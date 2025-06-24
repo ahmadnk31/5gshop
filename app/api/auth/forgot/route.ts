@@ -5,7 +5,7 @@ import crypto from "crypto";
 import { prisma } from "@/lib/database";
 
 export async function POST(req: NextRequest) {
-  const { email } = await req.json();
+  const { email,locale } = await req.json();
   if (!email) return NextResponse.json({ error: "Email required" }, { status: 400 });
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) return NextResponse.json({ ok: true }); // Don't reveal if user exists
@@ -18,6 +18,6 @@ export async function POST(req: NextRequest) {
       expires,
     },
   });
-  await sendResetEmail(email, token);
+  await sendResetEmail(email, token, locale);
   return NextResponse.json({ ok: true });
 }
