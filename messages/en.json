@@ -1,0 +1,642 @@
+{
+  "homepage": {
+    "hero": {
+      "title": "Welcome to 5gphones Leuven",
+      "subtitle": "Your one-stop destination for device repairs and premium accessories"
+    },
+    "services": {
+      "title": "Our Services",
+      "repairs": {
+        "title": "Device Repairs",
+        "description": "Professional repair services for all your devices",
+        "features": {
+          "screenReplacements": "Screen replacements",
+          "batteryReplacements": "Battery replacements",
+          "waterDamageRepair": "Water damage repair",
+          "softwareTroubleshooting": "Software troubleshooting"
+        },
+        "learnMore": "Learn More"
+      },
+      "accessories": {
+        "title": "Accessories",
+        "description": "Premium accessories for all your devices",
+        "features": {
+          "casesProtectors": "Phone cases & screen protectors",
+          "chargersCables": "Chargers & cables",
+          "wirelessAccessories": "Wireless accessories",
+          "audioAccessories": "Audio accessories"
+        },
+        "shopNow": "Shop Now"
+      }
+    },
+    "featuredAccessories": {
+      "title": "Featured Accessories",
+      "viewAll": "View All",
+      "inStock": "{count} in stock",
+      "viewDetails": "View Details"
+    },
+    "popularServices": {
+      "title": "Popular Repair Services",
+      "viewAllServices": "View All Services",
+      "starting": "starting",
+      "bookNow": "Book Now"
+    },
+    "deviceCategories": {
+      "title": "Device Categories",
+      "smartphones": {
+        "name": "Smartphones",
+        "description": "iPhone, Samsung, Google & more"
+      },
+      "laptops": {
+        "name": "Laptops",
+        "description": "MacBook, Windows laptops"
+      },
+      "tablets": {
+        "name": "Tablets",
+        "description": "iPad, Android tablets"
+      },
+      "smartwatches": {
+        "name": "Smartwatches",
+        "description": "Apple Watch, Samsung Galaxy Watch"
+      },
+      "modelsSupported": "{count} models supported"
+    },
+    "whyChooseUs": {
+      "title": "Why Choose Us?",
+      "fastService": {
+        "title": "Fast Service",
+        "description": "Most repairs completed within 24-48 hours"
+      },
+      "qualityGuarantee": {
+        "title": "Quality Guarantee",
+        "description": "90-day warranty on all repairs and parts"
+      },
+      "expertTechnicians": {
+        "title": "Expert Technicians",
+        "description": "Certified professionals with years of experience"
+      }
+    },
+    "testimonials": {
+      "title": "What Our Customers Say",
+      "customers": [
+        {
+          "name": "Sarah Johnson",
+          "review": "Amazing service! They fixed my iPhone screen in just 2 hours and it looks brand new. The price was very reasonable too.",
+          "service": "iPhone 13 Screen Repair",
+          "date": "2 weeks ago"
+        },
+        {
+          "name": "Mike Chen",
+          "review": "Professional and fast service. My laptop was running slow and they optimized it perfectly. Highly recommend!",
+          "service": "Laptop Performance Optimization",
+          "date": "1 month ago"
+        },
+        {
+          "name": "Emily Rodriguez",
+          "review": "Great selection of accessories and excellent customer service. Found the perfect case for my new phone.",
+          "service": "Phone Case Purchase",
+          "date": "3 weeks ago"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to Get Started?",
+      "subtitle": "Book a repair or browse our accessories today",
+      "contactUs": "Contact Us",
+      "learnMore": "Learn More"
+    }
+  },
+   "navigation": {
+    "home": "Home",
+    "repairs": "Repairs",
+    "accessories": "Accessories",
+    "about": "About",
+    "contact": "Contact",
+    "getQuote": "Get Quote",
+    "quote": "Quote",
+    "login": "Login",
+    "register": "Register",
+    "account": "Account",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "cart": "Cart",
+    "myOrders": "My Orders",
+    "search": "Search",
+    "searchPlaceholder": "Search for repairs or accessories...",
+    "allRepairs": "All Repairs",
+    "allAccessories": "All Accessories",
+    "deviceTypes": "Device Types",
+    "categories": "Categories",
+    "adminDashboard": "Admin Dashboard",
+    "devices": {
+      "smartphones": "Smartphones",
+      "tablets": "Tablets",
+      "laptops": "Laptops",
+      "smartwatches": "Smartwatches",
+      "desktops": "Desktops",
+      "gamingConsoles": "Gaming Consoles",
+      "otherDevices": "Other Devices"
+    },
+    "accessoryCategories": {
+      "casesCovers": "Cases & Covers",
+      "chargersPower": "Chargers & Power",
+      "cablesAdapters": "Cables & Adapters",
+      "audioHeadphones": "Audio & Headphones",
+      "screenProtection": "Screen Protection",
+      "speakers": "Speakers",
+      "cameraPhoto": "Camera & Photo"
+    }
+  },
+  "footer": {
+    "description": "Your trusted partner for device repairs and premium accessories. Professional service with a personal touch.",
+    "quickLinks": {
+      "title": "Quick Links",
+      "deviceRepairs": "Device Repairs",
+      "accessories": "Accessories",
+      "getQuote": "Get Quote",
+      "aboutUs": "About Us"
+    },
+    "contactInfo": {
+      "title": "Contact Info",
+      "address": "84A Bondgenotenlaan, Leuven",
+      "phone": "+32 467 87 12 05",
+      "email": "info@5gphones.be"
+    },
+    "businessHours": {
+      "title": "Business Hours",
+      "mondayFriday": "Monday - Friday: 10:00 AM - 6:00 PM",
+      "saturday": "Saturday: 10:00 AM - 6:30 PM",
+      "sunday": "Sunday: closed"
+    },
+    "legal": {
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "contactUs": "Contact Us"
+    },
+    "copyright": "All rights reserved.",
+    "poweredBy": "Powered by Next JS and Tailwind CSS"
+  },
+  "pricingComparison": {
+    "title": "Why Pay More Elsewhere?",
+    "subtitle": "Compare our prices with ifixers.be and see the difference. We offer competitive pricing without compromising on quality.",
+    "averageSavings": "Save an average of €{amount} per repair",
+    "stats": {
+      "servicesCompared": "Services Compared",
+      "averageSavings": "Average Savings",
+      "averageDiscount": "Average Discount"
+    },
+    "comparison": {
+      "title": "Price Comparison",
+      "subtitle": "See how much you save with TechFix Pro vs ifixers.be",
+      "headers": {
+        "service": "Service & Device",
+        "ourPrice": "Our Price",
+        "ifixersPrice": "ifixers.be",
+        "youSave": "You Save"
+      },
+      "popular": "Popular"
+    },
+    "benefits": {
+      "title": "Why Choose TechFix Pro?",
+      "lowerPrices": {
+        "title": "Lower Prices",
+        "description": "Save an average of €{amount} compared to competitors"
+      },
+      "sameDayService": {
+        "title": "Same Day Service",
+        "description": "Most repairs completed within 24-48 hours"
+      },
+      "qualityGuarantee": {
+        "title": "Quality Guarantee",
+        "description": "90-day warranty on all repairs and parts"
+      }
+    },
+    "cta": {
+      "title": "Ready to Save Money?",
+      "subtitle": "Get your free quote today and see how much you can save",
+      "button": "Get Free Quote"
+    },
+    "trustIndicators": {
+      "happyCustomers": "Happy Customers",
+      "averageRepairTime": "Average Repair Time",
+      "warrantyPeriod": "Warranty Period",
+      "averageSavings": "Average Savings"
+    },
+    "disclaimer": "* Prices compared with ifixers.be as of {date}. Competitor pricing may vary. All our prices include parts, labor, and warranty."
+  },
+  "repairs": {
+    "meta": {
+      "title": "Professional Device Repair Services",
+      "description": "Expert technicians, quality parts, and fast turnaround times for all your device repair needs"
+    },
+    "hero": {
+      "title": "Professional Device Repair Services",
+      "description": "Expert technicians, quality parts, and fast turnaround times for all your device repair needs",
+      "cta": "Get Free Quote"
+    },
+    "searchResults": {
+      "title": "Search Results for \"{searchTerm}\"",
+      "description": "Showing repair services matching your search",
+      "clearSearch": "Clear Search"
+    },
+    "deviceBrowser": {
+      "title": "Browse Devices & Repairs",
+      "description": "Find your device, explore available parts, and get repair cost estimates"
+    },
+    "whyChooseUs": {
+      "title": "Why Choose Our Repair Service?",
+      "features": {
+        "expertTechnicians": {
+          "title": "Expert Technicians",
+          "description": "Certified professionals with years of experience"
+        },
+        "qualityGuarantee": {
+          "title": "Quality Guarantee",
+          "description": "90-day warranty on all repairs and parts"
+        },
+        "fastTurnaround": {
+          "title": "Fast Turnaround",
+          "description": "Most repairs completed within 24-48 hours"
+        },
+        "qualityParts": {
+          "title": "Quality Parts",
+          "description": "OEM and high-quality aftermarket parts only"
+        }
+      }
+    },
+    "popularServices": {
+      "title": "Popular Repair Services",
+      "warranty": "{days} days warranty",
+      "timeframe": "{time} minutes"
+    },
+    "process": {
+      "title": "Our Repair Process",
+      "steps": {
+        "diagnosis": {
+          "title": "Diagnosis",
+          "description": "Free diagnostic to identify the exact issue with your device"
+        },
+        "quote": {
+          "title": "Quote",
+          "description": "Transparent pricing with no hidden fees - you approve before we start"
+        },
+        "repair": {
+          "title": "Repair",
+          "description": "Expert repair using quality parts with comprehensive testing"
+        }
+      }
+    },
+    "pricing": {
+      "title": "Repair Pricing by Device",
+      "commonRepairs": "{deviceType} Common Repairs",
+      "commonRepairsDescription": "Popular repair services for {deviceType}s",
+      "additionalServices": "Additional Services",
+      "additionalServicesDescription": "More repair options available",
+      "noServicesFound": {
+        "title": "No Services Found",
+        "description": "No repair services are currently available for {deviceType}s.",
+        "cta": "Contact Us for Custom Service"
+      },
+      "disclaimer": "Prices may vary based on device model and condition. Get an accurate quote for your specific device.",
+      "cta": "Get Personalized Quote"
+    },
+    "finalCta": {
+      "title": "Ready to Fix Your Device?",
+      "description": "Get a free quote and fast, professional repair service",
+      "primaryCta": "Get Free Quote",
+      "secondaryCta": "Contact Us"
+    },
+    "deviceTypes": {
+      "smartphone": "Smartphone",
+      "tablet": "Tablet", 
+      "laptop": "Laptop",
+      "smartwatch": "Smartwatch",
+      "desktop": "Desktop",
+      "gamingConsole": "Gaming Console",
+      "other": "Other Device"
+    },
+    "loading": "Loading..."
+  },
+  "accessories": {
+    "title": "Premium Device Accessories",
+    "subtitle": "Enhance your devices with our curated collection of high-quality accessories",
+    "features": {
+      "freeShipping": "Free Shipping",
+      "qualityGuarantee": "Quality Guarantee",
+      "easyReturns": "Easy Returns"
+    },
+    "search": {
+      "placeholder": "Search accessories...",
+      "loading": "Loading...",
+      "pressEnter": "Press Enter or click to search for \"{query}\"",
+      "searchResults": "Search Results",
+      "found": "{count} accessories found"
+    },
+    "categories": {
+      "title": "Shop by Category",
+      "titleFiltered": "Categories",
+      "showAll": "Show All Categories",
+      "items": "{count} items",
+      "labels": {
+        "CASE": "Cases & Covers",
+        "CHARGER": "Chargers & Power",
+        "CABLE": "Cables & Adapters",
+        "HEADPHONES": "Audio & Headphones",
+        "SCREEN_PROTECTOR": "Screen Protection",
+        "KEYBOARD": "Keyboards",
+        "MOUSE": "Mice & Trackpads",
+        "STYLUS": "Stylus & Pens",
+        "STAND": "Stands & Holders",
+        "MOUNT": "Mounts & Brackets",
+        "OTHER": "Other Accessories"
+      },
+      "descriptions": {
+        "CASE": "High-quality cases & covers",
+        "CHARGER": "High-quality chargers & power",
+        "CABLE": "High-quality cables & adapters",
+        "HEADPHONES": "High-quality audio & headphones",
+        "SCREEN_PROTECTOR": "High-quality screen protection",
+        "KEYBOARD": "High-quality keyboards",
+        "MOUSE": "High-quality mice & trackpads",
+        "STYLUS": "High-quality stylus & pens",
+        "STAND": "High-quality stands & holders",
+        "MOUNT": "High-quality mounts & brackets",
+        "OTHER": "High-quality other accessories"
+      }
+    },
+    "filters": {
+      "clear": "Clear",
+      "clearAll": "Clear Filters",
+      "category": "Category: {category}",
+      "searchFilter": "Search: \"{query}\""
+    },
+    "sorting": {
+      "name": "Name",
+      "price": "Price",
+      "stock": "Stock",
+      "dateAdded": "Date Added"
+    },
+    "product": {
+      "viewDetails": "View Details",
+      "inStock": "{count} in stock",
+      "lowStock": "Low Stock",
+      "productImage": "Product Image"
+    },
+    "results": {
+      "title": "All Accessories",
+      "noResults": {
+        "title": "No Accessories Found",
+        "message": "Try adjusting your search criteria or browse our categories.",
+        "messageNoFilters": "We'll be adding accessories soon!"
+      }
+    },
+    "loading": {
+      "message": "Loading accessories..."
+    }
+  },
+  "search": {
+    "placeholder": "Search replacement parts...",
+    "filters": {
+      "all": "All",
+      "parts": "Parts", 
+      "accessories": "Accessories"
+    },
+    "results": {
+      "searching": "Searching...",
+      "minCharacters": "Type at least 2 characters to search",
+      "found": "{count} result found",
+      "found_plural": "{count} results found",
+      "noResults": "No results found for \"{query}\"",
+      "noResultsHint": "Try different keywords or browse our categories",
+      "viewAll": "View all results for \"{query}\"",
+      "viewParts": "View {count} part for \"{query}\"",
+      "viewParts_plural": "View {count} parts for \"{query}\"",
+      "viewAccessories": "View {count} accessory for \"{query}\"",
+      "viewAccessories_plural": "View {count} accessories for \"{query}\""
+    },
+    "badges": {
+      "part": "Part",
+      "accessory": "Accessory"
+    },
+    "categories": {
+      "replacementPart": "Replacement Part",
+      "accessory": "Accessory",
+      "case": "Case",
+      "cover": "Cover", 
+      "screenProtector": "Screen Protector",
+      "charger": "Charger",
+      "power": "Power",
+      "battery": "Battery",
+      "cable": "Cable",
+      "adapter": "Adapter",
+      "headphones": "Headphones",
+      "earbuds": "Earbuds",
+      "speaker": "Speaker",
+      "camera": "Camera"
+    }
+  },
+  "navigationAccessory": {
+    "home": "Home",
+    "accessories": "Accessories",
+    "backToAccessories": "Back to Accessories"
+  },
+  "product": {
+    "outOfStock": "Out of Stock",
+    "lowStock": "Low Stock",
+    "brand": "Brand",
+    "model": "Model",
+    "rating": {
+      "reviews": "reviews"
+    },
+    "inStock": "in stock",
+    "currentlyUnavailable": "Currently unavailable",
+    "compatibility": "Compatibility",
+    "description": "Description",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "freeShipping": "Free shipping on orders over €50",
+    "warranty": "1 Year Warranty",
+    "imageNotAvailable": "Image not available",
+    "noImageAvailable": "No image available",
+    "clickToZoom": "Click to zoom • High-quality product image",
+    "save": "Save",
+    "share": "Share"
+  },
+  "features": {
+    "freeShipping": {
+      "title": "Free Shipping",
+      "description": "On orders over €50"
+    },
+    "warranty": {
+      "title": "1 Year Warranty",
+      "description": "Full coverage"
+    },
+    "returns": {
+      "title": "30-Day Returns",
+      "description": "Hassle-free"
+    }
+  },
+  "relatedProducts": {
+    "title": "Related Products",
+    "description": "Discover more high-quality accessories to complement your device setup",
+    "viewDetails": "View Details",
+    "viewAllAccessories": "View All Accessories",
+    "productImage": "Product Image"
+  },
+  "specifications": {
+    "title": "Product Specifications",
+    "productName": "Product Name",
+    "brand": "Brand",
+    "model": "Model",
+    "category": "Category",
+    "price": "Price",
+    "availability": "Availability",
+    "compatibility": "Compatibility",
+    "productId": "Product ID",
+    "outOfStock": "Out of stock"
+  },
+  "categories": {
+    "CASE": "Cases & Covers",
+    "CHARGER": "Chargers & Power",
+    "CABLE": "Cables & Adapters",
+    "HEADPHONES": "Audio & Headphones",
+    "SCREEN_PROTECTOR": "Screen Protection",
+    "KEYBOARD": "Keyboards",
+    "MOUSE": "Mice & Trackpads",
+    "STYLUS": "Stylus & Pens",
+    "STAND": "Stands & Holders",
+    "MOUNT": "Mounts & Brackets",
+    "OTHER": "Other Accessories"
+  },
+   "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "button": "Login",
+      "forgot": "Forgot password?",
+      "register": "Register",
+      "error": "Invalid email or password.",
+      "loggingIn": "Logging in..."
+    },
+    "register": {
+      "title": "Register",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "button": "Register",
+      "login": "Already have an account? Login",
+      "success": "Registration successful! Please check your email to verify your account.",
+      "error": "Registration failed. Please try again.",
+      "registering": "Registering..."
+    },
+    "forgot": {
+      "title": "Forgot Password",
+      "email": "Email",
+      "button": "Send reset link",
+      "back": "Back to login",
+      "success": "If your email is registered, you will receive a reset link.",
+      "error": "Failed to send reset email.",
+      "sending": "Sending..."
+    },
+    "reset": {
+      "title": "Reset Password",
+      "password": "New Password",
+      "confirmPassword": "Confirm Password",
+      "button": "Reset Password",
+      "back": "Back to login",
+      "success": "Password reset successfully. You can now log in.",
+      "error": "Failed to reset password. The link may have expired.",
+      "resetting": "Resetting...",
+      "mismatch": "Passwords do not match"
+    },
+    "verify": {
+      "title": "Verify Your Email",
+      "message": "A verification link has been sent to your email.",
+      "resend": "Resend verification email",
+      "success": "Email verified successfully! You can now log in.",
+      "error": "Verification failed or link expired."
+    }
+  },
+  "device-catalog-browser": {
+  "breadcrumbs": {
+    "deviceTypes": "Device Types",
+    "brands": "Brands",
+    "models": "Models",
+    "parts": "Parts",
+    "services": "Repair Services"
+  },
+  "filter": {
+    "filteredBy": "Filtered by: {type}",
+    "showing": "Showing {type} devices only",
+    "showAll": "Show All Devices"
+  },
+  "search": {
+    "resultsTitle": "{type} Search Results",
+    "resultsFound": "Found {count} repair service(s) {type, select, undefined {} other {for {type}}} matching \"{search}\"",
+    "filteredBy": "Filtered by: {type}",
+    "searchAll": "Search All Device Types",
+    "browseAll": "Browse All Device Types",
+    "noResults": "No Results Found",
+    "noResultsDesc": "No repair services found matching \"{search}\".",
+    "browseAllCta": "Browse All Services"
+  },
+  "types": {
+    "browse": "Browse {type} repairs and parts",
+    "selected": "{type} Selected",
+    "selectedDesc": "You've navigated to {type}. Choose a brand to continue or view all device types.",
+    "continue": "Continue with {type}",
+    "showAll": "Show All Types"
+  },
+  "brands": {
+    "viewModels": "View {brand} {type} models"
+  },
+  "models": {
+    "series": "{brand} {series} Series",
+    "model": "Model {count}",
+    "count": "({count} model{count, plural, one {} other {s}})",
+    "viewParts": "View available parts and repairs for {brand} {model}",
+    "filterPlaceholder": "Filter models...",
+    "selectModel": "Select a model to view parts and services",
+    "noModelsFound": "No models found for this brand. Please select a different brand or check back later.",
+    "noModelsAvailable": "No models available for this brand at the moment. Please check back later or contact us for assistance."
+  },
+  "parts": {
+    "available": "Available Parts",
+    "stock": "Stock:",
+    "price": "Price:",
+    "supplier": "Supplier:",
+    "inStock": "In Stock",
+    "units": "units",
+    "lowStock": "Low Stock",
+    "outOfStock": "Out of Stock",
+    "requestQuote": "Request Repair Quote",
+    "noParts": "No specific parts found for this model.",
+    "contactForParts": "Contact us for availability of compatible parts.",
+    "contactUs": "Contact Us"
+  },
+  "services": {
+    "available": "Repair Services",
+    "estimatedCost": "Estimated Cost:",
+    "startingAt": "Starting at {price}",
+    "estimatedTime": "Estimated time:",
+    "minutes": "{minutes} minutes",
+    "getQuote": "Get Detailed Quote",
+    "getQuoteShort": "Get Quote",
+    "forModel": "for {brand} {model}",
+    "noServicesFound": "No repair services found for this model. Please check back later or contact us for assistance.",
+    "noServicesAvailable": "No services available for this model at the moment. Please check back later or contact us for assistance.",
+    "getDetailedQuote": "Get Detailed Quote for"
+  },
+  "navigation": {
+    "back": "Back"
+  },
+  "tabs": {
+    "brands": "Brands",
+    "repairServices": "Repair Services",
+    "availableParts": "Available Parts",
+    "availableServices": "Available Services"
+  }
+}
+}

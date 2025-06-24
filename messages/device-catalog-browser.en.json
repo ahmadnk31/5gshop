@@ -1,0 +1,61 @@
+{
+  "breadcrumbs": {
+    "deviceTypes": "Device Types",
+    "brands": "Brands",
+    "models": "Models",
+    "parts": "Parts",
+    "services": "Repair Services"
+  },
+  "filter": {
+    "filteredBy": "Filtered by: {type}",
+    "showing": "Showing {type} devices only",
+    "showAll": "Show All Devices"
+  },
+  "search": {
+    "resultsTitle": "{type} Search Results",
+    "resultsFound": "Found {count} repair service(s) {type, select, undefined {} other {for {type}}} matching \"{search}\"",
+    "filteredBy": "Filtered by: {type}",
+    "searchAll": "Search All Device Types",
+    "browseAll": "Browse All Device Types",
+    "noResults": "No Results Found",
+    "noResultsDesc": "No repair services found matching \"{search}\".",
+    "browseAllCta": "Browse All Services"
+  },
+  "types": {
+    "browse": "Browse {type} repairs and parts",
+    "selected": "{type} Selected",
+    "selectedDesc": "You've navigated to {type}. Choose a brand to continue or view all device types.",
+    "continue": "Continue with {type}",
+    "showAll": "Show All Types"
+  },
+  "brands": {
+    "viewModels": "View {brand} {type} models"
+  },
+  "models": {
+    "series": "{brand} {series} Series",
+    "count": "({count} model{count, plural, one {} other {s}})",
+    "viewParts": "View available parts and repairs for {brand} {model}",
+    "filterPlaceholder": "Filter models..."
+  },
+  "parts": {
+    "available": "Available Parts",
+    "stock": "Stock:",
+    "price": "Price:",
+    "supplier": "Supplier:",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "requestQuote": "Request Repair Quote",
+    "noParts": "No specific parts found for this model.",
+    "contactForParts": "Contact us for availability of compatible parts.",
+    "contactUs": "Contact Us"
+  },
+  "services": {
+    "available": "Repair Services",
+    "estimatedCost": "Estimated Cost:",
+    "startingAt": "Starting at {price}",
+    "estimatedTime": "Estimated time:",
+    "minutes": "{minutes} minutes",
+    "getQuote": "Get Detailed Quote",
+    "getQuoteShort": "Get Quote"
+  }
+}
