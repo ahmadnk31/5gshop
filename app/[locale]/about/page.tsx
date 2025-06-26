@@ -14,36 +14,55 @@ import {
   Calendar,
   MapPin
 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from 'next-intl';
 
 export default function AboutPage() {
+  const t = useTranslations('about');
+
   const teamMembers = [
     {
-      name: "Alex Johnson",
-      role: "Founder & Lead Technician",
-      experience: "15+ years",
-      specialties: ["iPhone Repair", "Logic Board Repair", "Data Recovery"],
+      name: t('team.members.alex.name'),
+      role: t('team.members.alex.role'),
+      experience: t('team.members.alex.experience'),
+      specialties: [
+        t('team.members.alex.specialty1'),
+        t('team.members.alex.specialty2'),
+        t('team.members.alex.specialty3')
+      ],
       image: "/api/placeholder/300/300"
     },
     {
-      name: "Sarah Chen",
-      role: "Senior Repair Technician", 
-      experience: "8+ years",
-      specialties: ["Android Repair", "Tablet Repair", "Software Issues"],
+      name: t('team.members.sarah.name'),
+      role: t('team.members.sarah.role'), 
+      experience: t('team.members.sarah.experience'),
+      specialties: [
+        t('team.members.sarah.specialty1'),
+        t('team.members.sarah.specialty2'),
+        t('team.members.sarah.specialty3')
+      ],
       image: "/api/placeholder/300/300"
     },
     {
-      name: "Mike Rodriguez",
-      role: "Laptop Specialist",
-      experience: "10+ years", 
-      specialties: ["MacBook Repair", "PC Repair", "Performance Optimization"],
+      name: t('team.members.mike.name'),
+      role: t('team.members.mike.role'),
+      experience: t('team.members.mike.experience'), 
+      specialties: [
+        t('team.members.mike.specialty1'),
+        t('team.members.mike.specialty2'),
+        t('team.members.mike.specialty3')
+      ],
       image: "/api/placeholder/300/300"
     },
     {
-      name: "Emma Wilson",
-      role: "Customer Service Manager",
-      experience: "5+ years",
-      specialties: ["Customer Relations", "Quality Assurance", "Parts Management"],
+      name: t('team.members.emma.name'),
+      role: t('team.members.emma.role'),
+      experience: t('team.members.emma.experience'),
+      specialties: [
+        t('team.members.emma.specialty1'),
+        t('team.members.emma.specialty2'),
+        t('team.members.emma.specialty3')
+      ],
       image: "/api/placeholder/300/300"
     }
   ];
@@ -51,50 +70,50 @@ export default function AboutPage() {
   const achievements = [
     {
       icon: Users,
-      number: "10,000+",
-      title: "Happy Customers",
-      description: "Devices repaired successfully"
+      number: t('achievements.items.customers.number'),
+      title: t('achievements.items.customers.title'),
+      description: t('achievements.items.customers.description')
     },
     {
       icon: Star,
-      number: "4.9/5",
-      title: "Customer Rating",
-      description: "Based on 1,200+ reviews"
+      number: t('achievements.items.rating.number'),
+      title: t('achievements.items.rating.title'),
+      description: t('achievements.items.rating.description')
     },
     {
       icon: Clock,
-      number: "24-48h",
-      title: "Avg. Repair Time",
-      description: "Fast turnaround guaranteed"
+      number: t('achievements.items.time.number'),
+      title: t('achievements.items.time.title'),
+      description: t('achievements.items.time.description')
     },
     {
       icon: Award,
-      number: "5",
-      title: "Years in Business",
-      description: "Trusted local service provider"
+      number: t('achievements.items.years.number'),
+      title: t('achievements.items.years.title'),
+      description: t('achievements.items.years.description')
     }
   ];
 
   const values = [
     {
       icon: Target,
-      title: "Quality First",
-      description: "We use only premium parts and maintain the highest repair standards"
+      title: t('values.items.quality.title'),
+      description: t('values.items.quality.description')
     },
     {
       icon: Heart,
-      title: "Customer Care",
-      description: "Your satisfaction is our priority - we treat every device like it's our own"
+      title: t('values.items.care.title'),
+      description: t('values.items.care.description')
     },
     {
       icon: Shield,
-      title: "Transparency",
-      description: "No hidden fees, clear communication, and honest pricing"
+      title: t('values.items.transparency.title'),
+      description: t('values.items.transparency.description')
     },
     {
       icon: Wrench,
-      title: "Expertise",
-      description: "Certified technicians with years of experience and ongoing training"
+      title: t('values.items.expertise.title'),
+      description: t('values.items.expertise.description')
     }
   ];
 
@@ -104,17 +123,17 @@ export default function AboutPage() {
       <section className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            About 5gphones Leuven
+            {t('hero.title')}
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-            Your trusted partner for device repairs and premium accessories since 2019
+            {t('hero.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link href="/contact">Get in Touch</Link>
+              <Link href="/contact">{t('hero.getInTouch')}</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-white bg-transparent border-white hover:bg-white hover:text-indigo-600">
-              <Link href="/quote">Get Quote</Link>
+              <Link href="/quote">{t('hero.getQuote')}</Link>
             </Button>
           </div>
         </div>
@@ -124,24 +143,17 @@ export default function AboutPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-8">Our Story</h2>
+            <h2 className="text-3xl font-bold mb-8">{t('story.title')}</h2>
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="space-y-6 text-left">
                 <p className="text-lg text-gray-600">
-                  5gphones was founded in 2019 with a simple mission: to provide reliable, 
-                  affordable device repair services to our community. What started as a small 
-                  repair shop has grown into a trusted local business serving thousands of customers.
+                  {t('story.paragraph1')}
                 </p>
                 <p className="text-gray-600">
-                  We noticed that many people were frustrated with expensive repair quotes, 
-                  long wait times, and poor customer service from other providers. That's when 
-                  we decided to create a different kind of repair shop - one that puts customers 
-                  first and delivers exceptional service at fair prices.
+                  {t('story.paragraph2')}
                 </p>
                 <p className="text-gray-600">
-                  Today, we're proud to be the go-to repair destination for smartphones, tablets, 
-                  laptops, and more. Our team of certified technicians has the expertise to handle 
-                  everything from simple screen replacements to complex logic board repairs.
+                  {t('story.paragraph3')}
                 </p>
               </div>
               <div className="space-y-4">
@@ -150,21 +162,21 @@ export default function AboutPage() {
                     <Calendar className="h-6 w-6 text-blue-600 mr-2" />
                     <span className="font-semibold">2019</span>
                   </div>
-                  <p className="text-sm text-gray-600">Founded 5gphones with a vision to revolutionize device repair services</p>
+                  <p className="text-sm text-gray-600">{t('story.timeline.2019')}</p>
                 </div>
                 <div className="bg-green-50 p-6 rounded-lg">
                   <div className="flex items-center mb-4">
                     <MapPin className="h-6 w-6 text-green-600 mr-2" />
                     <span className="font-semibold">2021</span>
                   </div>
-                  <p className="text-sm text-gray-600">Expanded to our current location and added premium accessories</p>
+                  <p className="text-sm text-gray-600">{t('story.timeline.2021')}</p>
                 </div>
                 <div className="bg-purple-50 p-6 rounded-lg">
                   <div className="flex items-center mb-4">
                     <Award className="h-6 w-6 text-purple-600 mr-2" />
                     <span className="font-semibold">2024</span>
                   </div>
-                  <p className="text-sm text-gray-600">Achieved 10,000+ successful repairs and 4.9/5 customer rating</p>
+                  <p className="text-sm text-gray-600">{t('story.timeline.2024')}</p>
                 </div>
               </div>
             </div>
@@ -175,7 +187,7 @@ export default function AboutPage() {
       {/* Achievements */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Achievements</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('achievements.title')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {achievements.map((achievement, index) => (
               <Card key={index} className="text-center hover:shadow-lg transition-shadow">
@@ -196,7 +208,7 @@ export default function AboutPage() {
       {/* Our Values */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Values</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('values.title')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div key={index} className="text-center">
@@ -214,7 +226,7 @@ export default function AboutPage() {
       {/* Our Team */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Meet Our Team</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('team.title')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
               <Card key={index} className="hover:shadow-lg transition-shadow">
@@ -228,7 +240,7 @@ export default function AboutPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <p className="text-sm font-semibold">Specialties:</p>
+                    <p className="text-sm font-semibold">{t('team.specialties')}</p>
                     <div className="flex flex-wrap gap-1">
                       {member.specialties.map((specialty, i) => (
                         <Badge key={i} variant="secondary" className="text-xs">
@@ -247,32 +259,32 @@ export default function AboutPage() {
       {/* Certifications */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Certifications & Training</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">{t('certifications.title')}</h2>
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Award className="h-6 w-6 mr-2 text-blue-600" />
-                    Professional Certifications
+                    {t('certifications.professional.title')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                    <span>Apple Authorized Service Provider</span>
+                    <span>{t('certifications.professional.item1')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                    <span>Samsung Certified Repair Center</span>
+                    <span>{t('certifications.professional.item2')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                    <span>CompTIA A+ Certified Technicians</span>
+                    <span>{t('certifications.professional.item3')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                    <span>Mobile Device Repair Certification</span>
+                    <span>{t('certifications.professional.item4')}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -281,25 +293,25 @@ export default function AboutPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Target className="h-6 w-6 mr-2 text-purple-600" />
-                    Ongoing Training
+                    {t('certifications.training.title')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                    <span>Monthly technical training sessions</span>
+                    <span>{t('certifications.training.item1')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                    <span>Latest repair technique workshops</span>
+                    <span>{t('certifications.training.item2')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                    <span>New device training programs</span>
+                    <span>{t('certifications.training.item3')}</span>
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
-                    <span>Customer service excellence training</span>
+                    <span>{t('certifications.training.item4')}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -311,14 +323,14 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="bg-indigo-600 text-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Experience the 5gphones Leuven Difference?</h2>
-          <p className="text-xl mb-8">Join thousands of satisfied customers who trust us with their devices</p>
+          <h2 className="text-3xl font-bold mb-4">{t('cta.title')}</h2>
+          <p className="text-xl mb-8">{t('cta.subtitle')}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg" variant="secondary">
-              <Link href="/repairs">Book a Repair</Link>
+              <Link href="/repairs">{t('cta.bookRepair')}</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-white bg-transparent border-white hover:bg-white hover:text-indigo-600">
-              <Link href="/contact">Visit Our Store</Link>
+              <Link href="/contact">{t('cta.visitStore')}</Link>
             </Button>
           </div>
         </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import dynamic from "next/dynamic";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -27,7 +26,9 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
 
   // Coordinates for Leuven, Belgium - 84A Bondgenotenlaan
   // You should get exact coordinates from Google Maps or geocoding service
-  const position: [number, number] = [50.8802289666973, 4.709424098225124];
+  const position: [number, number] = [
+    50.880199, 4.709482
+  ];
 
   // Custom marker icon
   const customIcon = new L.Icon({
@@ -36,6 +37,7 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
     iconAnchor: [12, 41],
     popupAnchor: [0, -41],
   });
+  
 
   return (
     <div className={className}>
@@ -74,15 +76,5 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
   );
 };
 
-// Export with dynamic import to avoid SSR issues
-export const LeafletMap = dynamic(() => Promise.resolve(LeafletMapComponent), {
-  ssr: false,
-  loading: () => (
-    <div className="h-64 w-full bg-gray-100 rounded-lg flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-        <p className="text-gray-500">Loading map...</p>
-      </div>
-    </div>
-  ),
-});
+// Export the component directly
+export const LeafletMap = LeafletMapComponent;

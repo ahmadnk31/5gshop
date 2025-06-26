@@ -16,6 +16,7 @@ import { CustomerEditModal } from "@/components/admin/customer-edit-modal";
 import { ContactList } from "@/components/admin/contact-list";
 import { QuotesList } from "@/components/admin/quotes-list";
 import { ReportsModal } from "@/components/admin/reports-modal";
+import { OrdersTable } from "@/components/admin/orders-table";
 import { Repair, Customer, Priority, RepairStatus, Part } from "@/lib/types";
 import { 
   DollarSign, 
@@ -57,7 +58,7 @@ function AdminDashboardContent() {
   const [showCustomerEditModal, setShowCustomerEditModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<RepairStatus | 'all'>('all');
-  const [activeTab, setActiveTab] = useState<'overview' | 'repairs' | 'customers' | 'contacts' | 'quotes' | 'analytics' | 'inventory'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'repairs' | 'customers' | 'contacts' | 'quotes' | 'analytics' | 'inventory' | 'orders'>('overview');
   const [customerSearchTerm, setCustomerSearchTerm] = useState('');
   const [showTodayFilter, setShowTodayFilter] = useState(false);
   const [showReportsModal, setShowReportsModal] = useState(false);
@@ -227,7 +228,8 @@ function AdminDashboardContent() {
                 { id: 'contacts', label: 'Contacts', icon: MessageSquare },
                 { id: 'quotes', label: 'Quotes', icon: DollarSign },
                 { id: 'analytics', label: 'Analytics', icon: PieChart },
-                { id: 'inventory', label: 'Inventory', icon: Package }
+                { id: 'inventory', label: 'Inventory', icon: Package },
+                { id: 'orders', label: 'Orders', icon: Box }
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -1060,6 +1062,14 @@ function AdminDashboardContent() {
                 </CardContent>
               </Card>
             </div>
+          </div>
+        )}
+
+        {/* Orders Tab */}
+        {activeTab === 'orders' && (
+          <div>
+            <h2 className="text-xl font-bold mb-4">Orders Management</h2>
+            <OrdersTable />
           </div>
         )}
       </div>

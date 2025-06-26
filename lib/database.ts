@@ -227,7 +227,7 @@ export class DatabaseService {
 
   // Repair operations
   static async getRepairs(params?: PaginationParams): Promise<PaginatedResult<Repair>> {
-    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'desc' } = params || {}
+    const { page = 1, limit = 10, sortBy = 'createdAt', sortOrder = 'asc' } = params || {}
 
     const repairs = await prisma.repair.findMany({
       include: {

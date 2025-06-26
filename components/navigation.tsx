@@ -30,6 +30,7 @@ import {
   X
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useEffect } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link } from "@/i18n/navigation";
@@ -38,12 +39,21 @@ import { useTranslations } from 'next-intl';
 import Image from "next/image";
 import { useState } from "react";
 import { SearchComponent } from "./search-component";
+import { ShoppingCart } from "lucide-react";
+import { CartSheet } from "@/components/cart-sheet";
+import { useCart } from "@/components/cart-context";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchbarOpen, setSearchbarOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const t = useTranslations('navigation');
   const { data: session } = useSession();
+  const { items } = useCart();
+  const totalCartItems = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  useEffect(() => { setIsMounted(true); }, []);
 
   // Device types for repairs dropdown
   const deviceTypes = [
@@ -78,7 +88,6 @@ export function Navigation() {
               alt="5gphones Logo"
               width={62}
               height={62}
-              
             />
           </Link>
 
@@ -88,9 +97,7 @@ export function Navigation() {
             <div className="flex-1 max-w-lg mx-4">
               <SearchComponent />
             </div>
-            
             <div className="flex items-center space-x-6">
-            
               {/* Repairs Dropdown */}
               <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors">
@@ -147,7 +154,20 @@ export function Navigation() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            
+            {/* Cart Icon - Desktop */}
+            <button
+              className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
+              aria-label="Open cart"
+              onClick={() => setCartOpen(true)}
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {isMounted && totalCartItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center border border-white shadow">
+                  {totalCartItems}
+                </span>
+              )}
+            </button>
+            <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
 
             {/* User info or auth links */}
             {session?.user ? (
@@ -325,13 +345,39 @@ export function Navigation() {
                
               </div>
             )}
-            <Button asChild size="sm">
-              <Link href="/quote">{t('quote')}</Link>
-            </Button>
+            {/* Cart Icon - Desktop & Tablet */}
+            <button
+              className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
+              aria-label="Open cart"
+              onClick={() => setCartOpen(true)}
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {isMounted && totalCartItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center border border-white shadow">
+                  {totalCartItems}
+                </span>
+              )}
+            </button>
+            <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
           </div>
 
           {/* Mobile/Small Screen Navigation */}
           <div className="flex md:hidden items-center space-x-3">
+            {/* Cart Icon - Mobile */}
+            <button
+              className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
+              aria-label="Open cart"
+              onClick={() => setCartOpen(true)}
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {isMounted && totalCartItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center border border-white shadow">
+                  {totalCartItems}
+                </span>
+              )}
+            </button>
+            <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
+
             {/* Search Icon */}
             <button
               onClick={() => setSearchbarOpen(!searchbarOpen)}
@@ -399,6 +445,7 @@ export function Navigation() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="p-2"
+              aria-label="Open menu"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>

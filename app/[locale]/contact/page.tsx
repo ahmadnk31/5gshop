@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ContactForm } from "@/components/contact-form";
-import { EmbeddedMap } from "@/components/embedded-map";
 import { 
   MapPin, 
   Phone, 
@@ -12,18 +11,21 @@ import {
 } from "lucide-react";
 // Import analytics components
 import { TrackablePhoneLink, PageSectionTracker } from "@/components/analytics-components";
+import { useTranslations } from 'next-intl';
+import ContactMapClientWrapper from "./contact-map-client-wrapper";
 
 export default function ContactPage() {
+  const t = useTranslations('contact');
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Get in Touch
+            {t('hero.title')}
           </h1>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Have questions about our services? Need a repair quote? We're here to help!
+            {t('hero.subtitle')}
           </p>
         </div>
       </section>
@@ -35,14 +37,14 @@ export default function ContactPage() {
             <Card className="text-center">
               <CardHeader>
                 <MapPin className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                <CardTitle>Visit Us</CardTitle>
+                <CardTitle>{t('info.visitUs')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  84A Bondgenotenlaan<br />
-                  Leuven<br />
-                  Belgie (Belgium)<br />
-                  <strong>Postal Code:</strong> 3000
+                  {t('info.address.line1')}<br />
+                  {t('info.address.line2')}<br />
+                  {t('info.address.line3')}<br />
+                  <strong>{t('info.address.postalLabel')}</strong> {t('info.address.postalCode')}
                 </p>
               </CardContent>
             </Card>
@@ -50,13 +52,13 @@ export default function ContactPage() {
             <Card className="text-center">
               <CardHeader>
                 <Phone className="h-12 w-12 text-green-600 mx-auto mb-4" />
-                <CardTitle>Call Us</CardTitle>
+                <CardTitle>{t('info.callUs')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  <strong>Main:</strong> <TrackablePhoneLink phoneNumber="+32466134181" className="text-blue-600 hover:underline">+32 (466) 13 41 81</TrackablePhoneLink><br />
-                  <strong>Support:</strong> <TrackablePhoneLink phoneNumber="+32467871205" className="text-blue-600 hover:underline">+32 (467) 87 12 05</TrackablePhoneLink><br />
-                  <strong>Emergency:</strong> <TrackablePhoneLink phoneNumber="+32466134181" className="text-blue-600 hover:underline">+32 (466) 13 41 81</TrackablePhoneLink>
+                  <strong>{t('info.phone.main')}:</strong> <TrackablePhoneLink phoneNumber="+32466134181" className="text-blue-600 hover:underline">+32 (466) 13 41 81</TrackablePhoneLink><br />
+                  <strong>{t('info.phone.support')}:</strong> <TrackablePhoneLink phoneNumber="+32467871205" className="text-blue-600 hover:underline">+32 (467) 87 12 05</TrackablePhoneLink><br />
+                  <strong>{t('info.phone.emergency')}:</strong> <TrackablePhoneLink phoneNumber="+32466134181" className="text-blue-600 hover:underline">+32 (466) 13 41 81</TrackablePhoneLink>
                 </p>
               </CardContent>
             </Card>
@@ -64,13 +66,13 @@ export default function ContactPage() {
             <Card className="text-center">
               <CardHeader>
                 <Mail className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <CardTitle>Email Us</CardTitle>
+                <CardTitle>{t('info.emailUs')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  <strong>General:</strong> info@5gphones.be<br />
-                  <strong>Support:</strong> support@5gphones.be<br />
-                  <strong>Sales:</strong> sales@5gphones/be
+                  <strong>{t('info.email.general')}:</strong> info@5gphones.be<br />
+                  <strong>{t('info.email.support')}:</strong> support@5gphones.be<br />
+                  <strong>{t('info.email.sales')}:</strong> sales@5gphones.be
                 </p>
               </CardContent>
             </Card>
@@ -78,13 +80,13 @@ export default function ContactPage() {
             <Card className="text-center">
               <CardHeader>
                 <Clock className="h-12 w-12 text-orange-600 mx-auto mb-4" />
-                <CardTitle>Hours</CardTitle>
+                <CardTitle>{t('info.hoursLabel')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  <strong>Mon-Fri:</strong> 10:00 AM - 6:00 PM<br />
-                  <strong>Saturday:</strong> 10:00 AM - 6:30 PM<br />
-                  <strong>Sunday:</strong> closed
+                  <strong>{t('info.hours.mondayFriday')}:</strong> 10:00 AM - 6:00 PM<br />
+                  <strong>{t('info.hours.saturday')}:</strong> 10:00 AM - 6:30 PM<br />
+                  <strong>{t('info.hours.sunday')}:</strong> {t('info.hours.closed')}
                 </p>
               </CardContent>
             </Card>
@@ -118,7 +120,7 @@ export default function ContactPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <EmbeddedMap address="84A Bondgenotenlaan, 3000 Leuven, Belgium" />
+                  <ContactMapClientWrapper className="h-64 w-full rounded-lg" />
                 </CardContent>
               </Card>
 

@@ -39,6 +39,7 @@ export async function submitQuoteRequest(data: {
   photos: Array<{ url: string; key: string }>;
   urgency: 'urgent' | 'normal' | 'flexible';
   contactMethod: 'email' | 'phone' | 'text' | 'any';
+  quality?: string; // Add quality
 }) {
   try {
     // Create the quote in database
@@ -51,7 +52,8 @@ export async function submitQuoteRequest(data: {
       estimatedTime: 0, // Will be filled by admin
       status: 'PENDING' as const,
       urgency: data.urgency,
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
+      quality: data.quality // Store quality if provided
     });
 
     // Send email notification to admin
@@ -69,7 +71,8 @@ export async function submitQuoteRequest(data: {
       issues: data.issues,
       urgency: data.urgency,
       contactMethod: data.contactMethod,
-      photos: data.photos
+      photos: data.photos,
+      quality: data.quality // Pass quality to notification
     });
 
     // Send confirmation email to customer
@@ -78,7 +81,8 @@ export async function submitQuoteRequest(data: {
       customerName: `${data.firstName} ${data.lastName}`,
       deviceInfo: `${data.brand} ${data.model}`,
       serviceRequested: data.service || data.part || 'General Repair',
-      urgency: data.urgency
+      urgency: data.urgency,
+      quality: data.quality // Pass quality to confirmation
     });
 
     revalidatePath("/admin");

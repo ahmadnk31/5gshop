@@ -40,11 +40,13 @@ import { submitQuoteRequest } from "@/app/actions/quote-actions";
 // Import Google Analytics tracking for quote requests
 import { useGoogleAnalytics } from "@/components/google-analytics";
 import { QuoteRequestTracker, PageSectionTracker } from "@/components/analytics-components";
+import { useTranslations } from 'next-intl';
 
 function QuotePageContent() {
 	const searchParams = useSearchParams();
 	// Add Google Analytics tracking
 	const { trackQuoteRequest, trackEvent } = useGoogleAnalytics();
+	const t = useTranslations('quote');
 
 	// Form state
 	const [formData, setFormData] = useState({
@@ -67,6 +69,7 @@ function QuotePageContent() {
 		// Preferences
 		urgency: "normal" as "urgent" | "normal" | "flexible",
 		contactMethod: "email" as "email" | "phone" | "text" | "any",
+		quality: '',
 	});
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -166,6 +169,8 @@ function QuotePageContent() {
 				// Preferences
 				urgency: formData.urgency,
 				contactMethod: formData.contactMethod,
+				quality: formData.quality,
+				
 			});
 
 			if (result.success) {
@@ -196,6 +201,7 @@ function QuotePageContent() {
 					photos: [],
 					urgency: "normal",
 					contactMethod: "email",
+					quality: '',
 				});
 			} else {
 				setSubmitStatus("error");
@@ -219,28 +225,29 @@ function QuotePageContent() {
 
 	return (
 		<div className="flex flex-col min-h-screen">
+			<QuoteRequestTracker deviceType={formData.deviceType || 'unknown'} repairType={formData.service || formData.part || 'general_repair'} />
 			{/* Hero Section */}
 			<section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8 sm:py-12 lg:py-16">
+				<PageSectionTracker sectionName="quote-hero" />
 				<div className="container mx-auto px-4 text-center">
 					<h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
-						Get Your Free Repair Quote
+						{t('hero.title')}
 					</h1>
 					<p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-						Fast, transparent pricing for all your device repair needs. Get an accurate
-						quote in minutes.
+						{t('hero.description')}
 					</p>
 					<div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 lg:gap-8 text-sm sm:text-base md:text-lg">
 						<div className="flex items-center">
 							<CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-2" />
-							<span>Free Diagnostic</span>
+							<span>{t('hero.benefits.freeDiagnostic')}</span>
 						</div>
 						<div className="flex items-center">
 							<Clock className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-2" />
-							<span>Fast Response</span>
+							<span>{t('hero.benefits.fastResponse')}</span>
 						</div>
 						<div className="flex items-center">
 							<DollarSign className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-2" />
-							<span>Transparent Pricing</span>
+							<span>{t('hero.benefits.transparentPricing')}</span>
 						</div>
 					</div>
 				</div>
@@ -276,35 +283,39 @@ function QuotePageContent() {
 							<CardHeader>
 								<CardTitle className="flex items-center text-2xl">
 									<Calculator className="h-7 w-7 mr-3" />
-									Repair Quote Request
+									{t('form.title')}
 								</CardTitle>
 								<CardDescription>
-									Please provide details about your device and the issue you're
-									experiencing
+									{t('form.description')}
 								</CardDescription>
 								{isPrePopulated && (
 									<div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-2">
 										<div className="flex items-center text-green-800">
 											<CheckCircle className="h-4 w-4 mr-2" />
 											<span className="text-sm font-medium">
-												Form pre-populated with device information from your
-												selection
+												{t('form.prepopulate.success')}
 											</span>
 										</div>
 										<div className="mt-2 text-xs text-green-600">
 											{formData.deviceType && (
 												<span className="mr-3">
-													Device: {formData.deviceType}
+													{t('form.deviceType')}: {formData.deviceType}
 												</span>
 											)}
 											{formData.service && (
-												<span className="mr-3">Service: {formData.service}</span>
+												<span className="mr-3">
+													{t('form.service')}: {formData.service}
+												</span>
 											)}
 											{formData.brand && (
-												<span className="mr-3">Brand: {formData.brand}</span>
+												<span className="mr-3">
+													{t('form.brand')}: {formData.brand}
+												</span>
 											)}
 											{formData.model && (
-												<span className="mr-3">Model: {formData.model}</span>
+												<span className="mr-3">
+													{t('form.model')}: {formData.model}
+												</span>
 											)}
 										</div>
 									</div>
@@ -315,14 +326,14 @@ function QuotePageContent() {
 									{/* Personal Information */}
 									<div className="space-y-6">
 										<h3 className="text-lg font-semibold border-b pb-2">
-											Contact Information
+											{t('form.contactInformation.title')}
 										</h3>
 										<div className="grid md:grid-cols-2 gap-4">
 											<div className="space-y-2">
-												<Label htmlFor="firstName">First Name *</Label>
+												<Label htmlFor="firstName">{t('form.contactInformation.firstName')}</Label>
 												<Input
 													id="firstName"
-													placeholder="John"
+													placeholder={t('form.contactInformation.firstNamePlaceholder')}
 													required
 													value={formData.firstName}
 													onChange={(e) =>
@@ -334,10 +345,10 @@ function QuotePageContent() {
 												/>
 											</div>
 											<div className="space-y-2">
-												<Label htmlFor="lastName">Last Name *</Label>
+												<Label htmlFor="lastName">{t('form.contactInformation.lastName')}</Label>
 												<Input
 													id="lastName"
-													placeholder="Doe"
+													placeholder={t('form.contactInformation.lastNamePlaceholder')}
 													required
 													value={formData.lastName}
 													onChange={(e) =>
@@ -351,11 +362,11 @@ function QuotePageContent() {
 										</div>
 										<div className="grid md:grid-cols-2 gap-4">
 											<div className="space-y-2">
-												<Label htmlFor="email">Email Address *</Label>
+												<Label htmlFor="email">{t('form.contactInformation.email')}</Label>
 												<Input
 													id="email"
 													type="email"
-													placeholder="john@example.com"
+													placeholder={t('form.contactInformation.emailPlaceholder')}
 													required
 													value={formData.email}
 													onChange={(e) =>
@@ -367,11 +378,11 @@ function QuotePageContent() {
 												/>
 											</div>
 											<div className="space-y-2">
-												<Label htmlFor="phone">Phone Number *</Label>
+												<Label htmlFor="phone">{t('form.contactInformation.phone')}</Label>
 												<Input
 													id="phone"
 													type="tel"
-													placeholder="+1 (555) 123-4567"
+													placeholder={t('form.contactInformation.phonePlaceholder')}
 													required
 													value={formData.phone}
 													onChange={(e) =>
@@ -388,11 +399,11 @@ function QuotePageContent() {
 									{/* Device Information */}
 									<div className="space-y-6">
 										<h3 className="text-lg font-semibold border-b pb-2">
-											Device Information
+											{t('form.deviceInformation.title')}
 										</h3>
 
 										<div className="space-y-4">
-											<Label>Device Type *</Label>
+											<Label>{t('form.deviceInformation.deviceType')}</Label>
 											<RadioGroup
 												value={formData.deviceType}
 												onValueChange={(value) =>
@@ -407,7 +418,7 @@ function QuotePageContent() {
 														className="flex flex-col items-center cursor-pointer"
 													>
 														<Smartphone className="h-8 w-8 mb-2" />
-														<span>Smartphone</span>
+														<span>{t('form.deviceInformation.deviceTypeOptions.smartphone')}</span>
 													</Label>
 												</div>
 												<div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
@@ -417,7 +428,7 @@ function QuotePageContent() {
 														className="flex flex-col items-center cursor-pointer"
 													>
 														<Tablet className="h-8 w-8 mb-2" />
-														<span>Tablet</span>
+														<span>{t('form.deviceInformation.deviceTypeOptions.tablet')}</span>
 													</Label>
 												</div>
 												<div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
@@ -427,7 +438,7 @@ function QuotePageContent() {
 														className="flex flex-col items-center cursor-pointer"
 													>
 														<Laptop className="h-8 w-8 mb-2" />
-														<span>Laptop</span>
+														<span>{t('form.deviceInformation.deviceTypeOptions.laptop')}</span>
 													</Label>
 												</div>
 												<div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
@@ -437,7 +448,7 @@ function QuotePageContent() {
 														className="flex flex-col items-center cursor-pointer"
 													>
 														<Watch className="h-8 w-8 mb-2" />
-														<span>Smartwatch</span>
+														<span>{t('form.deviceInformation.deviceTypeOptions.smartwatch')}</span>
 													</Label>
 												</div>
 												<div className="flex items-center space-x-2 border rounded-lg p-4 hover:bg-gray-50">
@@ -447,7 +458,7 @@ function QuotePageContent() {
 														className="flex flex-col items-center cursor-pointer"
 													>
 														<Camera className="h-8 w-8 mb-2" />
-														<span>Other</span>
+														<span>{t('form.deviceInformation.deviceTypeOptions.other')}</span>
 													</Label>
 												</div>
 											</RadioGroup>
@@ -455,10 +466,10 @@ function QuotePageContent() {
 
 										<div className="grid md:grid-cols-2 gap-4">
 											<div className="space-y-2">
-												<Label htmlFor="brand">Brand *</Label>
+												<Label htmlFor="brand">{t('form.brand')}</Label>
 												<Input
 													id="brand"
-													placeholder="e.g., Apple, Samsung, Dell"
+													placeholder={t('form.brandPlaceholder')}
 													required
 													value={formData.brand}
 													onChange={(e) =>
@@ -467,10 +478,10 @@ function QuotePageContent() {
 												/>
 											</div>
 											<div className="space-y-2">
-												<Label htmlFor="model">Model *</Label>
+												<Label htmlFor="model">{t('form.model')}</Label>
 												<Input
 													id="model"
-													placeholder="e.g., iPhone 15 Pro, Galaxy S24, XPS 13"
+													placeholder={t('form.modelPlaceholder')}
 													required
 													value={formData.model}
 													onChange={(e) =>
@@ -482,10 +493,10 @@ function QuotePageContent() {
 
 										<div className="grid md:grid-cols-2 gap-4">
 											<div className="space-y-2">
-												<Label htmlFor="service">Requested Service (if any)</Label>
+												<Label htmlFor="service">{t('form.service')}</Label>
 												<Input
 													id="service"
-													placeholder="e.g., Screen Repair, Battery Replacement"
+													placeholder={t('form.servicePlaceholder')}
 													value={formData.service}
 													onChange={(e) =>
 														setFormData((prev) => ({ ...prev, service: e.target.value }))
@@ -493,10 +504,10 @@ function QuotePageContent() {
 												/>
 											</div>
 											<div className="space-y-2">
-												<Label htmlFor="part">Specific Part (if any)</Label>
+												<Label htmlFor="part">{t('form.part')}</Label>
 												<Input
 													id="part"
-													placeholder="e.g., Front Camera, Charging Port"
+													placeholder={t('form.partPlaceholder')}
 													value={formData.part}
 													onChange={(e) =>
 														setFormData((prev) => ({ ...prev, part: e.target.value }))
@@ -509,12 +520,12 @@ function QuotePageContent() {
 									{/* Issue Details */}
 									<div className="space-y-6">
 										<h3 className="text-lg font-semibold border-b pb-2">
-											Issue Details
+											{t('form.issueDetails.title')}
 										</h3>
 
 										<div className="space-y-4">
 											<Label>
-												What issues are you experiencing? (Check all that apply)
+												{t('form.issueDetails.issuesDescription')}
 											</Label>
 											<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
 												{[
@@ -555,10 +566,10 @@ function QuotePageContent() {
 										</div>
 
 										<div className="space-y-2">
-											<Label htmlFor="issueDescription">Detailed Description</Label>
+											<Label htmlFor="issueDescription">{t('form.issueDetails.detailedDescription')}</Label>
 											<Textarea
 												id="issueDescription"
-												placeholder="Please describe the issue in detail, when it started, and any relevant circumstances..."
+												placeholder={t('form.issueDetails.detailedDescriptionPlaceholder')}
 												rows={4}
 												value={formData.issueDescription}
 												onChange={(e) =>
@@ -570,7 +581,7 @@ function QuotePageContent() {
 
 									{/* Photo Upload */}
 									<div className="space-y-4">
-										<Label>Photos (Optional)</Label>
+										<Label>{t('form.photoUpload.label')}</Label>
 										<FileUpload
 											onUploadComplete={(fileUrl, key) => {
 												setFormData((prev) => ({
@@ -585,8 +596,8 @@ function QuotePageContent() {
 											accept="image/*"
 											maxSize={10}
 											multiple={true}
-											label="Drop photos here or click to browse"
-											description="Upload photos of the damage or issue (optional, max 10MB per file)"
+											label={t('form.photoUpload.dropZoneLabel')}
+											description={t('form.photoUpload.dropZoneDescription')}
 										/>
 										{formData.photos.length > 0 && (
 											<div className="flex flex-wrap gap-2 mt-2">
@@ -618,12 +629,12 @@ function QuotePageContent() {
 									{/* Preferences */}
 									<div className="space-y-6">
 										<h3 className="text-lg font-semibold border-b pb-2">
-											Preferences
+											{t('form.preferences.title')}
 										</h3>
 
 										<div className="grid md:grid-cols-2 gap-6">
 											<div className="space-y-2">
-												<Label>Urgency</Label>
+												<Label>{t('form.preferences.urgency')}</Label>
 												<Select
 													value={formData.urgency}
 													onValueChange={(value: "urgent" | "normal" | "flexible") =>
@@ -631,17 +642,17 @@ function QuotePageContent() {
 													}
 												>
 													<SelectTrigger>
-														<SelectValue placeholder="Select urgency level" />
+														<SelectValue placeholder={t('form.preferences.urgencyPlaceholder')} />
 													</SelectTrigger>
 													<SelectContent>
-														<SelectItem value="urgent">Urgent (Same day)</SelectItem>
-														<SelectItem value="normal">Normal (1-2 days)</SelectItem>
-														<SelectItem value="flexible">Flexible (3-5 days)</SelectItem>
+														<SelectItem value="urgent">{t('form.preferences.urgencyOptions.urgent')}</SelectItem>
+														<SelectItem value="normal">{t('form.preferences.urgencyOptions.normal')}</SelectItem>
+														<SelectItem value="flexible">{t('form.preferences.urgencyOptions.flexible')}</SelectItem>
 													</SelectContent>
 												</Select>
 											</div>
 											<div className="space-y-2">
-												<Label>Preferred Contact Method</Label>
+												<Label>{t('form.preferences.contactMethod')}</Label>
 												<Select
 													value={formData.contactMethod}
 													onValueChange={(value: "email" | "phone" | "text" | "any") =>
@@ -649,13 +660,32 @@ function QuotePageContent() {
 													}
 												>
 													<SelectTrigger>
-														<SelectValue placeholder="How should we contact you?" />
+														<SelectValue placeholder={t('form.preferences.contactMethodPlaceholder')} />
 													</SelectTrigger>
 													<SelectContent>
-														<SelectItem value="email">Email</SelectItem>
-														<SelectItem value="phone">Phone Call</SelectItem>
-														<SelectItem value="text">Text Message</SelectItem>
-														<SelectItem value="any">Any method is fine</SelectItem>
+														<SelectItem value="email">{t('form.preferences.contactMethodOptions.email')}</SelectItem>
+														<SelectItem value="phone">{t('form.preferences.contactMethodOptions.phone')}</SelectItem>
+														<SelectItem value="text">{t('form.preferences.contactMethodOptions.text')}</SelectItem>
+														<SelectItem value="any">{t('form.preferences.contactMethodOptions.any')}</SelectItem>
+													</SelectContent>
+												</Select>
+											</div>
+											{/* Quality Dropdown */}
+											<div className="space-y-2">
+												<Label>{t('device-catalog-browser.parts.quality')}</Label>
+												<Select
+													value={formData.quality}
+													onValueChange={(value) => setFormData((prev) => ({ ...prev, quality: value }))}
+												>
+													<SelectTrigger>
+														<SelectValue placeholder={t('device-catalog-browser.parts.quality')} />
+													</SelectTrigger>
+													<SelectContent>
+														<SelectItem value="OEM">{t('device-catalog-browser.parts.qualityOptions.oem')}</SelectItem>
+														<SelectItem value="Original">{t('device-catalog-browser.parts.qualityOptions.original')}</SelectItem>
+														<SelectItem value="Premium">{t('device-catalog-browser.parts.qualityOptions.premium')}</SelectItem>
+														<SelectItem value="Aftermarket">{t('device-catalog-browser.parts.qualityOptions.aftermarket')}</SelectItem>
+														<SelectItem value="Refurbished">{t('device-catalog-browser.parts.qualityOptions.refurbished')}</SelectItem>
 													</SelectContent>
 												</Select>
 											</div>
@@ -671,7 +701,7 @@ function QuotePageContent() {
 											disabled={isSubmitting}
 										>
 											<Calculator className="h-5 w-5 mr-2" />
-											{isSubmitting ? "Submitting..." : "Get My Free Quote"}
+											{isSubmitting ? t('form.submitButton.submitting') : t('form.submitButton.label')}
 										</Button>
 										{isPrePopulated && (
 											<Button
@@ -694,30 +724,30 @@ function QuotePageContent() {
 														photos: [],
 														urgency: "normal",
 														contactMethod: "email",
+														quality: '',
 													});
 												}}
 											>
-												Clear Form
+												{t('form.clearButton')}
 											</Button>
 										)}
 									</div>
 
 									<div className="text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
 										<p>
-											<strong>What happens next?</strong>
+											<strong>{t('form.nextSteps.title')}</strong>
 										</p>
 										<ul className="mt-2 space-y-1 list-disc list-inside">
 											<li>
-												We'll review your request and contact you within 2 hours
+												{t('form.nextSteps.step1')}
 											</li>
 											<li>
-												We'll provide a detailed quote via your preferred contact
-												method
+												{t('form.nextSteps.step2')}
 											</li>
 											<li>
-												If you approve, we'll schedule a convenient time for repair
+												{t('form.nextSteps.step3')}
 											</li>
-											<li>All quotes are valid for 30 days</li>
+											<li>{t('form.nextSteps.step4')}</li>
 										</ul>
 									</div>
 								</form>

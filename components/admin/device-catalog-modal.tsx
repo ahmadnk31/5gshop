@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -78,6 +78,7 @@ interface Part {
   deviceType?: string | null
   imageUrl?: string
   description?: string
+  quality?: string;
 }
 
 export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps) {
@@ -128,7 +129,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
     deviceModel: '',
     deviceType: '',
     imageUrl: '',
-    description: ''
+    description: '',
+    quality: '' // <-- Add quality
   })
 
   // Image upload states
@@ -139,6 +141,13 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   const [selectedServiceDeviceType, setSelectedServiceDeviceType] = useState<DeviceType | null>(null)
   const [showAddServiceDialog, setShowAddServiceDialog] = useState(false)
 
+  // All available models
+  const [allDevices, setAllDevices] = useState<Device[]>([])
+  const [allModels, setAllModels] = useState<string[]>([])
+
+  // Error states
+  const [deviceImageError, setDeviceImageError] = useState<string | null>(null)
+
   // Load initial data
   useEffect(() => {
     if (isOpen) {
@@ -147,6 +156,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       loadParts()
       loadServices()
       loadAvailableBrands()
+      fetchAllModels()
     }
   }, [isOpen])
 
@@ -156,6 +166,20 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       loadModelsForBrand(editingService.specificBrand)
     }
   }, [editingService])
+
+  useEffect(() => {
+    async function fetchDevices() {
+      try {
+        const devices = await getAllDevices()
+        setAllDevices(devices) // Store full device objects
+        setAllModels(Array.from(new Set(devices.map((d: any) => d.model).filter(Boolean))))
+      } catch (error) {
+        setAllDevices([])
+        setAllModels([])
+      }
+    }
+    if (isOpen) fetchDevices()
+  }, [isOpen])
 
   const loadDeviceTypes = async () => {
     try {
@@ -212,16 +236,38 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
     }
   }
 
+  const fetchAllModels = async () => {
+    try {
+      const devices = await getAllDevices()
+      // Extract unique models
+      const uniqueModels = Array.from(new Set(devices.map((d: any) => d.model).filter(Boolean)))
+      setAllModels(uniqueModels)
+    } catch (error) {
+      setAllModels([])
+    }
+  }
+
   const handleAddDevice = async () => {
+    setDeviceImageError(null)
+    if (!newDevice.imageUrl) {
+      setDeviceImageError('Please upload a device image before adding the device.')
+      return
+    }
     if (newDevice.type && newDevice.brand && newDevice.model) {
       try {
+        // Debug log
+        console.log('Creating device with:', newDevice)
         const device = await createDevice({
           type: newDevice.type as DeviceType,
           brand: newDevice.brand,
-          model: newDevice.model
+          model: newDevice.model,
+          imageUrl: newDevice.imageUrl,
+          description: newDevice.description,
         })
         setDevices([...devices, device])
         setNewDevice({ type: '', brand: '', model: '', imageUrl: '', description: '' })
+        setDeviceImageError(null)
+        onClose() // Close the modal after creation
       } catch (error) {
         console.error('Error adding device:', error)
       }
@@ -231,7 +277,10 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   const handleAddPart = async () => {
     if (newPart.name && newPart.sku) {
       try {
-        const part = await createPart(newPart)
+        const part = await createPart({
+          ...newPart,
+          quality: newPart.quality,
+        })
         setParts([...parts, part])
         setNewPart({
           name: '',
@@ -243,7 +292,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
           deviceModel: '',
           deviceType: '',
           imageUrl: '',
-          description: ''
+          description: '',
+          quality: '' // <-- Reset quality
         })
       } catch (error) {
         console.error('Error adding part:', error)
@@ -393,7 +443,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
         type: editingDevice.type,
         brand: editingDevice.brand,
         model: editingDevice.model,
-        // Add imageUrl and description when backend supports it
+        imageUrl: editingDevice.imageUrl, // <-- Fix: include imageUrl
+        description: editingDevice.description // <-- Fix: include description
       })
       setDevices(devices.map(d => d.id === editingDevice.id ? updatedDevice : d))
       setEditingDevice(null)
@@ -404,7 +455,13 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
 
   const handleUpdatePart = async () => {
     if (!editingPart) return
-    
+    let deviceModelValue = editingPart.deviceModel;
+    if (deviceModelValue && deviceModelValue !== 'all') {
+      const found = allDevices.find((d) => d.id === deviceModelValue);
+      deviceModelValue = found ? found.model : deviceModelValue;
+    } else if (deviceModelValue === 'all') {
+      deviceModelValue = undefined;
+    }
     try {
       const updatedPart = await updatePart(editingPart.id, {
         name: editingPart.name,
@@ -413,8 +470,9 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
         inStock: editingPart.inStock,
         minStock: editingPart.minStock,
         supplier: editingPart.supplier,
-        deviceModel: editingPart.deviceModel || undefined,
+        deviceModel: deviceModelValue || undefined,
         deviceType: editingPart.deviceType || undefined,
+        quality: editingPart.quality,
         // Add imageUrl and description when backend supports it
       })
       setParts(parts.map(p => p.id === editingPart.id ? updatedPart : p))
@@ -547,11 +605,18 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     rows={4}
                     className="resize-none"
                   />
+                  {deviceImageError && (
+                    <p className="text-red-600 text-sm mt-2">{deviceImageError}</p>
+                  )}
                 </div>
 
-                <Button onClick={handleAddDevice} className="h-11 text-base">
+                <Button 
+                  onClick={handleAddDevice} 
+                  className="h-11 text-base"
+                  disabled={uploadingDeviceImage || !newDevice.imageUrl}
+                >
                   <Plus className="h-5 w-5 mr-2" />
-                  Add Device
+                  {uploadingDeviceImage ? 'Uploading Image...' : 'Add Device'}
                 </Button>
               </CardContent>
             </Card>
@@ -704,12 +769,25 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                       </div>
                       <div className="space-y-3">
                         <Label className="text-base font-medium">Specific Device Model</Label>
-                        <Input
-                          placeholder="e.g., iPhone 15 Pro, Galaxy S23"
+                        <Select
                           value={newPart.deviceModel}
-                          onChange={(e) => setNewPart({ ...newPart, deviceModel: e.target.value })}
-                          className="h-11"
-                        />
+                          onValueChange={(value) => setNewPart({ ...newPart, deviceModel: value })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select model (optional)" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">Universal (All Models)</SelectItem>
+                            {(newPart.deviceType && newPart.deviceType !== 'all'
+                              ? allDevices.filter((d) => d.type === newPart.deviceType)
+                              : allDevices
+                            ).map((device) => (
+                              <SelectItem key={device.id} value={device.id}>
+                                {device.brand} {device.model}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <p className="text-sm text-gray-500">
                           Specify exact model for precise compatibility matching
                         </p>
@@ -763,6 +841,27 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                   />
                 </div>
 
+                {/* Quality Selection */}
+                <div className="space-y-2">
+                  <Label>Quality</Label>
+                  <Select
+                    value={newPart.quality}
+                    onValueChange={(value) => setNewPart({ ...newPart, quality: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select quality" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="OEM">OEM</SelectItem>
+                      <SelectItem value="Incell">Incell</SelectItem>
+                      <SelectItem value="Original">Original</SelectItem>
+                      <SelectItem value="Premium">Premium</SelectItem>
+                      <SelectItem value="Aftermarket">Aftermarket</SelectItem>
+                      <SelectItem value="Refurbished">Refurbished</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <Button onClick={handleAddPart} className="mt-4">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Part
@@ -799,6 +898,9 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                           </div>
                           <div className="text-sm text-gray-500">
                             SKU: {part.sku} • ${part.cost} • {part.supplier}
+                            {part.quality && (
+                              <span className="ml-2">• <span className="font-semibold">{part.quality}</span> quality</span>
+                            )}
                           </div>
                           {part.description && (
                             <p className="text-sm text-gray-500 mt-1">{part.description}</p>
@@ -940,7 +1042,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
 
                     {/* Brand and Model Specificity */}
                     <div className="space-y-4 border-t pt-4">
-                      <h4 className="text-base font-medium">Service Specificity (Optional)</h4>
+                      <h4 className="text-base font-medium mb-4">Service Specificity (Optional)</h4>
                       <p className="text-sm text-gray-600">
                         Leave blank for universal services, or specify to create brand/model-specific services with different pricing
                       </p>
@@ -1385,12 +1487,28 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     </div>
                     <div className="space-y-3">
                       <Label className="text-base font-medium">Specific Device Model</Label>
-                      <Input
-                        placeholder="e.g., iPhone 15 Pro, Galaxy S23"
+                      <Select
                         value={editingPart.deviceModel || ''}
-                        onChange={(e) => setEditingPart({ ...editingPart, deviceModel: e.target.value || null })}
-                        className="h-11"
-                      />
+                        onValueChange={(value) => {
+                          // If 'all', clear deviceModel; else, store device id
+                          setEditingPart({ ...editingPart, deviceModel: value === 'all' ? null : value })
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select model (optional)" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Universal (All Models)</SelectItem>
+                          {(editingPart.deviceType && editingPart.deviceType !== 'all'
+                            ? allDevices.filter((d) => d.type === editingPart.deviceType)
+                            : allDevices
+                          ).map((device) => (
+                            <SelectItem key={device.id} value={device.id}>
+                              {device.brand} {device.model}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <p className="text-sm text-gray-500">
                         Specify exact model for precise compatibility matching
                       </p>
@@ -1440,6 +1558,26 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                   onChange={(e) => setEditingPart({ ...editingPart, description: e.target.value })}
                   rows={3}
                 />
+              </div>
+
+              {/* Quality Selection */}
+              <div className="space-y-2">
+                <Label>Quality</Label>
+                <Select
+                  value={editingPart.quality || ''}
+                  onValueChange={(value) => setEditingPart({ ...editingPart, quality: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select quality" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="OEM">OEM</SelectItem>
+                    <SelectItem value="Original">Original</SelectItem>
+                    <SelectItem value="Premium">Premium</SelectItem>
+                    <SelectItem value="Aftermarket">Aftermarket</SelectItem>
+                    <SelectItem value="Refurbished">Refurbished</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

@@ -31,6 +31,8 @@ import { getAccessoriesWithFiltersPaginated } from "@/app/actions/pagination-act
 import { Accessory, AccessoryCategory } from "@/lib/types";
 import { useTranslations } from "next-intl";
 import { formatCurrency } from "@/lib/utils";
+import { useCart } from "@/components/cart-context";
+
 // Category configurations matching the database schema
 const getCategoryConfigs = (t: any) => ({
   CASE: { icon: Shield, label: t('accessories.categories.labels.CASE') },
@@ -80,6 +82,7 @@ export default function AccessoriesPagePaginated() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslations();
+  const { addToCart } = useCart();
   
   // State
   const [accessories, setAccessories] = useState<Accessory[]>([]);
@@ -382,6 +385,11 @@ export default function AccessoriesPagePaginated() {
     );
   }
 
+  // Helper for low stock
+  function isLowStock(accessory: Accessory) {
+    return accessory.inStock > 0 && accessory.inStock <= (accessory.minStock || 1);
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -664,10 +672,9 @@ export default function AccessoriesPagePaginated() {
               : "space-y-4 mb-8"
             }>
               {accessories.map((accessory) => {
-                const categoryConfig = categoryConfigs[accessory.category as keyof typeof categoryConfigs];
-                const IconComponent = categoryConfig?.icon || Package;
-                const isLowStock = accessory.inStock <= accessory.minStock;
-
+                const categoryConfig = categoryConfigs[accessory.category];
+                const IconComponent = categoryConfig?.icon || Box;
+                const lowStock = isLowStock(accessory);
                 return (
                   <Card key={accessory.id} className="hover:shadow-lg transition-shadow group">
                     <CardHeader className="p-0">
@@ -688,7 +695,7 @@ export default function AccessoriesPagePaginated() {
                             </div>
                           )}
                         </div>
-                        {isLowStock && (
+                        {lowStock && (
                           <Badge 
                             variant="destructive" 
                             className="absolute top-2 right-2"
@@ -728,13 +735,27 @@ export default function AccessoriesPagePaginated() {
                           {categoryConfig?.label || accessory.category}
                         </Badge>
 
-                        {/* Action Button */}
-                        <Link href={`/accessories/${accessory.id}`}>
-                          <Button className="w-full mt-4">
+                        {/* Action Buttons */}
+                        <div className="flex flex-col gap-2 mt-4">
+                          <Button
+                            className="w-full"
+                            variant="secondary"
+                            onClick={() => addToCart({
+                              id: accessory.id,
+                              name: accessory.name,
+                              price: accessory.price,
+                              image: accessory.imageUrl || undefined,
+                            })}
+                          >
                             <ShoppingCart className="h-4 w-4 mr-2" />
-                            {t('accessories.product.viewDetails')}
+                            {t('accessories.product.addToCart', { defaultValue: 'Add to Cart' })}
                           </Button>
-                        </Link>
+                          <Link href={`/accessories/${accessory.id}`}>
+                            <Button className="w-full">
+                              {t('accessories.product.viewDetails')}
+                            </Button>
+                          </Link>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

@@ -18,8 +18,8 @@ export function FallbackImage({
   src,
   alt,
   fill,
-  width,
-  height,
+  width=200,
+  height=200,
   className,
   sizes,
   fallbackContent
@@ -31,24 +31,32 @@ export function FallbackImage({
     return <>{fallbackContent}</>;
   }
 
+  // Only pass width/height if fill is not set
+  const imageProps: any = {
+    src,
+    alt,
+    className,
+    sizes,
+    onError: (e: any) => {
+      console.log('Image failed to load:', src);
+      setImageError(true);
+    },
+    onLoad: () => {
+      setImageLoaded(true);
+    },
+  };
+  if (fill) {
+    imageProps.fill = true;
+    imageProps.style = { objectFit: 'contain', ...imageProps.style };
+  } else {
+    imageProps.width = width;
+    imageProps.height = height;
+    imageProps.style = { objectFit: 'contain', ...imageProps.style };
+  }
+
   return (
     <>
-      <Image
-        src={src}
-        alt={alt}
-        fill={fill}
-        width={width}
-        height={height}
-        className={className}
-        sizes={sizes}
-        onError={(e) => {
-          console.log('Image failed to load:', src);
-          setImageError(true);
-        }}
-        onLoad={() => {
-          setImageLoaded(true);
-        }}
-      />
+      <Image {...imageProps} />
       {!imageLoaded && !imageError && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse" />
       )}

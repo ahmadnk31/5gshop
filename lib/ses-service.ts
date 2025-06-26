@@ -446,6 +446,7 @@ export class SESService {
     urgency: string;
     contactMethod: string;
     photos: Array<{ url: string; key: string }>;
+    quality?: string;
   }) {
     const subject = `New Quote Request - ${data.brand} ${data.model}`;
     const htmlBody = `
@@ -490,6 +491,12 @@ export class SESService {
                 <div class="field">
                   <div class="label">Specific Part:</div>
                   <div class="value">${data.part}</div>
+                </div>
+                ` : ''}
+                ${data.quality ? `
+                <div class="field">
+                  <div class="label">Part Quality:</div>
+                  <div class="value">${data.quality}</div>
                 </div>
                 ` : ''}
               </div>
@@ -559,6 +566,7 @@ export class SESService {
       Device: ${data.brand} ${data.model} (${data.deviceType})
       ${data.service ? `Service: ${data.service}` : ''}
       ${data.part ? `Part: ${data.part}` : ''}
+      ${data.quality ? `Quality: ${data.quality}` : ''}
       
       Issue Description:
       ${data.issueDescription}
@@ -623,6 +631,7 @@ export class SESService {
     deviceInfo: string;
     serviceRequested: string;
     urgency: string;
+    quality?: string;
   }) {
     const subject = `Quote Request Received - ${data.deviceInfo}`;
     const htmlBody = `
@@ -651,6 +660,7 @@ export class SESService {
               <div class="highlight">
                 <strong>Thank you for your quote request!</strong><br>
                 We've received your request for <strong>${data.serviceRequested}</strong> on your <strong>${data.deviceInfo}</strong>.
+                ${data.quality ? `<br><span><strong>Selected Part Quality:</strong> ${data.quality}</span>` : ''}
               </div>
 
               <div class="next-steps">
@@ -694,6 +704,7 @@ export class SESService {
       
       Thank you for your quote request!
       We've received your request for ${data.serviceRequested} on your ${data.deviceInfo}.
+      ${data.quality ? `\nSelected Part Quality: ${data.quality}` : ''}
       
       What happens next:
       1. Review (within 2 hours): Our technicians will review your request
@@ -1012,5 +1023,95 @@ This email was sent from 5gphones.be in response to your quote request.
       }
       throw new Error(`Reset email failed: ${error instanceof Error ? error.message : 'Unknown AWS error'}`);
     }
+  }
+
+  static async sendRawEmail({ to, subject, html, text }: { to: string; subject: string; html: string; text?: string }) {
+    const command = new SendEmailCommand({
+      Source: this.fromEmail,
+      Destination: { ToAddresses: [to] },
+      Message: {
+        Subject: { Data: subject, Charset: "UTF-8" },
+        Body: {
+          Html: { Data: html, Charset: "UTF-8" },
+          Text: { Data: text || html.replace(/<[^>]+>/g, ""), Charset: "UTF-8" },
+        },
+      },
+    });
+    if (mockEmailMode) {
+      return this.mockSendEmail({ email: to, message: text || html, subject }, 'GENERIC_EMAIL');
+    }
+    try {
+      return await sesClient.send(command);
+    } catch (error) {
+      console.error("Failed to send generic email:", error);
+      if (isDevelopment) {
+        return this.mockSendEmail({ email: to, message: text || html, subject }, 'GENERIC_EMAIL_FALLBACK');
+      }
+      throw error;
+    }
+  }
+
+  static async sendOrderStatusEmail({
+    to,
+    status,
+    orderId,
+    order,
+    products
+  }: {
+    to: string;
+    status: string;
+    orderId: string;
+    order: any;
+    products: Array<{ name: string; image?: string; quantity: number; price: number }>;
+  }) {
+    let subject = `Your order #${orderId.slice(-6)} status update`;
+    let statusMsg = '';
+    if (status === 'ready') statusMsg = 'Your order is ready for pickup!';
+    else if (status === 'shipped') statusMsg = 'Your order has been shipped!';
+    else if (status === 'finished') statusMsg = 'Your order is complete!';
+    else if (status === 'paid') statusMsg = 'Your payment was received.';
+    else if (status === 'created') statusMsg = 'Your order was created.';
+    else if (status === 'failed') statusMsg = 'There was a problem with your order.';
+    else if (status === 'refunded') statusMsg = 'Your order was refunded.';
+    else statusMsg = `Order status: ${status}`;
+
+    const productRows = products.map(p => `
+      <tr>
+        <td style="padding:8px; border:1px solid #eee; text-align:center;">
+          ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;" />` : ''}
+        </td>
+        <td style="padding:8px; border:1px solid #eee;">${p.name}</td>
+        <td style="padding:8px; border:1px solid #eee; text-align:center;">${p.quantity}</td>
+        <td style="padding:8px; border:1px solid #eee; text-align:right;">€${(p.price / 100).toFixed(2)}</td>
+      </tr>
+    `).join('');
+
+    const html = `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <h2 style="background:#4f46e5;color:white;padding:16px 24px;border-radius:8px 8px 0 0;">Order Update</h2>
+        <div style="background:#f9fafb;padding:24px;border-radius:0 0 8px 8px;">
+          <p>Hello,</p>
+          <p>${statusMsg}</p>
+          <h3 style="margin-top:24px;">Order Details</h3>
+          <table style="width:100%;border-collapse:collapse;margin-top:12px;">
+            <thead>
+              <tr>
+                <th style="padding:8px;border:1px solid #eee;">Image</th>
+                <th style="padding:8px;border:1px solid #eee;">Product</th>
+                <th style="padding:8px;border:1px solid #eee;">Qty</th>
+                <th style="padding:8px;border:1px solid #eee;">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${productRows}
+            </tbody>
+          </table>
+          <p style="margin-top:24px;">Order total: <strong>€${(order.amount / 100).toFixed(2)}</strong></p>
+          <p style="color:#6b7280;font-size:13px;margin-top:24px;">Thank you for shopping with us!</p>
+        </div>
+      </div>
+    `;
+    const text = `Order status: ${statusMsg}\n\nProducts:\n${products.map(p => `- ${p.name} x${p.quantity} (€${(p.price / 100).toFixed(2)})`).join('\n')}\nOrder total: €${(order.amount / 100).toFixed(2)}`;
+    return this.sendRawEmail({ to, subject, html, text });
   }
 }

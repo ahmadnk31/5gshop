@@ -18,11 +18,21 @@ export async function createDevice(data: {
   type: DeviceType;
   brand: string;
   model: string;
+  imageUrl?: string;
+  description?: string;
   serialNumber?: string;
   purchaseDate?: string;
 }) {
   try {
-    const device = await DatabaseService.createDevice(data);
+    const device = await DatabaseService.createDevice({
+      type: data.type,
+      brand: data.brand,
+      model: data.model,
+      imageUrl: data.imageUrl,
+      description: data.description,
+      serialNumber: data.serialNumber,
+      purchaseDate: data.purchaseDate,
+    });
     revalidatePath("/admin");
     return device;
   } catch (error) {
@@ -37,6 +47,8 @@ export async function updateDevice(deviceId: string, data: {
   model?: string;
   serialNumber?: string;
   purchaseDate?: string;
+  imageUrl?: string; // <-- Add imageUrl
+  description?: string; // <-- Add description
 }) {
   try {
     const device = await DatabaseService.updateDevice(deviceId, data);
@@ -77,6 +89,7 @@ export async function createPart(data: {
   supplier: string;
   deviceModel?: string;
   deviceType?: string;
+  quality?: string; // Add quality
 }) {
   try {
     const part = await DatabaseService.createPart(data);
@@ -97,6 +110,7 @@ export async function updatePart(partId: string, data: {
   supplier?: string;
   deviceModel?: string;
   deviceType?: string;
+  quality?: string; // Add quality
 }) {
   try {
     const part = await DatabaseService.updatePart(partId, data);

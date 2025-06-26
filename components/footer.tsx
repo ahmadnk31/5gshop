@@ -5,6 +5,7 @@ import { CookiePreferencesButton } from "./cookie-preferences-button";
 import { TrackablePhoneLink } from "./analytics-components";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
+import { LanguageSelector } from "./language-selector";
 
 export function Footer() {
   const t = useTranslations('footer');
@@ -32,6 +33,7 @@ export function Footer() {
             <p className="text-gray-400 text-sm">
               {t('description')}
             </p>
+            <LanguageSelector />
           </div>
 
           {/* Quick Links */}

@@ -715,7 +715,6 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
                     } else {
                       ;(card as HTMLElement).style.display = 'none'
                     }
-                    
                     // Hide series if no models are visible
                     if (seriesContainer) {
                       const visibleCards = seriesContainer.querySelectorAll('[data-model-card]:not([style*="display: none"])')
@@ -730,35 +729,45 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
           {(() => {
             // Group models by series (e.g., iPhone 14, iPhone 15)
             const modelGroups: Record<string, string[]> = {}
-            
             models.forEach(model => {
-              // Extract base model name (e.g., "iPhone 14" from "iPhone 14 Pro Max")
               let baseModel = model
-              
-              // Handle iPhone series grouping
               if (model.includes('iPhone')) {
                 const match = model.match(/iPhone (\d+)/)
-                if (match) {
-                  baseModel = `iPhone ${match[1]}`
-                }
+                if (match) baseModel = `iPhone ${match[1]}`
+              } else if (model.includes('Galaxy S')) {
+                const match = model.match(/Galaxy S(\d+)/)
+                if (match) baseModel = `Galaxy S${match[1]}`
+              } else if (model.includes('MacBook')) {
+                baseModel = model.split(' ').slice(0, 2).join(' ')
+              } else if (model.includes('iPad')) {
+                baseModel = model.split(' ').slice(0, 2).join(' ')
+              } else if (model.includes('Watch')) {
+                baseModel = model.split(' ').slice(0, 3).join(' ')
               }
-              // Handle other potential series (MacBook, iPad, etc.)
-              else if (model.includes('MacBook')) {
-                baseModel = model.split(' ').slice(0, 2).join(' ') // "MacBook Pro"
-              }
-              else if (model.includes('iPad')) {
-                baseModel = model.split(' ').slice(0, 2).join(' ') // "iPad Pro"
-              }
-              else if (model.includes('Watch')) {
-                baseModel = model.split(' ').slice(0, 3).join(' ') // "Watch Series 8"
-              }
-              
-              if (!modelGroups[baseModel]) {
-                modelGroups[baseModel] = []
-              }
+              if (!modelGroups[baseModel]) modelGroups[baseModel] = []
               modelGroups[baseModel].push(model)
             })
-            
+            // Custom sort for each series: latest to oldest
+            const sortModels = (series: string[], base: string) => {
+              // iPhone: extract number, sort desc
+              if (base.startsWith('iPhone')) {
+                return series.sort((a, b) => {
+                  const anum = parseInt(a.replace(/[^\d]/g, ''))
+                  const bnum = parseInt(b.replace(/[^\d]/g, ''))
+                  return bnum - anum
+                })
+              }
+              // Galaxy S: extract number, sort desc
+              if (base.startsWith('Galaxy S')) {
+                return series.sort((a, b) => {
+                  const anum = parseInt(a.replace(/[^\d]/g, ''))
+                  const bnum = parseInt(b.replace(/[^\d]/g, ''))
+                  return bnum - anum
+                })
+              }
+              // Default: alphabetical
+              return series.sort((a, b) => a.localeCompare(b))
+            }
             return Object.entries(modelGroups).map(([seriesName, seriesModels]) => (
               <div key={seriesName} className="space-y-4" data-series-container>
                 <h4 className="text-lg font-semibold text-gray-800 border-b pb-2">
@@ -768,10 +777,8 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
                   </span>
                 </h4>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {seriesModels.map((model) => {
-                    // Find device with image for this model
+                  {sortModels([...seriesModels], seriesName).map((model) => {
                     const deviceWithImage = devices.find(device => device.model === model)
-                    
                     return (
                       <Card 
                         key={model}
@@ -868,6 +875,10 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
                           <span>{t('parts.supplier')}:</span>
                           <span>{part.supplier}</span>
                         </div>
+                        <div className="flex justify-between text-sm">
+                          <span>{t('parts.quality')}:</span>
+                          <span>{part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}</span>
+                        </div>
                         <div className="pt-2">
                           <Button asChild size="sm" className="w-full">
                             <Link href={`/quote?deviceType=${selectedType || ''}&brand=${encodeURIComponent(selectedBrand || '')}&model=${encodeURIComponent(selectedModel || '')}&part=${encodeURIComponent(part.name)}`}>
@@ -908,7 +919,7 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
                       {service.name}
                     </CardTitle>
                     <CardDescription>
-                      {t('services.forModel', { brand: selectedBrand, model: selectedModel })}
+                      {t('services.forModel', { brand: selectedBrand || '', model: selectedModel || '' })}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>

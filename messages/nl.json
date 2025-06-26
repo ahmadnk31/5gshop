@@ -1,0 +1,1031 @@
+{
+  "homepage": {
+    "hero": {
+      "title": "Welkom bij 5gphones Leuven",
+      "subtitle": "Uw one-stop bestemming voor apparaat reparaties en premium accessoires"
+    },
+    "services": {
+      "title": "Onze Diensten",
+      "repairs": {
+        "title": "Apparaat Reparaties",
+        "description": "Professionele reparatieservices voor al uw apparaten",
+        "features": {
+          "screenReplacements": "Schermvervangingen",
+          "batteryReplacements": "Batterijvervangingen",
+          "waterDamageRepair": "Waterschade reparatie",
+          "softwareTroubleshooting": "Softwareproblemen oplossen"
+        },
+        "learnMore": "Meer informatie"
+      },
+      "accessories": {
+        "title": "Accessoires",
+        "description": "Premium accessoires voor al uw apparaten",
+        "features": {
+          "casesProtectors": "Telefoonhoesjes & schermbeschermers",
+          "chargersCables": "Opladers & kabels",
+          "wirelessAccessories": "Draadloze accessoires",
+          "audioAccessories": "Audio accessoires"
+        },
+        "shopNow": "Nu winkelen"
+      }
+    },
+    "featuredAccessories": {
+      "title": "Uitgelichte Accessoires",
+      "viewAll": "Alles bekijken",
+      "inStock": "{count} op voorraad",
+      "viewDetails": "Bekijk details"
+    },
+    "popularServices": {
+      "title": "Populaire Reparatieservices",
+      "viewAllServices": "Alle services bekijken",
+      "starting": "vanaf",
+      "bookNow": "Nu boeken"
+    },
+    "deviceCategories": {
+      "title": "Apparaatcategorieën",
+      "smartphones": {
+        "name": "Smartphones",
+        "description": "iPhone, Samsung, Google & meer"
+      },
+      "laptops": {
+        "name": "Laptops",
+        "description": "MacBook, Windows laptops"
+      },
+      "tablets": {
+        "name": "Tablets",
+        "description": "iPad, Android tablets"
+      },
+      "smartwatches": {
+        "name": "Smartwatches",
+        "description": "Apple Watch, Samsung Galaxy Watch"
+      },
+      "modelsSupported": "{count} modellen ondersteund"
+    },
+    "whyChooseUs": {
+      "title": "Waarom voor ons kiezen?",
+      "fastService": {
+        "title": "Snelle Service",
+        "description": "De meeste reparaties binnen 24-48 uur voltooid"
+      },
+      "qualityGuarantee": {
+        "title": "Kwaliteitsgarantie",
+        "description": "90 dagen garantie op alle reparaties en onderdelen"
+      },
+      "expertTechnicians": {
+        "title": "Expert Technici",
+        "description": "Gecertificeerde professionals met jarenlange ervaring"
+      }
+    },
+    "testimonials": {
+      "title": "Wat onze klanten zeggen",
+      "customers": [
+        {
+          "name": "Sarah Johnson",
+          "review": "Geweldige service! Mijn iPhone-scherm was binnen 2 uur gerepareerd en ziet er als nieuw uit. De prijs was ook zeer redelijk.",
+          "service": "iPhone 13 Schermreparatie",
+          "date": "2 weken geleden"
+        },
+        {
+          "name": "Mike Chen",
+          "review": "Professionele en snelle service. Mijn laptop was traag en ze hebben hem perfect geoptimaliseerd. Zeker een aanrader!",
+          "service": "Laptop Prestatie Optimalisatie",
+          "date": "1 maand geleden"
+        },
+        {
+          "name": "Emily Rodriguez",
+          "review": "Groot aanbod accessoires en uitstekende klantenservice. Het perfecte hoesje voor mijn nieuwe telefoon gevonden.",
+          "service": "Telefoonhoesje Aankoop",
+          "date": "3 weken geleden"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Klaar om te beginnen?",
+      "subtitle": "Boek een reparatie of bekijk onze accessoires vandaag nog",
+      "contactUs": "Neem contact op",
+      "learnMore": "Meer informatie"
+    }
+  },
+  "navigation": {
+    "home": "Home",
+    "repairs": "Reparaties",
+    "accessories": "Accessoires",
+    "about": "Over",
+    "contact": "Contact",
+    "getQuote": "Offerte aanvragen",
+    "quote": "Offerte",
+    "login": "Inloggen",
+    "register": "Registreren",
+    "account": "Account",
+    "logout": "Uitloggen",
+    "profile": "Profiel",
+    "settings": "Instellingen",
+    "cart": "Winkelwagen",
+    "myOrders": "Mijn bestellingen",
+    "search": "Zoeken",
+    "searchPlaceholder": "Zoek naar reparaties of accessoires...",
+    "allRepairs": "Alle reparaties",
+    "allAccessories": "Alle accessoires",
+    "deviceTypes": "Apparaattypen",
+    "categories": "Categorieën",
+    "adminDashboard": "Admin Dashboard",
+    "devices": {
+      "smartphones": "Smartphones",
+      "tablets": "Tablets",
+      "laptops": "Laptops",
+      "smartwatches": "Smartwatches",
+      "desktops": "Desktops",
+      "gamingConsoles": "Gameconsoles",
+      "otherDevices": "Andere apparaten"
+    },
+    "accessoryCategories": {
+      "casesCovers": "Hoesjes & Covers",
+      "chargersPower": "Opladers & Stroom",
+      "cablesAdapters": "Kabels & Adapters",
+      "audioHeadphones": "Audio & Hoofdtelefoons",
+      "screenProtection": "Schermbescherming",
+      "speakers": "Luidsprekers",
+      "cameraPhoto": "Camera & Foto"
+    }
+  },
+  "footer": {
+    "description": "Uw vertrouwde partner voor apparaat reparaties en premium accessoires. Professionele service met een persoonlijke touch.",
+    "quickLinks": {
+      "title": "Snelle links",
+      "deviceRepairs": "Apparaat reparaties",
+      "accessories": "Accessoires",
+      "getQuote": "Offerte aanvragen",
+      "aboutUs": "Over ons"
+    },
+    "contactInfo": {
+      "title": "Contactinformatie",
+      "address": "Bondgenotenlaan 84A, Leuven",
+      "phone": "+32 467 87 12 05",
+      "email": "info@5gphones.be"
+    },
+    "businessHours": {
+      "title": "Openingstijden",
+      "mondayFriday": "Maandag - Vrijdag: 10:00 - 18:00",
+      "saturday": "Zaterdag: 10:00 - 18:30",
+      "sunday": "Zondag: gesloten"
+    },
+    "legal": {
+      "privacyPolicy": "Privacybeleid",
+      "termsOfService": "Gebruiksvoorwaarden",
+      "contactUs": "Neem contact op"
+    },
+    "copyright": "Alle rechten voorbehouden.",
+    "poweredBy": "Aangedreven door Next JS en Tailwind CSS"
+  },
+  "device-catalog-browser": {
+    "breadcrumbs": {
+      "deviceTypes": "Apparaattypen",
+      "brands": "Merken",
+      "models": "Modellen",
+      "parts": "Onderdelen",
+      "services": "Reparatieservices"
+    },
+    "filter": {
+      "filteredBy": "Gefilterd op: {type}",
+      "showing": "Toont alleen {type} apparaten",
+      "showAllDevices": "Alle apparaten weergeven"
+    },
+    "search": {
+      "resultsTitle": "{type} zoekresultaten",
+      "resultsFound": "{count} reparatieservice(s) {type, select, undefined {} other {voor {type}}} gevonden die overeenkomen met \"{search}\"",
+      "filteredBy": "Gefilterd op: {type}",
+      "searchAll": "Alle apparaattypen doorzoeken",
+      "browseAll": "Alle apparaattypen bekijken",
+      "noResults": "Geen resultaten gevonden",
+      "noResultsDesc": "Geen reparatieservices gevonden die overeenkomen met \"{search}\".",
+      "browseAllCta": "Alle services bekijken"
+    },
+    "types": {
+      "browse": "Blader door {type} reparaties en onderdelen",
+      "selected": "{type} geselecteerd",
+      "selectedDesc": "U heeft genavigeerd naar {type}. Kies een merk om verder te gaan of bekijk alle apparaattypen.",
+      "continue": "Doorgaan met {type}",
+      "showAll": "Alle types weergeven"
+    },
+    "brands": {
+      "viewModels": "Bekijk {brand} {type} modellen"
+    },
+    "models": {
+      "series": "{brand} {series} serie",
+      "model": "Model {count}",
+      "count": "({count} model{count, plural, one {} other {len}})",
+      "viewParts": "Bekijk beschikbare onderdelen en reparaties voor {brand} {model}",
+      "filterPlaceholder": "Modellen filteren...",
+      "selectModel": "Selecteer een model om onderdelen en services te bekijken",
+      "noModelsFound": "Geen modellen gevonden voor dit merk. Selecteer een ander merk of kom later terug.",
+      "noModelsAvailable": "Geen modellen beschikbaar voor dit merk op dit moment. Kom later terug of neem contact met ons op."
+    },
+    "parts": {
+      "available": "Beschikbare onderdelen",
+      "stock": "Voorraad:",
+      "price": "Prijs:",
+      "supplier": "Leverancier:",
+      "quality": "Kwaliteit",
+      "unknownQuality": "Onbekend",
+      "qualityOptions": {
+        "oem": "OEM",
+        "original": "Origineel",
+        "premium": "Premium",
+        "aftermarket": "Aftermarket",
+        "incell": "Incell",
+        "refurbished": "Gereviseerd"
+      },
+      "inStock": "Op voorraad",
+      "outOfStock": "Niet op voorraad",
+      "units": "Eenheden",
+
+      "requestQuote": "Offerte aanvragen",
+      "noParts": "Geen onderdelen beschikbaar voor dit model.",
+      "contactForParts": "Neem contact op als u een onderdeel nodig heeft dat niet wordt vermeld.",
+      "contactUs": "Contact opnemen"
+    },
+    "services": {
+      "available": "Reparatieservices",
+      "estimatedCost": "Geschatte kosten:",
+      "startingAt": "Vanaf {price}",
+      "estimatedTime": "Geschatte tijd:",
+      "minutes": "{minutes} minuten",
+      "getQuote": "Gedetailleerde offerte aanvragen",
+      "getQuoteShort": "Offerte aanvragen",
+      "forModel": "voor {brand} {model}",
+      "noServicesFound": "Geen reparatieservices gevonden voor dit model. Kom later terug of neem contact met ons op.",
+      "noServicesAvailable": "Geen services beschikbaar voor dit model op dit moment. Kom later terug of neem contact met ons op.",
+      "getDetailedQuote": "Gedetailleerde offerte aanvragen voor"
+    },
+    "navigation": {
+      "back": "Terug"
+    },
+    "tabs": {
+      "brands": "Merken",
+      "repairServices": "Reparatieservices",
+      "availableParts": "Beschikbare onderdelen",
+      "availableServices": "Beschikbare services"
+    }
+  },
+  "relatedProducts": {
+    "title": "Gerelateerde producten",
+    "description": "Ontdek meer hoogwaardige accessoires voor uw toestelsetup",
+    "viewDetails": "Bekijk details",
+    "viewAllAccessories": "Alle accessoires bekijken",
+    "productImage": "Productafbeelding"
+  },
+  "specifications": {
+    "title": "Productspecificaties",
+    "productName": "Productnaam",
+    "brand": "Merk",
+    "model": "Model",
+    "category": "Categorie",
+    "price": "Prijs",
+    "availability": "Beschikbaarheid",
+    "compatibility": "Compatibiliteit",
+    "productId": "Product-ID",
+    "outOfStock": "Niet op voorraad"
+  },
+  "categories": {
+    "CASE": "Hoesjes & covers",
+    "CHARGER": "Opladers & stroom",
+    "CABLE": "Kabels & adapters",
+    "HEADPHONES": "Audio & hoofdtelefoons",
+    "SCREEN_PROTECTOR": "Schermbescherming",
+    "KEYBOARD": "Toetsenborden",
+    "MOUSE": "Muizen & trackpads",
+    "STYLUS": "Stylus & pennen",
+    "STAND": "Standaards & houders",
+    "MOUNT": "Beugels & houders",
+    "OTHER": "Overige accessoires"
+  },
+  "repairs": {
+    "meta": {
+      "title": "Professionele apparaat reparatieservices",
+      "description": "Expert technici, kwaliteitsonderdelen en snelle doorlooptijden voor al uw reparatiebehoeften"
+    },
+    "hero": {
+      "title": "Professionele apparaat reparatieservices",
+      "description": "Expert technici, kwaliteitsonderdelen en snelle doorlooptijden voor al uw reparatiebehoeften",
+      "cta": "Gratis offerte aanvragen"
+    },
+    "searchResults": {
+      "title": "Zoekresultaten voor \"{searchTerm}\"",
+      "description": "Toon reparatieservices die overeenkomen met uw zoekopdracht",
+      "clearSearch": "Zoekopdracht wissen"
+    },
+    "deviceBrowser": {
+      "title": "Blader door apparaten & reparaties",
+      "description": "Vind uw apparaat, bekijk beschikbare onderdelen en krijg een prijsinschatting voor reparaties"
+    },
+    "whyChooseUs": {
+      "title": "Waarom kiezen voor onze reparatieservice?",
+      "features": {
+        "expertTechnicians": {
+          "title": "Expert technici",
+          "description": "Gecertificeerde professionals met jarenlange ervaring"
+        },
+        "qualityGuarantee": {
+          "title": "Kwaliteitsgarantie",
+          "description": "90 dagen garantie op alle reparaties en onderdelen"
+        },
+        "fastTurnaround": {
+          "title": "Snelle doorlooptijd",
+          "description": "De meeste reparaties binnen 24-48 uur voltooid"
+        },
+        "qualityParts": {
+          "title": "Kwaliteitsonderdelen",
+          "description": "Alleen OEM en hoogwaardige aftermarket onderdelen"
+        }
+      }
+    },
+    "popularServices": {
+      "title": "Populaire reparatieservices",
+      "warranty": "{days} dagen garantie",
+      "timeframe": "{time} minuten"
+    },
+    "process": {
+      "title": "Ons reparatieproces",
+      "steps": {
+        "diagnosis": {
+          "title": "Diagnose",
+          "description": "Gratis diagnose om het exacte probleem met uw apparaat te identificeren"
+        },
+        "quote": {
+          "title": "Offerte",
+          "description": "Transparante prijzen zonder verborgen kosten - u keurt goed voordat we starten"
+        },
+        "repair": {
+          "title": "Reparatie",
+          "description": "Vakkundige reparatie met kwaliteitsonderdelen en uitgebreide tests"
+        }
+      }
+    },
+    "pricing": {
+      "title": "Reparatieprijzen per apparaat",
+      "commonRepairs": "{deviceType} veelvoorkomende reparaties",
+      "commonRepairsDescription": "Populaire reparatieservices voor {deviceType}s",
+      "additionalServices": "Aanvullende diensten",
+      "additionalServicesDescription": "Meer reparatieopties beschikbaar",
+      "noServicesFound": {
+        "title": "Geen services gevonden",
+        "description": "Er zijn momenteel geen reparatieservices beschikbaar voor {deviceType}s.",
+        "cta": "Neem contact op voor een aangepaste service"
+      },
+      "disclaimer": "Prijzen kunnen variëren afhankelijk van het model en de staat van het apparaat. Vraag een nauwkeurige offerte aan voor uw specifieke apparaat.",
+      "cta": "Persoonlijke offerte aanvragen"
+    },
+    "finalCta": {
+      "title": "Klaar om uw apparaat te laten repareren?",
+      "description": "Vraag een gratis offerte aan en ontvang snelle, professionele service",
+      "primaryCta": "Gratis offerte aanvragen",
+      "secondaryCta": "Neem contact op"
+    },
+    "deviceTypes": {
+      "smartphone": "Smartphone",
+      "tablet": "Tablet",
+      "laptop": "Laptop",
+      "smartwatch": "Smartwatch",
+      "desktop": "Desktop",
+      "gamingConsole": "Gameconsole",
+      "other": "Ander apparaat"
+    },
+    "loading": "Laden..."
+  },
+  "accessories": {
+    "title": "Premium apparaat accessoires",
+    "subtitle": "Verbeter uw apparaten met onze zorgvuldig geselecteerde collectie hoogwaardige accessoires",
+    "features": {
+      "freeShipping": "Gratis verzending",
+      "qualityGuarantee": "Kwaliteitsgarantie",
+      "easyReturns": "Gemakkelijk retourneren"
+    },
+    "search": {
+      "placeholder": "Zoek accessoires...",
+      "loading": "Laden...",
+      "pressEnter": "Druk op Enter of klik om te zoeken naar \"{query}\"",
+      "searchResults": "Zoekresultaten",
+      "found": "{count} accessoires gevonden"
+    },
+    "categories": {
+      "title": "Winkel per categorie",
+      "titleFiltered": "Categorieën",
+      "showAll": "Alle categorieën weergeven",
+      "items": "{count} items",
+      "labels": {
+        "CASE": "Hoesjes & covers",
+        "CHARGER": "Opladers & stroom",
+        "CABLE": "Kabels & adapters",
+        "HEADPHONES": "Audio & hoofdtelefoons",
+        "SCREEN_PROTECTOR": "Schermbescherming",
+        "KEYBOARD": "Toetsenborden",
+        "MOUSE": "Muizen & trackpads",
+        "STYLUS": "Stylus & pennen",
+        "STAND": "Standaards & houders",
+        "MOUNT": "Beugels & houders",
+        "OTHER": "Overige accessoires"
+      },
+      
+      "descriptions": {
+        "CASE": "Hoogwaardige hoesjes & covers",
+        "CHARGER": "Hoogwaardige opladers & stroom",
+        "CABLE": "Hoogwaardige kabels & adapters",
+        "HEADPHONES": "Hoogwaardige audio & hoofdtelefoons",
+        "SCREEN_PROTECTOR": "Hoogwaardige schermbescherming",
+        "KEYBOARD": "Hoogwaardige toetsenborden",
+        "MOUSE": "Hoogwaardige muizen & trackpads",
+        "STYLUS": "Hoogwaardige stylus & pennen",
+        "STAND": "Hoogwaardige standaards & houders",
+        "MOUNT": "Hoogwaardige beugels & houders",
+        "OTHER": "Hoogwaardige overige accessoires"
+      }
+    },
+    "filters": {
+      "clear": "Wissen",
+      "clearAll": "Alle filters wissen",
+      "category": "Categorie: {category}",
+      "searchFilter": "Zoek: \"{query}\""
+    },
+    "sorting": {
+      "name": "Naam",
+      "price": "Prijs",
+      "stock": "Voorraad",
+      "dateAdded": "Datum toegevoegd"
+    },
+    "product": {
+      "viewDetails": "Bekijk details",
+      "inStock": "{count} op voorraad",
+      "lowStock": "Lage voorraad",
+      "productImage": "Productafbeelding",
+        "addToCart": "Toevoegen aan winkelwagen",
+        "buyNow": "Nu kopen"
+    },
+    "results": {
+      "title": "Alle accessoires",
+      "noResults": {
+        "title": "Geen accessoires gevonden",
+        "message": "Probeer uw zoekcriteria aan te passen of blader door onze categorieën.",
+        "messageNoFilters": "We voegen binnenkort accessoires toe!"
+      }
+    },
+    "loading": {
+      "message": "Accessoires laden..."
+    },
+    "cart": {
+      "title": "Winkelwagen",
+      "empty": "Je winkelwagen is leeg.",
+      "total": "Totaal",
+      "addToCart": "Toevoegen aan winkelwagen",
+      "buyNow": "Nu kopen",
+      "checkout": "Afrekenen",
+      "clear": "Winkelwagen legen"
+    }
+  },
+  "navigationAccessory": {
+    "home": "Huis",
+    "accessories": "Accessoires",
+    "backToAccessories": "Terug naar accessoires"
+  },
+  "auth": {
+    "login": {
+      "title": "Inloggen",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "button": "Inloggen",
+      "forgot": "Wachtwoord vergeten?",
+      "register": "Registreren",
+      "error": "Ongeldig e-mailadres of wachtwoord.",
+      "loggingIn": "Bezig met inloggen..."
+    },
+    "register": {
+      "title": "Registreren",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "confirmPassword": "Bevestig wachtwoord",
+      "button": "Registreren",
+      "login": "Heeft u al een account? Inloggen",
+      "success": "Registratie geslaagd! Controleer uw e-mail om uw account te verifiëren.",
+      "error": "Registratie mislukt. Probeer het opnieuw.",
+      "registering": "Bezig met registreren..."
+    },
+    "forgot": {
+      "title": "Wachtwoord vergeten",
+      "email": "E-mail",
+      "button": "Resetlink verzenden",
+      "back": "Terug naar inloggen",
+      "success": "Als uw e-mailadres is geregistreerd, ontvangt u een resetlink.",
+      "error": "Kan resetmail niet verzenden.",
+      "sending": "Bezig met verzenden..."
+    },
+    "reset": {
+      "title": "Wachtwoord resetten",
+      "password": "Nieuw wachtwoord",
+      "confirmPassword": "Bevestig wachtwoord",
+      "button": "Wachtwoord resetten",
+      "back": "Terug naar inloggen",
+      "success": "Wachtwoord succesvol gereset. U kunt nu inloggen.",
+      "error": "Wachtwoord resetten mislukt. De link is mogelijk verlopen.",
+      "resetting": "Bezig met resetten...",
+      "mismatch": "Wachtwoorden komen niet overeen"
+    },
+    "verify": {
+      "title": "Verifieer uw e-mail",
+      "message": "Er is een verificatielink naar uw e-mail gestuurd.",
+      "resend": "Verificatie-e-mail opnieuw verzenden",
+      "success": "E-mail succesvol geverifieerd! U kunt nu inloggen.",
+      "error": "Verificatie mislukt of link verlopen."
+    }
+  },
+  "search": {
+    "placeholder": "Zoek vervangingsonderdelen...",
+    "filters": {
+      "all": "Alles",
+      "parts": "Onderdelen",
+      "accessories": "Accessoires"
+    },
+    "results": {
+      "searching": "Zoeken...",
+      "minCharacters": "Typ minimaal 2 tekens om te zoeken",
+      "found": "{count} resultaat gevonden",
+      "found_plural": "{count} resultaten gevonden",
+      "noResults": "Geen resultaten gevonden voor \"{query}\"",
+      "noResultsHint": "Probeer andere zoekwoorden of blader door onze categorieën",
+      "viewAll": "Bekijk alle resultaten voor \"{query}\"",
+      "viewParts": "Bekijk {count} onderdeel voor \"{query}\"",
+      "viewParts_plural": "Bekijk {count} onderdelen voor \"{query}\"",
+      "viewAccessories": "Bekijk {count} accessoire voor \"{query}\"",
+      "viewAccessories_plural": "Bekijk {count} accessoires voor \"{query}\""
+    },
+    "badges": {
+      "part": "Onderdeel",
+      "accessory": "Accessoire"
+    },
+    "categories": {
+      "replacementPart": "Vervangingsonderdeel",
+      "accessory": "Accessoire",
+      "case": "Hoesje",
+      "cover": "Cover",
+      "screenProtector": "Schermbeschermer",
+      "charger": "Oplader",
+      "power": "Stroom",
+      "battery": "Batterij",
+      "cable": "Kabel",
+      "adapter": "Adapter",
+      "headphones": "Hoofdtelefoon",
+      "earbuds": "Oordopjes",
+      "speaker": "Luidspreker",
+      "camera": "Camera"
+    }
+  },
+  "features": {
+    "freeShipping": {
+      "title": "Gratis verzending",
+      "description": "Bij bestellingen boven €50"
+    },
+    "warranty": {
+      "title": "1 jaar garantie",
+      "description": "Volledige dekking"
+    },
+    "returns": {
+      "title": "30 dagen retour",
+      "description": "Zorgeloos"
+    }
+  },
+  "pricingComparison": {
+    "title": "Waarom elders meer betalen?",
+    "subtitle": "Vergelijk onze prijzen met ifixers.be en zie het verschil. Wij bieden concurrerende prijzen zonder in te leveren op kwaliteit.",
+    "averageSavings": "Bespaar gemiddeld €{amount} per reparatie",
+    "stats": {
+      "servicesCompared": "Vergeleken services",
+      "averageSavings": "Gemiddelde besparing",
+      "averageDiscount": "Gemiddelde korting"
+    },
+    "comparison": {
+      "title": "Prijsvergelijking",
+      "subtitle": "Zie hoeveel u bespaart bij TechFix Pro vs ifixers.be",
+      "headers": {
+        "service": "Service & apparaat",
+        "ourPrice": "Onze prijs",
+        "ifixersPrice": "ifixers.be",
+        "youSave": "U bespaart"
+      },
+      "popular": "Populair"
+    },
+    "benefits": {
+      "title": "Waarom kiezen voor TechFix Pro?",
+      "lowerPrices": {
+        "title": "Lagere prijzen",
+        "description": "Bespaar gemiddeld €{amount} vergeleken met concurrenten"
+      },
+      "sameDayService": {
+        "title": "Zelfde dag service",
+        "description": "De meeste reparaties binnen 24-48 uur voltooid"
+      },
+      "qualityGuarantee": {
+        "title": "Kwaliteitsgarantie",
+        "description": "90 dagen garantie op alle reparaties en onderdelen"
+      }
+    },
+    "cta": {
+      "title": "Klaar om geld te besparen?",
+      "subtitle": "Vraag vandaag nog uw gratis offerte aan en zie hoeveel u kunt besparen",
+      "button": "Gratis offerte aanvragen"
+    },
+    "trustIndicators": {
+      "happyCustomers": "Tevreden klanten",
+      "averageRepairTime": "Gemiddelde reparatietijd",
+      "warrantyPeriod": "Garantieperiode",
+      "averageSavings": "Gemiddelde besparing"
+    },
+    "disclaimer": "* Prijzen vergeleken met ifixers.be per {date}. Concurrentieprijzen kunnen variëren. Al onze prijzen zijn inclusief onderdelen, arbeid en garantie."
+  },
+  "product": {
+    "outOfStock": "Niet op voorraad",
+    "lowStock": "Lage voorraad",
+    "brand": "Merk",
+    "model": "Model",
+    "rating": {
+      "reviews": "beoordelingen"
+    },
+    "inStock": "op voorraad",
+    "currentlyUnavailable": "Momenteel niet beschikbaar",
+    "compatibility": "Compatibiliteit",
+    "description": "Beschrijving",
+    "addToCart": "In winkelwagen",
+    "buyNow": "Nu kopen",
+    "freeShipping": "Gratis verzending bij bestellingen boven €50",
+    "warranty": "1 jaar garantie",
+    "imageNotAvailable": "Afbeelding niet beschikbaar",
+    "noImageAvailable": "Geen afbeelding beschikbaar",
+    "clickToZoom": "Klik om te vergroten • Hoogwaardige productafbeelding",
+    "save": "Opslaan",
+    "share": "Delen"
+  },
+  "about": {
+    "hero": {
+      "title": "Over 5gphones Leuven",
+      "subtitle": "Uw vertrouwde partner voor apparaatreparaties en premium accessoires sinds 2019",
+      "getInTouch": "Neem Contact Op",
+      "getQuote": "Offerte Aanvragen"
+    },
+    "story": {
+      "title": "Ons Verhaal",
+      "paragraph1": "5gphones werd opgericht in 2019 met een eenvoudige missie: betrouwbare, betaalbare apparaatreparatieservices bieden aan onze gemeenschap. Wat begon als een kleine reparatiewinkel is uitgegroeid tot een vertrouwd lokaal bedrijf dat duizenden klanten bedient.",
+      "paragraph2": "We merkten op dat veel mensen gefrustreerd waren door dure reparatieoffertes, lange wachttijden en slechte klantenservice van andere aanbieders. Toen besloten we een ander soort reparatiewinkel te creëren - een die klanten voorop stelt en uitzonderlijke service levert tegen eerlijke prijzen.",
+      "paragraph3": "Vandaag zijn we er trots op de go-to reparatiebestemming te zijn voor smartphones, tablets, laptops en meer. ons team van gecertificeerde technici heeft de expertise om alles aan te pakken, van eenvoudige schermvervangingen tot complexe logic board reparaties.",
+      "timeline": {
+        "2019": "5gphones opgericht met de visie om apparaatreparatieservices te revolutioneren",
+        "2021": "Uitgebreid naar onze huidige locatie en premium accessoires toegevoegd",
+        "2024": "Meer dan 10.000 succesvolle reparaties en 4,9/5 klantbeoordeling behaald"
+      }
+    },
+    "achievements": {
+      "title": "Onze Prestaties",
+      "items": {
+        "customers": {
+          "number": "10.000+",
+          "title": "Tevreden Klanten",
+          "description": "Apparaten succesvol gerepareerd"
+        },
+        "rating": {
+          "number": "4,9/5",
+          "title": "Klantbeoordeling",
+          "description": "Gebaseerd op 1.200+ beoordelingen"
+        },
+        "time": {
+          "number": "24-48u",
+          "title": "Gem. Reparatietijd",
+          "description": "Snelle doorlooptijd gegarandeerd"
+        },
+        "years": {
+          "number": "5",
+          "title": "Jaar in Bedrijf",
+          "description": "Vertrouwde lokale serviceprovider"
+        }
+      }
+    },
+    "values": {
+      "title": "Onze Waarden",
+      "items": {
+        "quality": {
+          "title": "Kwaliteit Voorop",
+          "description": "We gebruiken alleen premium onderdelen en handhaven de hoogste reparatiestandaarden"
+        },
+        "care": {
+          "title": "Klantzorg",
+          "description": "Uw tevredenheid is onze prioriteit - we behandelen elk apparaat alsof het van onszelf is"
+        },
+        "transparency": {
+          "title": "Transparantie",
+          "description": "Geen verborgen kosten, duidelijke communicatie en eerlijke prijzen"
+        },
+        "expertise": {
+          "title": "Expertise",
+          "description": "Gecertificeerde technici met jarenlange ervaring en doorlopende training"
+        }
+      }
+    },
+    "team": {
+      "title": "Ontmoet Ons Team",
+      "specialties": "Specialiteiten:",
+      "members": {
+        "alex": {
+          "name": "Alex Johnson",
+          "role": "Oprichter & Hoofdtechnicus",
+          "experience": "15+ jaar",
+          "specialty1": "iPhone Reparatie",
+          "specialty2": "Logic Board Reparatie",
+          "specialty3": "Gegevensherstel"
+        },
+        "sarah": {
+          "name": "Sarah Chen",
+          "role": "Senior Reparatietechnicus",
+          "experience": "8+ jaar",
+          "specialty1": "Android Reparatie",
+          "specialty2": "Tablet Reparatie",
+          "specialty3": "Software Problemen"
+        },
+        "mike": {
+          "name": "Mike Rodriguez",
+          "role": "Laptop Specialist",
+          "experience": "10+ jaar",
+          "specialty1": "MacBook Reparatie",
+          "specialty2": "PC Reparatie",
+          "specialty3": "Prestatie Optimalisatie"
+        },
+        "emma": {
+          "name": "Emma Wilson",
+          "role": "Klantenservice Manager",
+          "experience": "5+ jaar",
+          "specialty1": "Klantrelaties",
+          "specialty2": "Kwaliteitsborging",
+          "specialty3": "Onderdelenbeheer"
+        }
+      }
+    },
+    "certifications": {
+      "title": "Certificeringen & Training",
+      "professional": {
+        "title": "Professionele Certificeringen",
+        "item1": "Apple Geautoriseerde Serviceprovider",
+        "item2": "Samsung Gecertificeerd Reparatiecentrum",
+        "item3": "CompTIA A+ Gecertificeerde Technici",
+        "item4": "Mobiele Apparaat Reparatie Certificering"
+      },
+      "training": {
+        "title": "Doorlopende Training",
+        "item1": "Maandelijkse technische trainingsessies",
+        "item2": "Nieuwste reparatietechniek workshops",
+        "item3": "Nieuwe apparaat trainingsprogramma's",
+        "item4": "Klantenservice excellentie training"
+      }
+    },
+    "cta": {
+      "title": "Klaar om het 5gphones Leuven Verschil te Ervaren?",
+      "subtitle": "Sluit je aan bij duizenden tevreden klanten die ons vertrouwen met hun apparaten",
+      "bookRepair": "Reparatie Boeken",
+      "visitStore": "Bezoek Onze Winkel"
+    }
+  },
+  "quote": {
+    "meta": {
+      "title": "Offerte aanvragen",
+      "description": "Vraag eenvoudig een offerte aan voor uw apparaat reparatie of service. Vul het formulier in en ontvang snel een prijsopgave."
+    },
+    "hero": {
+      "title": "Vraag een offerte aan",
+      "benefits":{
+        "freeDiagnostic": "Gratis Diagnose",
+        "transparentPricing": "Transparante Prijzen",
+        "noObligation": "Geen Verplichting",
+        "fastResponse": "Snelle Reactie",
+        "personalizedService": "Persoonlijke Service"
+      },
+      "subtitle": "Ontvang een transparante prijsopgave voor uw reparatie of service",
+      "description": "Vul het onderstaande formulier in en ons team neemt zo snel mogelijk contact met u op met een persoonlijke offerte."
+    },
+    "form": {
+      "title": "Offerte aanvraagformulier",
+      "description": "Vul het onderstaande formulier in om een persoonlijke offerte te ontvangen voor uw apparaat reparatie of service.",
+      "prepopulate": {
+        "success": "Apparaat/service details zijn vooraf ingevuld op basis van uw vorige selectie."
+      },
+      "contactInformation": {
+        "title": "Contactgegevens",
+        "firstName": "Voornaam",
+        "firstNamePlaceholder": "Vul uw voornaam in",
+        "lastName": "Achternaam",
+        "lastNamePlaceholder": "Vul uw achternaam in",
+        "email": "E-mail",
+        "emailPlaceholder": "Vul uw e-mailadres in",
+        "phone": "Telefoonnummer",
+        "phonePlaceholder": "Vul uw telefoonnummer in (optioneel)"
+      },
+      "deviceInformation": {
+        "title": "Apparaatgegevens",
+        "deviceType": "Apparaattype",
+        "deviceTypeOptions": {
+          "smartphone": "Smartphone",
+          "tablet": "Tablet",
+          "laptop": "Laptop",
+          "smartwatch": "Smartwatch",
+          "other": "Anders"
+        }
+      },
+      "brand": "Merk",
+      "brandPlaceholder": "bijv. Apple, Samsung",
+      "model": "Model",
+      "modelPlaceholder": "bijv. iPhone 13, Galaxy S22",
+      "service": "Service (optioneel)",
+      "servicePlaceholder": "bijv. Schermvervanging",
+      "part": "Onderdeel (optioneel)",
+      "partPlaceholder": "bijv. Batterij, Camera",
+      "issueDetails": {
+        "title": "Probleemdetails",
+        "issuesDescription": "Selecteer de problemen die u ervaart:",
+        "detailedDescription": "Beschrijf het probleem in detail",
+        "detailedDescriptionPlaceholder": "Geef zo veel mogelijk details over het probleem."
+      },
+      "photoUpload": {
+        "label": "Foto's uploaden (optioneel)",
+        "dropZoneLabel": "Sleep of klik om foto's te uploaden",
+        "dropZoneDescription": "Upload duidelijke foto's van het apparaat en het probleem, indien mogelijk."
+      },
+      "preferences": {
+        "title": "Voorkeuren",
+        "urgency": "Urgentie",
+        "urgencyPlaceholder": "Selecteer urgentie",
+        "urgencyOptions": {
+          "urgent": "Urgent (zo snel mogelijk)",
+          "normal": "Normaal (1-2 dagen)",
+          "flexible": "Flexibel (geen haast)"
+        },
+        "contactMethod": "Voorkeurscontactmethode",
+        "contactMethodPlaceholder": "Selecteer contactmethode",
+        "contactMethodOptions": {
+          "email": "E-mail",
+          "phone": "Telefoon",
+          "text": "Sms/Bericht",
+          "any": "Maakt niet uit"
+        }
+      },
+      "submitButton": {
+        "label": "Offerte aanvragen",
+        "submitting": "Verzenden..."
+      },
+      "clearButton": "Formulier wissen",
+      "nextSteps": {
+        "title": "Wat gebeurt er daarna?",
+        "step1": "Ons team beoordeelt uw aanvraag en neemt binnen 2 werkuren contact op.",
+        "step2": "U ontvangt een persoonlijke offerte en eventuele vervolgvragen.",
+        "step3": "Als u akkoord gaat met de offerte, plannen we uw reparatie of service in.",
+        "step4": "Geen verplichting – u beslist of u doorgaat."
+      }
+    },
+    "faq": {
+      "title": "Veelgestelde vragen over offertes",
+      "q1": "Hoe snel ontvang ik een offerte?",
+      "a1": "Meestal ontvangt u binnen enkele uren een offerte, uiterlijk binnen 1 werkdag.",
+      "q2": "Is de offerte gratis en vrijblijvend?",
+      "a2": "Ja, het aanvragen van een offerte is altijd gratis en geheel vrijblijvend.",
+      "q3": "Wat als ik het niet eens ben met de offerte?",
+      "a3": "U zit nergens aan vast. U beslist zelf of u akkoord gaat met de prijsopgave."
+    },
+    "cta": {
+      "title": "Klaar om een offerte aan te vragen?",
+      "subtitle": "Vul het formulier in en ontvang snel een prijsopgave voor uw reparatie of service."
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Neem contact op",
+      "subtitle": "Vragen over onze diensten? Offerte nodig? Wij helpen u graag!"
+    },
+    "info": {
+      "visitUs": "Bezoek ons",
+      "address": {
+        "line1": "Bondgenotenlaan 84A",
+        "line2": "Leuven",
+        "line3": "België",
+        "postalLabel": "Postcode:",
+        "postalCode": "3000"
+      },
+      "callUs": "Bel ons",
+      "phone": {
+        "main": "Algemeen",
+        "support": "Support",
+        "emergency": "Noodnummer"
+      },
+      "emailUs": "E-mail ons",
+      "email": {
+        "general": "Algemeen",
+        "support": "Support",
+        "sales": "Verkoop"
+      },
+      "hoursLabel": "Openingstijden",
+      "hours": {
+        "mondayFriday": "Ma-Vr",
+        "saturday": "Zaterdag",
+        "sunday": "Zondag",
+        "closed": "gesloten"
+      }
+    },
+    "form": {
+      "title": "Stuur ons een bericht",
+      "description": "Vul het onderstaande formulier in en we nemen binnen 24 uur contact met u op",
+      "firstNameLabel": "Voornaam *",
+      "firstNamePlaceholder": "Jan",
+      "lastNameLabel": "Achternaam *",
+      "lastNamePlaceholder": "Jansen",
+      "emailLabel": "E-mail *",
+      "emailPlaceholder": "jan@example.com",
+      "phoneLabel": "Telefoonnummer",
+      "phonePlaceholder": "+32 466 13 41 81",
+      "serviceLabel": "Type dienst *",
+      "servicePlaceholder": "Selecteer een dienst",
+      "serviceRepair": "Toestelreparatie",
+      "serviceAccessories": "Accessoires",
+      "serviceQuote": "Offerte aanvragen",
+      "serviceSupport": "Technische ondersteuning",
+      "serviceOther": "Anders",
+      "deviceLabel": "Toestel (indien van toepassing)",
+      "devicePlaceholder": "bijv. iPhone 14 Pro, Samsung Galaxy S23",
+      "messageLabel": "Bericht *",
+      "messagePlaceholder": "Beschrijf uw vraag of probleem zo gedetailleerd mogelijk...",
+      "sendMessage": "Bericht verzenden",
+      "sending": "Verzenden...",
+      "successMessage": "Bedankt voor uw bericht! We nemen binnen 24 uur contact met u op.",
+      "errorMessage": "Verzenden mislukt. Probeer het opnieuw of neem direct contact met ons op."
+    }
+  },
+  "checkout": {
+    "stepper": {
+      "address": "Adres",
+      "payment": "Betaling",
+      "result": "Resultaat"
+    },
+    "title": "Afrekenen",
+    "cartSummary": "Winkelwagenoverzicht",
+    "shippingAddress": "Verzendadres",
+    "edit": "Bewerken",
+    "continue": "Doorgaan",
+    "back": "Terug",
+    "pay": "Nu betalen",
+    "paying": "Bezig met betalen...",
+    "orderSummary": "Besteloverzicht",
+    "total": "Totaal",
+    "emptyCart": "Je winkelwagen is leeg.",
+    "success": {
+      "title": "Bedankt voor je bestelling!",
+      "message": "Je betaling is geslaagd en je bestelling is ontvangen. We sturen je een bevestigingsmail."
+    },
+    "error": {
+      "title": "Er is iets misgegaan",
+      "message": "Je betaling is mislukt of geannuleerd. Probeer het opnieuw of neem contact op als het probleem aanhoudt."
+    },
+    "addressForm": {
+      "title": "Verzendadres",
+      "firstName": "Voornaam",
+      "lastName": "Achternaam",
+      "email": "E-mail",
+      "phone": "Telefoonnummer",
+      "address1": "Adresregel 1",
+      "address2": "Adresregel 2 (optioneel)",
+      "city": "Stad",
+      "postalCode": "Postcode",
+      "country": "Land",
+      "save": "Adres opslaan en doorgaan"
+    },
+    "paymentForm": {
+      "title": "Betaling",
+      "cardDetails": "Kaartgegevens",
+      "pay": "Nu betalen"
+    },
+    "validation": {
+      "required": "Dit veld is verplicht",
+      "invalidEmail": "Ongeldig e-mailadres",
+      "invalidPhone": "Ongeldig telefoonnummer"
+    },
+    "loading": "Laden...",
+    "cart": {
+      "title": "Winkelwagen",
+      "empty": "Je winkelwagen is leeg.",
+      "total": "Totaal",
+      "checkout": "Afrekenen"
+    }
+  },
+  "settings": {
+      "title": "Instellingen",
+      "firstName": "Voornaam",
+      "lastName": "Achternaam",
+      "address1": "Adresregel 1",
+      "address2": "Adresregel 2 (optioneel)",
+      "city": "Stad",
+      "state": "Provincie",
+      "postalCode": "Postcode",
+      "country": "Land",
+      "save": "Adres opslaan",
+      "saving": "Opslaan...",
+      "success": "Adres bijgewerkt!"
+    }
+}

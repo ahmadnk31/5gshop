@@ -344,7 +344,7 @@
         "CABLE": "Cables & Adapters",
         "HEADPHONES": "Audio & Headphones",
         "SCREEN_PROTECTOR": "Screen Protection",
-        "KEYBOARD": "Keyboards",
+        "KEYBOARD": "High-quality keyboards",
         "MOUSE": "Mice & Trackpads",
         "STYLUS": "Stylus & Pens",
         "STAND": "Stands & Holders",
@@ -381,7 +381,9 @@
       "viewDetails": "View Details",
       "inStock": "{count} in stock",
       "lowStock": "Low Stock",
-      "productImage": "Product Image"
+      "productImage": "Product Image",
+      "addToCart": "Add to Cart",
+      "buyNow": "Buy Now"
     },
     "results": {
       "title": "All Accessories",
@@ -393,6 +395,15 @@
     },
     "loading": {
       "message": "Loading accessories..."
+    },
+    "cart": {
+      "title": "Cart",
+      "empty": "Your cart is empty.",
+      "total": "Total",
+      "checkout": "Checkout",
+      "clear": "Clear Cart",
+      "addToCart": "Add to Cart",
+      "buyNow": "Buy Now"
     }
   },
   "search": {
@@ -570,7 +581,7 @@
   "filter": {
     "filteredBy": "Filtered by: {type}",
     "showing": "Showing {type} devices only",
-    "showAll": "Show All Devices"
+    "showAllDevices": "Show All Devices"
   },
   "search": {
     "resultsTitle": "{type} Search Results",
@@ -603,17 +614,24 @@
     "noModelsAvailable": "No models available for this brand at the moment. Please check back later or contact us for assistance."
   },
   "parts": {
-    "available": "Available Parts",
-    "stock": "Stock:",
-    "price": "Price:",
-    "supplier": "Supplier:",
-    "inStock": "In Stock",
-    "units": "units",
-    "lowStock": "Low Stock",
-    "outOfStock": "Out of Stock",
-    "requestQuote": "Request Repair Quote",
-    "noParts": "No specific parts found for this model.",
-    "contactForParts": "Contact us for availability of compatible parts.",
+    "stock": "Stock",
+    "units": "pcs",
+    "price": "Price",
+    "supplier": "Supplier",
+    "quality": "Quality",
+    "unknownQuality": "Unknown",
+    "qualityOptions": {
+      "oem": "OEM",
+      "original": "Original",
+      "premium": "Premium",
+      "aftermarket": "Aftermarket",
+      "refurbished": "Refurbished"
+    },
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "requestQuote": "Request Quote",
+    "noParts": "No parts available for this model.",
+    "contactForParts": "Contact us if you need a part not listed.",
     "contactUs": "Contact Us"
   },
   "services": {
@@ -638,5 +656,379 @@
     "availableParts": "Available Parts",
     "availableServices": "Available Services"
   }
-}
+},
+  "about": {
+    "hero": {
+      "title": "About 5gphones Leuven",
+      "subtitle": "Your trusted partner for device repairs and premium accessories since 2019",
+      "getInTouch": "Get in Touch",
+      "getQuote": "Get Quote"
+    },
+    "story": {
+      "title": "Our Story",
+      "paragraph1": "5gphones was founded in 2019 with a simple mission: to provide reliable, affordable device repair services to our community. What started as a small repair shop has grown into a trusted local business serving thousands of customers.",
+      "paragraph2": "We noticed that many people were frustrated with expensive repair quotes, long wait times, and poor customer service from other providers. That's when we decided to create a different kind of repair shop - one that puts customers first and delivers exceptional service at fair prices.",
+      "paragraph3": "Today, we're proud to be the go-to repair destination for smartphones, tablets, laptops, and more. Our team of certified technicians has the expertise to handle everything from simple screen replacements to complex logic board repairs.",
+      "timeline": {
+        "2019": "Founded 5gphones with a vision to revolutionize device repair services",
+        "2021": "Expanded to our current location and added premium accessories",
+        "2024": "Achieved 10,000+ successful repairs and 4.9/5 customer rating"
+      }
+    },
+    "achievements": {
+      "title": "Our Achievements",
+      "items": {
+        "customers": {
+          "number": "10,000+",
+          "title": "Happy Customers",
+          "description": "Devices repaired successfully"
+        },
+        "rating": {
+          "number": "4.9/5",
+          "title": "Customer Rating",
+          "description": "Based on 1,200+ reviews"
+        },
+        "time": {
+          "number": "24-48h",
+          "title": "Avg. Repair Time",
+          "description": "Fast turnaround guaranteed"
+        },
+        "years": {
+          "number": "5",
+          "title": "Years in Business",
+          "description": "Trusted local service provider"
+        }
+      }
+    },
+    "values": {
+      "title": "Our Values",
+      "items": {
+        "quality": {
+          "title": "Quality First",
+          "description": "We use only premium parts and maintain the highest repair standards"
+        },
+        "care": {
+          "title": "Customer Care",
+          "description": "Your satisfaction is our priority - we treat every device like it's our own"
+        },
+        "transparency": {
+          "title": "Transparency",
+          "description": "No hidden fees, clear communication, and honest pricing"
+        },
+        "expertise": {
+          "title": "Expertise",
+          "description": "Certified technicians with years of experience and ongoing training"
+        }
+      }
+    },
+    "team": {
+      "title": "Meet Our Team",
+      "specialties": "Specialties:",
+      "members": {
+        "alex": {
+          "name": "Alex Johnson",
+          "role": "Founder & Lead Technician",
+          "experience": "15+ years",
+          "specialty1": "iPhone Repair",
+          "specialty2": "Logic Board Repair",
+          "specialty3": "Data Recovery"
+        },
+        "sarah": {
+          "name": "Sarah Chen",
+          "role": "Senior Repair Technician",
+          "experience": "8+ years",
+          "specialty1": "Android Repair",
+          "specialty2": "Tablet Repair",
+          "specialty3": "Software Issues"
+        },
+        "mike": {
+          "name": "Mike Rodriguez",
+          "role": "Laptop Specialist",
+          "experience": "10+ years",
+          "specialty1": "MacBook Repair",
+          "specialty2": "PC Repair",
+          "specialty3": "Performance Optimization"
+        },
+        "emma": {
+          "name": "Emma Wilson",
+          "role": "Customer Service Manager",
+          "experience": "5+ years",
+          "specialty1": "Customer Relations",
+          "specialty2": "Quality Assurance",
+          "specialty3": "Parts Management"
+        }
+      }
+    },
+    "certifications": {
+      "title": "Certifications & Training",
+      "professional": {
+        "title": "Professional Certifications",
+        "item1": "Apple Authorized Service Provider",
+        "item2": "Samsung Certified Repair Center",
+        "item3": "CompTIA A+ Certified Technicians",
+        "item4": "Mobile Device Repair Certification"
+      },
+      "training": {
+        "title": "Ongoing Training",
+        "item1": "Monthly technical training sessions",
+        "item2": "Latest repair technique workshops",
+        "item3": "New device training programs",
+        "item4": "Customer service excellence training"
+      }
+    },
+    "cta": {
+      "title": "Ready to Experience the 5gphones Leuven Difference?",
+      "subtitle": "Join thousands of satisfied customers who trust us with their devices",
+      "bookRepair": "Book a Repair",
+      "visitStore": "Visit Our Store"
+    }
+  },
+  "quote": {
+    "meta": {
+      "title": "Request a Quote",
+      "description": "Easily request a quote for your device repair or service. Fill out the form and receive a price estimate quickly."
+    },
+    "hero": {
+      "title": "Request a Quote",
+      "benefits":{
+        "freeDiagnostic": "Free Diagnostic",
+        "transparentPricing": "Transparent Pricing",
+        "noObligation": "No Obligation",
+        "fastResponse": "Fast Response",
+        "personalizedService": "Personalized Service"
+      },
+      "subtitle": "Get a transparent price estimate for your repair or service",
+      "description": "Fill out the form below and our team will contact you as soon as possible with a personalized quote."
+    },
+    "form": {
+      "title": "Quote Request Form",
+      "description": "Fill out the form below to receive a personalized quote for your device repair or service.",
+      "prepopulate": {
+        "success": "Device/service details have been pre-filled from your previous selection."
+      },
+      "contactInformation": {
+        "title": "Contact Information",
+        "firstName": "First Name",
+        "firstNamePlaceholder": "Enter your first name",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "Enter your last name",
+        "email": "Email",
+        "emailPlaceholder": "Enter your email address",
+        "phone": "Phone Number",
+        "phonePlaceholder": "Enter your phone number (optional)"
+      },
+      "deviceInformation": {
+        "title": "Device Information",
+        "deviceType": "Device Type",
+        "deviceTypeOptions": {
+          "smartphone": "Smartphone",
+          "tablet": "Tablet",
+          "laptop": "Laptop",
+          "smartwatch": "Smartwatch",
+          "other": "Other"
+        }
+      },
+      "brand": "Brand",
+      "brandPlaceholder": "e.g. Apple, Samsung",
+      "model": "Model",
+      "modelPlaceholder": "e.g. iPhone 13, Galaxy S22",
+      "service": "Service (optional)",
+      "servicePlaceholder": "e.g. Screen Replacement",
+      "part": "Part (optional)",
+      "partPlaceholder": "e.g. Battery, Camera",
+      "issueDetails": {
+        "title": "Issue Details",
+        "issuesDescription": "Select the issues you are experiencing:",
+        "detailedDescription": "Describe the issue in detail",
+        "detailedDescriptionPlaceholder": "Please provide as much detail as possible about the problem."
+      },
+      "photoUpload": {
+        "label": "Upload Photos (optional)",
+        "dropZoneLabel": "Drag and drop or click to upload photos",
+        "dropZoneDescription": "Upload clear photos of the device and the issue, if possible."
+      },
+      "preferences": {
+        "title": "Preferences",
+        "urgency": "Urgency",
+        "urgencyPlaceholder": "Select urgency",
+        "urgencyOptions": {
+          "urgent": "Urgent (need it ASAP)",
+          "normal": "Normal (1-2 days)",
+          "flexible": "Flexible (no rush)"
+        },
+        "contactMethod": "Preferred Contact Method",
+        "contactMethodPlaceholder": "Select contact method",
+        "contactMethodOptions": {
+          "email": "Email",
+          "phone": "Phone",
+          "text": "Text/SMS",
+          "any": "Any"
+        }
+      },
+      "submitButton": {
+        "label": "Request Quote",
+        "submitting": "Submitting..."
+      },
+      "clearButton": "Clear Form",
+      "nextSteps": {
+        "title": "What happens next?",
+        "step1": "Our team will review your request and contact you within 2 business hours.",
+        "step2": "You will receive a personalized quote and any follow-up questions if needed.",
+        "step3": "If you accept the quote, we will schedule your repair or service.",
+        "step4": "No obligation – you decide if you want to proceed."
+      }
+    },
+    "faq": {
+      "title": "Quote FAQs",
+      "q1": "How quickly will I receive a quote?",
+      "a1": "You will usually receive a quote within a few hours, or at most within 1 business day.",
+      "q2": "Is the quote free and without obligation?",
+      "a2": "Yes, requesting a quote is always free and without obligation.",
+      "q3": "What if I don't agree with the quote?",
+      "a3": "You are under no obligation. You decide whether to accept the price estimate."
+    },
+    "cta": {
+      "title": "Ready to request a quote?",
+      "subtitle": "Fill out the form and receive a price estimate for your repair or service quickly."
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Get in Touch",
+      "subtitle": "Have questions about our services? Need a repair quote? We're here to help!"
+    },
+    "info": {
+      "visitUs": "Visit Us",
+      "address": {
+        "line1": "84A Bondgenotenlaan",
+        "line2": "Leuven",
+        "line3": "Belgium",
+        "postalLabel": "Postal Code:",
+        "postalCode": "3000"
+      },
+      "callUs": "Call Us",
+      "phone": {
+        "main": "Main",
+        "support": "Support",
+        "emergency": "Emergency"
+      },
+      "emailUs": "Email Us",
+      "email": {
+        "general": "General",
+        "support": "Support",
+        "sales": "Sales"
+      },
+      "hoursLabel": "Hours",
+      "hours": {
+        "mondayFriday": "Mon-Fri",
+        "saturday": "Saturday",
+        "sunday": "Sunday",
+        "closed": "closed"
+      }
+    },
+    "form": {
+      "title": "Send us a Message",
+      "description": "Fill out the form below and we'll get back to you within 24 hours",
+      "firstNameLabel": "First Name *",
+      "firstNamePlaceholder": "John",
+      "lastNameLabel": "Last Name *",
+      "lastNamePlaceholder": "Doe",
+      "emailLabel": "Email *",
+      "emailPlaceholder": "john@example.com",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "+1 (555) 123-4567",
+      "serviceLabel": "Service Type *",
+      "servicePlaceholder": "Select a service",
+      "serviceRepair": "Device Repair",
+      "serviceAccessories": "Accessories",
+      "serviceQuote": "Get Quote",
+      "serviceSupport": "Technical Support",
+      "serviceOther": "Other",
+      "deviceLabel": "Device (if applicable)",
+      "devicePlaceholder": "e.g., iPhone 14 Pro, Samsung Galaxy S23",
+      "messageLabel": "Message *",
+      "messagePlaceholder": "Please describe your issue or question in detail...",
+      "sendMessage": "Send Message",
+      "sending": "Sending...",
+      "successMessage": "Thank you for your message! We'll get back to you within 24 hours.",
+      "errorMessage": "Failed to send your message. Please try again or contact us directly."
+    }
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "total": "Total",
+    "checkout": "Checkout",
+    "clear": "Clear Cart"
+  },
+  "checkout": {
+    "stepper": {
+      "address": "Address",
+      "payment": "Payment",
+      "result": "Result"
+    },
+    "title": "Checkout",
+    "cartSummary": "Cart Summary",
+    "shippingAddress": "Shipping Address",
+    "edit": "Edit",
+    "continue": "Continue",
+    "back": "Back",
+    "pay": "Pay Now",
+    "paying": "Processing payment...",
+    "orderSummary": "Order Summary",
+    "total": "Total",
+    "emptyCart": "Your cart is empty.",
+    "success": {
+      "title": "Thank you for your order!",
+      "message": "Your payment was successful and your order has been received. We will send you a confirmation email."
+    },
+    "error": {
+      "title": "Something went wrong",
+      "message": "Your payment failed or was cancelled. Please try again or contact us if the problem persists."
+    },
+    "addressForm": {
+      "title": "Shipping Address",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "address1": "Address Line 1",
+      "address2": "Address Line 2 (optional)",
+      "city": "City",
+      "postalCode": "Postal Code",
+      "country": "Country",
+      "save": "Save address and continue"
+    },
+    "paymentForm": {
+      "title": "Payment",
+      "cardDetails": "Card Details",
+      "pay": "Pay Now"
+    },
+    "validation": {
+      "required": "This field is required",
+      "invalidEmail": "Invalid email address",
+      "invalidPhone": "Invalid phone number"
+    },
+    "loading": "Loading...",
+    "cart": {
+      "title": "Cart",
+      "empty": "Your cart is empty.",
+      "total": "Total",
+      "checkout": "Checkout"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "address1": "Address Line 1",
+    "address2": "Address Line 2 (optional)",
+    "city": "City",
+    "state": "State",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "save": "Save Address",
+    "saving": "Saving...",
+    "success": "Address updated!"
+  }
 }

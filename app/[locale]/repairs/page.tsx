@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  CheckCircle, 
   Clock, 
   DollarSign,
   Wrench,
@@ -16,7 +15,7 @@ import {
   Star,
   Award
 } from "lucide-react";
-import Link from "next/link";
+
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -24,6 +23,7 @@ import DeviceCatalogBrowser from "@/components/device-catalog-browser";
 import { RepairService, DeviceType } from "@/lib/types";
 import { getRepairServicesForDevice } from "@/app/actions/device-catalog-actions";
 import { formatCurrency } from "@/lib/utils";
+import { Link } from "@/i18n/navigation";
 
 function RepairsPageContent() {
   const t = useTranslations('repairs');

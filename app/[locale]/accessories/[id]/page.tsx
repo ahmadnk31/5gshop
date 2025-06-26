@@ -11,6 +11,8 @@ import { getAccessoryById, getAccessories } from "@/app/actions/accessory-action
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { getTranslations } from 'next-intl/server';
 import { formatCurrency } from '@/lib/utils';
+import { useCart } from "@/components/cart-context";
+import { AccessoryDetailClientActions } from './accessory-actions';
 
 interface AccessoryDetailPageProps {
   params: Promise<{ id: string }>;
@@ -236,27 +238,7 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
             )}
 
             {/* Add to Cart Section */}
-            <div className="space-y-4">
-              <div className="flex space-x-4">
-                <Button 
-                  size="lg" 
-                  className="flex-1" 
-                  disabled={!isInStock}
-                >
-                  <ShoppingCart className="h-5 w-5 mr-2" />
-                  {isInStock ? t('product.addToCart') : t('product.outOfStock')}
-                </Button>
-                <Button variant="outline" size="lg">
-                  {t('product.buyNow')}
-                </Button>
-              </div>
-              
-              {isInStock && (
-                <p className="text-sm text-gray-500 text-center">
-                  {t('product.freeShipping')}
-                </p>
-              )}
-            </div>
+            <AccessoryDetailClientActions accessory={accessory} isInStock={isInStock} />
 
             {/* Features */}
             <div className="grid grid-cols-3 gap-4 pt-6 border-t">
@@ -442,3 +424,4 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
     </div>
   );
 }
+

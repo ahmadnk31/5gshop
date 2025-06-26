@@ -41,12 +41,28 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.role = user.role;
       }
+      
+      // Always fetch role from DB if missing, even for OAuth
+      if (!token.role && token.sub) {
+        const dbUser = await prisma.user.findUnique({ where: { id: token.sub } });
+        token.role = dbUser?.role || "user";
+      }
+      //if user has admin role allow to access admin routes
+      if (account?.provider === "google" && !token.role) {
+        const dbUser = await prisma.user.findUnique({ where: { email: user?.email || "" } });
+        if (dbUser) {
+          token.role = dbUser.role || "user";
+        } else {
+          token.role = "user"; // Default role if not found
+        }
+      } 
       return token;
     },
+    
   },
   pages: {
     signIn: "/auth/login",

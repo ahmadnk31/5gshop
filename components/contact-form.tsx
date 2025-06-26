@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Send, CheckCircle, AlertCircle } from "lucide-react";
 import { submitContactForm } from "@/app/actions/contact-actions";
 import { useGoogleAnalytics } from "@/components/google-analytics";
+import { useTranslations } from 'next-intl';
 
 interface ContactFormData {
   firstName: string;
@@ -23,6 +24,7 @@ interface ContactFormData {
 }
 
 export function ContactForm() {
+  const t = useTranslations('contact.form');
   // Add Google Analytics tracking
   const { trackContactForm } = useGoogleAnalytics();
 
@@ -67,7 +69,7 @@ export function ContactForm() {
         
         setSubmitStatus({
           type: 'success',
-          message: 'Thank you for your message! We\'ll get back to you within 24 hours.',
+          message: t('successMessage'),
         });
         // Reset form
         setFormData({
@@ -83,7 +85,7 @@ export function ContactForm() {
     } catch (error) {
       setSubmitStatus({
         type: 'error',
-        message: 'Failed to send your message. Please try again or contact us directly.',
+        message: t('errorMessage'),
       });
     } finally {
       setIsSubmitting(false);
@@ -95,10 +97,10 @@ export function ContactForm() {
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Send className="h-6 w-6 text-blue-600" />
-          <span>Send us a Message</span>
+          <span>{t('title')}</span>
         </CardTitle>
         <CardDescription>
-          Fill out the form below and we'll get back to you within 24 hours
+          {t('description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -118,23 +120,23 @@ export function ContactForm() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name *</Label>
+              <Label htmlFor="firstName">{t('firstNameLabel')}</Label>
               <Input
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
-                placeholder="John"
+                placeholder={t('firstNamePlaceholder')}
                 required
                 disabled={isSubmitting}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name *</Label>
+              <Label htmlFor="lastName">{t('lastNameLabel')}</Label>
               <Input
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
-                placeholder="Doe"
+                placeholder={t('lastNamePlaceholder')}
                 required
                 disabled={isSubmitting}
               />
@@ -142,68 +144,68 @@ export function ContactForm() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
+            <Label htmlFor="email">{t('emailLabel')}</Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
-              placeholder="john@example.com"
+              placeholder={t('emailPlaceholder')}
               required
               disabled={isSubmitting}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phone">{t('phoneLabel')}</Label>
             <Input
               id="phone"
               type="tel"
               value={formData.phone}
               onChange={(e) => handleInputChange('phone', e.target.value)}
-              placeholder="+1 (555) 123-4567"
+              placeholder={t('phonePlaceholder')}
               disabled={isSubmitting}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="service">Service Type *</Label>
+            <Label htmlFor="service">{t('serviceLabel')}</Label>
             <Select
               value={formData.serviceType}
               onValueChange={(value) => handleInputChange('serviceType', value)}
               disabled={isSubmitting}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select a service" />
+                <SelectValue placeholder={t('servicePlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="repair">Device Repair</SelectItem>
-                <SelectItem value="accessories">Accessories</SelectItem>
-                <SelectItem value="quote">Get Quote</SelectItem>
-                <SelectItem value="support">Technical Support</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="repair">{t('serviceRepair')}</SelectItem>
+                <SelectItem value="accessories">{t('serviceAccessories')}</SelectItem>
+                <SelectItem value="quote">{t('serviceQuote')}</SelectItem>
+                <SelectItem value="support">{t('serviceSupport')}</SelectItem>
+                <SelectItem value="other">{t('serviceOther')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="device">Device (if applicable)</Label>
+            <Label htmlFor="device">{t('deviceLabel')}</Label>
             <Input
               id="device"
               value={formData.device}
               onChange={(e) => handleInputChange('device', e.target.value)}
-              placeholder="e.g., iPhone 14 Pro, Samsung Galaxy S23"
+              placeholder={t('devicePlaceholder')}
               disabled={isSubmitting}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="message">Message *</Label>
+            <Label htmlFor="message">{t('messageLabel')}</Label>
             <Textarea
               id="message"
               value={formData.message}
               onChange={(e) => handleInputChange('message', e.target.value)}
-              placeholder="Please describe your issue or question in detail..."
+              placeholder={t('messagePlaceholder')}
               rows={4}
               required
               disabled={isSubmitting}
@@ -218,12 +220,12 @@ export function ContactForm() {
             {isSubmitting ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                Sending...
+                {t('sending')}
               </>
             ) : (
               <>
                 <Send className="h-4 w-4 mr-2" />
-                Send Message
+                {t('sendMessage')}
               </>
             )}
           </Button>

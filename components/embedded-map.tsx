@@ -9,7 +9,7 @@ interface EmbeddedMapProps {
 }
 
 export const EmbeddedMap: React.FC<EmbeddedMapProps> = ({ 
-  address = "84A Bondgenotenlaan, 3000 Leuven, Belgium",
+  address = "5G Phones, 84, Bondgenotenlaan, Sint-Maartensdal, Leuven, Vlaams-Brabant, Vlaanderen, 3000, België",
   className = "h-64 w-full rounded-lg"
 }) => {
   // Encode the address for the Google Maps embed URL
@@ -64,6 +64,13 @@ export const EmbeddedMap: React.FC<EmbeddedMapProps> = ({
           </a>
         </Button>
       </div>
+
+      {/* Deprecation Note */}
+      <div className="text-sm text-red-500">
+        NOTE: This component is now deprecated in favor of LeafletMap for precise, interactive location display. Use LeafletMap in your contact page for best results.
+      </div>
     </div>
   );
 };
+
+// Optionally, you can remove this file if not needed elsewhere.
