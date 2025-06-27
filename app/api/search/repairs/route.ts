@@ -106,23 +106,41 @@ export async function GET(request: NextRequest) {
         }
           
         // In your parts API, make sure this section is correct:
-searchResults.push({
-  id: `part-${part.id}`,
-  name: displayName,
-  title: displayName,
-  description: part.description || `${part.name} for ${foundDevice ? `${foundDevice.brand} ${foundDevice.model}` : 'compatible devices'}`,
-  price: part.cost,
-  category: 'Replacement Part',
-  deviceType: part.deviceType || 'GENERAL',
-  deviceBrand: foundDevice?.brand || 'Universal',
-  deviceModel: foundDevice?.model || 'Compatible',
-  partName: part.name,
-  inStock: part.inStock,
-  matchScore: matchScore,
-  url: `/parts/${part.id}`, // Use /parts instead of /accessories for parts
-  type: 'part', // Make sure this is 'part', not 'accessory'
-  imageUrl: part.imageUrl || '/images/default-part.png',
-});
+// Validate and normalize cost/price fields
+const cost = typeof part.cost === 'number' && !isNaN(part.cost) ? part.cost : 0;
+const price = typeof part.price === 'number' && !isNaN(part.price) ? part.price : cost;
+const imageUrl = part.imageUrl || '/images/default-part.png';
+const inStock = typeof part.inStock === 'number' ? part.inStock : 0;
+const id = part.id ? `part-${part.id}` : undefined;
+const name = displayName || part.name || '';
+
+// Only push if required fields are present
+if (id && name && cost > 0 && imageUrl && inStock >= 0) {
+  // Debug log for deviceType issue
+  console.log('[DEBUG] part.id:', part.id, 'part.deviceType:', part.deviceType, 'foundDevice?.type:', foundDevice?.type);
+  searchResults.push({
+    id,
+    name,
+    title: name,
+    description: part.description || `${part.name} for ${foundDevice ? `${foundDevice.brand} ${foundDevice.model}` : 'compatible devices'}`,
+    cost, // for frontend compatibility
+    price, // for legacy compatibility
+    sku: part.sku || '',
+    category: 'Replacement Part',
+    deviceType: part.deviceType || foundDevice?.type || 'GENERAL',
+    deviceBrand: foundDevice?.brand || 'Universal',
+    brand: foundDevice?.brand || 'Universal',
+    deviceModel: foundDevice?.model || 'Compatible',
+    partName: part.name,
+    inStock,
+    matchScore: matchScore,
+    url: `/parts/${part.id}`,
+    type: 'part',
+    imageUrl,
+    supplier: part.supplier || '',
+    quality: part.quality || 'Unknown',
+  });
+}
       }
     });
 

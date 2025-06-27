@@ -163,6 +163,7 @@ export class DatabaseService {
     const parts = await prisma.part.findMany({
       orderBy: { [sortBy]: sortOrder },
       skip: (page - 1) * limit,
+      
       take: limit,
     })
 
@@ -195,6 +196,7 @@ export class DatabaseService {
         description: data.description,
         deviceModel: data.deviceModel,
         deviceType: data.deviceType,
+        quality: data.quality, // ensure quality is saved
       },
     })
     return DatabaseService.mapPart(part)
@@ -214,6 +216,7 @@ export class DatabaseService {
         description: data.description,
         deviceModel: data.deviceModel,
         deviceType: data.deviceType,
+        quality: data.quality, // ensure quality is updated
       },
     })
     return DatabaseService.mapPart(part)
@@ -1247,6 +1250,7 @@ export class DatabaseService {
       description: part.description,
       deviceModel: part.deviceModel,
       deviceType: part.deviceType,
+      quality: part.quality, // <-- add this line to include quality
       createdAt: part.createdAt.toISOString(),
       updatedAt: part.updatedAt.toISOString(),
     }
@@ -1341,5 +1345,17 @@ export class DatabaseService {
       createdAt: service.createdAt.toISOString(),
       updatedAt: service.updatedAt.toISOString(),
     }
+  }
+
+  static async getAllDevicesBySerialNumber(order: 'asc' | 'desc' = 'asc'): Promise<Device[]> {
+    const devices = await prisma.device.findMany({
+      orderBy: { serialNumber: order },
+    })
+    return devices.map(DatabaseService.mapDevice)
+  }
+
+  static async getPartById(id: string): Promise<Part | null> {
+    const part = await prisma.part.findUnique({ where: { id } });
+    return part ? DatabaseService.mapPart(part) : null;
   }
 }

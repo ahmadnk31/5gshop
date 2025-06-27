@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -5,18 +6,54 @@ import { PaymentElement, AddressElement, useStripe, useElements } from "@stripe/
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart-context";
 import { useTranslations } from "next-intl";
+import { LeafletMap } from "./leaflet-map";
 
-export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
+// Helper to check if all cart items are parts (not accessories)
+function isPartsCart(cart: any[]): boolean {
+  if (!cart.length) return false;
+  // Only return true if every item is a part (type === 'part')
+  return cart.every(item => item.type === 'part');
+}
+
+export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: string, setCheckoutMeta?: (meta: { repairType?: string, shippingOption?: string }) => void }) {
   const stripe = useStripe();
   const elements = useElements();
   const { cart, getTotal } = useCart();
+  // DEBUG: Log cart to inspect item structure
+  if (typeof window !== 'undefined') {
+    // eslint-disable-next-line no-console
+    console.log('Cart contents:', cart);
+  }
   const t = useTranslations('checkout');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [step, setStep] = useState<"address" | "payment" | "result">("address");
+  // For substeps in address (repairType/shippingOption)
+  const [addressSubStep, setAddressSubStep] = useState<"repair" | "shipping" | null>(null);
+  // New state for repair type and shipping option
+  const [repairType, setRepairType] = useState<'self' | 'by_us' | null>(null);
+  const [shippingOption, setShippingOption] = useState<'at_shop' | 'send' | 'drop' | null>(null);
 
   const handleAddressComplete = () => {
+    // If parts cart, require repairType
+    if (isPartsCart(cart) && !repairType) {
+      setError('Please select who will perform the repair.');
+      return;
+    }
+    // If repair by us, require shipping option
+    if (isPartsCart(cart) && repairType === 'by_us' && !shippingOption) {
+      setError('Please select a shipping option.');
+      return;
+    }
+    setError(null);
+    // Forward meta to parent for payment intent creation
+    if (setCheckoutMeta) {
+      setCheckoutMeta({
+        ...(isPartsCart(cart) ? { repairType: repairType ?? undefined } : {}),
+        ...(isPartsCart(cart) && repairType === 'by_us' ? { shippingOption: shippingOption ?? undefined } : {}),
+      });
+    }
     setStep("payment");
   };
 
@@ -25,9 +62,16 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
     if (!stripe || !elements) return;
     setLoading(true);
     setError(null);
+    // Attach repairType and shippingOption to payment intent metadata (or send to backend order API)
+    // This is a placeholder; actual implementation may require backend changes
+    // You may need to update your payment intent creation endpoint to accept these fields
+    // and store them in the order record.
     const { error } = await stripe.confirmPayment({
       elements,
-      confirmParams: {},
+      confirmParams: {
+        // Optionally pass metadata here if supported by your backend
+        // metadata: { repairType, shippingOption },
+      },
       redirect: "if_required",
     });
     setLoading(false);
@@ -80,10 +124,113 @@ export function CheckoutForm({ clientSecret }: { clientSecret: string }) {
       {/* Step Content */}
       {step === "address" && (
         <div>
-          <AddressElement options={{ mode: "shipping" }} onBlur={handleAddressComplete} />
-          <Button className="w-full mt-8 py-3 text-lg" onClick={handleAddressComplete} type="button">
-            {t('continue')}
-          </Button>
+          <AddressElement options={{ mode: "shipping" }} />
+          {/* Parts-specific repair type selection with stepper */}
+          {isPartsCart(cart) && (
+            <div className="mt-6 space-y-4">
+              {(!addressSubStep || addressSubStep === "repair") && (
+                <>
+                  <div className="font-semibold mb-2">{t('repair.whoWillPerform')}</div>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="repairType"
+                        value="self"
+                        checked={repairType === 'self'}
+                        onChange={() => { setRepairType('self'); setShippingOption(null); }}
+                      />
+                      {t('repair.self')}
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="repairType"
+                        value="by_us"
+                        checked={repairType === 'by_us'}
+                        onChange={() => setRepairType('by_us')}
+                      />
+                      {t('repair.byUs')}
+                    </label>
+                  </div>
+                  <div className="flex gap-2 mt-4">
+                    <Button type="button" className="flex-1" onClick={() => setStep("payment")}>Skip</Button>
+                    <Button type="button" className="flex-1" onClick={() => {
+                      if (!repairType) { setError(t('repair.errorSelectRepairType')); return; }
+                      setError(null);
+                      if (repairType === 'by_us') setAddressSubStep('shipping');
+                      else setStep('payment');
+                    }}>Next</Button>
+                  </div>
+                </>
+              )}
+              {addressSubStep === "shipping" && repairType === 'by_us' && (
+                <>
+                  <div className="font-semibold mb-2">{t('repair.howToGetDevice')}</div>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="shippingOption"
+                        value="at_shop"
+                        checked={shippingOption === 'at_shop'}
+                        onChange={() => setShippingOption('at_shop')}
+                      />
+                      {t('repair.atShop')}
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="shippingOption"
+                        value="send"
+                        checked={shippingOption === 'send'}
+                        onChange={() => setShippingOption('send')}
+                      />
+                      {t('repair.send')}
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="shippingOption"
+                        value="drop"
+                        checked={shippingOption === 'drop'}
+                        onChange={() => setShippingOption('drop')}
+                      />
+                      {t('repair.drop')}
+                    </label>
+                  </div>
+                  {/* Show something for each shipping option */}
+                  {shippingOption === 'at_shop' && (
+                    <div className="mt-4"><LeafletMap /></div>
+                  )}
+                  {shippingOption === 'send' && (
+                    <div className="mt-4 text-blue-700 font-semibold">
+                      {t('repair.sendDesc')}</div>
+                  )}
+                  {shippingOption === 'drop' && (
+                    <div className="mt-4 text-blue-700 font-semibold">{t('repair.dropDesc')}</div>
+                  )}
+                  <div className="flex gap-2 mt-4">
+                    <Button type="button" className="flex-1" onClick={() => setAddressSubStep('repair')}>
+                      {t('back')}
+                    </Button>
+                    <Button type="button" className="flex-1" onClick={() => {
+                      if (!shippingOption) { setError(t('repair.errorSelectShippingOption')); return; }
+                      setError(null);
+                      setStep('payment');
+                    }}>{t('next')}</Button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+          {error && <div className="text-red-600 text-base mt-2">{error}</div>}
+          {/* If not parts cart, just continue */}
+          {!isPartsCart(cart) && (
+            <Button className="w-full mt-8 py-3 text-lg" onClick={() => setStep('payment')} type="button">
+              {t('continue')}
+            </Button>
+          )}
         </div>
       )}
       {step === "payment" && (

@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useState } from "react"
@@ -67,18 +68,20 @@ interface Device {
 }
 
 interface Part {
-  id: string
-  name: string
-  sku: string
-  cost: number
-  inStock: number
-  minStock: number
-  supplier: string
-  deviceModel?: string | null
-  deviceType?: string | null
-  imageUrl?: string
-  description?: string
-  quality?: string;
+  id: string;
+  name: string;
+  sku: string;
+  cost: number;
+  supplier: string;
+  inStock: number;
+  minStock: number;
+  imageUrl?: string;
+  description?: string;
+  deviceModel?: string | null;
+  deviceType?: string | null;
+  quality?: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps) {
@@ -145,9 +148,6 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   const [allDevices, setAllDevices] = useState<Device[]>([])
   const [allModels, setAllModels] = useState<string[]>([])
 
-  // Error states
-  const [deviceImageError, setDeviceImageError] = useState<string | null>(null)
-
   // Load initial data
   useEffect(() => {
     if (isOpen) {
@@ -189,7 +189,64 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       console.error('Error loading device types:', error)
     }
   }
+  // --- PARTS FILTER STATE ---
+  const [filterDeviceType, setFilterDeviceType] = useState<string>('');
+  const [filterBrand, setFilterBrand] = useState<string>('');
+  const [filterModel, setFilterModel] = useState<string>('');
 
+  // Memoized unique device types, brands, and models from parts
+  const partDeviceTypes = Array.from(new Set(parts.map((p: Part) => p.deviceType).filter(Boolean) as string[])).sort();
+  // Brand extraction: prefer explicit brand field, fallback to deviceModel/description regex
+  const partBrands = Array.from(new Set(parts.map((p: Part) => {
+    // Prefer explicit brand if present
+    if ((p as any).brand && typeof (p as any).brand === 'string' && (p as any).brand.trim() !== '') {
+      return (p as any).brand.trim();
+    }
+    // Fallback: extract from deviceModel
+    if (p.deviceModel) {
+      const match = p.deviceModel.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+      if (match) return match[1];
+    }
+    // Fallback: extract from description
+    if (p.description) {
+      const match = p.description.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+      if (match) return match[1];
+    }
+    return null;
+  }).filter(Boolean) as string[])).sort();
+  const partModels = Array.from(new Set(parts.filter((p: Part) => {
+    let matchesBrand = true;
+    if (filterBrand) {
+      if (p.deviceModel) {
+        const match = p.deviceModel.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+        matchesBrand = !!(match && match[1] === filterBrand);
+      } else {
+        matchesBrand = false;
+      }
+    }
+    return (!filterDeviceType || p.deviceType === filterDeviceType) && matchesBrand && p.deviceModel;
+  }).map((p: Part) => p.deviceModel as string))).sort();
+
+  // Filtered parts
+  const filteredParts = parts.filter((p: Part) => {
+    let matchesBrand = true;
+    if (filterBrand) {
+      if (p.deviceModel) {
+        const match = p.deviceModel.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+        matchesBrand = !!(match && match[1] === filterBrand);
+      } else if (p.description) {
+        const match = p.description.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+        matchesBrand = !!(match && match[1] === filterBrand);
+      } else {
+        matchesBrand = false;
+      }
+    }
+    return (
+      (!filterDeviceType || p.deviceType === filterDeviceType) &&
+      matchesBrand &&
+      (!filterModel || p.deviceModel === filterModel)
+    );
+  });
   const loadDevices = async () => {
     try {
       const deviceData = await getAllDevices()
@@ -248,26 +305,15 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   }
 
   const handleAddDevice = async () => {
-    setDeviceImageError(null)
-    if (!newDevice.imageUrl) {
-      setDeviceImageError('Please upload a device image before adding the device.')
-      return
-    }
     if (newDevice.type && newDevice.brand && newDevice.model) {
       try {
-        // Debug log
-        console.log('Creating device with:', newDevice)
         const device = await createDevice({
           type: newDevice.type as DeviceType,
           brand: newDevice.brand,
-          model: newDevice.model,
-          imageUrl: newDevice.imageUrl,
-          description: newDevice.description,
+          model: newDevice.model
         })
         setDevices([...devices, device])
         setNewDevice({ type: '', brand: '', model: '', imageUrl: '', description: '' })
-        setDeviceImageError(null)
-        onClose() // Close the modal after creation
       } catch (error) {
         console.error('Error adding device:', error)
       }
@@ -277,11 +323,28 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   const handleAddPart = async () => {
     if (newPart.name && newPart.sku) {
       try {
+        let deviceModelValue = newPart.deviceModel;
+        if (deviceModelValue && deviceModelValue !== 'all') {
+          const foundDevice = allDevices.find((d) => d.id === deviceModelValue);
+          deviceModelValue = foundDevice ? foundDevice.model : deviceModelValue;
+        } else if (deviceModelValue === 'all') {
+          deviceModelValue = '';
+        }
         const part = await createPart({
           ...newPart,
-          quality: newPart.quality,
-        })
-        setParts([...parts, part])
+          deviceModel: deviceModelValue ? deviceModelValue : undefined,
+          deviceType: newPart.deviceType ? newPart.deviceType : undefined,
+          quality: newPart.quality || undefined,
+        });
+        setParts([
+          ...parts,
+          {
+            ...part,
+            quality: part.quality ?? null,
+            createdAt: part.createdAt ?? new Date().toISOString(),
+            updatedAt: part.updatedAt ?? new Date().toISOString(),
+          },
+        ]);
         setNewPart({
           name: '',
           sku: '',
@@ -293,10 +356,10 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
           deviceType: '',
           imageUrl: '',
           description: '',
-          quality: '' // <-- Reset quality
-        })
+          quality: ''
+        });
       } catch (error) {
-        console.error('Error adding part:', error)
+        console.error('Error adding part:', error);
       }
     }
   }
@@ -454,7 +517,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   }
 
   const handleUpdatePart = async () => {
-    if (!editingPart) return
+    if (!editingPart) return;
     let deviceModelValue = editingPart.deviceModel;
     if (deviceModelValue && deviceModelValue !== 'all') {
       const found = allDevices.find((d) => d.id === deviceModelValue);
@@ -470,15 +533,25 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
         inStock: editingPart.inStock,
         minStock: editingPart.minStock,
         supplier: editingPart.supplier,
-        deviceModel: deviceModelValue || undefined,
-        deviceType: editingPart.deviceType || undefined,
-        quality: editingPart.quality,
-        // Add imageUrl and description when backend supports it
-      })
-      setParts(parts.map(p => p.id === editingPart.id ? updatedPart : p))
-      setEditingPart(null)
+        deviceModel: deviceModelValue ? deviceModelValue : undefined,
+        deviceType: editingPart.deviceType ? editingPart.deviceType : undefined,
+        quality: editingPart.quality || undefined,
+      });
+      setParts(
+        parts.map((p) =>
+          p.id === editingPart.id
+            ? {
+                ...updatedPart,
+                quality: updatedPart.quality ?? null,
+                createdAt: updatedPart.createdAt ?? p.createdAt,
+                updatedAt: updatedPart.updatedAt ?? new Date().toISOString(),
+              }
+            : p
+        )
+      );
+      setEditingPart(null);
     } catch (error) {
-      console.error('Error updating part:', error)
+      console.error('Error updating part:', error);
     }
   }
 
@@ -605,18 +678,11 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     rows={4}
                     className="resize-none"
                   />
-                  {deviceImageError && (
-                    <p className="text-red-600 text-sm mt-2">{deviceImageError}</p>
-                  )}
                 </div>
 
-                <Button 
-                  onClick={handleAddDevice} 
-                  className="h-11 text-base"
-                  disabled={uploadingDeviceImage || !newDevice.imageUrl}
-                >
+                <Button onClick={handleAddDevice} className="h-11 text-base">
                   <Plus className="h-5 w-5 mr-2" />
-                  {uploadingDeviceImage ? 'Uploading Image...' : 'Add Device'}
+                  Add Device
                 </Button>
               </CardContent>
             </Card>
@@ -871,11 +937,73 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
 
             <Card>
               <CardHeader>
-                <CardTitle>Parts Inventory ({parts.length})</CardTitle>
+                <CardTitle>Parts Inventory ({filteredParts.length})</CardTitle>
               </CardHeader>
               <CardContent>
+                {/* Parts Filter UI */}
+                <div className="flex flex-wrap gap-4 items-end mb-4">
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Device Type</label>
+                    <select
+                      className="border rounded px-2 py-1 min-w-[120px]"
+                      value={filterDeviceType}
+                      onChange={e => {
+                        setFilterDeviceType(e.target.value);
+                        setFilterBrand('');
+                        setFilterModel('');
+                      }}
+                    >
+                      <option value="">All</option>
+                      {partDeviceTypes.map((type: string) => (
+                        <option key={type} value={type}>{type}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Brand</label>
+                    <select
+                      className="border rounded px-2 py-1 min-w-[120px]"
+                      value={filterBrand}
+                      onChange={e => {
+                        setFilterBrand(e.target.value);
+                        setFilterModel('');
+                      }}
+                    >
+                      <option value="">All</option>
+                      {partBrands.map((brand: string) => (
+                        <option key={brand} value={brand}>{brand}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium mb-1">Model</label>
+                    <select
+                      className="border rounded px-2 py-1 min-w-[120px]"
+                      value={filterModel}
+                      onChange={e => setFilterModel(e.target.value)}
+                    >
+                      <option value="">All</option>
+                      {partModels.map((model: string) => (
+                        <option key={model} value={model}>{model}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {(filterDeviceType || filterBrand || filterModel) && (
+                    <button
+                      type="button"
+                      className="ml-2 px-2 py-1 border rounded text-xs bg-gray-100 hover:bg-gray-200"
+                      onClick={() => {
+                        setFilterDeviceType('');
+                        setFilterBrand('');
+                        setFilterModel('');
+                      }}
+                    >
+                      Clear Filters
+                    </button>
+                  )}
+                </div>
                 <div className="space-y-3">
-                  {parts.map((part) => (
+                  {filteredParts.map((part: Part) => (
                     <div key={part.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex items-center space-x-3">
                         {part.imageUrl ? (
@@ -890,17 +1018,19 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                           </div>
                         )}
                         <div className="flex-1">
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center space-x-2 mb-1">
                             <span className="font-medium">{part.name}</span>
                             <Badge variant={part.inStock <= part.minStock ? "destructive" : "secondary"}>
                               {part.inStock} in stock
                             </Badge>
+                            {part.quality && (
+                              <Badge variant="outline" className="text-xs">
+                                {part.quality}
+                              </Badge>
+                            )}
                           </div>
                           <div className="text-sm text-gray-500">
                             SKU: {part.sku} • ${part.cost} • {part.supplier}
-                            {part.quality && (
-                              <span className="ml-2">• <span className="font-semibold">{part.quality}</span> quality</span>
-                            )}
                           </div>
                           {part.description && (
                             <p className="text-sm text-gray-500 mt-1">{part.description}</p>
@@ -1572,6 +1702,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="OEM">OEM</SelectItem>
+                    <SelectItem value="Incell">Incell</SelectItem>
                     <SelectItem value="Original">Original</SelectItem>
                     <SelectItem value="Premium">Premium</SelectItem>
                     <SelectItem value="Aftermarket">Aftermarket</SelectItem>

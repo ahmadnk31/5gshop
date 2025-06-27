@@ -23,8 +23,9 @@ import {
   Speaker,
   Camera
 } from "lucide-react";
-import Link from "next/link";
+
 import { useRouter } from "next/navigation";
+import { Link } from '@/i18n/navigation';
 
 type SearchFilter = 'all' | 'parts' | 'accessories';
 
@@ -189,9 +190,12 @@ export function SearchComponent() {
   };
 
   const handleResultClick = (result: SearchResult) => {
-    // Route based on result type
-    if (result.type === 'accessory') {
-      router.push(`/accessories?search=${encodeURIComponent(searchTerm)}`);
+    if (result.type === 'part' && result.id) {
+      router.push(`/parts/${result.id.replace(/^part-/, '')}`);
+    } else if (result.type === 'accessory' && result.id) {
+      router.push(`/accessories/${result.id.replace(/^accessory-/, '')}`);
+    } else if (result.url) {
+      router.push(result.url);
     } else {
       router.push(`/repairs?search=${encodeURIComponent(searchTerm)}`);
     }
@@ -203,6 +207,26 @@ export function SearchComponent() {
     if (e.key === 'Escape') {
       setIsOpen(false);
       setSearchTerm('');
+    } else if (e.key === 'Enter' && searchTerm.trim().length >= 2) {
+      if (results.length > 0) {
+        const bestResult = results.reduce((prev, curr) => (curr.matchScore || 0) > (prev.matchScore || 0) ? curr : prev, results[0]);
+        if (bestResult.type === 'part') {
+          router.push(`/parts/${bestResult.id}`);
+          setIsOpen(false);
+          return;
+        } else if (bestResult.type === 'accessory') {
+          router.push(`/accessories/${bestResult.id}`);
+          setIsOpen(false);
+          return;
+        } else if (bestResult.url) {
+          router.push(bestResult.url);
+          setIsOpen(false);
+          return;
+        }
+      }
+      const searchUrl = `${getSmartDestination()}?search=${encodeURIComponent(searchTerm.trim())}`;
+      router.push(searchUrl);
+      setIsOpen(false);
     }
   };
 
@@ -300,8 +324,14 @@ export function SearchComponent() {
           onClick={() => {
             if (searchTerm.trim() && searchTerm.length >= 2) {
               const trimmedSearch = searchTerm.trim();
-              const searchUrl = `${getSmartDestination()}?search=${encodeURIComponent(trimmedSearch)}`;
-              router.push(searchUrl);
+              // If user just clicks search, always go to browser page with search term
+              const partCount = results.filter(r => r.type === 'part').length;
+              const accessoryCount = results.filter(r => r.type === 'accessory').length;
+              if (partCount >= accessoryCount) {
+                router.push(`/repairs?search=${encodeURIComponent(trimmedSearch)}`);
+              } else {
+                router.push(`/accessories?search=${encodeURIComponent(trimmedSearch)}`);
+              }
               setIsOpen(false);
             }
           }}

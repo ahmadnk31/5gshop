@@ -242,7 +242,9 @@
     },
     "deviceBrowser": {
       "title": "Browse Devices & Repairs",
-      "description": "Find your device, explore available parts, and get repair cost estimates"
+      "description": "Find your device, explore available parts, and get repair cost estimates",
+      "serialAsc": "Serial Number: Ascending",
+      "serialDesc": "Serial Number: Descending"
     },
     "whyChooseUs": {
       "title": "Why Choose Our Repair Service?",
@@ -610,6 +612,9 @@
     "viewParts": "View available parts and repairs for {brand} {model}",
     "filterPlaceholder": "Filter models...",
     "selectModel": "Select a model to view parts and services",
+    "sortDesc": "Sort by name (A-Z)",
+    "sortAsc": "Sort by name (Z-A)",
+    "sortBy": "Sort by",
     "noModelsFound": "No models found for this brand. Please select a different brand or check back later.",
     "noModelsAvailable": "No models available for this brand at the moment. Please check back later or contact us for assistance."
   },
@@ -619,13 +624,16 @@
     "price": "Price",
     "supplier": "Supplier",
     "quality": "Quality",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
     "unknownQuality": "Unknown",
     "qualityOptions": {
       "oem": "OEM",
       "original": "Original",
       "premium": "Premium",
       "aftermarket": "Aftermarket",
-      "refurbished": "Refurbished"
+      "refurbished": "Refurbished",
+      "incell": "Incell"
     },
     "inStock": "In stock",
     "outOfStock": "Out of stock",
@@ -829,9 +837,13 @@
         }
       },
       "brand": "Brand",
+      "quality":"Quality",
+      "qualityPlaceholder": "Select quality",
       "brandPlaceholder": "e.g. Apple, Samsung",
       "model": "Model",
       "modelPlaceholder": "e.g. iPhone 13, Galaxy S22",
+      "deviceType":"Device Type",
+      "deviceTypePlaceholder": "Select device type",
       "service": "Service (optional)",
       "servicePlaceholder": "e.g. Screen Replacement",
       "part": "Part (optional)",
@@ -974,6 +986,9 @@
     "continue": "Continue",
     "back": "Back",
     "pay": "Pay Now",
+    "next": "Next",
+    "confirm": "Confirm Order",
+    "confirmOrder": "Confirm Order",
     "paying": "Processing payment...",
     "orderSummary": "Order Summary",
     "total": "Total",
@@ -1015,6 +1030,21 @@
       "empty": "Your cart is empty.",
       "total": "Total",
       "checkout": "Checkout"
+    },
+    "repair": {
+      "whoWillPerform": "Who will perform the repair?",
+      "self": "I will repair myself",
+      "byUs": "Repair by us",
+      "howToGetDevice": "How will you get your device to us?",
+      "atShop": "At the shop",
+      "send": "Send",
+      "drop": "Drop",
+      "dropDesc": "Drop off your device at our shop during business hours.",
+      "sendDesc": "Send your device to us via post or courier.",
+      "shippingOptions": "Shipping Options",
+      "shippingOptionsDesc": "Choose how you want to send your device to us.",
+      "errorSelectRepairType": "Please select who will perform the repair.",
+      "errorSelectShippingOption": "Please select a shipping option."
     }
   },
   "settings": {
@@ -1030,5 +1060,50 @@
     "save": "Save Address",
     "saving": "Saving...",
     "success": "Address updated!"
-  }
+  },
+  "parts": {
+    "loading": "Loading...",
+    "notFound": "Part not found",
+    "save": "Save",
+    "warranty": "Warranty",
+    "outOfStock": "Out of Stock",
+    "lowStock": "Low Stock",
+    "sku": "SKU",
+    "supplier": "Supplier",
+    "quality": "Quality",
+    "back": "Back",
+    "inStock": "in stock",
+    "currentlyUnavailable": "Currently unavailable",
+    "description": "Description",
+    "addToCart": "Add to Cart",
+    "getQuote": "Get Quote",
+    "buyNow": "Buy Now",
+    "allParts": "All Parts",
+    "noPartsFound": {
+      "title": "No Parts Found",
+      "message": "We couldn't find any parts matching your search criteria. Please try again with different keywords or browse our categories.",
+      "messageNoFilters": "We'll be adding more parts soon!"
+    },
+    "features": {
+      "freeShipping": {
+        "title": "Free Shipping",
+        "description": "On orders over €50"
+      },
+      "warranty": {
+        "title": "2 Year Warranty",
+        "description": "Full coverage included"
+      },
+      "returns": {
+        "title": "Easy Returns",
+        "description": "30-day return policy"
+      }
+    },
+    "relatedProducts": {
+      "title": "Related Products",
+      "description": "Discover other parts that might interest you",
+      "productImage": "Product Image",
+      "viewDetails": "View Details",
+      "viewAllParts": "View All Parts"
+    }
+}
 }

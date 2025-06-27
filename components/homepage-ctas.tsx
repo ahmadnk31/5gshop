@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Wrench, ShoppingBag } from "lucide-react";
-import Link from "next/link";
+
 import { useGoogleAnalytics } from "@/components/google-analytics";
+import { Link } from "@/i18n/navigation";
 
 export function HomePageCTAs() {
   const { trackEvent } = useGoogleAnalytics();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,84 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
   const [selectedPart, setSelectedPart] = useState<Part | null>(null);
   const [stockUpdate, setStockUpdate] = useState(0);
   const [activeTab, setActiveTab] = useState('parts');
+  // Device part filter state
+  const [filterDeviceType, setFilterDeviceType] = useState<string>('');
+  const [filterBrand, setFilterBrand] = useState<string>('');
+  const [filterModel, setFilterModel] = useState<string>('');
+  // Memoized unique device types, brands, and models from parts
+  const deviceTypes = useMemo(() => {
+    const types = new Set<string>();
+    state.parts.forEach((p: Part) => { if (p.deviceType) types.add(p.deviceType); });
+    return Array.from(types).sort();
+  }, [state.parts]);
+
+  // Brand is not a top-level field on Part, but often encoded in deviceModel or description. Try to extract from deviceModel or description if possible.
+  const brands = useMemo(() => {
+    const brands = new Set<string>();
+    state.parts.forEach((p: Part) => {
+      // Try to extract brand from deviceModel (e.g., "iPhone 14" => "Apple") or from description
+      if (p.deviceModel) {
+        // Heuristic: if deviceModel contains a brand prefix, extract it
+        const match = p.deviceModel.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+        if (match) brands.add(match[1]);
+      }
+      // Fallback: look for brand in description
+      if (p.description) {
+        const match = p.description.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+        if (match) brands.add(match[1]);
+      }
+    });
+    return Array.from(brands).sort();
+  }, [state.parts]);
+
+  const models = useMemo(() => {
+    const models = new Set<string>();
+    state.parts.forEach((p: Part) => {
+      // Only show models for selected brand/deviceType
+      let matchesBrand = true;
+      if (filterBrand) {
+        // Try to extract brand from deviceModel
+        if (p.deviceModel) {
+          const match = p.deviceModel.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+          matchesBrand = !!(match && match[1] === filterBrand);
+        } else {
+          matchesBrand = false;
+        }
+      }
+      if (
+        (!filterDeviceType || p.deviceType === filterDeviceType) &&
+        matchesBrand &&
+        p.deviceModel
+      ) {
+        models.add(p.deviceModel);
+      }
+    });
+    return Array.from(models).sort();
+  }, [state.parts, filterDeviceType, filterBrand]);
+
+  // Filtered parts
+  const filteredParts = useMemo(() => {
+    return state.parts.filter((p: Part) => {
+      // Brand filter: extract brand from deviceModel or description
+      let matchesBrand = true;
+      if (filterBrand) {
+        if (p.deviceModel) {
+          const match = p.deviceModel.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+          matchesBrand = !!(match && match[1] === filterBrand);
+        } else if (p.description) {
+          const match = p.description.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
+          matchesBrand = !!(match && match[1] === filterBrand);
+        } else {
+          matchesBrand = false;
+        }
+      }
+      return (
+        (!filterDeviceType || p.deviceType === filterDeviceType) &&
+        matchesBrand &&
+        (!filterModel || p.deviceModel === filterModel)
+      );
+    });
+  }, [state.parts, filterDeviceType, filterBrand, filterModel]);
   
   // Accessories state
   const [accessories, setAccessories] = useState<Accessory[]>([]);
@@ -120,6 +198,68 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
 
           {/* Parts Tab */}
           <TabsContent value="parts" className="space-y-6">
+            {/* Device Part Filters */}
+            <div className="flex flex-wrap gap-4 items-end mb-2">
+              <div>
+                <label className="block text-xs font-medium mb-1">Device Type</label>
+                <select
+                  className="border rounded px-2 py-1 min-w-[120px]"
+                  value={filterDeviceType}
+                  onChange={e => {
+                    setFilterDeviceType(e.target.value);
+                    setFilterBrand('');
+                    setFilterModel('');
+                  }}
+                >
+                  <option value="">All</option>
+                  {deviceTypes.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium mb-1">Brand</label>
+                <select
+                  className="border rounded px-2 py-1 min-w-[120px]"
+                  value={filterBrand}
+                  onChange={e => {
+                    setFilterBrand(e.target.value);
+                    setFilterModel('');
+                  }}
+                >
+                  <option value="">All</option>
+                  {brands.map(brand => (
+                    <option key={brand} value={brand}>{brand}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-medium mb-1">Model</label>
+                <select
+                  className="border rounded px-2 py-1 min-w-[120px]"
+                  value={filterModel}
+                  onChange={e => setFilterModel(e.target.value)}
+                >
+                  <option value="">All</option>
+                  {models.map(model => (
+                    <option key={model} value={model}>{model}</option>
+                  ))}
+                </select>
+              </div>
+              {(filterDeviceType || filterBrand || filterModel) && (
+                <button
+                  type="button"
+                  className="ml-2 px-2 py-1 border rounded text-xs bg-gray-100 hover:bg-gray-200"
+                  onClick={() => {
+                    setFilterDeviceType('');
+                    setFilterBrand('');
+                    setFilterModel('');
+                  }}
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
             {/* Summary Cards for Parts */}
             <div className="grid md:grid-cols-3 gap-4">
               <Card>
@@ -157,8 +297,8 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
             {/* Parts List */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Repair Parts Inventory</h3>
-              <div className="space-y-3">
-                {state.parts.map((part: Part) => (
+            <div className="space-y-3">
+              {filteredParts.map((part: Part) => (
                   <Card key={part.id} className={`${part.inStock <= part.minStock ? 'border-orange-200 bg-orange-50' : ''}`}>
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">

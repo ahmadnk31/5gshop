@@ -53,6 +53,7 @@ export interface Part {
   description?: string;
   deviceModel?: string | null;  // Compatible device model for exact matching
   deviceType?: string | null;   // Compatible device type for broader matching
+  quality?: string | null;      // e.g. "OEM", "Original", etc.
   createdAt: string;
   updatedAt: string;
 }

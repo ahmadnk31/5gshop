@@ -56,6 +56,8 @@ export function OrdersTable() {
             <th className="px-4 py-2">User</th>
             <th className="px-4 py-2">Amount</th>
             <th className="px-4 py-2">Status</th>
+            <th className="px-4 py-2">Repair Type</th>
+            <th className="px-4 py-2">Shipping Option</th>
             <th className="px-4 py-2">Created</th>
             <th className="px-4 py-2">Actions</th>
           </tr>
@@ -69,6 +71,8 @@ export function OrdersTable() {
               <td className="px-4 py-2">
                 <span className={`inline-block px-2 py-1 rounded text-xs font-semibold ${order.status === 'paid' ? 'bg-green-100 text-green-700' : order.status === 'created' ? 'bg-yellow-100 text-yellow-700' : order.status === 'ready' ? 'bg-blue-100 text-blue-700' : order.status === 'shipped' ? 'bg-purple-100 text-purple-700' : order.status === 'finished' ? 'bg-gray-200 text-gray-700' : 'bg-gray-100 text-gray-700'}`}>{order.status}</span>
               </td>
+              <td className="px-4 py-2">{order.repairType || '-'}</td>
+              <td className="px-4 py-2">{order.shippingOption || '-'}</td>
               <td className="px-4 py-2">{new Date(order.createdAt).toLocaleDateString()}</td>
               <td className="px-4 py-2 space-x-2">
                 <button className="text-blue-600 hover:underline" onClick={() => setSelectedOrder(order)}>View</button>

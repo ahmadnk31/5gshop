@@ -5,12 +5,15 @@ import { CheckoutForm } from "@/components/checkout-form";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
+
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CheckoutPage() {
   const { cart, getTotal } = useCart();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // Forwards repairType and shippingOption from CheckoutForm
+  const [checkoutMeta, setCheckoutMeta] = useState<{ repairType?: string; shippingOption?: string }>({});
 
   useEffect(() => {
     async function createPaymentIntent() {
@@ -22,6 +25,7 @@ export default function CheckoutPage() {
           amount: Math.round(getTotal() * 100), // in cents
           currency: "eur",
           cart,
+          ...checkoutMeta,
         }),
       });
       const data = await res.json();
@@ -29,7 +33,7 @@ export default function CheckoutPage() {
       setLoading(false);
     }
     if (cart.length > 0) createPaymentIntent();
-  }, [cart, getTotal]);
+  }, [cart, getTotal, checkoutMeta]);
 
   if (cart.length === 0) {
     return <div className="text-center py-12">Your cart is empty.</div>;
@@ -41,7 +45,7 @@ export default function CheckoutPage() {
       {loading && <div>Loading payment form...</div>}
       {clientSecret && (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
-          <CheckoutForm clientSecret={clientSecret} />
+          <CheckoutForm clientSecret={clientSecret} setCheckoutMeta={setCheckoutMeta} />
         </Elements>
       )}
     </div>

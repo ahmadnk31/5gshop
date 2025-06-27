@@ -18,21 +18,11 @@ export async function createDevice(data: {
   type: DeviceType;
   brand: string;
   model: string;
-  imageUrl?: string;
-  description?: string;
   serialNumber?: string;
   purchaseDate?: string;
 }) {
   try {
-    const device = await DatabaseService.createDevice({
-      type: data.type,
-      brand: data.brand,
-      model: data.model,
-      imageUrl: data.imageUrl,
-      description: data.description,
-      serialNumber: data.serialNumber,
-      purchaseDate: data.purchaseDate,
-    });
+    const device = await DatabaseService.createDevice(data);
     revalidatePath("/admin");
     return device;
   } catch (error) {
@@ -67,6 +57,15 @@ export async function deleteDevice(deviceId: string) {
   } catch (error) {
     console.error("Failed to delete device:", error);
     throw new Error("Failed to delete device");
+  }
+}
+
+export async function getAllDevicesBySerialNumber(order: 'asc' | 'desc' = 'asc') {
+  try {
+    return await DatabaseService.getAllDevicesBySerialNumber(order);
+  } catch (error) {
+    console.error("Failed to get devices by serial number:", error);
+    throw new Error("Failed to get devices by serial number");
   }
 }
 

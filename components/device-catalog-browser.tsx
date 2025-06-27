@@ -28,8 +28,9 @@ import {
   getPartsByDeviceModel,
   getRepairServicesForDevice
 } from '@/app/actions/device-catalog-actions'
-import { getAllDevices } from '@/app/actions/device-management-actions'
+import { getAllDevices, getAllDevicesBySerialNumber } from '@/app/actions/device-management-actions'
 import { useTranslations } from 'next-intl';
+import { useCart } from "@/components/cart-context";
 
 import { FallbackImage } from './ui/fallback-image'
 import { Link } from '@/i18n/navigation'
@@ -63,10 +64,12 @@ const deviceDisplayNames: Record<DeviceType, string> = {
 
 interface DeviceCatalogBrowserProps {
   searchTerm?: string;
+  serialOrder?: 'asc' | 'desc';
 }
 
-function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) {
+function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'asc' }: DeviceCatalogBrowserProps) {
   const t = useTranslations('device-catalog-browser');
+  const { addToCart } = useCart();
   const searchParams = useSearchParams()
   const [currentLevel, setCurrentLevel] = useState<'types' | 'brands' | 'models' | 'parts'>('types')
   const [selectedType, setSelectedType] = useState<string | null>(null)
@@ -83,6 +86,7 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
   
   const [loading, setLoading] = useState(false)
   const [isSearchMode, setIsSearchMode] = useState(false)
+  const [order, setOrder] = useState<'asc' | 'desc'>(serialOrder);
 
   // Device type mapping for URL parameters
   const urlToDeviceTypeMap: Record<string, DeviceType> = {
@@ -128,11 +132,23 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
     try {
       const response = await fetch(`/api/search/repairs?q=${encodeURIComponent(query)}`)
       if (response.ok) {
-        const results = await response.json()
+        let results = await response.json()
+        // Filter out incomplete results (missing id, name, cost/price, imageUrl, inStock)
+        results = results.filter((part: any) => {
+          const hasId = !!part.id;
+          const hasName = !!part.name;
+          const hasCost = typeof part.cost === 'number' && !isNaN(part.cost) && part.cost > 0;
+          const hasImage = !!part.imageUrl;
+          const hasStock = typeof part.inStock === 'number';
+          return hasId && hasName && hasCost && hasImage && hasStock;
+        });
         setSearchResults(results)
+      } else {
+        setSearchResults([])
       }
     } catch (error) {
       console.error('Error performing search:', error)
+      setSearchResults([])
     } finally {
       setLoading(false)
     }
@@ -143,12 +159,13 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
     try {
       const response = await fetch(`/api/search/repairs?q=${encodeURIComponent(query)}&deviceType=${deviceType}`)
       if (response.ok) {
-        const results = await response.json()
+        let results = await response.json()
         // Filter results to only show the selected device type
-        const filteredResults = results.filter((result: any) => 
-          result.deviceType === deviceType || result.deviceType === 'GENERAL'
-        )
-        setSearchResults(filteredResults)
+        results = results.filter((result: any) => 
+          (result.deviceType === deviceType || result.deviceType === 'GENERAL') &&
+          !!result.id && !!result.name && typeof result.cost === 'number' && !isNaN(result.cost) && result.cost > 0 && !!result.imageUrl && typeof result.inStock === 'number'
+        );
+        setSearchResults(results)
       }
     } catch (error) {
       console.error('Error performing filtered search:', error)
@@ -169,9 +186,9 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
     }
   }
 
-  const loadDevicesForBrand = async (deviceType: DeviceType, brand: string) => {
+  const loadDevicesForBrand = async (deviceType: DeviceType, brand: string, order: 'asc' | 'desc' = 'asc') => {
     try {
-      const allDevices = await getAllDevices()
+      const allDevices = await getAllDevicesBySerialNumber(order);
       // Filter devices by type and brand
       const filteredDevices = allDevices.filter(device => 
         device.type === deviceType && device.brand === brand
@@ -218,14 +235,16 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
     try {
       setSelectedBrand(brand)
       const modelsData = await getModelsByBrand(selectedType as DeviceType, brand)
+      // Sort models according to current order
+      const sortedModels = sortModelsArray(modelsData, order)
+      setModels(sortedModels)
       // Load brand-specific services
       const servicesData = await getRepairServicesForDevice(selectedType as DeviceType, brand)
-      setModels(modelsData)
       setServices(servicesData)
       setCurrentLevel('models')
       
       // Load devices with images for this brand
-      await loadDevicesForBrand(selectedType as DeviceType, brand)
+      await loadDevicesForBrand(selectedType as DeviceType, brand, order);
       
       // Scroll to keep the user in context
       setTimeout(() => {
@@ -247,18 +266,28 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
   }
 
   const selectModel = async (model: string) => {
-    if (!selectedType || !selectedBrand) {
-      console.error('Missing selectedType or selectedBrand:', { selectedType, selectedBrand })
+    if (!selectedType) {
+      console.error('Missing selectedType:', { selectedType })
       return
     }
-    
     setLoading(true)
     try {
-      console.log(`🔍 Selecting model: ${model} for ${selectedType} ${selectedBrand}`)
+      let brandToUse: string | undefined = selectedBrand || undefined;
       setSelectedModel(model)
-      const partsData = await getPartsByDeviceModel(selectedType as DeviceType, selectedBrand, model)
-      // Load model-specific services
-      const servicesData = await getRepairServicesForDevice(selectedType as DeviceType, selectedBrand, model)
+      // Try to load parts with selectedBrand (may be undefined)
+      let partsData: any[] = [];
+      try {
+        partsData = await getPartsByDeviceModel(selectedType as DeviceType, brandToUse || '', model)
+      } catch (e) {
+        partsData = [];
+      }
+      // If no brand, try to infer from first part
+      if (!brandToUse && partsData && partsData.length > 0 && partsData[0].brand) {
+        brandToUse = partsData[0].brand;
+        setSelectedBrand(brandToUse || null);
+      }
+      // Now load services with the inferred brand
+      const servicesData = await getRepairServicesForDevice(selectedType as DeviceType, brandToUse, model)
       console.log(`✅ Received ${partsData.length} parts and ${servicesData.length} services for ${model}`)
       setParts(partsData)
       setServices(servicesData)
@@ -362,6 +391,33 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
     }
   }
 
+  const handleToggleOrder = () => {
+    const newOrder = order === 'asc' ? 'desc' : 'asc';
+    setOrder(newOrder);
+    if (currentLevel === 'models' && selectedType && selectedBrand) {
+      // Reload devices for brand with new order
+      loadDevicesForBrand(selectedType as DeviceType, selectedBrand, newOrder);
+    }
+  };
+
+  // Helper: Sort models array by numeric value in model name (if present), else alphabetically
+  const sortModelsArray = (modelsArr: string[], order: 'asc' | 'desc') => {
+    return [...modelsArr].sort((a, b) => {
+      const anum = parseInt(a.replace(/[^\d]/g, ''))
+      const bnum = parseInt(b.replace(/[^\d]/g, ''))
+      if (!isNaN(anum) && !isNaN(bnum)) {
+        return order === 'asc' ? anum - bnum : bnum - anum
+      }
+      return order === 'asc' ? a.localeCompare(b) : b.localeCompare(a)
+    })
+  }
+
+  // Sort models whenever order changes
+  useEffect(() => {
+    setModels(prev => sortModelsArray(prev, order))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order])
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -407,10 +463,14 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
         <div className="space-y-6">
           <div className="text-center">
             <h3 className="text-xl font-semibold mb-2">
-              {selectedType ? `${deviceDisplayNames[selectedType as DeviceType]} ` : ''}{t('search.resultsTitle')}
+              {t('search.resultsTitle', { type: selectedType ? deviceDisplayNames[selectedType as DeviceType] : '' })}
             </h3>
             <p className="text-gray-600">
-              {t('search.resultsFound', { count: searchResults.length, type: deviceDisplayNames[selectedType as DeviceType], term: (searchTerm || searchParams.get('search') || '') })}
+              {t('search.resultsFound', {
+                count: searchResults.length,
+                type: selectedType ? deviceDisplayNames[selectedType as DeviceType] : '',
+                search: (searchTerm || searchParams.get('search') || '')
+              })}
             </p>
             {selectedType && (
               <Badge variant="secondary" className="mt-2">
@@ -418,7 +478,6 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
               </Badge>
             )}
           </div>
-          
           {loading ? (
             <div className="text-center py-8">
               <div className="animate-spin h-8 w-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto"></div>
@@ -426,42 +485,88 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
             </div>
           ) : searchResults.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {searchResults.map((result) => (
-                <Card key={result.id} className="hover:shadow-lg transition-shadow">
+              {searchResults.map((part) => (
+                <Card key={part.id}>
+                  {part.imageUrl && (
+                    <div className="relative h-32 overflow-hidden">
+                      <FallbackImage
+                        src={part.imageUrl}
+                        alt={part.name}
+                        className="w-full h-full object-cover"
+                        fallbackContent={
+                          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                            <Package className="h-8 w-8 text-gray-400" />
+                          </div>
+                        }
+                      />
+                    </div>
+                  )}
                   <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <Wrench className="h-5 w-5 mr-2 text-blue-600" />
-                      {result.name || result.title}
-                    </CardTitle>
-                    <CardDescription>
-                      {result.description}
-                    </CardDescription>
-                    {result.deviceType && result.deviceType !== 'GENERAL' && (
-                      <Badge variant="secondary" className="w-fit">
-                        {deviceDisplayNames[result.deviceType as DeviceType] || result.deviceType}
+                    <CardTitle className="flex items-center justify-between">
+                      <span className="flex items-center">
+                        <Package className="h-5 w-5 mr-2 text-blue-600" />
+                        {part.name}
+                      </span>
+                      <Badge
+                        variant={part.inStock > 0 ? "default" : "destructive"}
+                        className={
+                          part.inStock > 0
+                            ? "bg-blue-100 text-blue-800 border-blue-200"
+                            : "bg-red-100 text-red-800 border-red-200"
+                        }
+                      >
+                        {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
                       </Badge>
-                    )}
+                    </CardTitle>
+                    <CardDescription>SKU: {part.sku}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
-                      {result.price && (
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="flex items-center">
-                            <DollarSign className="h-4 w-4 mr-1" />
-                            {t('searchResults.startingFrom')}:
-                          </span>
-                          <span className="font-medium">${result.price}</span>
-                        </div>
-                      )}
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Clock className="h-4 w-4 mr-1" />
-                        {t('searchResults.fastTurnaround')}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>{t('parts.stock')}:</span>
+                        <span className={part.inStock <= part.minStock ? 'text-red-600' : 'text-green-600'}>
+                          {part.inStock} {t('parts.units')}
+                        </span>
                       </div>
-                      <Button asChild size="sm" className="w-full">
-                        <Link href={`/quote?service=${encodeURIComponent(result.name || result.title)}&deviceType=${result.deviceType || ''}`}>
-                          {t('searchResults.getQuote')}
-                        </Link>
-                      </Button>
+                      <div className="flex justify-between text-sm">
+                        <span>{t('parts.price')}:</span>
+                        <span className="font-medium">{formatCurrency(part.cost,'EUR')}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span>{t('parts.supplier')}:</span>
+                        <span>{part.supplier}</span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span>{t('parts.quality')}:</span>
+                        <span>{part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}</span>
+                      </div>
+                      <div className="pt-2">
+                        <Button asChild size="sm" className="w-full">
+<Link href={`/quote?deviceType=${encodeURIComponent(part.deviceType ?? part.device_type ?? selectedType ?? '')}&brand=${encodeURIComponent(selectedBrand ?? part.brand ?? '')}&model=${encodeURIComponent(selectedModel ?? part.deviceModel ?? '')}&part=${encodeURIComponent(part.name)}&quality=${encodeURIComponent(part.quality ?? '')}&sku=${encodeURIComponent(part.sku ?? '')}&supplier=${encodeURIComponent(part.supplier ?? '')}`}>
+                            {t('parts.requestQuote')}
+                          </Link>
+                        </Button>
+                      </div>
+                      <div className="pt-2">
+                        <Button
+                          size="sm"
+                          className="w-full"
+                          disabled={part.inStock <= 0}
+                          onClick={() => {
+                            addToCart({
+                              id: part.id,
+                              name: part.name,
+                              price: part.cost,
+                              image: part.imageUrl,
+                            });
+                          }}
+                        >
+                          <span className="flex items-center justify-center">
+                            <Package className="h-4 w-4 mr-2" />
+                            {part.inStock > 0 ? t('parts.addToCart', { defaultValue: 'Add to Cart' }) : t('parts.outOfStock', { defaultValue: 'Out of Stock' })}
+                          </span>
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -472,7 +577,7 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
               <Package className="h-16 w-16 mx-auto mb-4 text-gray-300" />
               <h3 className="text-lg font-semibold mb-2">{t('search.noResults')}</h3>
               <p className="text-gray-600 mb-4">
-                {t('search.noResultsDesc', { term: (searchTerm || searchParams.get('search') || '') })}
+                {t('search.noResultsDesc', { search: (searchTerm || searchParams.get('search') || '') })}
               </p>
               <Button 
                 onClick={() => {
@@ -486,7 +591,6 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
               </Button>
             </div>
           )}
-          
           <div className="text-center border-t pt-6">
             <div className="flex gap-3 justify-center">
               {selectedType && (
@@ -510,7 +614,6 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
               <Button 
                 variant="outline"
                 onClick={() => {
-                  setIsSearchMode(false)
                   setSearchResults([])
                   setSelectedType(null)
                   window.history.pushState({}, '', '/repairs')
@@ -725,49 +828,69 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
               />
             </div>
           </div>
-          
+          {/* Order Toggle Button */}
+          <div className="flex items-center justify-end mb-2">
+            <Button size="sm" variant="outline" onClick={handleToggleOrder}>
+              {order === 'asc' ? t('models.sortAsc', { defaultValue: 'Sort: Ascending' }) : t('models.sortDesc', { defaultValue: 'Sort: Descending' })}
+            </Button>
+          </div>
           {(() => {
-            // Group models by series (e.g., iPhone 14, iPhone 15)
-            const modelGroups: Record<string, string[]> = {}
-            models.forEach(model => {
-              let baseModel = model
-              if (model.includes('iPhone')) {
-                const match = model.match(/iPhone (\d+)/)
-                if (match) baseModel = `iPhone ${match[1]}`
-              } else if (model.includes('Galaxy S')) {
-                const match = model.match(/Galaxy S(\d+)/)
-                if (match) baseModel = `Galaxy S${match[1]}`
-              } else if (model.includes('MacBook')) {
-                baseModel = model.split(' ').slice(0, 2).join(' ')
-              } else if (model.includes('iPad')) {
-                baseModel = model.split(' ').slice(0, 2).join(' ')
-              } else if (model.includes('Watch')) {
-                baseModel = model.split(' ').slice(0, 3).join(' ')
+            // Sort models array by order before grouping
+            const sortedModels = [...models].sort((a, b) => {
+              // Try to extract numbers for numeric sort (e.g., iPhone 14, Galaxy S21)
+              const getModelNumber = (model: string) => {
+                const match = model.match(/(\d+)/);
+                return match ? parseInt(match[1], 10) : null;
+              };
+              const aNum = getModelNumber(a);
+              const bNum = getModelNumber(b);
+              if (aNum !== null && bNum !== null) {
+                return order === 'asc' ? aNum - bNum : bNum - aNum;
               }
-              if (!modelGroups[baseModel]) modelGroups[baseModel] = []
-              modelGroups[baseModel].push(model)
-            })
+              // Fallback to alphabetical
+              return order === 'asc' ? a.localeCompare(b) : b.localeCompare(a);
+            });
+            // Group sorted models by series (e.g., iPhone 14, iPhone 15)
+            const modelGroups: Record<string, string[]> = {};
+            sortedModels.forEach(model => {
+              let baseModel = model;
+              if (model.includes('iPhone')) {
+                const match = model.match(/iPhone (\d+)/);
+                if (match) baseModel = `iPhone ${match[1]}`;
+              } else if (model.includes('Galaxy S')) {
+                const match = model.match(/Galaxy S(\d+)/);
+                if (match) baseModel = `Galaxy S${match[1]}`;
+              } else if (model.includes('MacBook')) {
+                baseModel = model.split(' ').slice(0, 2).join(' ');
+              } else if (model.includes('iPad')) {
+                baseModel = model.split(' ').slice(0, 2).join(' ');
+              } else if (model.includes('Watch')) {
+                baseModel = model.split(' ').slice(0, 3).join(' ');
+              }
+              if (!modelGroups[baseModel]) modelGroups[baseModel] = [];
+              modelGroups[baseModel].push(model);
+            });
             // Custom sort for each series: latest to oldest
             const sortModels = (series: string[], base: string) => {
-              // iPhone: extract number, sort desc
+              // iPhone: extract number, sort desc or asc
               if (base.startsWith('iPhone')) {
                 return series.sort((a, b) => {
-                  const anum = parseInt(a.replace(/[^\d]/g, ''))
-                  const bnum = parseInt(b.replace(/[^\d]/g, ''))
-                  return bnum - anum
-                })
+                  const anum = parseInt(a.replace(/[^\d]/g, ''));
+                  const bnum = parseInt(b.replace(/[^\d]/g, ''));
+                  return order === 'asc' ? anum - bnum : bnum - anum;
+                });
               }
-              // Galaxy S: extract number, sort desc
+              // Galaxy S: extract number, sort desc or asc
               if (base.startsWith('Galaxy S')) {
                 return series.sort((a, b) => {
-                  const anum = parseInt(a.replace(/[^\d]/g, ''))
-                  const bnum = parseInt(b.replace(/[^\d]/g, ''))
-                  return bnum - anum
-                })
+                  const anum = parseInt(a.replace(/[^\d]/g, ''));
+                  const bnum = parseInt(b.replace(/[^\d]/g, ''));
+                  return order === 'asc' ? anum - bnum : bnum - anum;
+                });
               }
               // Default: alphabetical
-              return series.sort((a, b) => a.localeCompare(b))
-            }
+              return series.sort((a, b) => order === 'asc' ? a.localeCompare(b) : b.localeCompare(a));
+            };
             return Object.entries(modelGroups).map(([seriesName, seriesModels]) => (
               <div key={seriesName} className="space-y-4" data-series-container>
                 <h4 className="text-lg font-semibold text-gray-800 border-b pb-2">
@@ -881,9 +1004,29 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
                         </div>
                         <div className="pt-2">
                           <Button asChild size="sm" className="w-full">
-                            <Link href={`/quote?deviceType=${selectedType || ''}&brand=${encodeURIComponent(selectedBrand || '')}&model=${encodeURIComponent(selectedModel || '')}&part=${encodeURIComponent(part.name)}`}>
+                            <Link href={`/quote?deviceType=${encodeURIComponent(part.deviceType || selectedType || '')}&brand=${encodeURIComponent(selectedBrand || part.brand || '')}&model=${encodeURIComponent(selectedModel || part.deviceModel || '')}&part=${encodeURIComponent(part.name)}&quality=${encodeURIComponent(part.quality || '')}&sku=${encodeURIComponent(part.sku || '')}&supplier=${encodeURIComponent(part.supplier || '')}`}>
                               {t('parts.requestQuote')}
                             </Link>
+                          </Button>
+                        </div>
+                        <div className="pt-2">
+                          <Button
+                            size="sm"
+                            className="w-full"
+                            disabled={part.inStock <= 0}
+                            onClick={() => {
+                              addToCart({
+                                id: part.id,
+                                name: part.name,
+                                price: part.cost,
+                                image: part.imageUrl,
+                              });
+                            }}
+                          >
+                            <span className="flex items-center justify-center">
+                              <Package className="h-4 w-4 mr-2" />
+                              {part.inStock > 0 ? t('parts.addToCart', { defaultValue: 'Add to Cart' }) : t('parts.outOfStock', { defaultValue: 'Out of Stock' })}
+                            </span>
                           </Button>
                         </div>
                       </div>
@@ -956,14 +1099,14 @@ function DeviceCatalogBrowserContent({ searchTerm }: DeviceCatalogBrowserProps) 
   )
 }
 
-export default function DeviceCatalogBrowser({ searchTerm }: DeviceCatalogBrowserProps) {
+export default function DeviceCatalogBrowser({ searchTerm, serialOrder = 'asc' }: DeviceCatalogBrowserProps) {
   return (
     <Suspense fallback={
       <div className="flex justify-center items-center py-12">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     }>
-      <DeviceCatalogBrowserContent searchTerm={searchTerm} />
+      <DeviceCatalogBrowserContent searchTerm={searchTerm} serialOrder={serialOrder} />
     </Suspense>
   );
 }

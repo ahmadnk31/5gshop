@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { sendConfirmationEmail } from "@/lib/email/sendConfirmationEmail";
 import { prisma } from "@/lib/database";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-05-28.basil", typescript: true });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-05-28.basil",typescript: true });
 
 export async function POST(req: NextRequest) {
   const sig = req.headers.get("stripe-signature");
@@ -27,6 +27,8 @@ export async function POST(req: NextRequest) {
     const email = paymentIntent.receipt_email || paymentIntent.shipping?.name || "";
     const cart = paymentIntent.metadata?.cart || "[]";
     const userId = paymentIntent.metadata?.userId || null;
+    const repairType = paymentIntent.metadata?.repairType || null;
+    const shippingOption = paymentIntent.metadata?.shippingOption || null;
     // Save address
     let addressId: string | null = null;
     if (shipping) {
@@ -54,6 +56,8 @@ export async function POST(req: NextRequest) {
         cart,
         addressId: addressId || undefined,
         userId: userId || undefined,
+        repairType: repairType || undefined,
+        shippingOption: shippingOption || undefined,
       },
     });
     // Send confirmation email

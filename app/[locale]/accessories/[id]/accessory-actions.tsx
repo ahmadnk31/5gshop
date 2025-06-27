@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 
 
 export function AccessoryDetailClientActions({ accessory, isInStock }: { accessory: any, isInStock: boolean }) {
-  const { addToCart } = useCart();
+  const { addToCart, clearCart } = useCart();
   const router = useRouter();
   const t = useTranslations('');
   return (
@@ -23,6 +23,7 @@ export function AccessoryDetailClientActions({ accessory, isInStock }: { accesso
               name: accessory.name,
               price: accessory.price,
               image: accessory.imageUrl || undefined,
+              type: 'accessory',
             });
           }}
         >
@@ -34,13 +35,17 @@ export function AccessoryDetailClientActions({ accessory, isInStock }: { accesso
           size="lg"
           className="flex-1"
           onClick={() => {
+            if (!isInStock) return;
+            // Use context clearCart and addToCart for correct state update (like parts)
+            clearCart();
             addToCart({
               id: accessory.id,
               name: accessory.name,
               price: accessory.price,
               image: accessory.imageUrl || undefined,
+              type: 'accessory',
             });
-            router.push("/checkout");
+            router.push('/checkout');
           }}
           disabled={!isInStock}
         >

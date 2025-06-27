@@ -236,6 +236,20 @@ export function Navigation() {
 
           {/* Tablet Navigation */}
           <div className="hidden md:flex lg:hidden items-center space-x-6">
+            {/* Tablet Search Icon */}
+            <button
+              className="p-2 text-gray-700 hover:text-blue-600 transition-colors"
+              aria-label="Open search"
+              onClick={() => setSearchbarOpen(!searchbarOpen)}
+            >
+              <Search className="h-5 w-5" />
+            </button>
+            {/* Tablet Search Bar - Toggleable */}
+            {searchbarOpen && (
+              <div className="absolute left-0 right-0 top-16 z-50 bg-white border-b border-gray-200 shadow-md px-4 py-3">
+                <SearchComponent />
+              </div>
+            )}
             {/* Compact tablet menu with essential items */}
             
             {/* Repairs Dropdown - Compact */}

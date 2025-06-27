@@ -251,6 +251,8 @@ model Order {
   address       OrderAddress? @relation(fields: [addressId], references: [id])
   userId        String?  // Optional: link to User if registered
   user          User?    @relation(fields: [userId], references: [id])
+  repairType    String?  // 'self' or 'by_us' (for parts orders)
+  shippingOption String? // 'at_shop', 'send', 'drop' (if repairType is 'by_us')
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

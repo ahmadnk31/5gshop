@@ -41,36 +41,39 @@ import { submitQuoteRequest } from "@/app/actions/quote-actions";
 import { useGoogleAnalytics } from "@/components/google-analytics";
 import { QuoteRequestTracker, PageSectionTracker } from "@/components/analytics-components";
 import { useTranslations } from 'next-intl';
+import { useSession } from "next-auth/react";
 
 function QuotePageContent() {
 	const searchParams = useSearchParams();
 	// Add Google Analytics tracking
 	const { trackQuoteRequest, trackEvent } = useGoogleAnalytics();
 	const t = useTranslations('quote');
-
+	const user=useSession();
 	// Form state
-	const [formData, setFormData] = useState({
-		// Contact Information
-		firstName: "",
-		lastName: "",
-		email: "",
-		phone: "",
+  const [formData, setFormData] = useState({
+	// Contact Information
+	firstName:  "",
+	lastName:  "",
+	email: user.data?.user?.email || "",
+	phone:  "",
 
-		// Device Information
-		deviceType: "",
-		brand: "",
-		model: "",
-		service: "",
-		part: "",
-		issueDescription: "",
-		issues: [] as string[],
-		photos: [] as Array<{ url: string; key: string }>,
+	// Device Information
+	deviceType: "",
+	brand: "",
+	model: "",
+	service: "",
+	part: "",
+	sku: "",
+	supplier: "",
+	issueDescription: "",
+	issues: [] as string[],
+	photos: [] as Array<{ url: string; key: string }>,
 
-		// Preferences
-		urgency: "normal" as "urgent" | "normal" | "flexible",
-		contactMethod: "email" as "email" | "phone" | "text" | "any",
-		quality: '',
-	});
+	// Preferences
+	urgency: "normal" as "urgent" | "normal" | "flexible",
+	contactMethod: "email" as "email" | "phone" | "text" | "any",
+	quality: '',
+  });
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">(
@@ -79,35 +82,55 @@ function QuotePageContent() {
 	const [submitMessage, setSubmitMessage] = useState("");
 
 	// Pre-populate form based on URL parameters
-	useEffect(() => {
-		const deviceType = searchParams.get("deviceType");
-		const brand = searchParams.get("brand");
-		const model = searchParams.get("model");
-		const service = searchParams.get("service");
-		const part = searchParams.get("part");
+useEffect(() => {
+  const deviceType = searchParams.get("deviceType");
+  const brand = searchParams.get("brand");
+  const model = searchParams.get("model");
+  const service = searchParams.get("service");
+  const part = searchParams.get("part");
+  let quality = searchParams.get("quality");
+  const sku = searchParams.get("sku");
+  const supplier = searchParams.get("supplier");
 
-		setFormData((prev) => ({
-			...prev,
-			deviceType: deviceType || prev.deviceType,
-			brand: brand || prev.brand,
-			model: model || prev.model,
-			service: service || prev.service,
-			part: part || prev.part,
-			issueDescription: generateIssueDescription(
-				deviceType,
-				brand,
-				model,
-				service,
-				part
-			),
-		}));
+  // Normalize quality to match dropdown options
+  const normalizeQuality = (q: string | null | undefined) => {
+	if (!q) return '';
+	const map: Record<string, string> = {
+	  oem: 'OEM',
+	  original: 'Original',
+	  premium: 'Premium',
+	  aftermarket: 'Aftermarket',
+	  refurbished: 'Refurbished',
+	};
+	const key = q.trim().toLowerCase();
+	return map[key] || '';
+  };
 
-		// Auto-select relevant issues based on service/part
-		if (service || part) {
-			const autoIssues = getAutoSelectedIssues(service, part);
-			setFormData((prev) => ({ ...prev, issues: autoIssues }));
-		}
-	}, [searchParams]);
+  setFormData((prev) => ({
+	...prev,
+	deviceType: deviceType || prev.deviceType,
+	brand: brand || prev.brand,
+	model: model || prev.model,
+	service: service || prev.service,
+	part: part || prev.part,
+	quality: normalizeQuality(quality) || prev.quality,
+	sku: sku || prev.sku,
+	supplier: supplier || prev.supplier,
+	issueDescription: generateIssueDescription(
+	  deviceType,
+	  brand,
+	  model,
+	  service,
+	  part
+	),
+  }));
+
+  // Auto-select relevant issues based on service/part
+  if (service || part) {
+	const autoIssues = getAutoSelectedIssues(service, part);
+	setFormData((prev) => ({ ...prev, issues: autoIssues }));
+  }
+}, [searchParams]);
 
 	const generateIssueDescription = (
 		deviceType?: string | null,
@@ -196,6 +219,8 @@ function QuotePageContent() {
 					model: "",
 					service: "",
 					part: "",
+					sku: "",
+					supplier: "",
 					issueDescription: "",
 					issues: [],
 					photos: [],
@@ -672,22 +697,32 @@ function QuotePageContent() {
 											</div>
 											{/* Quality Dropdown */}
 											<div className="space-y-2">
-												<Label>{t('device-catalog-browser.parts.quality')}</Label>
-												<Select
-													value={formData.quality}
-													onValueChange={(value) => setFormData((prev) => ({ ...prev, quality: value }))}
-												>
-													<SelectTrigger>
-														<SelectValue placeholder={t('device-catalog-browser.parts.quality')} />
-													</SelectTrigger>
-													<SelectContent>
-														<SelectItem value="OEM">{t('device-catalog-browser.parts.qualityOptions.oem')}</SelectItem>
-														<SelectItem value="Original">{t('device-catalog-browser.parts.qualityOptions.original')}</SelectItem>
-														<SelectItem value="Premium">{t('device-catalog-browser.parts.qualityOptions.premium')}</SelectItem>
-														<SelectItem value="Aftermarket">{t('device-catalog-browser.parts.qualityOptions.aftermarket')}</SelectItem>
-														<SelectItem value="Refurbished">{t('device-catalog-browser.parts.qualityOptions.refurbished')}</SelectItem>
-													</SelectContent>
-												</Select>
+												<Label>{t('form.quality')}</Label>
+												{searchParams.get('quality') ? (
+													<Input
+														id="quality"
+														value={formData.quality}
+														readOnly
+														className="bg-gray-100 cursor-not-allowed"
+													/>
+												) : (
+													<Select
+													
+														value={formData.quality}
+														onValueChange={(value) => setFormData((prev) => ({ ...prev, quality: value }))}
+													>
+														<SelectTrigger>
+															<SelectValue placeholder={t('form.quality')} />
+														</SelectTrigger>
+														<SelectContent>
+															<SelectItem value="OEM">OEM</SelectItem>
+															<SelectItem value="Original">Original</SelectItem>
+															<SelectItem value="Premium">Premium</SelectItem>
+															<SelectItem value="Aftermarket">Aftermarket</SelectItem>
+															<SelectItem value="Refurbished">Refurbished</SelectItem>
+														</SelectContent>
+													</Select>
+												)}
 											</div>
 										</div>
 									</div>
@@ -709,23 +744,25 @@ function QuotePageContent() {
 												variant="ghost"
 												size="lg"
 												onClick={() => {
-													setFormData({
-														firstName: "",
-														lastName: "",
-														email: "",
-														phone: "",
-														deviceType: "",
-														brand: "",
-														model: "",
-														service: "",
-														part: "",
-														issueDescription: "",
-														issues: [],
-														photos: [],
-														urgency: "normal",
-														contactMethod: "email",
-														quality: '',
-													});
+												setFormData({
+													firstName: "",
+													lastName: "",
+													email: "",
+													phone: "",
+													deviceType: "",
+													brand: "",
+													model: "",
+													service: "",
+													part: "",
+													sku: "",
+													supplier: "",
+													issueDescription: "",
+													issues: [],
+													photos: [],
+													urgency: "normal",
+													contactMethod: "email",
+													quality: '',
+												});
 												}}
 											>
 												{t('form.clearButton')}

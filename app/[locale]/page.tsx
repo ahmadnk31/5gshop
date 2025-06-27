@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Smartphone, Wrench, ShoppingBag, Star, Clock, Shield, CheckCircle, ArrowRight, Zap, Cable, Headphones, Monitor } from "lucide-react";
+import { Smartphone, Wrench, ShoppingBag, Star, Clock, Shield, CheckCircle, ArrowRight, Zap, Cable, Headphones, Monitor, ShoppingCart } from "lucide-react";
 import { Testimonials } from "@/components/testimonials";
 import { PricingComparison } from "@/components/pricing-comparison";
 import { getAccessories } from "@/app/actions/accessory-actions";

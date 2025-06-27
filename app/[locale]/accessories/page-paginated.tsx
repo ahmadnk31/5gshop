@@ -32,6 +32,7 @@ import { Accessory, AccessoryCategory } from "@/lib/types";
 import { useTranslations } from "next-intl";
 import { formatCurrency } from "@/lib/utils";
 import { useCart } from "@/components/cart-context";
+import { FallbackImage } from "@/components/ui/fallback-image";
 
 // Category configurations matching the database schema
 const getCategoryConfigs = (t: any) => ({
@@ -679,83 +680,58 @@ export default function AccessoriesPagePaginated() {
                   <Card key={accessory.id} className="hover:shadow-lg transition-shadow group">
                     <CardHeader className="p-0">
                       <div className="relative overflow-hidden rounded-t-lg">
-                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform">
-                          {accessory.imageUrl ? (
-                            <img 
-                              src={accessory.imageUrl} 
-                              alt={accessory.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="text-gray-400 text-center">
-                              <IconComponent className="h-16 w-16 mx-auto mb-2" />
-                              <p className="text-sm">
-                                {t('accessories.product.productImage')}
-                              </p>
-                            </div>
-                          )}
+                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
+                          <FallbackImage
+                            src={accessory.imageUrl || ''}
+                            alt={accessory.name}
+                            className="object-cover w-full h-full"
+                            fallbackContent={
+                              <div className="text-center text-gray-400 flex flex-col items-center justify-center w-full h-full">
+                                <IconComponent className="h-16 w-16 mx-auto mb-2" />
+                                <p className="text-sm">{t('accessories.product.productImage')}</p>
+                              </div>
+                            }
+                          />
                         </div>
                         {lowStock && (
-                          <Badge 
-                            variant="destructive" 
-                            className="absolute top-2 right-2"
-                          >
+                          <Badge className="absolute top-2 left-2" variant="outline">
                             {t('accessories.product.lowStock')}
                           </Badge>
                         )}
                       </div>
                     </CardHeader>
                     <CardContent className="p-4">
-                      <div className="space-y-3">
-                        {/* Product Name */}
-                        <h3 className="font-semibold text-lg leading-tight line-clamp-2">
-                          {accessory.name}
-                        </h3>
-
-                        {/* Brand */}
-                        <p className="text-sm text-gray-600">{accessory.brand}</p>
-
-                        {/* Description */}
-                        {accessory.description && (
-                          <p className="text-sm text-gray-600 line-clamp-2">
-                            {accessory.description}
-                          </p>
-                        )}
-
-                        {/* Price */}
-                        <div className="flex items-center justify-between">
-                          <span className="text-xl font-bold text-blue-600">
-                            {formatCurrency(accessory.price, "EUR")}
-                          </span>
-                          <Badge variant="outline">{t('accessories.product.inStock', { count: accessory.inStock })}</Badge>
-                        </div>
-
-                        {/* Category */}
+                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">{accessory.name}</h3>
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-xl font-bold text-blue-600">
+                          {formatCurrency(accessory.price, "EUR")}
+                        </span>
                         <Badge variant="secondary" className="text-xs">
                           {categoryConfig?.label || accessory.category}
                         </Badge>
-
-                        {/* Action Buttons */}
-                        <div className="flex flex-col gap-2 mt-4">
-                          <Button
-                            className="w-full"
-                            variant="secondary"
-                            onClick={() => addToCart({
-                              id: accessory.id,
-                              name: accessory.name,
-                              price: accessory.price,
-                              image: accessory.imageUrl || undefined,
-                            })}
-                          >
-                            <ShoppingCart className="h-4 w-4 mr-2" />
-                            {t('accessories.product.addToCart', { defaultValue: 'Add to Cart' })}
+                      </div>
+                      <div className="flex space-x-2">
+                        <Link href={`/accessories/${accessory.id}`} className="flex-1">
+                          <Button variant="outline" size="sm" className="w-full">
+                            {t('accessories.product.viewDetails')}
                           </Button>
-                          <Link href={`/accessories/${accessory.id}`}>
-                            <Button className="w-full">
-                              {t('accessories.product.viewDetails')}
-                            </Button>
-                          </Link>
-                        </div>
+                        </Link>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          className="px-3"
+                          disabled={accessory.inStock === 0}
+                          onClick={() => addToCart({
+                            id: accessory.id,
+                            name: accessory.name,
+                            price: accessory.price,
+                            image: accessory.imageUrl || undefined,
+                            type: 'accessory',
+                          })}
+                          title={t('accessories.product.addToCart', { defaultValue: 'Add to Cart' })}
+                        >
+                          <ShoppingCart className="h-4 w-4" />
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -773,12 +749,12 @@ export default function AccessoriesPagePaginated() {
           <div className="text-center py-12">
             <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-600 mb-2">
-              {t('accessories.noResults.title')}
+              {t('accessories.results.noResults.title')}
             </h3>
             <p className="text-gray-500 mb-4">
               {hasActiveFilters
-                ? t('accessories.noResults.message')
-                : t('accessories.noResults.messageNoFilters')}
+                ? t('accessories.results.noResults.message')
+                : t('accessories.results.noResults.messageNoFilters')}
             </p>
             {hasActiveFilters && (
               <Button 

@@ -178,6 +178,7 @@
     "poweredBy": "Aangedreven door Next JS en Tailwind CSS"
   },
   "device-catalog-browser": {
+    
     "breadcrumbs": {
       "deviceTypes": "Apparaattypen",
       "brands": "Merken",
@@ -196,6 +197,7 @@
       "filteredBy": "Gefilterd op: {type}",
       "searchAll": "Alle apparaattypen doorzoeken",
       "browseAll": "Alle apparaattypen bekijken",
+      "browseAllDeviceTypes": "Alle apparaattypen bekijken",
       "noResults": "Geen resultaten gevonden",
       "noResultsDesc": "Geen reparatieservices gevonden die overeenkomen met \"{search}\".",
       "browseAllCta": "Alle services bekijken"
@@ -213,6 +215,8 @@
     "models": {
       "series": "{brand} {series} serie",
       "model": "Model {count}",
+      "sortDesc": "Sorteer op naam (A-Z)",
+      "sortAsc": "Sorteer op naam (Z-A)",
       "count": "({count} model{count, plural, one {} other {len}})",
       "viewParts": "Bekijk beschikbare onderdelen en reparaties voor {brand} {model}",
       "filterPlaceholder": "Modellen filteren...",
@@ -227,6 +231,8 @@
       "supplier": "Leverancier:",
       "quality": "Kwaliteit",
       "unknownQuality": "Onbekend",
+      "addToCart": "Toevoegen aan winkelwagen",
+      "buyNow": "Nu kopen",
       "qualityOptions": {
         "oem": "OEM",
         "original": "Origineel",
@@ -265,6 +271,12 @@
       "repairServices": "Reparatieservices",
       "availableParts": "Beschikbare onderdelen",
       "availableServices": "Beschikbare services"
+    }
+    ,
+    "searchResults": {
+      "browseAllDeviceTypes": "Alle apparaattypen bekijken",
+      "searchAllDeviceTypes": "Alle apparaattypen doorzoeken",
+      "browseAllServices": "Alle services bekijken"
     }
   },
   "relatedProducts": {
@@ -316,6 +328,8 @@
     },
     "deviceBrowser": {
       "title": "Blader door apparaten & reparaties",
+      "serialAsc": "Sorteer op serienummer (oplopend)",
+      "serialDesc": "Sorteer op serienummer (aflopend)",
       "description": "Vind uw apparaat, bekijk beschikbare onderdelen en krijg een prijsinschatting voor reparaties"
     },
     "whyChooseUs": {
@@ -834,12 +848,16 @@
       },
       "brand": "Merk",
       "brandPlaceholder": "bijv. Apple, Samsung",
+      "quality": "Kwaliteit (optioneel)",
+      "qualityPlaceholder": "bijv. OEM, Origineel, Premium",
       "model": "Model",
       "modelPlaceholder": "bijv. iPhone 13, Galaxy S22",
       "service": "Service (optioneel)",
       "servicePlaceholder": "bijv. Schermvervanging",
       "part": "Onderdeel (optioneel)",
       "partPlaceholder": "bijv. Batterij, Camera",
+      "deviceType": "Apparaattype",
+      "deviceTypePlaceholder": "Selecteer een apparaat",
       "issueDetails": {
         "title": "Probleemdetails",
         "issuesDescription": "Selecteer de problemen die u ervaart:",
@@ -974,6 +992,10 @@
     "paying": "Bezig met betalen...",
     "orderSummary": "Besteloverzicht",
     "total": "Totaal",
+    "next": "Volgende",
+    "confirm": "Bevestigen",
+    "orderDetails": "Bestelgegevens",
+    "orderNumber": "Bestelnummer",
     "emptyCart": "Je winkelwagen is leeg.",
     "success": {
       "title": "Bedankt voor je bestelling!",
@@ -1012,6 +1034,28 @@
       "empty": "Je winkelwagen is leeg.",
       "total": "Totaal",
       "checkout": "Afrekenen"
+    },
+    "repair": {
+      "whoWillPerform": "Wie voert de reparatie uit?",
+      "self": "Ik voer de reparatie zelf uit",
+      "byUs": "Reparatie door ons",
+      "howToGetDevice": "Hoe komt het toestel bij ons?",
+      "atShop": "In de winkel",
+      "send": "Verzenden",
+      "drop": "Afgeven",
+      "errorSelectRepairType": "Selecteer wie de reparatie uitvoert.",
+      "errorSelectShippingOption": "Selecteer een verzendoptie.",
+      "dropDesc": "Breng je toestel tijdens de openingstijden naar onze winkel.",
+      "sendDesc": "Stuur je toestel naar ons op. We sturen je een verzendlabel.",
+      "atShopDesc": "Breng je toestel naar onze winkel en we voeren de reparatie ter plaatse uit.",
+      "sendDesc2": "We sturen je een verzendlabel zodat je het toestel gratis naar ons kunt opsturen.",
+      "selfDesc": "Je ontvangt de benodigd onderdelen en instructies om de reparatie zelf uit te voeren.",
+      "byUsDesc": "Wij voeren de reparatie uit met hoogwaardige onderdelen en garantie.",
+      "selfRepair": "Zelf repareren",
+      "byUsRepair": "Reparatie door ons",
+      "selfRepairDesc": "Kies deze optie als je de reparatie zelf wilt uitvoeren. We leveren de benodigde onderdelen en instructies.",
+      "byUsRepairDesc": "Kies deze optie als je wilt dat wij de reparatie voor je uitvoeren. We zorgen voor alles, inclusief garantie en kwaliteitscontrole.",
+      "shippingOptions": "Verzendopties"
     }
   },
   "settings": {
@@ -1027,5 +1071,54 @@
       "save": "Adres opslaan",
       "saving": "Opslaan...",
       "success": "Adres bijgewerkt!"
+    },
+  
+  "parts": {
+    "loading": "Laden...",
+    "notFound": "Onderdeel niet gevonden",
+    "save": "Opslaan",
+    "warranty": "Garantie",
+    "outOfStock": "Niet op voorraad",
+    "lowStock": "Beperkte voorraad",
+    "sku": "Artikelnummer",
+    "back": "Terug",
+    "supplier": "Leverancier",
+    "quality": "Kwaliteit",
+    "inStock": "op voorraad",
+    "currentlyUnavailable": "Momenteel niet beschikbaar",
+    "description": "Beschrijving",
+    "addToCart": "Toevoegen aan winkelwagen",
+    "getQuote": "Offerte aanvragen",
+    "buyNow": "Nu kopen",
+    "allParts": "Alle onderdelen",
+    "partDetails": "Onderdeel details",
+    "partNotFound": "Onderdeel niet gevonden",
+    "partNotFoundDescription": "Het onderdeel dat u zoekt is mogelijk niet beschikbaar of bestaat niet.",
+    "partNotFoundSuggestion": "Probeer een andere zoekopdracht of blader door onze categorieën.",
+    "partNotFoundButton": "Terug naar onderdelen",
+    "partImage": "Onderdeel afbeelding",
+    "partImageNotAvailable": "Onderdeel afbeelding niet beschikbaar",
+    "features": {
+      "freeShipping": {
+        "title": "Gratis verzending",
+        "description": "Bij bestellingen boven €50"
+      },
+      "warranty": {
+        "title": "2 jaar garantie",
+        "description": "Volledige dekking inbegrepen"
+      },
+      "returns": {
+        "title": "Eenvoudig retourneren",
+        "description": "30 dagen retourbeleid"
+      }
+    },
+    "relatedProducts": {
+      "title": "Gerelateerde onderdelen",
+      "description": "Ontdek meer hoogwaardige vervangingsonderdelen voor uw apparaat.",
+      "viewDetails": "Bekijk details",
+      "viewAllParts": "Alle onderdelen bekijken",
+      "productImage": "Productafbeelding"
     }
+  }
+
 }

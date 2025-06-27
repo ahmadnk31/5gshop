@@ -54,3 +54,12 @@ export async function deletePart(partId: string) {
     throw new Error("Failed to delete part");
   }
 }
+
+export async function getPartById(partId: string) {
+  try {
+    return await DatabaseService.getPartById(partId);
+  } catch (error) {
+    console.error("Failed to get part by id:", error);
+    throw new Error("Failed to get part by id");
+  }
+}
