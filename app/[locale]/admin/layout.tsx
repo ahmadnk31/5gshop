@@ -22,7 +22,7 @@ export default async function AdminLayout({
       })
     : null;
 
-  if (dbUser?.role !== "admin") {
+  if (dbUser?.role !== "ADMIN") {
     return (
       <div className="flex items-center flex-col justify-center min-h-screen bg-gray-100">
         <h1 className="text-2xl font-bold text-red-600">Access Denied</h1>

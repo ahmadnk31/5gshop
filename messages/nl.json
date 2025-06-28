@@ -1145,7 +1145,12 @@
   "country": "Land",
   "save": "Adres opslaan",
   "saving": "Opslaan...",
-  "success": "Adres bijgewerkt!"
+  "success": "Adres bijgewerkt!",
+  "uploadPhoto": "Foto uploaden",
+  "uploading": "Uploaden...",
+  "name": "Naam",
+  "email": "E-mail",
+  "orders": "Mijn bestellingen"
 },
 "orders": {
     "title": "Uw Bestellingen",

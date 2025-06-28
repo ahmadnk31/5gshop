@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useEffect, useState } from "react"
@@ -573,7 +572,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-h-[95vh] overflow-y-auto p-8">
+      <DialogContent className="w-screen h-screen max-w-none max-h-none overflow-y-auto p-8">
         <DialogHeader>
           <DialogTitle className="flex items-center text-xl">
             <Settings className="h-6 w-6 mr-3" />
@@ -1450,7 +1449,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       {/* Device Edit Modal */}
       {editingDevice && (
         <Dialog open={!!editingDevice} onOpenChange={() => setEditingDevice(null)}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-6">
+          <DialogContent className="w-screen h-screen max-w-none max-h-none overflow-y-auto p-6">
             <DialogHeader>
               <DialogTitle className="text-lg">Edit Device</DialogTitle>
               <DialogDescription className="text-base">
@@ -1574,7 +1573,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       {/* Part Edit Modal */}
       {editingPart && (
         <Dialog open={!!editingPart} onOpenChange={() => setEditingPart(null)}>
-          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto p-6">
+          <DialogContent className="w-screen h-screen max-w-none max-h-none overflow-y-auto p-6">
             <DialogHeader>
               <DialogTitle className="text-lg">Edit Part</DialogTitle>
               <DialogDescription className="text-base">
@@ -1774,7 +1773,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       {/* Service Edit Modal */}
       {editingService && (
         <Dialog open={!!editingService} onOpenChange={() => setEditingService(null)}>
-          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-6">
+          <DialogContent className="w-screen h-screen max-w-none max-h-none overflow-y-auto p-6">
             <DialogHeader>
               <DialogTitle className="text-lg">Edit Service</DialogTitle>
               <DialogDescription className="text-base">

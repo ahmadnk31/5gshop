@@ -1125,7 +1125,19 @@
   "uploading": "Uploading...",
   "name": "Name",
   "email": "Email",
-  "orders": "View My Orders"
+  "orders": "View My Orders",
+  "settings": "Settings",
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "address1": "Address Line 1",
+  "address2": "Address Line 2 (optional)",
+  "city": "City",
+  "state": "State",
+  "postalCode": "Postal Code",
+  "country": "Country",
+  "save": "Save Address",
+  "saving": "Saving...",
+  "success": "Address updated!"
 },
   "order": {
     "title": "Order #{orderId}",

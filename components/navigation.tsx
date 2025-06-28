@@ -189,12 +189,15 @@ export function Navigation() {
                   <DropdownMenuLabel>{session.user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile">
+                    <Link href="/account/profile">
                       {t('profile')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/orders">{t('myOrders')}</Link>
+                    <Link href="/account/orders">{t('myOrders')}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/account/settings">{t('settings')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {session.user.role === 'ADMIN' && (
@@ -420,12 +423,15 @@ export function Navigation() {
                   <DropdownMenuLabel className="text-sm">{session.user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile" className="text-sm">
+                    <Link href="/account/profile" className="text-sm">
                       {t('profile')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/orders" className="text-sm">{t('myOrders')}</Link>
+                    <Link href="/account/orders" className="text-sm">{t('myOrders')}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/account/settings" className="text-sm">{t('settings')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {session.user.role === 'ADMIN' && (
