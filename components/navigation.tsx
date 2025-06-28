@@ -49,7 +49,9 @@ export function Navigation() {
   const [cartOpen, setCartOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const t = useTranslations('navigation');
+  
   const { data: session } = useSession();
+
   const { items } = useCart();
   const totalCartItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -326,16 +328,19 @@ export function Navigation() {
                   <DropdownMenuLabel>{session.user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile">
+                    <Link href="/account/profile">
                       {t('profile')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/orders">{t('myOrders')}</Link>
+                    <Link href="/account/orders">{t('myOrders')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
                     {t('logout')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/account/settings">{t('settings')}</Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

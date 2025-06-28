@@ -27,6 +27,8 @@ model Device {
   type         String
   brand        String
   model        String
+  order        Int       @default( autoincrement())
+  series       String?   // e.g. "iPhone X/XS/XR", "Galaxy S", "A Series", etc.
   serialNumber String?
   purchaseDate DateTime?
   createdAt    DateTime  @default(now())

@@ -63,8 +63,10 @@ interface Device {
   type: DeviceType
   brand: string
   model: string
-  imageUrl?: string
-  description?: string
+  order: number
+  series?: string | null;
+  imageUrl?: string;
+  description?: string;
 }
 
 interface Part {
@@ -119,6 +121,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
     type: '' as DeviceType | '',
     brand: '',
     model: '',
+    order: 0,
+    series: '',
     imageUrl: '',
     description: ''
   })
@@ -310,10 +314,14 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
         const device = await createDevice({
           type: newDevice.type as DeviceType,
           brand: newDevice.brand,
-          model: newDevice.model
+          model: newDevice.model,
+          order: typeof newDevice.order === 'number' ? newDevice.order : 0,
+          series: newDevice.series || null,
+          imageUrl: newDevice.imageUrl,
+          description: newDevice.description
         })
         setDevices([...devices, device])
-        setNewDevice({ type: '', brand: '', model: '', imageUrl: '', description: '' })
+        setNewDevice({ type: '', brand: '', model: '', order: 0, series: '', imageUrl: '', description: '' })
       } catch (error) {
         console.error('Error adding device:', error)
       }
@@ -500,14 +508,15 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   // Update handlers
   const handleUpdateDevice = async () => {
     if (!editingDevice) return
-    
     try {
       const updatedDevice = await updateDevice(editingDevice.id, {
         type: editingDevice.type,
         brand: editingDevice.brand,
         model: editingDevice.model,
-        imageUrl: editingDevice.imageUrl, // <-- Fix: include imageUrl
-        description: editingDevice.description // <-- Fix: include description
+        order: typeof editingDevice.order === 'number' ? editingDevice.order : 0,
+        series: editingDevice.series || null,
+        imageUrl: editingDevice.imageUrl,
+        description: editingDevice.description
       })
       setDevices(devices.map(d => d.id === editingDevice.id ? updatedDevice : d))
       setEditingDevice(null)
@@ -593,7 +602,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   <div className="space-y-3">
                     <Label className="text-base font-medium">Device Type</Label>
                     <Select
@@ -615,6 +624,16 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     </Select>
                   </div>
                   <div className="space-y-3">
+                    <Label className="text-base font-medium">Order</Label>
+                    <Input
+                      type="number"
+                      min={0}
+                      value={newDevice.order}
+                      onChange={e => setNewDevice({ ...newDevice, order: Number(e.target.value) })}
+                      className="h-11"
+                    />
+                  </div>
+                  <div className="space-y-3">
                     <Label className="text-base font-medium">Brand</Label>
                     <Input
                       placeholder="e.g., Apple, Samsung"
@@ -629,6 +648,15 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                       placeholder="e.g., iPhone 15 Pro"
                       value={newDevice.model}
                       onChange={(e) => setNewDevice({ ...newDevice, model: e.target.value })}
+                      className="h-11"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <Label className="text-base font-medium">Series/Family</Label>
+                    <Input
+                      placeholder="e.g., iPhone 15, Galaxy S, A Series"
+                      value={newDevice.series}
+                      onChange={(e) => setNewDevice({ ...newDevice, series: e.target.value })}
                       className="h-11"
                     />
                   </div>
@@ -1431,7 +1459,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
             </DialogHeader>
             
             <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <Label>Device Type</Label>
                   <Select
@@ -1453,6 +1482,15 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                   </Select>
                 </div>
                 <div className="space-y-2">
+                  <Label>Order</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    value={editingDevice.order}
+                    onChange={e => setEditingDevice({ ...editingDevice, order: Number(e.target.value) })}
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label>Brand</Label>
                   <Input
                     value={editingDevice.brand}
@@ -1464,6 +1502,14 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                   <Input
                     value={editingDevice.model}
                     onChange={(e) => setEditingDevice({ ...editingDevice, model: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Series/Family</Label>
+                  <Input
+                    value={editingDevice.series || ''}
+                    placeholder="e.g., iPhone 15, Galaxy S, A Series"
+                    onChange={(e) => setEditingDevice({ ...editingDevice, series: e.target.value })}
                   />
                 </div>
               </div>

@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { FeaturedPartsSection } from "@/components/FeaturedPartsSection";
+import { FeaturedAccessoriesSection } from "@/components/FeaturedAccessoriesSection";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Smartphone, Wrench, ShoppingBag, Star, Clock, Shield, CheckCircle, ArrowRight, Zap, Cable, Headphones, Monitor, ShoppingCart } from "lucide-react";
@@ -7,7 +9,8 @@ import { PricingComparison } from "@/components/pricing-comparison";
 import { getAccessories } from "@/app/actions/accessory-actions";
 import { getRepairServices } from "@/app/actions/repair-services-actions";
 import { getDeviceTypes } from "@/app/actions/device-catalog-actions";
-import { Accessory, RepairService } from "@/lib/types";
+import { getHomepageParts } from "@/app/actions/homepage-parts";
+import { Accessory, RepairService, Part } from "@/lib/types";
 
 import { PageSectionTracker, ScrollDepthTracker } from "@/components/analytics-components";
 import { HomePageCTAs } from "@/components/homepage-ctas";
@@ -15,14 +18,16 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/utils";
 
+
 export default async function Home() {
   const t = await getTranslations('homepage');
 
   // Fetch featured data
-  const [accessories, services, deviceTypes] = await Promise.all([
+  const [accessories, services, deviceTypes, homepageParts] = await Promise.all([
     getAccessories(),
     getRepairServices(),
-    getDeviceTypes()
+    getDeviceTypes(),
+    getHomepageParts()
   ]);
 
   // Get featured accessories (top 6 by stock)
@@ -31,10 +36,15 @@ export default async function Home() {
     .sort((a: Accessory, b: Accessory) => b.inStock - a.inStock)
     .slice(0, 6);
 
+  // Get homepage parts (top 6 in-stock)
+  const featuredParts = homepageParts as Part[];
+
   // Get popular repair services (sorted by price for better UX)
   const popularServices = services
     .sort((a: RepairService, b: RepairService) => a.basePrice - b.basePrice)
     .slice(0, 6);
+      {/* Featured Repair Parts */}
+      <FeaturedPartsSection parts={featuredParts} t={t} />
 
   // Device categories with counts and icons
   const deviceCategories = [
@@ -202,54 +212,18 @@ export default async function Home() {
       </section>
 
       {/* Featured Accessories */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold">{t('featuredAccessories.title')}</h2>
-            <Button asChild variant="outline">
-              <Link href="/accessories">
-                {t('featuredAccessories.viewAll')}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredAccessories.map((accessory: Accessory) => {
-              const IconComponent = getCategoryIcon(accessory.category);
-              return (
-                <Link key={accessory.id} href={`/accessories/${accessory.id}`}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                    <CardHeader className="pb-4">
-                      <div className="flex items-center justify-between">
-                        <div className="p-2 bg-gray-100 rounded-lg">
-                          <IconComponent className="h-6 w-6 text-gray-600" />
-                        </div>
-                        <Badge variant="secondary">
-                          {t('featuredAccessories.inStock', { count: accessory.inStock })}
-                        </Badge>
-                      </div>
-                      <CardTitle className="text-lg">{accessory.name}</CardTitle>
-                      <CardDescription className="text-sm line-clamp-2">
-                        {accessory.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between">
-                        <span className="text-2xl font-bold text-green-600">
-                          {formatCurrency(accessory.price, "EUR")}
-                        </span>
-                        <Button size="sm" variant="outline">
-                          {t('featuredAccessories.viewDetails')}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <FeaturedAccessoriesSection
+        accessories={featuredAccessories}
+        translations={{
+          title: t('featuredAccessories.title'),
+          viewAll: t('featuredAccessories.viewAll'),
+          inStock: t('featuredAccessories.inStock', { count: '{count}' }),
+          viewDetails: t('featuredAccessories.viewDetails'),
+          addToCart: t('accessories.product.addToCart', { defaultValue: 'Add to Cart' }),
+          buyNow: t('accessories.product.buyNow'),
+          productImage: t('accessories.product.productImage'),
+        }}
+      />
 
       {/* Popular Repair Services */}
       <section className="py-16 bg-gray-50">
@@ -264,39 +238,51 @@ export default async function Home() {
             </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {popularServices.map((service: RepairService) => (
-              <Link key={service.id} href={`/quote?service=${encodeURIComponent(service.name)}&deviceType=${service.deviceTypes?.[0] || ''}`}>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="p-2 bg-blue-100 rounded-lg">
-                        <Wrench className="h-6 w-6 text-blue-600" />
+            {popularServices.map((service: RepairService) => {
+              // Build quote URL with all possible fields for auto-population
+              // Try to include model, quality, brand if available on the service object
+              const params = new URLSearchParams();
+              params.set('service', service.name);
+              if (service.deviceTypes?.[0]) params.set('deviceType', service.deviceTypes[0]);
+              if (service.specificBrand) params.set('brand', service.specificBrand);
+              if (service.specificModel) params.set('model', service.specificModel);
+              // No quality field on RepairService
+              // Add more fields as needed
+              const quoteUrl = `/quote?${params.toString()}`;
+              return (
+                <Link key={service.id} href={quoteUrl} prefetch={false}>
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-center justify-between">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <Wrench className="h-6 w-6 text-blue-600" />
+                        </div>
+                        <Badge variant="outline">
+                          {service.deviceTypes?.[0] || 'Multiple'}
+                        </Badge>
                       </div>
-                      <Badge variant="outline">
-                        {service.deviceTypes?.[0] || 'Multiple'}
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-lg">{service.name}</CardTitle>
-                    <CardDescription className="text-sm line-clamp-2">
-                      {service.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-2xl font-bold text-blue-600">
-                          {formatCurrency(service.basePrice, "EUR")}
-                        </span>
-                        <span className="text-sm text-gray-500 ml-1">{t('popularServices.starting')}</span>
+                      <CardTitle className="text-lg">{service.name}</CardTitle>
+                      <CardDescription className="text-sm line-clamp-2">
+                        {service.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-2xl font-bold text-blue-600">
+                            {formatCurrency(service.basePrice, "EUR")}
+                          </span>
+                          <span className="text-sm text-gray-500 ml-1">{t('popularServices.starting')}</span>
+                        </div>
+                        <Button size="sm" variant="outline">
+                          {t('popularServices.bookNow')}
+                        </Button>
                       </div>
-                      <Button size="sm" variant="outline">
-                        {t('popularServices.bookNow')}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

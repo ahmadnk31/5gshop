@@ -28,7 +28,7 @@ import {
   getPartsByDeviceModel,
   getRepairServicesForDevice
 } from '@/app/actions/device-catalog-actions'
-import { getAllDevices, getAllDevicesBySerialNumber } from '@/app/actions/device-management-actions'
+import { getAllDevices, getAllDevicesBySerialNumber, getAllDevicesByOrder } from '@/app/actions/device-management-actions'
 import { useTranslations } from 'next-intl';
 import { useCart } from "@/components/cart-context";
 
@@ -188,14 +188,19 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'asc' }: Device
 
   const loadDevicesForBrand = async (deviceType: DeviceType, brand: string, order: 'asc' | 'desc' = 'asc') => {
     try {
-      const allDevices = await getAllDevicesBySerialNumber(order);
+      // Always use the new order-based function
+      const allDevices = await getAllDevicesByOrder();
       // Filter devices by type and brand
-      const filteredDevices = allDevices.filter(device => 
+      let filteredDevices = allDevices.filter(device => 
         device.type === deviceType && device.brand === brand
-      )
-      setDevices(filteredDevices)
+      );
+      // Sort by order field
+      filteredDevices = filteredDevices.sort((a, b) => 
+        order === 'asc' ? a.order - b.order : b.order - a.order
+      );
+      setDevices(filteredDevices);
     } catch (error) {
-      console.error('Error loading devices:', error)
+      console.error('Error loading devices:', error);
     }
   }
 
@@ -850,25 +855,30 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'asc' }: Device
               // Fallback to alphabetical
               return order === 'asc' ? a.localeCompare(b) : b.localeCompare(a);
             });
-            // Group sorted models by series (e.g., iPhone 14, iPhone 15)
+            // Group sorted models by device.series if available, else fallback to parsing
             const modelGroups: Record<string, string[]> = {};
             sortedModels.forEach(model => {
-              let baseModel = model;
-              if (model.includes('iPhone')) {
-                const match = model.match(/iPhone (\d+)/);
-                if (match) baseModel = `iPhone ${match[1]}`;
-              } else if (model.includes('Galaxy S')) {
-                const match = model.match(/Galaxy S(\d+)/);
-                if (match) baseModel = `Galaxy S${match[1]}`;
-              } else if (model.includes('MacBook')) {
-                baseModel = model.split(' ').slice(0, 2).join(' ');
-              } else if (model.includes('iPad')) {
-                baseModel = model.split(' ').slice(0, 2).join(' ');
-              } else if (model.includes('Watch')) {
-                baseModel = model.split(' ').slice(0, 3).join(' ');
+              const deviceObj = devices.find(d => d.model === model);
+              let groupKey = deviceObj?.series || null;
+              if (!groupKey) {
+                // fallback to old parsing logic
+                groupKey = model;
+                if (model.includes('iPhone')) {
+                  const match = model.match(/iPhone (\d+)/);
+                  if (match) groupKey = `iPhone ${match[1]}`;
+                } else if (model.includes('Galaxy S')) {
+                  const match = model.match(/Galaxy S(\d+)/);
+                  if (match) groupKey = `Galaxy S${match[1]}`;
+                } else if (model.includes('MacBook')) {
+                  groupKey = model.split(' ').slice(0, 2).join(' ');
+                } else if (model.includes('iPad')) {
+                  groupKey = model.split(' ').slice(0, 2).join(' ');
+                } else if (model.includes('Watch')) {
+                  groupKey = model.split(' ').slice(0, 3).join(' ');
+                }
               }
-              if (!modelGroups[baseModel]) modelGroups[baseModel] = [];
-              modelGroups[baseModel].push(model);
+              if (!modelGroups[groupKey]) modelGroups[groupKey] = [];
+              modelGroups[groupKey].push(model);
             });
             // Custom sort for each series: latest to oldest
             const sortModels = (series: string[], base: string) => {

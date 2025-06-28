@@ -1,5 +1,18 @@
 {
   "homepage": {
+    "parts": {
+      "addToCart": "Add to Cart",
+      "getQuote": "Get Quote",
+      "allParts": "Featured Repair Parts"
+    },
+    "accessories": {
+      "product": {
+        "addToCart": "Add to Cart",
+        "buyNow": "Get Quote",
+        "productImage": "Product Image",
+        "inStock": "{count} in stock"
+      }
+    },
     "hero": {
       "title": "Welcome to 5gphones Leuven",
       "subtitle": "Your one-stop destination for device repairs and premium accessories"
@@ -1105,5 +1118,27 @@
       "viewDetails": "View Details",
       "viewAllParts": "View All Parts"
     }
-}
+},
+"profile":{
+  "title": "My Profile",
+  "uploadPhoto": "Upload Photo",
+  "uploading": "Uploading...",
+  "name": "Name",
+  "email": "Email",
+  "orders": "View My Orders"
+},
+  "order": {
+    "title": "Order #{orderId}",
+    "date": "Order Date: {date}",
+    "status": "Status: {status}",
+    "items": "Items",
+    "total": "Total",
+    "shippingAddress": "Shipping Address",
+    "billingAddress": "Billing Address",
+    "paymentMethod": "Payment Method",
+    "viewDetails": "View Details",
+    "noItems": "No items in this order.",
+    "loading": "Loading order details..."
+  }
+
 }

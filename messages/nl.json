@@ -4,6 +4,19 @@
       "title": "Welkom bij 5gphones Leuven",
       "subtitle": "Uw one-stop bestemming voor apparaat reparaties en premium accessoires"
     },
+    "parts": {
+      "addToCart": "Voeg toe aan winkelwagentje",
+      "getQuote": "Vraag offerte aan",
+      "allParts": "Uitgelichte Onderdelen"
+    },
+    "accessories": {
+      "product": {
+        "addToCart": "Voeg toe aan winkelwagentje",
+        "buyNow": "Vraag offerte aan",
+        "productImage": "Productafbeelding",
+        "inStock": "{count} op voorraad"
+      }
+    },
     "services": {
       "title": "Onze Diensten",
       "repairs": {
@@ -1119,6 +1132,38 @@
       "viewAllParts": "Alle onderdelen bekijken",
       "productImage": "Productafbeelding"
     }
+  },
+  "profile":{
+  "title": "Instellingen",
+  "firstName": "Voornaam",
+  "lastName": "Achternaam",
+  "address1": "Adresregel 1",
+  "address2": "Adresregel 2 (optioneel)",
+  "city": "Stad",
+  "state": "Provincie",
+  "postalCode": "Postcode",
+  "country": "Land",
+  "save": "Adres opslaan",
+  "saving": "Opslaan...",
+  "success": "Adres bijgewerkt!"
+},
+"orders": {
+    "title": "Uw Bestellingen",
+    "empty": "U heeft nog geen bestellingen geplaatst.",
+    "orderNumber": "Ordernummer",
+    "date": "Datum",
+    "status": "Status",
+    "total": "Totaal",
+    "viewDetails": "Bekijk details",
+    "noOrdersFound": {
+      "title": "Geen Bestellingen Gevonden",
+      "description": "Het lijkt erop dat u nog geen bestellingen heeft geplaatst. Begin met winkelen om uw bestellingen hier te zien."
+    }
+  },
+  "wishlist": {
+    "title": "Uw Verlanglijst",
+    "empty": "Uw verlanglijst is leeg.",
+    "addToCart": "Toevoegen aan winkelwagen",
+    "removeFromWishlist": "Verwijderen uit verlanglijst"
   }
-
 }

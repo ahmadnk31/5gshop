@@ -147,6 +147,8 @@ export class DatabaseService {
         type: data.type as any,
         brand: data.brand,
         model: data.model,
+        order: typeof data.order === 'number' ? data.order : 0,
+        series: data.series ?? null,
         serialNumber: data.serialNumber,
         purchaseDate: data.purchaseDate ? new Date(data.purchaseDate) : undefined,
         imageUrl: data.imageUrl,
@@ -429,13 +431,15 @@ export class DatabaseService {
     }
   }
 
-  static async updateDevice(id: string, data: Partial<Device>): Promise<Device> {
+  static async updateDevice(id: string, data: Partial<Device> & { series?: string | null }): Promise<Device> {
     const device = await prisma.device.update({
       where: { id },
       data: {
         type: data.type as any,
         brand: data.brand,
         model: data.model,
+        order: typeof data.order === 'number' ? data.order : undefined,
+        series: data.series ?? null,
         serialNumber: data.serialNumber,
         purchaseDate: data.purchaseDate ? new Date(data.purchaseDate) : undefined,
         imageUrl: data.imageUrl,
@@ -730,10 +734,15 @@ export class DatabaseService {
   }
 
   static async getAllDevicesSimple(): Promise<Device[]> {
+    // Correct Prisma orderBy: must be array of single-key objects, or a single object with multiple keys
     const devices = await prisma.device.findMany({
-      orderBy: [{ brand: 'asc' }, { model: 'asc' }],
-    })
-    return devices.map(DatabaseService.mapDevice)
+      orderBy: [
+        { brand: 'asc' },
+        { order: 'asc' },
+        { model: 'asc' }
+      ],
+    });
+    return devices.map(DatabaseService.mapDevice);
   }
 
   static async getAllPartsSimple(): Promise<Part[]> {
@@ -1221,6 +1230,8 @@ export class DatabaseService {
       type: device.type,
       brand: device.brand,
       model: device.model,
+      order: device.order ?? 0,
+      series: device.series ?? null,
       serialNumber: device.serialNumber,
       purchaseDate: device.purchaseDate?.toISOString(),
       imageUrl: device.imageUrl,
@@ -1349,7 +1360,10 @@ export class DatabaseService {
 
   static async getAllDevicesBySerialNumber(order: 'asc' | 'desc' = 'asc'): Promise<Device[]> {
     const devices = await prisma.device.findMany({
-      orderBy: { serialNumber: order },
+      orderBy: [
+        { order: 'asc' },
+        { serialNumber: order },
+      ],
     })
     return devices.map(DatabaseService.mapDevice)
   }
@@ -1357,5 +1371,16 @@ export class DatabaseService {
   static async getPartById(id: string): Promise<Part | null> {
     const part = await prisma.part.findUnique({ where: { id } });
     return part ? DatabaseService.mapPart(part) : null;
+  }
+
+  // Get all devices ordered by the 'order' field (primary), then serialNumber (secondary)
+  static async getAllDevicesByOrder(): Promise<Device[]> {
+    const devices = await prisma.device.findMany({
+      orderBy: [
+        { order: 'asc' },
+        { serialNumber: 'asc' },
+      ],
+    });
+    return devices.map(DatabaseService.mapDevice);
   }
 }

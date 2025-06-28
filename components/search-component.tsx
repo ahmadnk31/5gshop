@@ -24,9 +24,10 @@ import {
   Camera
 } from "lucide-react";
 
-import { useRouter } from "next/navigation";
-import { Link } from '@/i18n/navigation';
 
+import { Link, useRouter } from '@/i18n/navigation';
+import { formatCurrency } from '@/lib/utils';
+import Image from 'next/image';
 type SearchFilter = 'all' | 'parts' | 'accessories';
 
 interface SearchResult {
@@ -39,6 +40,7 @@ interface SearchResult {
   url: string;
   description?: string;
   matchScore?: number;
+  imageUrl?: string; // Optional image URL for the result
 }
 
 export function SearchComponent() {
@@ -77,7 +79,8 @@ export function SearchComponent() {
               category: part.category || t('categories.replacementPart'),
               url: part.url,
               description: part.description,
-              matchScore: part.matchScore
+              matchScore: part.matchScore,
+              imageUrl: part.imageUrl || '/placeholder.png' // Use a placeholder if no image URL
             });
           });
         }
@@ -97,7 +100,8 @@ export function SearchComponent() {
               category: acc.category || t('categories.accessory'),
               url: acc.url,
               description: acc.description,
-              matchScore: acc.matchScore
+              matchScore: acc.matchScore,
+              imageUrl: acc.imageUrl
             });
           });
         }
@@ -365,9 +369,19 @@ export function SearchComponent() {
                   className="w-full px-3 py-3 text-left hover:bg-gray-50 border-b last:border-b-0 focus:bg-gray-50 focus:outline-none"
                 >
                   <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0 mt-0.5">
-                      {getResultIcon(result)}
-                    </div>
+                    {result.imageUrl ? (
+                      <Image
+                        src={result.imageUrl}
+                        alt={result.title}
+                        width={40}
+                        height={40}
+                        className="h-10 w-10 rounded-md object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center flex-shrink-0">
+                        {getResultIcon(result)}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
                         <p className="text-sm font-medium text-gray-900 truncate">
@@ -388,7 +402,7 @@ export function SearchComponent() {
                         </span>
                         {result.price && (
                           <span className="text-sm font-medium text-green-600 flex-shrink-0">
-                            ${result.price}
+                            {formatCurrency(result.price,'EUR')}
                           </span>
                         )}
                       </div>

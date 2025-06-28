@@ -6,6 +6,7 @@ import { DeviceType } from "@/lib/types";
 
 // Device Management
 export async function getAllDevices() {
+
   try {
     return await DatabaseService.getAllDevicesSimple();
   } catch (error) {
@@ -14,15 +15,13 @@ export async function getAllDevices() {
   }
 }
 
-export async function createDevice(data: {
-  type: DeviceType;
-  brand: string;
-  model: string;
-  serialNumber?: string;
-  purchaseDate?: string;
-}) {
+import type { CreateDeviceData } from '@/lib/types';
+export async function createDevice(data: CreateDeviceData) {
   try {
-    const device = await DatabaseService.createDevice(data);
+    const device = await DatabaseService.createDevice({
+      ...data,
+      order: data.order ?? 0,
+    });
     revalidatePath("/admin");
     return device;
   } catch (error) {
@@ -31,15 +30,7 @@ export async function createDevice(data: {
   }
 }
 
-export async function updateDevice(deviceId: string, data: {
-  type?: DeviceType;
-  brand?: string;
-  model?: string;
-  serialNumber?: string;
-  purchaseDate?: string;
-  imageUrl?: string; // <-- Add imageUrl
-  description?: string; // <-- Add description
-}) {
+export async function updateDevice(deviceId: string, data: Partial<CreateDeviceData>) {
   try {
     const device = await DatabaseService.updateDevice(deviceId, data);
     revalidatePath("/admin");
@@ -62,10 +53,21 @@ export async function deleteDevice(deviceId: string) {
 
 export async function getAllDevicesBySerialNumber(order: 'asc' | 'desc' = 'asc') {
   try {
-    return await DatabaseService.getAllDevicesBySerialNumber(order);
+    // This function is now deprecated in favor of getAllDevicesByOrder
+    return await DatabaseService.getAllDevicesByOrder();
   } catch (error) {
-    console.error("Failed to get devices by serial number:", error);
-    throw new Error("Failed to get devices by serial number");
+    console.error("Failed to get devices by order:", error);
+    throw new Error("Failed to get devices by order");
+  }
+}
+
+// New function to get all devices ordered by the 'order' field
+export async function getAllDevicesByOrder() {
+  try {
+    return await DatabaseService.getAllDevicesByOrder();
+  } catch (error) {
+    console.error("Failed to get devices by order:", error);
+    throw new Error("Failed to get devices by order");
   }
 }
 

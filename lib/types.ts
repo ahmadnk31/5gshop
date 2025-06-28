@@ -33,6 +33,8 @@ export interface Device {
   type: DeviceType;
   brand: string;
   model: string;
+  order: number;
+  series?: string | null;
   serialNumber?: string;
   purchaseDate?: string | null;
   imageUrl?: string;
@@ -41,6 +43,17 @@ export interface Device {
   updatedAt: string;
 }
 
+export interface CreateDeviceData {
+  type: DeviceType;
+  brand: string;
+  model: string;
+  order?: number;
+  series?: string | null;
+  serialNumber?: string;
+  purchaseDate?: string | null;
+  imageUrl?: string;
+  description?: string;
+}
 export interface Part {
   id: string;
   name: string;
