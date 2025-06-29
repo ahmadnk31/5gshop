@@ -61,7 +61,8 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
               <p className="text-sm text-gray-600 mb-1">3000 Leuven, Belgium</p>
               <p className="text-sm text-gray-600 mb-2">+32 (466) 13 41 81</p>
               <a 
-                href="https://www.openstreetmap.org/directions?from=&to=50.8798%2C4.7005" 
+              
+                href="https://www.openstreetmap.org/directions?from=&to=50.880150%2C4.709603" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-800 text-sm underline"
