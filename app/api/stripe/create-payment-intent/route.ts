@@ -6,13 +6,25 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-05
 
 export async function POST(req: NextRequest) {
   const { amount, currency, cart, repairType, shippingOption } = await req.json();
+  
+  // Create a simplified cart summary for metadata (without long image URLs)
+  const cartSummary = cart.map((item: any) => ({
+    id: item.id,
+    name: item.name,
+    price: item.price,
+    quantity: item.quantity,
+    type: item.type
+  }));
+  
   // Optionally, validate cart and amount here
   const paymentIntent = await stripe.paymentIntents.create({
     amount,
     currency,
     automatic_payment_methods: { enabled: true },
     metadata: {
-      cart: JSON.stringify(cart),
+      cart: JSON.stringify(cartSummary),
+      cartItemCount: cart.length.toString(),
+      totalAmount: amount.toString(),
       ...(repairType ? { repairType } : {}),
       ...(shippingOption ? { shippingOption } : {}),
     },

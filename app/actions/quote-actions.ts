@@ -42,10 +42,77 @@ export async function submitQuoteRequest(data: {
   quality?: string; // Add quality
 }) {
   try {
-    // Create the quote in database
+    console.log('Starting quote submission for:', data.email);
+    
+    // Always create or find customer (for both authenticated and non-authenticated users)
+    let customerId: string;
+    try {
+      const existingCustomer = await DatabaseService.findCustomerByEmail(data.email);
+      if (existingCustomer) {
+        console.log('Found existing customer:', existingCustomer.id);
+        customerId = existingCustomer.id;
+        
+        // Update customer information if it has changed
+        if (existingCustomer.firstName !== data.firstName || 
+            existingCustomer.lastName !== data.lastName || 
+            existingCustomer.phone !== data.phone) {
+          await DatabaseService.updateCustomer(existingCustomer.id, {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            phone: data.phone,
+          });
+          console.log('Updated existing customer information');
+        }
+      } else {
+        console.log('Creating new customer for:', data.email);
+        const newCustomer = await DatabaseService.createCustomer({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          address: '', // Will be filled later if needed
+        });
+        customerId = newCustomer.id;
+        console.log('Created new customer:', customerId);
+      }
+    } catch (error) {
+      console.error('Error creating/finding customer:', error);
+      throw new Error('Failed to create customer record');
+    }
+
+    // Create or find device
+    let deviceId: string;
+    try {
+      const existingDevice = await DatabaseService.findDeviceByModel(data.brand, data.model);
+      if (existingDevice) {
+        console.log('Found existing device:', existingDevice.id);
+        deviceId = existingDevice.id;
+      } else {
+        console.log('Creating new device:', data.brand, data.model);
+        const newDevice = await DatabaseService.createDevice({
+          type: data.deviceType as any, // Cast to DeviceType
+          brand: data.brand,
+          model: data.model,
+          order: 0, // Default order
+          series: undefined, // Use undefined instead of null
+          serialNumber: undefined, // Use undefined instead of null
+          purchaseDate: undefined, // Use undefined instead of null
+          description: `${data.brand} ${data.model}`,
+          imageUrl: undefined, // Use undefined instead of null
+        });
+        deviceId = newDevice.id;
+        console.log('Created new device:', deviceId);
+      }
+    } catch (error) {
+      console.error('Error creating/finding device:', error);
+      throw new Error('Failed to create device record');
+    }
+
+    // Create the quote in database with proper customer and device IDs
+    console.log('Creating quote with customerId:', customerId, 'deviceId:', deviceId);
     const quote = await DatabaseService.createQuote({
-      customerId: null, // We'll create customer on the fly
-      deviceId: null,   // We'll create device on the fly
+      customerId: customerId,
+      deviceId: deviceId,
       issues: JSON.stringify(data.issues),
       description: data.issueDescription,
       estimatedCost: 0, // Will be filled by admin
@@ -55,6 +122,8 @@ export async function submitQuoteRequest(data: {
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
       quality: data.quality // Store quality if provided
     });
+
+    console.log('Quote created successfully:', quote.id);
 
     // Send email notification to admin
     await SESService.sendQuoteNotification({

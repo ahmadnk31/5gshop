@@ -834,6 +834,7 @@
     "form": {
       "title": "Offerte aanvraagformulier",
       "description": "Vul het onderstaande formulier in om een persoonlijke offerte te ontvangen voor uw apparaat reparatie of service.",
+      "autoFilled": "Contactgegevens automatisch ingevuld vanuit uw profiel",
       "prepopulate": {
         "success": "Apparaat/service details zijn vooraf ingevuld op basis van uw vorige selectie."
       },
@@ -846,7 +847,7 @@
         "email": "E-mail",
         "emailPlaceholder": "Vul uw e-mailadres in",
         "phone": "Telefoonnummer",
-        "phonePlaceholder": "Vul uw telefoonnummer in (optioneel)"
+        "phonePlaceholder": "Vul uw telefoonnummer in"
       },
       "deviceInformation": {
         "title": "Apparaatgegevens",
@@ -964,6 +965,7 @@
     "form": {
       "title": "Stuur ons een bericht",
       "description": "Vul het onderstaande formulier in en we nemen binnen 24 uur contact met u op",
+      "autoFilled": "Contactgegevens automatisch ingevuld vanuit uw profiel",
       "firstNameLabel": "Voornaam *",
       "firstNamePlaceholder": "Jan",
       "lastNameLabel": "Achternaam *",
@@ -1029,7 +1031,8 @@
       "city": "Stad",
       "postalCode": "Postcode",
       "country": "Land",
-      "save": "Adres opslaan en doorgaan"
+      "save": "Adres opslaan en doorgaan",
+      "autoFilled": "Adres automatisch ingevuld vanuit uw profiel"
     },
     "paymentForm": {
       "title": "Betaling",
@@ -1104,6 +1107,7 @@
     "getQuote": "Offerte aanvragen",
     "buyNow": "Nu kopen",
     "allParts": "Alle onderdelen",
+    "allPartsList": "Alle onderdelen",
     "partDetails": "Onderdeel details",
     "partNotFound": "Onderdeel niet gevonden",
     "partNotFoundDescription": "Het onderdeel dat u zoekt is mogelijk niet beschikbaar of bestaat niet.",
@@ -1131,6 +1135,10 @@
       "viewDetails": "Bekijk details",
       "viewAllParts": "Alle onderdelen bekijken",
       "productImage": "Productafbeelding"
+    },
+    "featuredParts": {
+      "title": "Uitgelichte onderdelen",
+      "description": "Onze meest populaire en hoogwaardige onderdelen"
     }
   },
   "profile":{
@@ -1153,13 +1161,21 @@
   "orders": "Mijn bestellingen"
 },
 "orders": {
-    "title": "Uw Bestellingen",
+    "title": "Mijn Bestellingen",
     "empty": "U heeft nog geen bestellingen geplaatst.",
-    "orderNumber": "Ordernummer",
+    "orderNumber": "Bestelnummer",
     "date": "Datum",
     "status": "Status",
     "total": "Totaal",
+    "shippingAddress": "Verzendadres",
+    "postalCode": "Postcode",
     "viewDetails": "Bekijk details",
+    "loading": "Laden...",
+    "error": "Bestellingen ophalen mislukt",
+    "tryAgain": "Opnieuw proberen",
+    "accessDenied": "Toegang geweigerd",
+    "loginRequired": "U moet ingelogd zijn om uw bestellingen te bekijken.",
+    "login": "Inloggen",
     "noOrdersFound": {
       "title": "Geen Bestellingen Gevonden",
       "description": "Het lijkt erop dat u nog geen bestellingen heeft geplaatst. Begin met winkelen om uw bestellingen hier te zien."

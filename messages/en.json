@@ -505,10 +505,14 @@
   },
   "relatedProducts": {
     "title": "Related Products",
-    "description": "Discover more high-quality accessories to complement your device setup",
+    "description": "Discover other parts that might interest you",
+    "productImage": "Product Image",
     "viewDetails": "View Details",
-    "viewAllAccessories": "View All Accessories",
-    "productImage": "Product Image"
+    "viewAllParts": "View All Parts"
+  },
+  "featuredParts": {
+    "title": "Featured Parts",
+    "description": "Our most popular and high-quality parts"
   },
   "specifications": {
     "title": "Product Specifications",
@@ -653,7 +657,18 @@
     "requestQuote": "Request Quote",
     "noParts": "No parts available for this model.",
     "contactForParts": "Contact us if you need a part not listed.",
-    "contactUs": "Contact Us"
+    "contactUs": "Contact Us",
+    "relatedProducts": {
+      "title": "Related Products",
+      "description": "Discover other parts that might interest you",
+      "productImage": "Product Image",
+      "viewDetails": "View Details",
+      "viewAllParts": "View All Parts"
+    },
+    "featuredParts": {
+      "title": "Featured Parts",
+      "description": "Our most popular and high-quality parts"
+    }
   },
   "services": {
     "available": "Repair Services",
@@ -819,11 +834,13 @@
         "personalizedService": "Personalized Service"
       },
       "subtitle": "Get a transparent price estimate for your repair or service",
-      "description": "Fill out the form below and our team will contact you as soon as possible with a personalized quote."
+      "description": "Fill out the form below to receive a personalized quote for your device repair or service.",
+      "autoFilled": "Contact information auto-filled from your profile"
     },
     "form": {
       "title": "Quote Request Form",
       "description": "Fill out the form below to receive a personalized quote for your device repair or service.",
+      "autoFilled": "Contact information auto-filled from your profile",
       "prepopulate": {
         "success": "Device/service details have been pre-filled from your previous selection."
       },
@@ -836,7 +853,7 @@
         "email": "Email",
         "emailPlaceholder": "Enter your email address",
         "phone": "Phone Number",
-        "phonePlaceholder": "Enter your phone number (optional)"
+        "phonePlaceholder": "Enter your phone number"
       },
       "deviceInformation": {
         "title": "Device Information",
@@ -954,6 +971,7 @@
     "form": {
       "title": "Send us a Message",
       "description": "Fill out the form below and we'll get back to you within 24 hours",
+      "autoFilled": "Contact information auto-filled from your profile",
       "firstNameLabel": "First Name *",
       "firstNamePlaceholder": "John",
       "lastNameLabel": "Last Name *",
@@ -1025,7 +1043,8 @@
       "city": "City",
       "postalCode": "Postal Code",
       "country": "Country",
-      "save": "Save address and continue"
+      "save": "Save address and continue",
+      "autoFilled": "Address auto-filled from your profile"
     },
     "paymentForm": {
       "title": "Payment",
@@ -1084,6 +1103,7 @@
     "sku": "SKU",
     "supplier": "Supplier",
     "quality": "Quality",
+    "allPartsList": "All Parts",
     "back": "Back",
     "inStock": "in stock",
     "currentlyUnavailable": "Currently unavailable",
@@ -1117,6 +1137,10 @@
       "productImage": "Product Image",
       "viewDetails": "View Details",
       "viewAllParts": "View All Parts"
+    },
+    "featuredParts": {
+      "title": "Featured Parts",
+      "description": "Our most popular and high-quality parts"
     }
 },
 "profile":{
@@ -1151,6 +1175,26 @@
     "viewDetails": "View Details",
     "noItems": "No items in this order.",
     "loading": "Loading order details..."
+  },
+  "orders": {
+    "title": "My Orders",
+    "empty": "You haven't placed any orders yet.",
+    "orderNumber": "Order Number",
+    "date": "Date",
+    "status": "Status",
+    "total": "Total",
+    "shippingAddress": "Shipping Address",
+    "postalCode": "Postal Code",
+    "viewDetails": "View Details",
+    "loading": "Loading...",
+    "error": "Failed to fetch orders",
+    "tryAgain": "Try Again",
+    "accessDenied": "Access Denied",
+    "loginRequired": "You need to be logged in to view your orders.",
+    "login": "Login",
+    "noOrdersFound": {
+      "title": "No Orders Found",
+      "description": "It looks like you haven't placed any orders yet. Start shopping to see your orders here."
+    }
   }
-
 }

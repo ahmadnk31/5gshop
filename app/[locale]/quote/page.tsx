@@ -48,13 +48,14 @@ function QuotePageContent() {
 	// Add Google Analytics tracking
 	const { trackQuoteRequest, trackEvent } = useGoogleAnalytics();
 	const t = useTranslations('quote');
-	const user=useSession();
+	const { data: session, status } = useSession();
+	
 	// Form state
   const [formData, setFormData] = useState({
 	// Contact Information
 	firstName:  "",
 	lastName:  "",
-	email: user.data?.user?.email || "",
+	email: "",
 	phone:  "",
 
 	// Device Information
@@ -80,6 +81,20 @@ function QuotePageContent() {
 		"idle"
 	);
 	const [submitMessage, setSubmitMessage] = useState("");
+
+	// Auto-populate form with user data when session is available
+	useEffect(() => {
+		if (status === "authenticated" && session?.user) {
+			const user = session.user as any;
+			setFormData(prev => ({
+				...prev,
+				firstName: user.firstName || prev.firstName,
+				lastName: user.lastName || prev.lastName,
+				email: user.email || prev.email,
+				phone: user.phone || prev.phone,
+			}));
+		}
+	}, [session, status]);
 
 	// Pre-populate form based on URL parameters
 useEffect(() => {
@@ -342,6 +357,16 @@ useEffect(() => {
 													{t('form.model')}: {formData.model}
 												</span>
 											)}
+										</div>
+									</div>
+								)}
+								{status === "authenticated" && session?.user && (
+									<div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-2">
+										<div className="flex items-center text-blue-800">
+											<CheckCircle className="h-4 w-4 mr-2" />
+											<span className="text-sm font-medium">
+												{t('form.autoFilled', { defaultValue: 'Contact information auto-filled from your profile' })}
+											</span>
 										</div>
 									</div>
 								)}
@@ -728,11 +753,11 @@ useEffect(() => {
 									</div>
 
 									{/* Submit */}
-									<div className="flex flex-col sm:flex-row gap-4 pt-6">
+									<div className="flex flex-col sm:flex-row justify-center gap-4 pt-6">
 										<Button
 											type="submit"
 											size="lg"
-											className="flex-1"
+											className=""
 											disabled={isSubmitting}
 										>
 											<Calculator className="h-5 w-5 mr-2" />
@@ -740,7 +765,7 @@ useEffect(() => {
 										</Button>
 										{isPrePopulated && (
 											<Button
-												type="button"
+												type="submit"
 												variant="ghost"
 												size="lg"
 												onClick={() => {

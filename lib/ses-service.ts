@@ -1,4 +1,6 @@
-import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import { SESClient, SendEmailCommand, SendRawEmailCommand } from "@aws-sdk/client-ses";
+import { createReadStream } from "fs";
+import { Readable } from "stream";
 
 // Check if we're in development mode
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -204,16 +206,16 @@ export class SESService {
               
               <h3>Contact Information:</h3>
               <ul>
-                <li><strong>Phone:</strong> +1 (555) 123-4567</li>
-                <li><strong>Email:</strong> support@techfixpro.com</li>
-                <li><strong>Address:</strong> 123 Tech Street, Digital City, DC 12345</li>
-                <li><strong>Hours:</strong> Mon-Fri 9AM-6PM, Sat 10AM-4PM</li>
+                <li><strong>Phone:</strong> +32 466 13 41 81</li>
+                <li><strong>Email:</strong> support@5gphones.be</li>
+                <li><strong>Address:</strong> Bondgenotenlaan 84A, Leuven</li>
+                <li><strong>Hours:</strong> Mon-Fri 10AM-6PM, Sat 10AM-6:30PM</li>
               </ul>
             </div>
             
             <div class="footer">
               <p>This is an automated confirmation. Please do not reply to this email.</p>
-              <p>&copy; 2024 5gphones. All rights reserved.</p>
+              <p>&copy; 2025 5gphones. All rights reserved.</p>
             </div>
           </div>
         </body>
@@ -234,12 +236,12 @@ export class SESService {
       - For urgent matters, feel free to call us directly
       
       Contact Information:
-      Phone: +1 (555) 123-4567
-      Email: support@techfixpro.com
-      Address: 123 Tech Street, Digital City, DC 12345
-      Hours: Mon-Fri 9AM-6PM, Sat 10AM-4PM
+      Phone: +32 466 13 41 81
+      Email: support@5gphones.be
+      Address: Bondgenotenlaan 84A, Leuven
+      Hours: Mon-Fri 10AM-6PM, Sat 10AM-6:30PM
       
-      © 2024 5gphones. All rights reserved.
+      © 2025 5gphones. All rights reserved.
     `;
 
     const command = new SendEmailCommand({
@@ -329,10 +331,10 @@ export class SESService {
               
               <h3>Contact Information:</h3>
               <ul>
-                <li><strong>Phone:</strong> +1 (555) 123-4567</li>
-                <li><strong>Email:</strong> support@techfixpro.com</li>
-                <li><strong>Address:</strong> 123 Tech Street, Digital City, DC 12345</li>
-                <li><strong>Hours:</strong> Mon-Fri 9AM-6PM, Sat 10AM-4PM</li>
+                <li><strong>Phone:</strong> +32 466 13 41 81</li>
+                <li><strong>Email:</strong> support@5gphones.be</li>
+                <li><strong>Address:</strong> Bondgenotenlaan 84A, Leuven</li>
+                <li><strong>Hours:</strong> Mon-Fri 10AM-6PM, Sat 10AM-6:30PM</li>
               </ul>
             </div>
             
@@ -358,10 +360,10 @@ export class SESService {
       If you have any additional questions or would like to proceed with our services, please don't hesitate to contact us.
       
       Contact Information:
-      Phone: +1 (555) 123-4567
-      Email: support@techfixpro.com
-      Address: 123 Tech Street, Digital City, DC 12345
-      Hours: Mon-Fri 9AM-6PM, Sat 10AM-4PM
+      Phone: +32 466 13 41 81
+      Email: support@5gphones.be
+      Address: Bondgenotenlaan 84A, Leuven
+      Hours: Mon-Fri 10AM-6PM, Sat 10AM-6:30PM
       
       Best regards,
       The 5gphones Team
@@ -682,9 +684,9 @@ export class SESService {
 
               <div class="contact-info">
                 <h3>📞 Need immediate assistance?</h3>
-                <p><strong>Phone:</strong> +32 123 456 789</p>
+                <p><strong>Phone:</strong> +32 466 13 41 81</p>
                 <p><strong>Email:</strong> info@5gphones.be</p>
-                <p><strong>Business Hours:</strong> Monday-Saturday, 9:00 AM - 7:00 PM</p>
+                <p><strong>Business Hours:</strong> Monday-Saturday, 10:00 AM - 6:00 PM</p>
               </div>
 
               <p>Your quote is valid for 30 days from today.</p>
@@ -715,9 +717,9 @@ export class SESService {
       ${data.urgency === 'urgent' ? 'URGENT REQUEST NOTED: We understand you need same-day service and will prioritize your request.' : ''}
       
       Need immediate assistance?
-      Phone: +32 123 456 789
+      Phone: +32 466 13 41 81
       Email: info@5gphones.be
-      Business Hours: Monday-Saturday, 9:00 AM - 7:00 PM
+      Business Hours: Monday-Saturday, 10:00 AM - 6:00 PM
       
       Your quote is valid for 30 days from today.
       
@@ -837,27 +839,27 @@ export class SESService {
                 <h3 style="margin-top: 0;">Next Steps:</h3>
                 <ul>
                   <li>Reply to this email if you have any questions</li>
-                  <li>Call us at +32 123 456 789 to schedule your repair</li>
+                  <li>Call us at +32 466 13 41 81 to schedule your repair</li>
                   <li>Visit our shop for immediate service</li>
                   <li>This quote is valid for 30 days</li>
                 </ul>
               </div>
               
               <div style="text-align: center; margin: 20px 0;">
-                <a href="tel:+32123456789" class="button">📞 Call Us Now</a>
+                <a href="tel:+32466134181" class="button">📞 Call Us Now</a>
                 <a href="mailto:info@5gphones.be" class="button">📧 Email Us</a>
               </div>
               
               <p><strong>Business Hours:</strong><br>
-              Monday - Saturday: 9:00 AM - 7:00 PM<br>
+              Monday - Saturday: 10:00 AM - 6:00 PM<br>
               Sunday: Closed</p>
               
               <p><strong>Location:</strong><br>
-              123 Repair Street, Brussels, Belgium</p>
+              Bondgenotenlaan 84A, Leuven</p>
             </div>
             <div class="footer">
               <p>This email was sent from 5gphones.be in response to your quote request.</p>
-              <p>© 2024 5gphones.be - Professional Device Repair Services</p>
+              <p>© ${new Date().getFullYear()} 5gphones.be - Professional Device Repair Services</p>
             </div>
           </div>
         </body>
@@ -881,12 +883,12 @@ ${data.responseMessage}
 
 NEXT STEPS:
 - Reply to this email if you have any questions
-- Call us at +32 123 456 789 to schedule your repair
+- Call us at +32 466 13 41 81 to schedule your repair
 - Visit our shop for immediate service
 - This quote is valid for 30 days
 
-Business Hours: Monday-Saturday, 9:00 AM - 7:00 PM
-Location: 123 Repair Street, Brussels, Belgium
+Business Hours: Monday-Saturday, 10:00 AM - 6:00 PM
+Location: Bondgenotenlaan 84A, Leuven
 
 Best regards,
 The 5gphones.be Team
@@ -1113,5 +1115,289 @@ This email was sent from 5gphones.be in response to your quote request.
     `;
     const text = `Order status: ${statusMsg}\n\nProducts:\n${products.map(p => `- ${p.name} x${p.quantity} (€${(p.price / 100).toFixed(2)})`).join('\n')}\nOrder total: €${(order.amount / 100).toFixed(2)}`;
     return this.sendRawEmail({ to, subject, html, text });
+  }
+
+  // New methods for sending emails with attachments
+  static async sendEmailWithAttachment(data: {
+    to: string;
+    subject: string;
+    htmlBody: string;
+    textBody?: string;
+    attachments: Array<{
+      filename: string;
+      content: Buffer | string;
+      contentType: string;
+    }>;
+  }) {
+    const boundary = `boundary_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    let rawEmail = '';
+    
+    // Headers
+    rawEmail += `From: ${this.fromEmail}\r\n`;
+    rawEmail += `To: ${data.to}\r\n`;
+    rawEmail += `Subject: ${data.subject}\r\n`;
+    rawEmail += `MIME-Version: 1.0\r\n`;
+    rawEmail += `Content-Type: multipart/mixed; boundary="${boundary}"\r\n\r\n`;
+    
+    // HTML Body
+    rawEmail += `--${boundary}\r\n`;
+    rawEmail += `Content-Type: multipart/alternative; boundary="${boundary}_alt"\r\n\r\n`;
+    
+    // Text version
+    if (data.textBody) {
+      rawEmail += `--${boundary}_alt\r\n`;
+      rawEmail += `Content-Type: text/plain; charset=UTF-8\r\n\r\n`;
+      rawEmail += `${data.textBody}\r\n\r\n`;
+    }
+    
+    // HTML version
+    rawEmail += `--${boundary}_alt\r\n`;
+    rawEmail += `Content-Type: text/html; charset=UTF-8\r\n\r\n`;
+    rawEmail += `${data.htmlBody}\r\n\r\n`;
+    
+    rawEmail += `--${boundary}_alt--\r\n\r\n`;
+    
+    // Attachments
+    for (const attachment of data.attachments) {
+      rawEmail += `--${boundary}\r\n`;
+      rawEmail += `Content-Type: ${attachment.contentType}; name="${attachment.filename}"\r\n`;
+      rawEmail += `Content-Disposition: attachment; filename="${attachment.filename}"\r\n`;
+      rawEmail += `Content-Transfer-Encoding: base64\r\n\r\n`;
+      
+      const content = typeof attachment.content === 'string' 
+        ? attachment.content 
+        : attachment.content.toString('base64');
+      rawEmail += `${content}\r\n\r\n`;
+    }
+    
+    rawEmail += `--${boundary}--\r\n`;
+    
+    const command = new SendRawEmailCommand({
+      RawMessage: {
+        Data: Buffer.from(rawEmail, 'utf-8')
+      }
+    });
+
+    // Use mock email in development
+    if (mockEmailMode) {
+      return this.mockSendEmail({
+        email: data.to,
+        message: `Email with ${data.attachments.length} attachment(s): ${data.subject}`,
+        subject: data.subject
+      }, 'EMAIL_WITH_ATTACHMENT');
+    }
+
+    try {
+      console.log(`Sending email with ${data.attachments.length} attachment(s) to: ${data.to}`);
+      const result = await sesClient.send(command);
+      console.log("Email with attachment sent successfully:", result.MessageId);
+      return result;
+    } catch (error) {
+      console.error("Failed to send email with attachment:", error);
+      if (isDevelopment) {
+        return this.mockSendEmail({
+          email: data.to,
+          message: `Email with ${data.attachments.length} attachment(s): ${data.subject}`,
+          subject: data.subject
+        }, 'EMAIL_WITH_ATTACHMENT_FALLBACK');
+      }
+      throw error;
+    }
+  }
+
+  static async sendQuoteResponseWithAttachment(data: {
+    customerEmail: string;
+    customerName: string;
+    deviceInfo: string;
+    responseMessage: string;
+    estimatedCost?: number;
+    estimatedTime?: string;
+    adminEmail: string;
+    attachments?: Array<{
+      filename: string;
+      content: Buffer | string;
+      contentType: string;
+    }>;
+  }) {
+    const subject = `Quote Response - ${data.deviceInfo}`;
+    
+    const htmlBody = `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; }
+            .content { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .estimate { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 15px 0; }
+            .footer { text-align: center; color: #6c757d; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Quote Response</h1>
+              <p>5gphones - Professional Device Repair</p>
+            </div>
+            
+            <div class="content">
+              <h2>Hi ${data.customerName},</h2>
+              
+              <p>Thank you for your quote request for <strong>${data.deviceInfo}</strong>. Here's our response:</p>
+              
+              <div class="estimate">
+                ${data.responseMessage}
+              </div>
+              
+              ${data.estimatedCost ? `
+                <div class="estimate">
+                  <h3>Estimated Cost: €${data.estimatedCost.toFixed(2)}</h3>
+                </div>
+              ` : ''}
+              
+              ${data.estimatedTime ? `
+                <div class="estimate">
+                  <h3>Estimated Time: ${data.estimatedTime}</h3>
+                </div>
+              ` : ''}
+              
+              <p>Please contact us if you have any questions or would like to proceed with the repair.</p>
+            </div>
+            
+            <div class="footer">
+              <p>Best regards,<br>The 5gphones Team</p>
+              <p>Contact: ${this.adminEmail}</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const textBody = `
+      Quote Response - 5gphones
+      
+      Hi ${data.customerName},
+      
+      Thank you for your quote request for ${data.deviceInfo}. Here's our response:
+      
+      ${data.responseMessage}
+      
+      ${data.estimatedCost ? `Estimated Cost: €${data.estimatedCost.toFixed(2)}` : ''}
+      ${data.estimatedTime ? `Estimated Time: ${data.estimatedTime}` : ''}
+      
+      Please contact us if you have any questions or would like to proceed with the repair.
+      
+      Best regards,
+      The 5gphones Team
+      Contact: ${this.adminEmail}
+    `;
+
+    if (data.attachments && data.attachments.length > 0) {
+      return this.sendEmailWithAttachment({
+        to: data.customerEmail,
+        subject,
+        htmlBody,
+        textBody,
+        attachments: data.attachments
+      });
+    } else {
+      return this.sendQuoteResponse(data);
+    }
+  }
+
+  static async sendShippingLabelEmail(data: {
+    customerEmail: string;
+    customerName: string;
+    orderId: string;
+    orderDetails: any;
+    labelAttachment: {
+      filename: string;
+      content: Buffer | string;
+      contentType: string;
+    };
+    trackingNumber?: string;
+    message?: string;
+  }) {
+    const subject = `Shipping Label - Order #${data.orderId.slice(-6)}`;
+    
+    const htmlBody = `
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; }
+            .content { background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .highlight { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 15px 0; }
+            .footer { text-align: center; color: #6c757d; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Shipping Label</h1>
+              <p>5gphones - Order #${data.orderId.slice(-6)}</p>
+            </div>
+            
+            <div class="content">
+              <h2>Hi ${data.customerName},</h2>
+              
+              <p>Your order #${data.orderId.slice(-6)} is ready for shipping. Please find the shipping label attached to this email.</p>
+              
+              ${data.trackingNumber ? `
+                <div class="highlight">
+                  <h3>Tracking Number: ${data.trackingNumber}</h3>
+                </div>
+              ` : ''}
+              
+              ${data.message ? `
+                <div class="highlight">
+                  <p><strong>Additional Information:</strong></p>
+                  <p>${data.message}</p>
+                </div>
+              ` : ''}
+              
+              <p>Please print the attached shipping label and affix it to your package before sending it to us.</p>
+              
+              <p>If you have any questions, please don't hesitate to contact us.</p>
+            </div>
+            
+            <div class="footer">
+              <p>Best regards,<br>The 5gphones Team</p>
+              <p>Contact: ${this.adminEmail}</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const textBody = `
+      Shipping Label - 5gphones
+      
+      Hi ${data.customerName},
+      
+      Your order #${data.orderId.slice(-6)} is ready for shipping. Please find the shipping label attached to this email.
+      
+      ${data.trackingNumber ? `Tracking Number: ${data.trackingNumber}` : ''}
+      
+      ${data.message ? `Additional Information: ${data.message}` : ''}
+      
+      Please print the attached shipping label and affix it to your package before sending it to us.
+      
+      If you have any questions, please don't hesitate to contact us.
+      
+      Best regards,
+      The 5gphones Team
+      Contact: ${this.adminEmail}
+    `;
+
+    return this.sendEmailWithAttachment({
+      to: data.customerEmail,
+      subject,
+      htmlBody,
+      textBody,
+      attachments: [data.labelAttachment]
+    });
   }
 }

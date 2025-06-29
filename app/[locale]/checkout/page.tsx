@@ -12,8 +12,13 @@ export default function CheckoutPage() {
   const { cart, getTotal } = useCart();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   // Forwards repairType and shippingOption from CheckoutForm
   const [checkoutMeta, setCheckoutMeta] = useState<{ repairType?: string; shippingOption?: string }>({});
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     async function createPaymentIntent() {
@@ -35,8 +40,21 @@ export default function CheckoutPage() {
     if (cart.length > 0) createPaymentIntent();
   }, [cart, getTotal, checkoutMeta]);
 
+  // Show loading state until component is mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12">
+        <div className="text-center py-12">Loading...</div>
+      </div>
+    );
+  }
+
   if (cart.length === 0) {
-    return <div className="text-center py-12">Your cart is empty.</div>;
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12">
+        <div className="text-center py-12">Your cart is empty.</div>
+      </div>
+    );
   }
 
   return (

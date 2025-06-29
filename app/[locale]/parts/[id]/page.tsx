@@ -9,9 +9,9 @@ import { FallbackImage } from '@/components/ui/fallback-image';
 import { formatCurrency } from '@/lib/utils';
 
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ShoppingCart, Star, Truck, Shield, RotateCcw } from "lucide-react";
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -24,7 +24,7 @@ import { Link } from '@/i18n/navigation';
 
 export default function PartDetailPage() {
   const t = useTranslations('parts');
-  
+  const locale = useLocale();
   const { id } = useParams();
   const { addToCart, clearCart } = useCart();
   const router = useRouter();
@@ -36,36 +36,26 @@ export default function PartDetailPage() {
     async function fetchPartAndRelated() {
       setLoading(true);
       try {
+        // Fetch the part
         const res = await fetch(`/api/parts/${id}`);
         let partData = null;
         if (res.ok) partData = await res.json();
         setPart(partData);
+        
         if (partData) {
-          // Fetch all parts for related
-          const allRes = await fetch('/api/parts');
-          if (allRes.ok) {
-            let allParts = await allRes.json();
-            // Defensive: ensure allParts is always an array
-            if (!Array.isArray(allParts)) {
-              if (allParts && Array.isArray(allParts.data)) {
-                allParts = allParts.data;
-              } else {
-                allParts = [];
-              }
-            }
-            // Prefer related by model, then by type/category, then fill with others
-            let related = allParts.filter((p: any) => p.model === partData.model && p.id !== partData.id && p.inStock > 0);
-            if (related.length < 4) {
-              const byType = allParts.filter((p: any) => p.category === partData.category && p.model !== partData.model && p.id !== partData.id && p.inStock > 0);
-              related = [...related, ...byType];
-            }
-            if (related.length < 4) {
-              const others = allParts.filter((p: any) => p.id !== partData.id && p.inStock > 0 && !related.some((r: any) => r.id === p.id)).slice(0, 4 - related.length);
-              related = [...related, ...others];
-            }
-            setRelatedParts(related.slice(0, 4));
+          // Fetch related parts using the new backend API
+          const relatedRes = await fetch(`/api/parts/${id}/related?limit=4`);
+          if (relatedRes.ok) {
+            const relatedData = await relatedRes.json();
+            console.log('🎯 Backend returned related parts:', relatedData.length);
+            setRelatedParts(relatedData);
+          } else {
+            console.error('❌ Failed to fetch related parts from backend');
+            setRelatedParts([]);
           }
         }
+      } catch (error) {
+        console.error('Error fetching part and related:', error);
       } finally {
         setLoading(false);
       }
@@ -86,11 +76,11 @@ export default function PartDetailPage() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink href={`/${locale}`}>Home</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink href="/parts">{t('allParts')}</BreadcrumbLink>
+              <BreadcrumbLink href={`/${locale}/parts`}>{t('allParts')}</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -126,7 +116,7 @@ export default function PartDetailPage() {
               )}
             </div>
             {/* Action buttons */}
-            <div className="flex space-x-3">
+            <div className="flex space-x-3 flex-wrap">
               <Button variant="outline" size="sm" className="flex-1">
                 <Star className="h-4 w-4 mr-2 text-yellow-400" />
                 {t('save')}
@@ -179,10 +169,10 @@ export default function PartDetailPage() {
               </div>
             )}
             {/* Add to Cart Section */}
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <Button onClick={() => addToCart({ id: part.id, name: part.name, price: part.cost, image: part.imageUrl, type: 'part' })} disabled={!isInStock}>
                 <ShoppingCart className="h-4 w-4 mr-2" />
-                {t('addToCart')}
+               
               </Button>
               <Button asChild variant="outline">
                 <Link
@@ -250,11 +240,12 @@ export default function PartDetailPage() {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedParts.map((relatedPart) => (
-                <Card key={relatedPart.id} className="hover:shadow-lg transition-shadow group">
+                <Card key={relatedPart.id} className="hover:shadow-lg transition-shadow group py-0">
                   <CardHeader className="p-0">
                     <div className="relative overflow-hidden rounded-t-lg">
                       <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
                         {relatedPart.imageUrl ? (
+                          <Link href={`/parts/${relatedPart.id}`}>
                           <FallbackImage
                             src={relatedPart.imageUrl}
                             alt={relatedPart.name}
@@ -263,6 +254,7 @@ export default function PartDetailPage() {
                             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
                             fallbackContent={<div className="w-full h-full flex items-center justify-center text-4xl">🧩</div>}
                           />
+                          </Link>
                         ) : (
                           <div className="text-center text-gray-400">
                             <span className="text-4xl">🧩</span>
@@ -278,6 +270,7 @@ export default function PartDetailPage() {
                     </div>
                   </CardHeader>
                   <CardContent className="p-4">
+                    <Link href={`/parts/${relatedPart.id}`}>
                     <h3 className="font-semibold text-lg mb-2 line-clamp-2">{relatedPart.name}</h3>
                     <div className="flex items-center mb-3">
                       <div className="flex items-center">
@@ -295,6 +288,7 @@ export default function PartDetailPage() {
                         {relatedPart.category}
                       </Badge>
                     </div>
+                    </Link>
                     <div className="flex space-x-2">
                       <Link href={`/parts/${relatedPart.id}`} className="flex-1">
                         <Button variant="outline" size="sm" className="w-full">

@@ -4,10 +4,11 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSession } from "next-auth/react";
+import { Link } from "@/i18n/navigation";
 
 export default function SettingsPage() {
   const t = useTranslations("settings");
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user = session?.user;
   const [address, setAddress] = useState({
     firstName: "",
@@ -20,25 +21,46 @@ export default function SettingsPage() {
     country: "",
   });
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Prefill address from user session (if available in session.user)
+  // Fetch user data from API
   useEffect(() => {
-    if (user) {
-      setAddress((prev) => ({
-        ...prev,
-        // fallback to empty string if not present
-        firstName: (user as any).firstName || "",
-        lastName: (user as any).lastName || "",
-        address1: (user as any).address1 || "",
-        address2: (user as any).address2 || "",
-        city: (user as any).city || "",
-        state: (user as any).state || "",
-        postalCode: (user as any).postalCode || "",
-        country: (user as any).country || "",
-      }));
+    const fetchUserData = async () => {
+      if (!user?.email) return;
+      
+      try {
+        const response = await fetch("/api/account/profile");
+        if (response.ok) {
+          const data = await response.json();
+          const userData = data.user; // Extract user data from response
+          setAddress({
+            firstName: userData.firstName || "",
+            lastName: userData.lastName || "",
+            address1: userData.address1 || "",
+            address2: userData.address2 || "",
+            city: userData.city || "",
+            state: userData.state || "",
+            postalCode: userData.postalCode || "",
+            country: userData.country || "",
+          });
+        } else {
+          console.error("Failed to fetch user data");
+        }
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (status === "authenticated" && user?.email) {
+      fetchUserData();
+    } else if (status === "unauthenticated") {
+      setLoading(false);
     }
-  }, [user]);
+  }, [user, status]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
@@ -47,19 +69,67 @@ export default function SettingsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    await fetch("/api/account/profile", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(address),
-    });
-    setSaving(false);
-    setSuccess(true);
-    setTimeout(() => setSuccess(false), 2000);
+    setError(null);
+    setSuccess(false);
+    
+    try {
+      const response = await fetch("/api/account/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(address),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update settings');
+      }
+      
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        // Refresh the page to update the session with new data
+        window.location.reload();
+      }, 2000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update settings');
+    } finally {
+      setSaving(false);
+    }
   };
+
+  if (status === "loading" || loading) {
+    return <div className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow border mt-8">
+      <div className="text-center">Loading...</div>
+    </div>;
+  }
+
+  if (status === "unauthenticated") {
+    return <div className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow border mt-8">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+        <p className="text-gray-600 mb-4">You need to be logged in to view your settings.</p>
+        <Link href="/auth/login">
+          <Button>Login</Button>
+        </Link>
+      </div>
+    </div>;
+  }
 
   return (
     <div className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow border mt-8">
       <h1 className="text-2xl font-bold mb-6">{t("title", { defaultValue: "Settings" })}</h1>
+      
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+      
+      {success && (
+        <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+          {t("success", { defaultValue: "Address updated! Refreshing page..." })}
+        </div>
+      )}
+      
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -102,7 +172,6 @@ export default function SettingsPage() {
         <Button type="submit" className="w-full mt-4" disabled={saving}>
           {saving ? t("saving", { defaultValue: "Saving..." }) : t("save", { defaultValue: "Save Address" })}
         </Button>
-        {success && <div className="text-green-600 text-center mt-2">{t("success", { defaultValue: "Address updated!" })}</div>}
       </form>
     </div>
   );

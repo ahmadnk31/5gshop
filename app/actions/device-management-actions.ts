@@ -62,12 +62,22 @@ export async function getAllDevicesBySerialNumber(order: 'asc' | 'desc' = 'asc')
 }
 
 // New function to get all devices ordered by the 'order' field
-export async function getAllDevicesByOrder() {
+export async function getAllDevicesByOrder(order: 'asc' | 'desc' = 'desc') {
   try {
-    return await DatabaseService.getAllDevicesByOrder();
+    return await DatabaseService.getAllDevicesByOrder(order);
   } catch (error) {
     console.error("Failed to get devices by order:", error);
     throw new Error("Failed to get devices by order");
+  }
+}
+
+// New function to get all devices sorted by model name
+export async function getAllDevicesByModelName(order: 'asc' | 'desc' = 'asc') {
+  try {
+    return await DatabaseService.getAllDevicesByModelName(order);
+  } catch (error) {
+    console.error("Failed to get devices by model name:", error);
+    throw new Error("Failed to get devices by model name");
   }
 }
 

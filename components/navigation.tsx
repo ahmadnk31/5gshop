@@ -52,6 +52,7 @@ export function Navigation() {
   
   const { data: session } = useSession();
 
+
   const { items } = useCart();
   const totalCartItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -338,13 +339,21 @@ export function Navigation() {
                   <DropdownMenuItem asChild>
                     <Link href="/account/orders">{t('myOrders')}</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
-                    {t('logout')}
-                  </DropdownMenuItem>
+                  
                   <DropdownMenuItem asChild>
                     <Link href="/account/settings">{t('settings')}</Link>
                   </DropdownMenuItem>
+                  {/* if user is admin, show admin dashboard */}
+                  {session.user.role === 'ADMIN' && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">{t('adminDashboard')}</Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="bg-destructive text-white" onClick={() => signOut({ callbackUrl: "/" })}>
+                    {t('logout')}
+                  </DropdownMenuItem>
+                 
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { sendQuoteResponse, updateQuoteNotes } from "@/app/actions/quote-actions";
+import { updateQuoteNotes } from "@/app/actions/quote-actions";
 import { Quote } from "@/lib/types";
 import { 
   DollarSign, 
@@ -22,7 +22,9 @@ import {
   CheckCircle,
   XCircle,
   FileText,
-  Save
+  Save,
+  Paperclip,
+  X
 } from "lucide-react";
 
 interface QuoteDetailModalProps {
@@ -31,6 +33,12 @@ interface QuoteDetailModalProps {
   onClose: () => void;
   onStatusUpdate: (quoteId: string, status: 'APPROVED' | 'REJECTED') => Promise<void>;
   onQuoteUpdate: () => Promise<void>;
+}
+
+interface Attachment {
+  filename: string;
+  content: string;
+  contentType: string;
 }
 
 export function QuoteDetailModal({ 
@@ -46,31 +54,60 @@ export function QuoteDetailModal({
   const [adminNotes, setAdminNotes] = useState(quote.adminNotes || '');
   const [sending, setSending] = useState(false);
   const [savingNotes, setSavingNotes] = useState(false);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        const base64Content = content.split(',')[1]; // Remove data URL prefix
+        
+        const attachment: Attachment = {
+          filename: file.name,
+          content: base64Content,
+          contentType: file.type || 'application/octet-stream'
+        };
+        
+        setAttachments(prev => [...prev, attachment]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeAttachment = (index: number) => {
+    setAttachments(prev => prev.filter((_, i) => i !== index));
+  };
 
   const handleSendQuoteResponse = async () => {
     if (!response.trim()) return;
 
     setSending(true);
     try {
-      // Use the configured admin email
-      const adminEmail = 'shafiq@5gphones.be';
-      
-      // Here we would add a new function to send quote responses
-      // For now, let's implement it similarly to contact responses
-      await sendQuoteResponse({
-        quoteId: quote.id,
-        customerEmail: quote?.customer.email,
-        customerName: `${quote?.customer.firstName} ${quote?.customer.lastName}`,
-        deviceInfo: `${quote?.device.brand} ${quote?.device.model}`,
-        responseMessage: response,
-        estimatedCost: estimatedCost ? parseFloat(estimatedCost) : undefined,
-        estimatedTime,
-        adminEmail,
-        adminNotes
+      const fetchResponse = await fetch(`/api/admin/quotes/${quote.id}/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          responseMessage: response,
+          estimatedCost: estimatedCost ? parseFloat(estimatedCost) : undefined,
+          estimatedTime,
+          attachments: attachments.length > 0 ? attachments : undefined
+        }),
       });
+
+      if (!fetchResponse.ok) {
+        const error = await fetchResponse.json();
+        throw new Error(error.error || 'Failed to send quote response');
+      }
 
       await onQuoteUpdate();
       setResponse('');
+      setAttachments([]);
       onClose();
     } catch (error) {
       console.error('Failed to send quote response:', error);
@@ -211,7 +248,7 @@ export function QuoteDetailModal({
                 <div className="flex items-center space-x-2">
                   <span className="font-medium">Urgency:</span>
                   <Badge className={getUrgencyColor(quote.urgency)}>
-                    {quote.urgency.toUpperCase()}
+                    {typeof quote.urgency === 'string' ? quote.urgency.toUpperCase() : 'UNKNOWN'}
                   </Badge>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -245,11 +282,18 @@ export function QuoteDetailModal({
               <h3 className="text-lg font-semibold">Reported Issues</h3>
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="space-y-2">
-                  {quote.issues.map((issue, index) => (
+                  {Array.isArray(quote.issues) ? quote.issues.map((issue, index) => (
                     <div key={index} className="flex items-center space-x-2">
                       <AlertCircle className="h-4 w-4 text-orange-500" />
                       <span>{issue}</span>
                     </div>
+                  )) : (typeof quote.issues === 'string' ? (
+                    <div className="flex items-center space-x-2">
+                      <AlertCircle className="h-4 w-4 text-orange-500" />
+                      <span>{quote.issues}</span>
+                    </div>
+                  ) : (
+                    <div className="text-gray-500 italic">No issues specified</div>
                   ))}
                 </div>
                 {quote.description && (
@@ -353,7 +397,61 @@ export function QuoteDetailModal({
                 rows={6}
               />
               <p className="text-sm text-gray-500">
-                This will be sent as an email to {quote.customer.email}
+                This will be sent as an email to {quote.customer?.email || 'customer email'}
+              </p>
+            </div>
+
+            {/* Attachments */}
+            <div className="space-y-3">
+              <Label htmlFor="attachments">Attachments</Label>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => document.getElementById('file-upload')?.click()}
+                  >
+                    <Paperclip className="h-4 w-4 mr-2" />
+                    Add Attachment
+                  </Button>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    multiple
+                    className="hidden"
+                    onChange={handleFileUpload}
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif"
+                  />
+                  <span className="text-sm text-gray-500">
+                    PDF, DOC, Images (max 10MB each)
+                  </span>
+                </div>
+                
+                {attachments.length > 0 && (
+                  <div className="space-y-2">
+                    <p className="text-sm font-medium">Attachments ({attachments.length}):</p>
+                    {attachments.map((attachment, index) => (
+                      <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                        <div className="flex items-center space-x-2">
+                          <Paperclip className="h-4 w-4 text-gray-500" />
+                          <span className="text-sm">{attachment.filename}</span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeAttachment(index)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <p className="text-sm text-gray-500">
+                Attachments will be included in the email sent to the customer.
               </p>
             </div>
 

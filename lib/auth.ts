@@ -26,7 +26,15 @@ export const authOptions: NextAuthOptions = {
         if (!user || !user.hashedPassword) return null;
         const isValid = await compare(credentials.password, user.hashedPassword);
         if (!isValid) return null;
-        return user;
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          image: user.image || undefined,
+          role: user.role,
+          firstName: user.firstName || undefined,
+          lastName: user.lastName || undefined,
+        };
       },
     }),
   ],
@@ -38,24 +46,45 @@ export const authOptions: NextAuthOptions = {
       if (session?.user) {
         session.user.id = token.sub ?? "";
         session.user.role = token.role ?? "";
+        // Include user profile fields in session
+        session.user.image = token.image as string | undefined;
+        session.user.name = token.name as string | undefined;
+        session.user.firstName = token.firstName as string | undefined;
+        session.user.lastName = token.lastName as string | undefined;
       }
       return session;
     },
     async jwt({ token, user, account }) {
       if (user) {
         token.role = user.role;
+        token.image = user.image;
+        token.name = user.name;
+        token.firstName = (user as any).firstName;
+        token.lastName = (user as any).lastName;
       }
       
       // Always fetch role from DB if missing, even for OAuth
       if (!token.role && token.sub) {
         const dbUser = await prisma.user.findUnique({ where: { id: token.sub } });
         token.role = dbUser?.role || "user";
+        // Also fetch other profile fields
+        if (dbUser) {
+          token.image = dbUser.image || undefined;
+          token.name = dbUser.name || undefined;
+          token.firstName = dbUser.firstName || undefined;
+          token.lastName = dbUser.lastName || undefined;
+        }
       }
       //if user has admin role allow to access admin routes
       if (account?.provider === "google" && !token.role) {
         const dbUser = await prisma.user.findUnique({ where: { email: user?.email || "" } });
         if (dbUser) {
           token.role = dbUser.role || "user";
+          // Also fetch other profile fields for OAuth users
+          token.image = dbUser.image || undefined;
+          token.name = dbUser.name || undefined;
+          token.firstName = dbUser.firstName || undefined;
+          token.lastName = dbUser.lastName || undefined;
         } else {
           token.role = "user"; // Default role if not found
         }

@@ -32,7 +32,7 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-12">
-          <h2 className="text-3xl font-bold">{translations.title}</h2>
+          <h2 className="text-lg md:text-2xl font-bold">{translations.title}</h2>
           <Button asChild variant="outline">
             <Link href="/accessories">
               {translations.viewAll}

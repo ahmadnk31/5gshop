@@ -63,3 +63,21 @@ export async function getPartById(partId: string) {
     throw new Error("Failed to get part by id");
   }
 }
+
+export async function getRelatedParts(partId: string, limit: number = 4) {
+  try {
+    return await DatabaseService.getRelatedParts(partId, limit);
+  } catch (error) {
+    console.error("Failed to get related parts:", error);
+    throw new Error("Failed to get related parts");
+  }
+}
+
+export async function getFeaturedParts(limit: number = 4) {
+  try {
+    return await DatabaseService.getFeaturedParts(limit);
+  } catch (error) {
+    console.error("Failed to get featured parts:", error);
+    throw new Error("Failed to get featured parts");
+  }
+}

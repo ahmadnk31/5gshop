@@ -83,21 +83,14 @@ export function FeaturedPartsSection({ parts, t }: { parts: any[]; t: any }) {
                   <Button
                     variant="default"
                     size="sm"
-                    className="w-full px-3"
+                    className="flex-1"
                     disabled={part.inStock === 0 || isPending}
                     title={t("parts.addToCart")}
                     type="button"
                     onClick={() => handleAddToCart(part)}
                   >
                     <ShoppingCart className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="px-3"
-                    asChild
-                  >
-                    <Link href={`/quote?part=${encodeURIComponent(part.name)}&deviceType=${encodeURIComponent(part.deviceType || "")}&model=${encodeURIComponent(part.deviceModel || "")}`}>{t("parts.getQuote")}</Link>
+                    <span className="sr-only">{t("parts.addToCart")}</span>
                   </Button>
                 </div>
               </CardContent>

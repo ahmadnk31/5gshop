@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,7 @@ import { Send, CheckCircle, AlertCircle } from "lucide-react";
 import { submitContactForm } from "@/app/actions/contact-actions";
 import { useGoogleAnalytics } from "@/components/google-analytics";
 import { useTranslations } from 'next-intl';
+import { useSession } from "next-auth/react";
 
 interface ContactFormData {
   firstName: string;
@@ -25,6 +26,7 @@ interface ContactFormData {
 
 export function ContactForm() {
   const t = useTranslations('contact.form');
+  const { data: session, status } = useSession();
   // Add Google Analytics tracking
   const { trackContactForm } = useGoogleAnalytics();
 
@@ -42,6 +44,20 @@ export function ContactForm() {
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: "" });
+
+  // Auto-populate form with user data when session is available
+  useEffect(() => {
+    if (status === "authenticated" && session?.user) {
+      const user = session.user as any;
+      setFormData(prev => ({
+        ...prev,
+        firstName: user.firstName || prev.firstName,
+        lastName: user.lastName || prev.lastName,
+        email: user.email || prev.email,
+        phone: user.phone || prev.phone,
+      }));
+    }
+  }, [session, status]);
 
   const handleInputChange = (field: keyof ContactFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -113,6 +129,15 @@ export function ContactForm() {
             )}
             <AlertDescription className={submitStatus.type === 'success' ? 'text-green-800' : 'text-red-800'}>
               {submitStatus.message}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {status === "authenticated" && session?.user && (
+          <Alert className="mb-6 border-blue-200 bg-blue-50">
+            <CheckCircle className="h-4 w-4 text-blue-600" />
+            <AlertDescription className="text-blue-800">
+              {t('autoFilled', { defaultValue: 'Contact information auto-filled from your profile' })}
             </AlertDescription>
           </Alert>
         )}

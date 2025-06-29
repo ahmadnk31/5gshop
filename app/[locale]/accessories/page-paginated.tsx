@@ -26,28 +26,15 @@ import {
   Grid,
   List
 } from "lucide-react";
-import Link from "next/link";
+
 import { getAccessoriesWithFiltersPaginated } from "@/app/actions/pagination-actions";
 import { Accessory, AccessoryCategory } from "@/lib/types";
 import { useTranslations } from "next-intl";
 import { formatCurrency } from "@/lib/utils";
 import { useCart } from "@/components/cart-context";
 import { FallbackImage } from "@/components/ui/fallback-image";
+import { Link } from "@/i18n/navigation";
 
-// Category configurations matching the database schema
-const getCategoryConfigs = (t: any) => ({
-  CASE: { icon: Shield, label: t('accessories.categories.labels.CASE') },
-  CHARGER: { icon: Zap, label: t('accessories.categories.labels.CHARGER') },
-  CABLE: { icon: Cable, label: t('accessories.categories.labels.CABLE') },
-  HEADPHONES: { icon: Headphones, label: t('accessories.categories.labels.HEADPHONES') },
-  SCREEN_PROTECTOR: { icon: Shield, label: t('accessories.categories.labels.SCREEN_PROTECTOR') },
-  KEYBOARD: { icon: Monitor, label: t('accessories.categories.labels.KEYBOARD') },
-  MOUSE: { icon: Monitor, label: t('accessories.categories.labels.MOUSE') },
-  STYLUS: { icon: Edit, label: t('accessories.categories.labels.STYLUS') },
-  STAND: { icon: Monitor, label: t('accessories.categories.labels.STAND') },
-  MOUNT: { icon: Monitor, label: t('accessories.categories.labels.MOUNT') },
-  OTHER: { icon: Box, label: t('accessories.categories.labels.OTHER') },
-});
 
 const getCategoryDescriptions = (t: any) => ({
   CASE: t('accessories.categories.descriptions.CASE'),
@@ -78,6 +65,101 @@ const categoryConfigs = {
 };
 
 const ITEMS_PER_PAGE_OPTIONS = [12, 24, 48];
+
+// Improved Helper: Generate related search terms based on the current searchTerm and allAccessories
+function getRelatedSearches(searchTerm: string, allAccessories: Accessory[]): string[] {
+  if (!searchTerm || !allAccessories.length) return [];
+  
+  console.log('🔍 Generating related searches for:', searchTerm);
+  console.log('📦 Total accessories available:', allAccessories.length);
+  
+  // Extract device model from search term (e.g., "iPhone 15", "Galaxy S24")
+  const deviceMatch = searchTerm.match(/(iphone|ipad|galaxy|samsung|pixel|oneplus|huawei|xiaomi|sony|nokia|lg|motorola|htc|asus|acer|dell|hp|lenovo|surface|chromebook|airpods|watch|macbook)?\s*(\d{1,3})/i);
+  
+  if (!deviceMatch) {
+    console.log('❌ No device model found in search term');
+    // Fallback: show accessories with similar keywords
+    const keywords = searchTerm.toLowerCase().split(' ');
+    const related = allAccessories
+      .filter(accessory => {
+        const searchText = [
+          accessory.name,
+          accessory.description || '',
+          accessory.compatibility || ''
+        ].join(' ').toLowerCase();
+        return keywords.some(keyword => searchText.includes(keyword));
+      })
+      .slice(0, 3)
+      .map(accessory => {
+        // Extract the main part of the name (first 3-4 words)
+        const nameParts = accessory.name.split(' ');
+        return nameParts.slice(0, 4).join(' ');
+      });
+    
+    console.log('🔄 Fallback related searches:', related);
+    return related;
+  }
+  
+  const [_, brand, modelNum] = deviceMatch;
+  const currentModel = parseInt(modelNum, 10);
+  
+  console.log('📱 Found device:', { brand, modelNum, currentModel });
+  
+  if (isNaN(currentModel)) return [];
+  
+  // Look for accessories with adjacent model numbers
+  const relatedModels = [currentModel - 1, currentModel + 1];
+  const related: string[] = [];
+  
+  for (const relatedModel of relatedModels) {
+    if (relatedModel <= 0) continue;
+    
+    console.log(`🔍 Looking for ${brand} ${relatedModel}...`);
+    
+    // Search in name, description, and compatibility for the related model
+    const found = allAccessories.find(accessory => {
+      const searchText = [
+        accessory.name,
+        accessory.description || '',
+        accessory.compatibility || ''
+      ].join(' ').toLowerCase();
+      
+      const brandLower = brand.toLowerCase();
+      const modelStr = relatedModel.toString();
+      
+      return searchText.includes(brandLower) && searchText.includes(modelStr);
+    });
+    
+    if (found) {
+      console.log(`✅ Found related accessory: ${found.name}`);
+      // Create a search term that matches the original pattern
+      // If original was "iPhone 15 case", create "iPhone 14 case"
+      const originalWords = searchTerm.toLowerCase().split(' ');
+      const brandIndex = originalWords.findIndex(word => word.includes(brand.toLowerCase()));
+      
+      if (brandIndex !== -1 && originalWords[brandIndex + 1] === modelNum) {
+        // Replace the model number in the original search
+        const newWords = [...originalWords];
+        newWords[brandIndex + 1] = relatedModel.toString();
+        const relatedSearch = newWords.join(' ');
+        if (!related.includes(relatedSearch)) {
+          related.push(relatedSearch);
+        }
+      } else {
+        // Fallback: just use brand + model
+        const relatedSearch = `${brand} ${relatedModel}`;
+        if (!related.includes(relatedSearch)) {
+          related.push(relatedSearch);
+        }
+      }
+    } else {
+      console.log(`❌ No accessories found for ${brand} ${relatedModel}`);
+    }
+  }
+  
+  console.log('🎯 Final related searches:', related);
+  return related.slice(0, 4); // Limit to 4 related searches
+}
 
 export default function AccessoriesPagePaginated() {
   const router = useRouter();
@@ -145,47 +227,17 @@ export default function AccessoriesPagePaginated() {
     }
   };
 
-  // Debounced search effect
-  useEffect(() => {
-    if (searchInput !== searchTerm) {
-      setSearchLoading(true);
-    }
-    
-    const timeoutId = setTimeout(async () => {
-      setSearchTerm(searchInput);
-      setSearchLoading(false);
-      
-      // Generate search suggestions if there's a search input
-      if (searchInput.trim() && searchInput.length >= 2) {
-        try {
-          const suggestions = await getAccessoriesWithFiltersPaginated({
-            page: 1,
-            limit: 5, // Limit suggestions
-            search: searchInput,
-            inStockOnly: true,
-          });
-          setSearchSuggestions(suggestions.data);
-          setShowSearchDropdown(true);
-        } catch (error) {
-          console.error('Failed to load search suggestions:', error);
-          setSearchSuggestions([]);
-        }
-      } else {
-        setSearchSuggestions([]);
-        setShowSearchDropdown(false);
-      }
-    }, 300); // Faster response for suggestions
-
-    return () => {
-      clearTimeout(timeoutId);
-      setSearchLoading(false);
-    };
-  }, [searchInput, searchTerm]);
-
   // Load accessories when dependencies change
   useEffect(() => {
     loadAccessories(currentPage);
-  }, [currentPage, itemsPerPage, sortBy, sortOrder, selectedCategory, searchTerm]);
+  }, [currentPage, itemsPerPage, sortBy, sortOrder, selectedCategory]);
+
+  // Trigger search when searchTerm changes
+  useEffect(() => {
+    if (searchTerm !== undefined) {
+      loadAccessories(1);
+    }
+  }, [searchTerm]);
 
   // Update URL only when necessary and with minimal impact
   useEffect(() => {
@@ -198,12 +250,14 @@ export default function AccessoriesPagePaginated() {
     if (sortOrder !== 'asc') params.set('sortOrder', sortOrder);
     
     const newURL = params.toString() ? `/accessories?${params.toString()}` : '/accessories';
+    const currentURL = window.location.pathname + (window.location.search || '');
     
     // Only update URL if it's actually different from current URL
-    if (window.location.pathname + (window.location.search || '') !== newURL) {
-      router.replace(newURL, { scroll: false });
+    if (currentURL !== newURL) {
+      // Use pushState instead of router.replace to avoid page refresh
+      window.history.pushState({}, '', newURL);
     }
-  }, [selectedCategory, searchTerm, currentPage, itemsPerPage, sortBy, sortOrder, router]);
+  }, [selectedCategory, searchTerm, currentPage, itemsPerPage, sortBy, sortOrder]);
 
   // Handle pagination
   useEffect(() => {
@@ -215,50 +269,51 @@ export default function AccessoriesPagePaginated() {
     setSelectedCategory(category);
     setCurrentPage(1);
     pagination.goToFirstPage();
-    
-    // Scroll to results section after filter is applied
-    if (category) {
-      setTimeout(() => {
-        const resultsSection = document.getElementById('results-section');
-        if (resultsSection) {
-          resultsSection.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-      }, 100); // Small delay to ensure state updates
+    // Clear search when selecting category
+    if (category && searchTerm) {
+      setSearchTerm('');
+      setSearchInput('');
     }
+    // Scroll to results section
+    setTimeout(() => {
+      const resultsSection = document.getElementById('results-section');
+      if (resultsSection) {
+        resultsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
   };
 
   const handleSearch = (search: string) => {
     setSearchInput(search); // Update input immediately for responsive UI
     setSelectedSuggestionIndex(-1); // Reset selection when typing
-    // Only reset page if search actually changes (not just input)
-    if (search !== searchTerm) {
-      setCurrentPage(1);
-      pagination.goToFirstPage();
-      // Clear category filter when searching
-      if (search.trim() && selectedCategory) {
-        setSelectedCategory(null);
-      }
+    
+    // Generate search suggestions if there's a search input (but don't trigger main search)
+    if (search.trim() && search.length >= 2) {
+      setSearchLoading(true);
+      getAccessoriesWithFiltersPaginated({
+        page: 1,
+        limit: 5, // Limit suggestions
+        search: search,
+        inStockOnly: true,
+      }).then(suggestions => {
+        setSearchSuggestions(suggestions.data);
+        setShowSearchDropdown(true);
+        setSearchLoading(false);
+      }).catch(error => {
+        console.error('Failed to load search suggestions:', error);
+        setSearchSuggestions([]);
+        setSearchLoading(false);
+      });
+    } else {
+      setSearchSuggestions([]);
+      setShowSearchDropdown(false);
+      setSearchLoading(false);
     }
   };
 
   const handleSearchSuggestionClick = (accessory: Accessory) => {
-    setSearchInput(accessory.name);
-    setSearchTerm(accessory.name);
-    setShowSearchDropdown(false);
-    setCurrentPage(1);
-    pagination.goToFirstPage();
-    if (selectedCategory) {
-      setSelectedCategory(null);
-    }
-    // Redirect to accessory detail page after a short delay to allow state/blur to finish
-    if (accessory.id) {
-      setTimeout(() => {
-        router.push(`/accessories/${accessory.id}`);
-      }, 30);
-    }
+    // Navigate to the accessory detail page
+    router.push(`/accessories/${accessory.id}`);
   };
 
   const handleSearchInputFocus = () => {
@@ -273,6 +328,26 @@ export default function AccessoriesPagePaginated() {
   };
 
   const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      // Submit search with current input
+      setSearchTerm(searchInput);
+      setShowSearchDropdown(false);
+      if (selectedCategory) {
+        setSelectedCategory(null);
+      }
+      setCurrentPage(1);
+      pagination.goToFirstPage();
+      // Scroll to results section after a short delay to allow state updates
+      setTimeout(() => {
+        const resultsSection = document.getElementById('results-section');
+        if (resultsSection) {
+          resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 200);
+      return;
+    }
+
     if (!showSearchDropdown || searchSuggestions.length === 0) return;
 
     switch (e.key) {
@@ -285,19 +360,6 @@ export default function AccessoriesPagePaginated() {
       case 'ArrowUp':
         e.preventDefault();
         setSelectedSuggestionIndex(prev => prev > 0 ? prev - 1 : -1);
-        break;
-      case 'Enter':
-        e.preventDefault();
-        if (selectedSuggestionIndex >= 0) {
-          handleSearchSuggestionClick(searchSuggestions[selectedSuggestionIndex]);
-        } else {
-          // Just search with current input
-          setSearchTerm(searchInput);
-          setShowSearchDropdown(false);
-          if (selectedCategory) {
-            setSelectedCategory(null);
-          }
-        }
         break;
       case 'Escape':
         setShowSearchDropdown(false);
@@ -373,6 +435,8 @@ export default function AccessoriesPagePaginated() {
 
   const hasActiveFilters = selectedCategory || searchTerm;
 
+  const relatedSearches = getRelatedSearches(searchTerm, allAccessories);
+
   if (loading && accessories.length === 0) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -424,10 +488,7 @@ export default function AccessoriesPagePaginated() {
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-6">
             {/* Search */}
-            <form 
-              className="relative flex-1 max-w-md"
-              onSubmit={(e) => e.preventDefault()}
-            >
+            <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 z-10" />
               {searchLoading && (
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
@@ -439,9 +500,9 @@ export default function AccessoriesPagePaginated() {
                 placeholder={t('accessories.search.placeholder')}
                 value={searchInput}
                 onChange={(e) => handleSearch(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
                 onFocus={handleSearchInputFocus}
                 onBlur={handleSearchInputBlur}
-                onKeyDown={handleSearchKeyDown}
                 className="pl-10 pr-10"
               />
               
@@ -488,7 +549,7 @@ export default function AccessoriesPagePaginated() {
                   )}
                 </div>
               )}
-            </form>
+            </div>
 
             {/* Controls */}
             <div className="flex flex-wrap gap-2 items-center">
@@ -654,15 +715,87 @@ export default function AccessoriesPagePaginated() {
         </div>
 
         {/* Results Header */}
-        <div  id="results-section" className="flex justify-between items-center mb-6">
-          <div>
-            <h2 className="text-2xl font-bold">
-             {hasActiveFilters ? t('accessories.search.searchResults') : t('accessories.results.title')}
-            </h2>
-            <p className="text-gray-600">
-             {loading ? t('accessories.search.loading') : t('accessories.search.found', { count: totalItems })}
-            </p>
+        <div id="results-section" className="mb-6">
+          {/* Related Searches - always above categories, visually distinct */}
+          {searchTerm && relatedSearches.length > 0 && (
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded">
+              <div className="text-base font-semibold text-blue-800 mb-2">Related searches for "{searchTerm}"</div>
+              <div className="flex flex-wrap gap-2">
+                {relatedSearches.map((term) => (
+                  <Button
+                    key={term}
+                    variant="outline"
+                    size="sm"
+                    className="px-3 py-1 border border-blue-300 text-blue-700 hover:bg-blue-100"
+                    onClick={() => {
+                      setSearchInput(term);
+                      setSearchTerm(term);
+                      setCurrentPage(1);
+                      pagination.goToFirstPage();
+                      setTimeout(() => {
+                        const resultsSection = document.getElementById('results-section');
+                        if (resultsSection) {
+                          resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }, 200);
+                    }}
+                  >
+                    {term}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-2xl font-bold">
+               {hasActiveFilters ? t('accessories.search.searchResults') : t('accessories.results.title')}
+              </h2>
+              <p className="text-gray-600">
+               {loading ? t('accessories.search.loading') : t('accessories.search.found', { count: totalItems })}
+              </p>
+            </div>
           </div>
+
+          {/* Category Navigation Badges */}
+          {hasActiveFilters && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-3 text-gray-700">
+                {searchTerm ? 'Related Categories' : 'Browse Categories'}
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => {
+                  const IconComponent = category.icon;
+                  return (
+                    <Button
+                      key={category.key}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCategorySelect(category.key)}
+                      className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300"
+                    >
+                      <IconComponent className="h-4 w-4" />
+                      {category.name}
+                      {category.count > 0 && (
+                        <Badge variant="secondary" className="ml-1 text-xs">
+                          {category.count}
+                        </Badge>
+                      )}
+                    </Button>
+                  );
+                })}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="flex items-center gap-2 hover:bg-gray-50"
+                >
+                  <X className="h-4 w-4" />
+                  Clear All
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Accessories Grid/List */}
@@ -677,7 +810,7 @@ export default function AccessoriesPagePaginated() {
                 const IconComponent = categoryConfig?.icon || Box;
                 const lowStock = isLowStock(accessory);
                 return (
-                  <Card key={accessory.id} className="hover:shadow-lg transition-shadow group">
+                  <Card key={accessory.id} className="hover:shadow-lg transition-shadow group py-0">
                     <CardHeader className="p-0">
                       <div className="relative overflow-hidden rounded-t-lg">
                         <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
@@ -694,7 +827,7 @@ export default function AccessoriesPagePaginated() {
                           />
                         </div>
                         {lowStock && (
-                          <Badge className="absolute top-2 left-2" variant="outline">
+                          <Badge className="absolute top-2 left-2 opacity-50  " variant="destructive">
                             {t('accessories.product.lowStock')}
                           </Badge>
                         )}

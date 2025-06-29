@@ -229,9 +229,10 @@ export default async function Home() {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold">{t('popularServices.title')}</h2>
+            <h2 className="text-lg md:text-3xl text-truncate font-bold">{t('popularServices.title')}</h2>
             <Button asChild variant="outline">
               <Link href="/repairs">
+              
                 {t('popularServices.viewAllServices')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -261,7 +262,7 @@ export default async function Home() {
                           {service.deviceTypes?.[0] || 'Multiple'}
                         </Badge>
                       </div>
-                      <CardTitle className="text-lg">{service.name}</CardTitle>
+                      <CardTitle className="text-sm md:text-lg">{service.name}</CardTitle>
                       <CardDescription className="text-sm line-clamp-2">
                         {service.description}
                       </CardDescription>

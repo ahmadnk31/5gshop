@@ -84,21 +84,37 @@ export function QuotesList() {
   };
 
   const handleDeleteQuote = async (quoteId: string) => {
-    if (confirm('Are you sure you want to delete this quote?')) {
+    if (confirm('Are you sure you want to delete this quote? This action cannot be undone.')) {
       try {
+        console.log('Attempting to delete quote:', quoteId);
         await deleteQuote(quoteId);
-        await loadQuotes();
+        console.log('Quote deleted successfully');
+        
+        // Remove the quote from the local state immediately for better UX
+        setQuotes(prevQuotes => prevQuotes.filter(q => q.id !== quoteId));
+        
+        // Update stats
+        const updatedQuotes = quotes.filter(q => q.id !== quoteId);
+        updateStats(updatedQuotes);
+        
+        // Show success message
+        alert('Quote deleted successfully');
       } catch (error) {
         console.error('Failed to delete quote:', error);
+        alert(`Failed to delete quote: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
   };
 
   const filteredQuotes = quotes.filter((quote) => {
+    const customerName = quote.customer ? `${quote.customer.firstName || ''} ${quote.customer.lastName || ''}`.trim() : '';
+    const customerEmail = quote.customer?.email || '';
+    const deviceInfo = quote.device ? `${quote.device.brand || ''} ${quote.device.model || ''}`.trim() : '';
+    
     const matchesSearch = 
-      `${quote.customer.firstName} ${quote.customer.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      quote.customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      `${quote.device.brand} ${quote.device.model}`.toLowerCase().includes(searchTerm.toLowerCase());
+      customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customerEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      deviceInfo.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || quote.status === statusFilter;
     const matchesUrgency = urgencyFilter === 'all' || quote.urgency === urgencyFilter;
@@ -269,7 +285,7 @@ export function QuotesList() {
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
                         <h3 className="font-medium">
-                          {quote.customer.firstName} {quote.customer.lastName}
+                          {quote.customer ? `${quote.customer.firstName || ''} ${quote.customer.lastName || ''}`.trim() : 'Unknown Customer'}
                         </h3>
                         <Badge className={getStatusColor(quote.status)}>
                           <div className="flex items-center space-x-1">
@@ -278,16 +294,16 @@ export function QuotesList() {
                           </div>
                         </Badge>
                         <Badge className={getUrgencyColor(quote.urgency)}>
-                          {quote.urgency.toUpperCase()}
+                          {typeof quote.urgency === 'string' ? quote.urgency.toUpperCase() : 'UNKNOWN'}
                         </Badge>
                       </div>
                       
                       <div className="grid md:grid-cols-2 gap-2 text-sm text-gray-600 mb-2">
                         <div className="flex items-center space-x-2">
                           <User className="h-4 w-4" />
-                          <span>{quote.customer.email}</span>
+                          <span>{quote.customer?.email || 'No email'}</span>
                         </div>
-                        {quote.customer.phone && (
+                        {quote.customer?.phone && (
                           <div className="flex items-center space-x-2">
                             <Phone className="h-4 w-4" />
                             <span>{quote.customer.phone}</span>
@@ -295,7 +311,7 @@ export function QuotesList() {
                         )}
                         <div className="flex items-center space-x-2">
                           <Smartphone className="h-4 w-4" />
-                          <span>{quote.device.brand} {quote.device.model}</span>
+                          <span>{quote.device ? `${quote.device.brand || ''} ${quote.device.model || ''}`.trim() : 'Unknown Device'}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <Calendar className="h-4 w-4" />
@@ -304,7 +320,7 @@ export function QuotesList() {
                       </div>
                       
                       <p className="text-sm text-gray-700 line-clamp-2 mb-2">
-                        <span className="font-medium">Issues:</span> {quote.issues.join(', ')}
+                        <span className="font-medium">Issues:</span> {Array.isArray(quote.issues) ? quote.issues.join(', ') : (typeof quote.issues === 'string' ? quote.issues : 'No issues specified')}
                       </p>
                       
                       {quote.description && (
@@ -348,8 +364,11 @@ export function QuotesList() {
                         size="sm"
                         variant="destructive"
                         onClick={() => handleDeleteQuote(quote.id)}
+                        className="hover:bg-red-700"
+                        title="Delete quote"
                       >
                         <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Delete quote</span>
                       </Button>
                     </div>
                   </div>

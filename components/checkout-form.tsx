@@ -1,29 +1,31 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PaymentElement, AddressElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart-context";
 import { useTranslations } from "next-intl";
-import { LeafletMap } from "./leaflet-map";
+import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 
-// Helper to check if all cart items are parts (not accessories)
+// Dynamically import LeafletMap to avoid SSR issues
+const LeafletMap = dynamic(() => import("./leaflet-map").then(mod => ({ default: mod.LeafletMap })), {
+  ssr: false,
+  loading: () => <div className="h-64 w-full rounded-lg bg-gray-200 animate-pulse flex items-center justify-center">Loading map...</div>
+});
+
+// Helper to check if any cart items are parts (not accessories)
 function isPartsCart(cart: any[]): boolean {
   if (!cart.length) return false;
-  // Only return true if every item is a part (type === 'part')
-  return cart.every(item => item.type === 'part');
+  // Return true if ANY item is a part (type === 'part')
+  return cart.some(item => item.type === 'part');
 }
 
 export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: string, setCheckoutMeta?: (meta: { repairType?: string, shippingOption?: string }) => void }) {
   const stripe = useStripe();
   const elements = useElements();
   const { cart, getTotal } = useCart();
-  // DEBUG: Log cart to inspect item structure
-  if (typeof window !== 'undefined') {
-    // eslint-disable-next-line no-console
-    console.log('Cart contents:', cart);
-  }
+  const { data: session } = useSession();
   const t = useTranslations('checkout');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +35,30 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
   const [addressSubStep, setAddressSubStep] = useState<"repair" | "shipping" | null>(null);
   // New state for repair type and shipping option
   const [repairType, setRepairType] = useState<'self' | 'by_us' | null>(null);
-  const [shippingOption, setShippingOption] = useState<'at_shop' | 'send' | 'drop' | null>(null);
+  const [shippingOption, setShippingOption] = useState<'at_shop' | 'send' | null>(null);
+
+  // Auto-populate address data from user session
+  const getUserAddressData = () => {
+    if (!session?.user) return null;
+    
+    const user = session.user as any;
+    if (!user.firstName && !user.lastName && !user.address1) return null;
+
+    return {
+      name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+      address: {
+        line1: user.address1 || '',
+        line2: user.address2 || '',
+        city: user.city || '',
+        state: user.state || '',
+        postal_code: user.postalCode || '',
+        country: user.country || '',
+      },
+      phone: user.phone || '',
+    };
+  };
+
+  const userAddressData = getUserAddressData();
 
   const handleAddressComplete = () => {
     // If parts cart, require repairType
@@ -62,18 +87,13 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
     if (!stripe || !elements) return;
     setLoading(true);
     setError(null);
-    // Attach repairType and shippingOption to payment intent metadata (or send to backend order API)
-    // This is a placeholder; actual implementation may require backend changes
-    // You may need to update your payment intent creation endpoint to accept these fields
-    // and store them in the order record.
+    
     const { error } = await stripe.confirmPayment({
       elements,
-      confirmParams: {
-        // Optionally pass metadata here if supported by your backend
-        // metadata: { repairType, shippingOption },
-      },
+      confirmParams: {},
       redirect: "if_required",
     });
+    
     setLoading(false);
     setStep("result");
     if (error) {
@@ -124,7 +144,21 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
       {/* Step Content */}
       {step === "address" && (
         <div>
-          <AddressElement options={{ mode: "shipping" }} />
+          {userAddressData && (
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center text-blue-800">
+                <span className="text-sm font-medium">
+                  {t('addressForm.autoFilled', { defaultValue: 'Address auto-filled from your profile' })}
+                </span>
+              </div>
+            </div>
+          )}
+          <AddressElement 
+            options={{ 
+              mode: "shipping",
+              defaultValues: userAddressData || undefined
+            }} 
+          />
           {/* Parts-specific repair type selection with stepper */}
           {isPartsCart(cart) && (
             <div className="mt-6 space-y-4">
@@ -188,16 +222,6 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
                       />
                       {t('repair.send')}
                     </label>
-                    <label className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="shippingOption"
-                        value="drop"
-                        checked={shippingOption === 'drop'}
-                        onChange={() => setShippingOption('drop')}
-                      />
-                      {t('repair.drop')}
-                    </label>
                   </div>
                   {/* Show something for each shipping option */}
                   {shippingOption === 'at_shop' && (
@@ -206,9 +230,6 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
                   {shippingOption === 'send' && (
                     <div className="mt-4 text-blue-700 font-semibold">
                       {t('repair.sendDesc')}</div>
-                  )}
-                  {shippingOption === 'drop' && (
-                    <div className="mt-4 text-blue-700 font-semibold">{t('repair.dropDesc')}</div>
                   )}
                   <div className="flex gap-2 mt-4">
                     <Button type="button" className="flex-1" onClick={() => setAddressSubStep('repair')}>
