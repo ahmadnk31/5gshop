@@ -37,6 +37,27 @@ export function OrdersTable() {
   const [message, setMessage] = useState('');
   const [sendingLabel, setSendingLabel] = useState(false);
 
+  const removeLabelAttachment = () => {
+    setLabelAttachment(null);
+  };
+
+  // Check if order is eligible for shipping label
+  const isEligibleForShippingLabel = (order: any) => {
+    // Allow shipping labels for orders that are paid/succeeded or received
+    return order.status === 'SUCCEEDED' || order.status === 'PAID' || order.status === 'RECEIVED';
+  };
+
+  // Get shipping label button text based on shipping option
+  const getShippingLabelButtonText = (order: any) => {
+    if (order.shippingOption === 'send') {
+      return 'Send Label (Customer → You)';
+    } else if (order.shippingOption === 'receive') {
+      return 'Send Label (You → Customer)';
+    } else {
+      return 'Send Label';
+    }
+  };
+
   useEffect(() => {
     async function fetchOrders() {
       try {
@@ -63,6 +84,14 @@ export function OrdersTable() {
         
         const data = await res.json();
         setOrders(data.orders || []);
+        
+        // Debug: Log order statuses to see what we're working with
+        console.log('🔍 Orders fetched:', data.orders?.map((o: any) => ({
+          id: o.id,
+          status: o.status,
+          shippingOption: o.shippingOption,
+          eligibleForLabel: isEligibleForShippingLabel(o)
+        })));
         
         console.log('Orders fetched successfully:', {
           count: data.count,
@@ -98,30 +127,38 @@ export function OrdersTable() {
     reader.readAsDataURL(file);
   };
 
-  const removeLabelAttachment = () => {
-    setLabelAttachment(null);
-  };
-
   const handleSendShippingLabel = async () => {
     if (!labelAttachment || !shippingLabelOrder) return;
 
     setSendingLabel(true);
     try {
+      const requestData = {
+        labelFile: labelAttachment,
+        trackingNumber,
+        message,
+      };
+      
+      console.log('🔍 Sending shipping label request:', {
+        orderId: shippingLabelOrder.id,
+        hasLabelFile: !!labelAttachment,
+        labelFileName: labelAttachment?.filename,
+        trackingNumber,
+        message,
+        requestData
+      });
+
       const response = await fetch(`/api/admin/orders/${shippingLabelOrder.id}/send-shipping-label`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          labelAttachment,
-          trackingNumber,
-          message,
-        }),
+        body: JSON.stringify(requestData),
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to send shipping label');
+        const errorData = await response.json();
+        console.error('API Error Response:', errorData);
+        throw new Error(errorData.error || `HTTP ${response.status}: Failed to send shipping label`);
       }
 
       // Update order status in local state
@@ -144,17 +181,12 @@ export function OrdersTable() {
     }
   };
 
-  // Check if order is eligible for shipping label
-  const isEligibleForShippingLabel = (order: any) => {
-    return order.repairType === 'by_us' && order.shippingOption === 'send';
-  };
-
   // Filtering
   const filteredOrders = statusFilter === 'all'
     ? orders
     : orders.filter(o =>
-        statusFilter === 'paid'
-          ? o.status === 'paid' || o.status === 'succeeded'
+        statusFilter === 'PAID'
+          ? o.status === 'PAID' || o.status === 'SUCCEEDED'
           : o.status === statusFilter
       );
 
@@ -194,14 +226,18 @@ export function OrdersTable() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All</SelectItem>
-            <SelectItem value="created">Created</SelectItem>
-            <SelectItem value="paid">Paid</SelectItem>
-            <SelectItem value="ready">Ready</SelectItem>
-            <SelectItem value="shipped">Shipped</SelectItem>
-            <SelectItem value="finished">Finished</SelectItem>
-            <SelectItem value="failed">Failed</SelectItem>
-            <SelectItem value="refunded">Refunded</SelectItem>
-            <SelectItem value="succeeded">Succeeded</SelectItem>
+            <SelectItem value="CREATED">Created</SelectItem>
+            <SelectItem value="PAID">Paid</SelectItem>
+            <SelectItem value="SUCCEEDED">Succeeded</SelectItem>
+            <SelectItem value="RECEIVED">Received</SelectItem>
+            <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+            <SelectItem value="READY">Ready</SelectItem>
+            <SelectItem value="SHIPPED">Shipped</SelectItem>
+            <SelectItem value="DELIVERED">Delivered</SelectItem>
+            <SelectItem value="FINISHED">Finished</SelectItem>
+            <SelectItem value="FAILED">Failed</SelectItem>
+            <SelectItem value="REFUNDED">Refunded</SelectItem>
+            <SelectItem value="CANCELLED">Cancelled</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -222,10 +258,10 @@ export function OrdersTable() {
           {filteredOrders.map(order => (
             <TableRow key={order.id}>
               <TableCell>{order.id}</TableCell>
-              <TableCell>{order.user || '-'}</TableCell>
+              <TableCell>{order.user?.email || order.email || '-'}</TableCell>
               <TableCell>€{(order.amount / 100).toFixed(2)}</TableCell>
               <TableCell>
-                <Badge variant="secondary">{order.status === "succeeded" ? "Paid" : order.status}</Badge>
+                <Badge variant="secondary">{order.status === "SUCCEEDED" ? "Paid" : order.status}</Badge>
               </TableCell>
               <TableCell>
                 <Badge variant="outline">{order.repairType || '-'}</Badge>
@@ -244,7 +280,7 @@ export function OrdersTable() {
                       onClick={() => setShippingLabelOrder(order)}
                     >
                       <Truck className="h-4 w-4" />
-                      <span>Send Label</span>
+                      <span>{getShippingLabelButtonText(order)}</span>
                     </button>
                   )}
                 </div>
@@ -293,14 +329,18 @@ export function OrdersTable() {
                     <SelectValue placeholder="select order status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="created">Created</SelectItem>
-                    <SelectItem value="paid">Paid</SelectItem>
-                    <SelectItem value="ready">Ready</SelectItem>
-                    <SelectItem value="shipped">Shipped</SelectItem>
-                    <SelectItem value="finished">Finished</SelectItem>
-                    <SelectItem value="failed">Failed</SelectItem>
-                    <SelectItem value="refunded">Refunded</SelectItem>
-                    <SelectItem value="succeeded">Succeeded</SelectItem>
+                    <SelectItem value="CREATED">Created</SelectItem>
+                    <SelectItem value="PAID">Paid</SelectItem>
+                    <SelectItem value="SUCCEEDED">Succeeded</SelectItem>
+                    <SelectItem value="RECEIVED">Received</SelectItem>
+                    <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                    <SelectItem value="READY">Ready</SelectItem>
+                    <SelectItem value="SHIPPED">Shipped</SelectItem>
+                    <SelectItem value="DELIVERED">Delivered</SelectItem>
+                    <SelectItem value="FINISHED">Finished</SelectItem>
+                    <SelectItem value="FAILED">Failed</SelectItem>
+                    <SelectItem value="REFUNDED">Refunded</SelectItem>
+                    <SelectItem value="CANCELLED">Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -340,7 +380,12 @@ export function OrdersTable() {
             
             <h3 className="text-lg font-bold mb-4 flex items-center">
               <Truck className="h-5 w-5 mr-2" />
-              Send Shipping Label - Order #{shippingLabelOrder.id.slice(-6)}
+              {shippingLabelOrder.shippingOption === 'send' 
+                ? `Send Shipping Label (Customer → You) - Order #${shippingLabelOrder.id.slice(-6)}`
+                : shippingLabelOrder.shippingOption === 'receive'
+                ? `Send Shipping Label (You → Customer) - Order #${shippingLabelOrder.id.slice(-6)}`
+                : `Send Shipping Label - Order #${shippingLabelOrder.id.slice(-6)}`
+              }
             </h3>
             
             <div className="space-y-4">
@@ -351,6 +396,20 @@ export function OrdersTable() {
                 </p>
                 <p className="text-sm">
                   <strong>Amount:</strong> {(shippingLabelOrder.amount / 100).toFixed(2)} {shippingLabelOrder.currency?.toUpperCase()}
+                </p>
+                <p className="text-sm">
+                  <strong>Shipping Option:</strong> 
+                  <span className={`ml-1 px-2 py-1 rounded text-xs ${
+                    shippingLabelOrder.shippingOption === 'send' 
+                      ? 'bg-blue-100 text-blue-800' 
+                      : shippingLabelOrder.shippingOption === 'receive'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    {shippingLabelOrder.shippingOption === 'send' ? 'Customer sends device to you' :
+                     shippingLabelOrder.shippingOption === 'receive' ? 'You send repaired device to customer' :
+                     shippingLabelOrder.shippingOption}
+                  </span>
                 </p>
                 {shippingLabelOrder.address && (
                   <div className="text-sm mt-2">
@@ -427,7 +486,13 @@ export function OrdersTable() {
                   id="message"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Add any additional information for the customer..."
+                  placeholder={
+                    shippingLabelOrder.shippingOption === 'send' 
+                      ? "Add instructions for the customer on how to send their device to you..."
+                      : shippingLabelOrder.shippingOption === 'receive'
+                      ? "Add information about the repaired device being sent back to the customer..."
+                      : "Add any additional information for the customer..."
+                  }
                   rows={3}
                 />
               </div>

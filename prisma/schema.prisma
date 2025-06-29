@@ -7,6 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum OrderStatus {
+  CREATED
+  PAID
+  SUCCEEDED
+  RECEIVED
+  IN_PROGRESS
+  READY
+  SHIPPED
+  DELIVERED
+  FINISHED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
 model Customer {
   id        String   @id @default(cuid())
   firstName String
@@ -245,21 +260,21 @@ model RepairService {
 }
 
 model Order {
-  id            String   @id @default(cuid())
-  stripeId      String   @unique
-  amount        Int      // in cents
+  id            String      @id @default(cuid())
+  stripeId      String      @unique
+  amount        Int         // in cents
   currency      String
-  status        String   // e.g. 'created', 'paid', 'failed', 'refunded', 'ready', 'shipped', 'finished'
+  status        OrderStatus @default(CREATED)
   email         String
-  cart          String   // JSON string of cart items
-  addressId     String?  @unique
+  cart          String      // JSON string of cart items
+  addressId     String?     @unique
   address       OrderAddress? @relation(fields: [addressId], references: [id])
-  userId        String?  // Optional: link to User if registered
-  user          User?    @relation(fields: [userId], references: [id])
-  repairType    String?  // 'self' or 'by_us' (for parts orders)
-  shippingOption String? // 'at_shop', 'send', 'drop' (if repairType is 'by_us')
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  userId        String?     // Optional: link to User if registered
+  user          User?       @relation(fields: [userId], references: [id])
+  repairType    String?     // 'self' or 'by_us' (for parts orders)
+  shippingOption String?    // 'at_shop', 'send', 'receive' (if repairType is 'by_us')
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
   @@map("orders")
 }

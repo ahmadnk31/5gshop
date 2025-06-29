@@ -1074,9 +1074,11 @@
       "howToGetDevice": "How will you get your device to us?",
       "atShop": "At the shop",
       "send": "Send",
+      "receive": "Receive",
       "drop": "Drop",
       "dropDesc": "Drop off your device at our shop during business hours.",
       "sendDesc": "Send your device to us via post or courier.",
+      "receiveDesc": "We will send the repaired device back to you.",
       "shippingOptions": "Shipping Options",
       "shippingOptionsDesc": "Choose how you want to send your device to us.",
       "errorSelectRepairType": "Please select who will perform the repair.",
@@ -1232,5 +1234,52 @@
     "removeFromWishlist": "Remove from Wishlist",
     "outOfStock": "Out of Stock",
     "lowStock": "Low Stock"
+  },
+  "orderEmails": {
+    "confirmation": {
+      "subject": "Order Confirmation - 5gphones",
+      "title": "Thank you for your order!",
+      "subtitle": "Your order has been confirmed and is being processed",
+      "orderNumber": "Order Number",
+      "orderDate": "Order Date",
+      "total": "Total Amount",
+      "shippingAddress": "Shipping Address",
+      "orderItems": "Order Items",
+      "nextSteps": "What happens next?",
+      "processing": "We're processing your order",
+      "shipping": "We'll ship your items soon",
+      "tracking": "You'll receive tracking information",
+      "contact": "Contact us if you have questions",
+      "footer": "Thank you for choosing 5gphones!"
+    },
+    "shipping": {
+      "subject": "Your order has been shipped! - 5gphones",
+      "title": "Your order is on its way!",
+      "subtitle": "We've shipped your order and it's on its way to you",
+      "trackingNumber": "Tracking Number",
+      "shippingLabel": "Shipping Label",
+      "estimatedDelivery": "Estimated Delivery",
+      "orderDetails": "Order Details",
+      "shippingAddress": "Shipping Address",
+      "orderItems": "Order Items",
+      "trackingInfo": "Track your package",
+      "contactSupport": "Need help? Contact our support team",
+      "footer": "Thank you for your patience!"
+    },
+    "admin": {
+      "newOrder": {
+        "subject": "New Order Received - Order #{orderId}",
+        "title": "New Order Received",
+        "subtitle": "Manual Shipping Label Required",
+        "orderId": "Order ID",
+        "customerEmail": "Customer Email",
+        "customerName": "Customer Name",
+        "orderAmount": "Order Amount",
+        "shippingAddress": "Shipping Address",
+        "orderItems": "Order Items",
+        "viewOrder": "View Order Details",
+        "manualShipping": "Please process this order and send the shipping label to the customer manually."
+      }
+    }
   }
 }

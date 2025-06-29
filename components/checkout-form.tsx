@@ -35,7 +35,7 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
   const [addressSubStep, setAddressSubStep] = useState<"repair" | "shipping" | null>(null);
   // New state for repair type and shipping option
   const [repairType, setRepairType] = useState<'self' | 'by_us' | null>(null);
-  const [shippingOption, setShippingOption] = useState<'at_shop' | 'send' | null>(null);
+  const [shippingOption, setShippingOption] = useState<'at_shop' | 'send' | 'receive' | null>(null);
   const addressRef = useRef<any>(null);
   const [addressData, setAddressData] = useState<any>(null);
 
@@ -248,7 +248,7 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
               {addressSubStep === "shipping" && repairType === 'by_us' && (
                 <>
                   <div className="font-semibold mb-2">{t('repair.howToGetDevice')}</div>
-                  <div className="flex gap-4">
+                  <div className="space-y-3">
                     <label className="flex items-center gap-2">
                       <input
                         type="radio"
@@ -269,6 +269,16 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
                       />
                       {t('repair.send')}
                     </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="shippingOption"
+                        value="receive"
+                        checked={shippingOption === 'receive'}
+                        onChange={() => setShippingOption('receive')}
+                      />
+                      {t('repair.receive')}
+                    </label>
                   </div>
                   {/* Show something for each shipping option */}
                   {shippingOption === 'at_shop' && (
@@ -277,6 +287,10 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
                   {shippingOption === 'send' && (
                     <div className="mt-4 text-blue-700 font-semibold">
                       {t('repair.sendDesc')}</div>
+                  )}
+                  {shippingOption === 'receive' && (
+                    <div className="mt-4 text-green-700 font-semibold">
+                      {t('repair.receiveDesc')}</div>
                   )}
                   <div className="flex gap-2 mt-4">
                     <Button type="button" className="flex-1" onClick={() => setAddressSubStep('repair')}>

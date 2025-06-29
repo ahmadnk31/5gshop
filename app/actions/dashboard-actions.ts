@@ -5,12 +5,42 @@ import { DashboardStats } from "@/lib/types";
 
 export async function getDashboardData() {
   try {
+    console.log('🔍 Starting getDashboardData...');
+    
+    // Test database connection first
+    try {
+      await DatabaseService.getAllRepairs();
+      console.log('✅ Database connection test successful');
+    } catch (dbError) {
+      console.error('❌ Database connection test failed:', dbError);
+      throw new Error(`Database connection failed: ${dbError instanceof Error ? dbError.message : 'Unknown error'}`);
+    }
+
     const [repairs, customers, parts, quotes] = await Promise.all([
-      DatabaseService.getAllRepairs(),
-      DatabaseService.getAllCustomers(),
-      DatabaseService.getAllPartsSimple(),
-      DatabaseService.getAllQuotes(),
+      DatabaseService.getAllRepairs().catch(error => {
+        console.error('❌ Failed to get repairs:', error);
+        throw new Error(`Failed to get repairs: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }),
+      DatabaseService.getAllCustomers().catch(error => {
+        console.error('❌ Failed to get customers:', error);
+        throw new Error(`Failed to get customers: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }),
+      DatabaseService.getAllPartsSimple().catch(error => {
+        console.error('❌ Failed to get parts:', error);
+        throw new Error(`Failed to get parts: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }),
+      DatabaseService.getAllQuotes().catch(error => {
+        console.error('❌ Failed to get quotes:', error);
+        throw new Error(`Failed to get quotes: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }),
     ]);
+
+    console.log('✅ All data fetched successfully:', {
+      repairsCount: repairs.length,
+      customersCount: customers.length,
+      partsCount: parts.length,
+      quotesCount: quotes.length
+    });
 
     // Get services overview
     const serviceTypes = [

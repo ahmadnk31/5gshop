@@ -1,6 +1,7 @@
 import { SESClient, SendEmailCommand, SendRawEmailCommand } from "@aws-sdk/client-ses";
 import { createReadStream } from "fs";
 import { Readable } from "stream";
+import { formatCurrency } from "./utils";
 
 // Check if we're in development mode
 const isDevelopment = process.env.NODE_ENV === 'development';
@@ -27,6 +28,38 @@ export class SESService {
     console.log(`Content: ${data.message || data.responseMessage || 'Email content'}`);
     console.log('✅ Mock email sent successfully');
     return { MessageId: 'mock-' + Date.now() };
+  }
+
+  // Helper function to convert image URL to base64 for email compatibility
+  private static async convertImageToBase64(imageUrl: string): Promise<string | null> {
+    try {
+      // Skip if it's already a data URL
+      if (imageUrl.startsWith('data:')) {
+        return imageUrl;
+      }
+
+      // Convert relative URLs to absolute URLs
+      if (imageUrl.startsWith('/')) {
+        const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+        imageUrl = `${baseUrl}${imageUrl}`;
+      }
+
+      // Fetch the image
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        console.warn(`Failed to fetch image: ${imageUrl}`);
+        return null;
+      }
+
+      const buffer = await response.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString('base64');
+      const contentType = response.headers.get('content-type') || 'image/jpeg';
+      
+      return `data:${contentType};base64,${base64}`;
+    } catch (error) {
+      console.warn(`Error converting image to base64: ${imageUrl}`, error);
+      return null;
+    }
   }
 
   static async sendContactNotification(data: {
@@ -1077,16 +1110,41 @@ This email was sent from 5gphones.be in response to your quote request.
     else if (status === 'refunded') statusMsg = 'Your order was refunded.';
     else statusMsg = `Order status: ${status}`;
 
-    const productRows = products.map(p => `
-      <tr>
-        <td style="padding:8px; border:1px solid #eee; text-align:center;">
-          ${p.image ? `<img src="${p.image}" alt="${p.name}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;" />` : ''}
-        </td>
-        <td style="padding:8px; border:1px solid #eee;">${p.name}</td>
-        <td style="padding:8px; border:1px solid #eee; text-align:center;">${p.quantity}</td>
-        <td style="padding:8px; border:1px solid #eee; text-align:right;">€${(p.price / 100).toFixed(2)}</td>
-      </tr>
-    `).join('');
+    // Helper function to format currency
+   
+
+    // Process product images for email compatibility
+    const productRows = await Promise.all(products.map(async (p) => {
+      let imageHtml = '';
+      
+      if (p.image) {
+        try {
+          // Convert image to base64 for email compatibility
+          const base64Image = await this.convertImageToBase64(p.image);
+          if (base64Image) {
+            imageHtml = `<img src="${base64Image}" alt="${p.name}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;" />`;
+          } else {
+            // Fallback: use original URL if conversion fails
+            imageHtml = `<img src="${p.image}" alt="${p.name}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;" />`;
+          }
+        } catch (error) {
+          console.warn(`Failed to process image for product ${p.name}:`, error);
+          // Fallback: use original URL
+          imageHtml = `<img src="${p.image}" alt="${p.name}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;" />`;
+        }
+      }
+      
+      return `
+        <tr>
+          <td style="padding:8px; border:1px solid #eee; text-align:center;">
+            ${imageHtml}
+          </td>
+          <td style="padding:8px; border:1px solid #eee;">${p.name}</td>
+          <td style="padding:8px; border:1px solid #eee; text-align:center;">${p.quantity}</td>
+          <td style="padding:8px; border:1px solid #eee; text-align:right;">${formatCurrency(p.price,'EUR')}</td>
+        </tr>
+      `;
+    }));
 
     const html = `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
@@ -1105,7 +1163,7 @@ This email was sent from 5gphones.be in response to your quote request.
               </tr>
             </thead>
             <tbody>
-              ${productRows}
+              ${productRows.join('')}
             </tbody>
           </table>
           <p style="margin-top:24px;">Order total: <strong>€${(order.amount / 100).toFixed(2)}</strong></p>
@@ -1113,7 +1171,7 @@ This email was sent from 5gphones.be in response to your quote request.
         </div>
       </div>
     `;
-    const text = `Order status: ${statusMsg}\n\nProducts:\n${products.map(p => `- ${p.name} x${p.quantity} (€${(p.price / 100).toFixed(2)})`).join('\n')}\nOrder total: €${(order.amount / 100).toFixed(2)}`;
+    const text = `Order status: ${statusMsg}\n\nProducts:\n${products.map(p => `- ${p.name} x${p.quantity} (${formatCurrency(p.price,'EUR')})`).join('\n')}\nOrder total: €${(order.amount / 100).toFixed(2)}`;
     return this.sendRawEmail({ to, subject, html, text });
   }
 
@@ -1252,7 +1310,7 @@ This email was sent from 5gphones.be in response to your quote request.
               
               ${data.estimatedCost ? `
                 <div class="estimate">
-                  <h3>Estimated Cost: €${data.estimatedCost.toFixed(2)}</h3>
+                  <h3>Estimated Cost: ${formatCurrency(data.estimatedCost,"EUR")}</h3>
                 </div>
               ` : ''}
               
@@ -1311,7 +1369,7 @@ This email was sent from 5gphones.be in response to your quote request.
     customerName: string;
     orderId: string;
     orderDetails: any;
-    labelAttachment: {
+    labelAttachment?: {
       filename: string;
       content: Buffer | string;
       contentType: string;
@@ -1343,7 +1401,7 @@ This email was sent from 5gphones.be in response to your quote request.
             <div class="content">
               <h2>Hi ${data.customerName},</h2>
               
-              <p>Your order #${data.orderId.slice(-6)} is ready for shipping. Please find the shipping label attached to this email.</p>
+              <p>Your order #${data.orderId.slice(-6)} is ready for shipping.${data.labelAttachment ? ' Please find the shipping label attached to this email.' : ''}</p>
               
               ${data.trackingNumber ? `
                 <div class="highlight">
@@ -1358,7 +1416,7 @@ This email was sent from 5gphones.be in response to your quote request.
                 </div>
               ` : ''}
               
-              <p>Please print the attached shipping label and affix it to your package before sending it to us.</p>
+              ${data.labelAttachment ? '<p>Please print the attached shipping label and affix it to your package before sending it to us.</p>' : ''}
               
               <p>If you have any questions, please don't hesitate to contact us.</p>
             </div>
@@ -1377,13 +1435,13 @@ This email was sent from 5gphones.be in response to your quote request.
       
       Hi ${data.customerName},
       
-      Your order #${data.orderId.slice(-6)} is ready for shipping. Please find the shipping label attached to this email.
+      Your order #${data.orderId.slice(-6)} is ready for shipping.${data.labelAttachment ? ' Please find the shipping label attached to this email.' : ''}
       
       ${data.trackingNumber ? `Tracking Number: ${data.trackingNumber}` : ''}
       
       ${data.message ? `Additional Information: ${data.message}` : ''}
       
-      Please print the attached shipping label and affix it to your package before sending it to us.
+      ${data.labelAttachment ? 'Please print the attached shipping label and affix it to your package before sending it to us.' : ''}
       
       If you have any questions, please don't hesitate to contact us.
       
@@ -1392,12 +1450,21 @@ This email was sent from 5gphones.be in response to your quote request.
       Contact: ${this.adminEmail}
     `;
 
-    return this.sendEmailWithAttachment({
-      to: data.customerEmail,
-      subject,
-      htmlBody,
-      textBody,
-      attachments: [data.labelAttachment]
-    });
+    if (data.labelAttachment) {
+      return this.sendEmailWithAttachment({
+        to: data.customerEmail,
+        subject,
+        htmlBody,
+        textBody,
+        attachments: [data.labelAttachment]
+      });
+    } else {
+      return this.sendRawEmail({
+        to: data.customerEmail,
+        subject,
+        html: htmlBody,
+        text: textBody
+      });
+    }
   }
 }

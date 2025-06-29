@@ -1062,11 +1062,13 @@
       "howToGetDevice": "Hoe komt het toestel bij ons?",
       "atShop": "In de winkel",
       "send": "Verzenden",
+      "receive": "Ontvangen",
       "drop": "Afgeven",
       "errorSelectRepairType": "Selecteer wie de reparatie uitvoert.",
       "errorSelectShippingOption": "Selecteer een verzendoptie.",
       "dropDesc": "Breng je toestel tijdens de openingstijden naar onze winkel.",
       "sendDesc": "Stuur je toestel naar ons op. We sturen je een verzendlabel.",
+      "receiveDesc": "We sturen het gerepareerde toestel terug naar jou.",
       "atShopDesc": "Breng je toestel naar onze winkel en we voeren de reparatie ter plaatse uit.",
       "sendDesc2": "We sturen je een verzendlabel zodat je het toestel gratis naar ons kunt opsturen.",
       "selfDesc": "Je ontvangt de benodigd onderdelen en instructies om de reparatie zelf uit te voeren.",
@@ -1216,5 +1218,52 @@
     "removeFromWishlist": "Verwijderen van verlanglijst",
     "outOfStock": "Niet op voorraad",
     "lowStock": "Lage voorraad"
+  },
+  "orderEmails": {
+    "confirmation": {
+      "subject": "Bestelling Bevestiging - 5gphones",
+      "title": "Bedankt voor uw bestelling!",
+      "subtitle": "Uw bestelling is bevestigd en wordt verwerkt",
+      "orderNumber": "Bestelnummer",
+      "orderDate": "Besteldatum",
+      "total": "Totaalbedrag",
+      "shippingAddress": "Verzendadres",
+      "orderItems": "Bestelde items",
+      "nextSteps": "Wat gebeurt er nu?",
+      "processing": "We verwerken uw bestelling",
+      "shipping": "We verzenden uw items binnenkort",
+      "tracking": "U ontvangt trackinginformatie",
+      "contact": "Neem contact op als u vragen heeft",
+      "footer": "Bedankt voor het kiezen van 5gphones!"
+    },
+    "shipping": {
+      "subject": "Uw bestelling is verzonden! - 5gphones",
+      "title": "Uw bestelling is onderweg!",
+      "subtitle": "We hebben uw bestelling verzonden en deze is onderweg naar u",
+      "trackingNumber": "Trackingnummer",
+      "shippingLabel": "Verzendlabel",
+      "estimatedDelivery": "Geschatte levering",
+      "orderDetails": "Bestelgegevens",
+      "shippingAddress": "Verzendadres",
+      "orderItems": "Bestelde items",
+      "trackingInfo": "Volg uw pakket",
+      "contactSupport": "Hulp nodig? Neem contact op met ons supportteam",
+      "footer": "Bedankt voor uw geduld!"
+    },
+    "admin": {
+      "newOrder": {
+        "subject": "Nieuwe Bestelling Ontvangen - Bestelling #{orderId}",
+        "title": "Nieuwe Bestelling Ontvangen",
+        "subtitle": "Handmatig Verzendlabel Vereist",
+        "orderId": "Bestel-ID",
+        "customerEmail": "Klant E-mail",
+        "customerName": "Klantnaam",
+        "orderAmount": "Bestelbedrag",
+        "shippingAddress": "Verzendadres",
+        "orderItems": "Bestelde items",
+        "viewOrder": "Bestelling bekijken",
+        "manualShipping": "Verwerk deze bestelling en stuur het verzendlabel handmatig naar de klant."
+      }
+    }
   }
 }

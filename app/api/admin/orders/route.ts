@@ -30,24 +30,33 @@ export async function GET() {
 
     console.log('Admin orders API - Fetching orders for admin user:', session.user.email);
     
-    const orders = await prisma.order.findMany({
-      orderBy: { createdAt: "desc" },
-      include: { 
-        user: true,
-        address: true 
-      },
-    });
+    try {
+      const orders = await prisma.order.findMany({
+        orderBy: { createdAt: "desc" },
+        include: { 
+          user: true,
+          address: true 
+        },
+      });
 
-    console.log('Admin orders API - Found orders:', orders.length);
-    
-    return NextResponse.json({ 
-      orders,
-      count: orders.length,
-      user: {
-        email: session.user.email,
-        role: session.user.role
-      }
-    });
+      console.log('Admin orders API - Found orders:', orders.length);
+      console.log('Admin orders API - Sample order statuses:', orders.slice(0, 3).map(o => ({ id: o.id, status: o.status })));
+      
+      return NextResponse.json({ 
+        orders,
+        count: orders.length,
+        user: {
+          email: session.user.email,
+          role: session.user.role
+        }
+      });
+    } catch (dbError) {
+      console.error('Admin orders API - Database error:', dbError);
+      return NextResponse.json({ 
+        error: 'Database error',
+        details: dbError instanceof Error ? dbError.message : 'Unknown database error'
+      }, { status: 500 });
+    }
   } catch (error) {
     console.error('Admin orders API - Error:', error);
     return NextResponse.json({ 
