@@ -1,9 +1,16 @@
+export const runtime = "nodejs";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { sendConfirmationEmail } from "@/lib/email/sendConfirmationEmail";
 import { prisma } from "@/lib/database";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-05-28.basil",typescript: true });
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export async function POST(req: NextRequest) {
   const sig = req.headers.get("stripe-signature");
