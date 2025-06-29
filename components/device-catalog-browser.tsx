@@ -522,28 +522,31 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {getPaginatedItems(searchResults, searchPagination).map((part) => (
-                  <Card key={part.id}>
-
-                    {part.imageUrl && (
-                      <div className="relative h-32 overflow-hidden">
-                        <FallbackImage
-                          src={part.imageUrl}
-                          alt={part.name}
-                          className="w-full h-full object-cover"
-                          fallbackContent={
-                            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                              <Package className="h-8 w-8 text-gray-400" />
-                            </div>
-                          }
-                        />
-                      </div>
-                    )}
+                  <Card key={part.id} className='relative'>
+                    
+                    <Link href={`/parts/${part.id}`} className="block  rounded-t-lg">
+                      {part.imageUrl && (
+                        <div className="relative h-32 overflow-hidden">
+                          <FallbackImage
+                            src={part.imageUrl}
+                            alt={part.name}
+                            className="w-full h-full object-cover"
+                            fallbackContent={
+                              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                <Package className="h-8 w-8 text-gray-400" />
+                              </div>
+                            }
+                          />
+                        </div>
+                      )}
+                    </Link>
+                    <Link href={`/parts/${part.id}`} className="hover:underline">
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
-                        <span className="flex items-center">
+                        <Link href={`/parts/${part.id}`} className="flex items-center hover:underline">
                           <Package className="h-5 w-5 mr-2 text-blue-600" />
                           {part.name}
-                        </span>
+                        </Link>
                         <Badge
                           variant={part.inStock > 0 ? "default" : "destructive"}
                           className={
@@ -555,10 +558,19 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                           {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
                         </Badge>
                       </CardTitle>
-                      <CardDescription>SKU: {part.sku}</CardDescription>
+                      <CardDescription>
+                          SKU: {part.sku}
+                      </CardDescription>
                     </CardHeader>
+                    <div className="absolute top-2 left-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
+                          </Badge>
+                        </div>
+                    </Link>
                     <CardContent>
                       <div className="space-y-2">
+                      <Link href={`/parts/${part.id}`} className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>{t('parts.stock')}:</span>
                           <span className={part.inStock <= part.minStock ? 'text-red-600' : 'text-green-600'}>
@@ -577,6 +589,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                           <span>{t('parts.quality')}:</span>
                           <span>{part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}</span>
                         </div>
+                        </Link>
                         <div className="pt-2 flex space-x-2">
                           <Button asChild size="sm" className="flex-1" variant="outline">
                             <Link href={`/quote?deviceType=${encodeURIComponent(part.deviceType ?? part.device_type ?? selectedType ?? '')}&brand=${encodeURIComponent(selectedBrand ?? part.brand ?? '')}&model=${encodeURIComponent(selectedModel ?? part.deviceModel ?? '')}&part=${encodeURIComponent(part.name)}&quality=${encodeURIComponent(part.quality ?? '')}&sku=${encodeURIComponent(part.sku ?? '')}&supplier=${encodeURIComponent(part.supplier ?? '')}`}>
@@ -671,33 +684,6 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           </div>
         </div>
       )}
-
-      {/* Regular Browse Mode - only show when not in search mode */}
-      {!isSearchMode && (
-        <>
-      {/* Breadcrumb Navigation */}
-      <div className="flex items-center space-x-2 text-sm text-gray-600">
-        {getBreadcrumbs().map((crumb, index) => (
-          <div key={index} className="flex items-center">
-            {index > 0 && <ChevronRight className="h-4 w-4 mx-2" />}
-            {index === getBreadcrumbs().length - 1 ? (
-              // Current page - not clickable
-              <span className="font-medium text-gray-900">
-                {crumb.label}
-              </span>
-            ) : (
-              // Previous levels - clickable
-              <button
-                onClick={() => navigateToBreadcrumb(index)}
-                className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
-              >
-                {crumb.label}
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-
       {/* Back Button */}
       {currentLevel !== 'types' && (
         <Button 
@@ -709,6 +695,40 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           {t('navigation.back')}
         </Button>
       )}
+      {/* Regular Browse Mode - only show when not in search mode */}
+      {!isSearchMode && (
+        <>
+      {/* Breadcrumb Navigation */}
+      <nav
+        className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600"
+        aria-label="Breadcrumb"
+      >
+        {getBreadcrumbs().map((crumb, index) => (
+          <div key={index} className="flex items-center min-w-0 max-w-full">
+            {index > 0 && (
+              <ChevronRight className="h-4 w-4 mx-2 shrink-0" aria-hidden="true" />
+            )}
+            {index === getBreadcrumbs().length - 1 ? (
+              // Current page - not clickable
+              <span className="font-medium text-gray-900 truncate block max-w-[120px] sm:max-w-xs md:max-w-sm lg:max-w-md" title={crumb.label}>
+                {crumb.label}
+              </span>
+            ) : (
+              // Previous levels - clickable
+              <button
+                onClick={() => navigateToBreadcrumb(index)}
+                className="text-blue-600 hover:text-blue-800 hover:underline transition-colors truncate block max-w-[120px] sm:max-w-xs md:max-w-sm lg:max-w-md"
+                title={crumb.label}
+                type="button"
+              >
+                {crumb.label}
+              </button>
+            )}
+          </div>
+        ))}
+      </nav>
+
+      
 
       {/* Device Types Level */}
       {currentLevel === 'types' && (
@@ -746,7 +766,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
             </div>
           ) : (
             // Show all device types grid
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
               {deviceTypes.map((type) => {
                 const deviceType = type as DeviceType
                 const Icon = deviceIcons[deviceType]
@@ -780,7 +800,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           </TabsList>
           
           <TabsContent value="brands" className="space-y-4">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
               {brands.map((brand) => (
                 <Card 
                   key={brand}
@@ -847,11 +867,11 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                 {t('models.selectModel')}
               </p>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 w-full sm:w-auto">
               <input
                 type="text"
                 placeholder={t('models.filterPlaceholder')}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 border border-gray-300 flex-1 w-full sm:w-auto rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 onChange={(e) => {
                   const searchTerm = e.target.value.toLowerCase()
                   const modelCards = document.querySelectorAll('[data-model-card]')
@@ -926,7 +946,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                           ({seriesModels.length} {t('models.model', { count: seriesModels.length })})
                         </span>
                       </h4>
-                      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
                         {paginatedSeriesModels.map((model) => {
                           const deviceWithImage = devices.find(device => device.model === model)
                           return (

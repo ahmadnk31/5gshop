@@ -148,15 +148,15 @@ function RepairsPageContent() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8 sm:py-12 lg:py-16">
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-6 sm:py-10 lg:py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+          <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-3 sm:mb-6">
             {t('hero.title')}
           </h1>
-          <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
             {t('hero.description')}
           </p>
-          <Button asChild size="lg" variant="secondary" className="text-sm sm:text-base">
+          <Button asChild size="lg" variant="secondary" className="text-xs sm:text-sm sm:text-base">
             <Link href="/quote">{t('hero.cta')}</Link>
           </Button>
         </div>
@@ -166,7 +166,7 @@ function RepairsPageContent() {
       {searchTerm && (
         <section className="py-8 bg-blue-50 border-b">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-blue-900">
                   {t('searchResults.title', { searchTerm })}
@@ -175,18 +175,21 @@ function RepairsPageContent() {
                   {t('searchResults.description')}
                 </p>
               </div>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchTerm("");
-                  // Remove search param from URL
-                  const url = new URL(window.location.href);
-                  url.searchParams.delete('search');
-                  window.history.replaceState({}, '', url.toString());
-                }}
-              >
-                {t('searchResults.clearSearch')}
-              </Button>
+              <div className="mt-2 sm:mt-0 w-full sm:w-auto flex-shrink-0">
+                <Button
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                  onClick={() => {
+                    setSearchTerm("");
+                    // Remove search param from URL
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('search');
+                    window.history.replaceState({}, '', url.toString());
+                  }}
+                >
+                  {t('searchResults.clearSearch')}
+                </Button>
+              </div>
             </div>
           </div>
         </section>
@@ -207,18 +210,18 @@ function RepairsPageContent() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-8 sm:py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">{t('whyChooseUs.title')}</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-12">{t('whyChooseUs.title')}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {whyChooseUs.map((feature, index) => {
               const Icon = feature.icon;
               return (
                 <Card key={index} className="text-center hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <Icon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
-                    <CardDescription>{feature.description}</CardDescription>
+                    <Icon className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-blue-600 mx-auto mb-2 sm:mb-4" />
+                    <CardTitle className="text-base sm:text-lg md:text-xl">{feature.title}</CardTitle>
+                    <CardDescription className="text-xs sm:text-sm md:text-base">{feature.description}</CardDescription>
                   </CardHeader>
                 </Card>
               );
@@ -228,32 +231,32 @@ function RepairsPageContent() {
       </section>
 
       {/* Popular Repair Services */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-8 sm:py-12 md:py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">{t('popularServices.title')}</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-12">{t('popularServices.title')}</h2>
           {loading ? (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {getPopularServices().map((repair, index) => (
                 <Card key={index} className="text-center hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <repair.icon className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-                    <CardTitle className="text-xl">{repair.title}</CardTitle>
-                    <CardDescription>{repair.description}</CardDescription>
+                    <repair.icon className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 text-blue-600 mx-auto mb-2 sm:mb-4" />
+                    <CardTitle className="text-base sm:text-lg md:text-xl">{repair.title}</CardTitle>
+                    <CardDescription className="text-xs sm:text-sm md:text-base">{repair.description}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-2">
                     <div className="flex items-center justify-center space-x-2">
                       <Clock className="h-4 w-4 text-gray-600" />
-                      <span className="text-sm text-gray-600">{repair.timeframe}</span>
+                      <span className="text-xs sm:text-sm text-gray-600">{repair.timeframe}</span>
                     </div>
                     <div className="flex items-center justify-center space-x-2">
                       <DollarSign className="h-4 w-4 text-gray-600" />
-                      <span className="text-sm font-semibold">{repair.price}</span>
+                      <span className="text-xs sm:text-sm font-semibold">{repair.price}</span>
                     </div>
-                    <Badge variant="outline">{repair.warranty}</Badge>
+                    <Badge variant="outline" className="text-xs sm:text-sm">{repair.warranty}</Badge>
                   </CardContent>
                 </Card>
               ))}
@@ -263,30 +266,30 @@ function RepairsPageContent() {
       </section>
 
       {/* Process */}
-      <section className="py-16">
+      <section className="py-8 sm:py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">{t('process.title')}</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-12">{t('process.title')}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
             <div className="text-center">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-blue-600">
+              <div className="bg-blue-100 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4 text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
                 1
               </div>
-              <h3 className="text-xl font-semibold mb-2">{t('process.steps.diagnosis.title')}</h3>
-              <p className="text-gray-600">{t('process.steps.diagnosis.description')}</p>
+              <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-1 sm:mb-2">{t('process.steps.diagnosis.title')}</h3>
+              <p className="text-xs sm:text-sm md:text-base text-gray-600">{t('process.steps.diagnosis.description')}</p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-blue-600">
+              <div className="bg-blue-100 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4 text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
                 2
               </div>
-              <h3 className="text-xl font-semibold mb-2">{t('process.steps.quote.title')}</h3>
-              <p className="text-gray-600">{t('process.steps.quote.description')}</p>
+              <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-1 sm:mb-2">{t('process.steps.quote.title')}</h3>
+              <p className="text-xs sm:text-sm md:text-base text-gray-600">{t('process.steps.quote.description')}</p>
             </div>
             <div className="text-center">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-blue-600">
+              <div className="bg-blue-100 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4 text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
                 3
               </div>
-              <h3 className="text-xl font-semibold mb-2">{t('process.steps.repair.title')}</h3>
-              <p className="text-gray-600">{t('process.steps.repair.description')}</p>
+              <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-1 sm:mb-2">{t('process.steps.repair.title')}</h3>
+              <p className="text-xs sm:text-sm md:text-base text-gray-600">{t('process.steps.repair.description')}</p>
             </div>
           </div>
         </div>

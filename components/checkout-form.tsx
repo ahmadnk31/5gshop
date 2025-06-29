@@ -69,6 +69,14 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
     }
   };
 
+  const getName = () => {
+    // Try to get name from session, addressData, or fallback
+    if (session?.user?.name) return session.user.name;
+    if (addressData?.name) return addressData.name;
+    if (addressData?.firstName || addressData?.lastName) return `${addressData.firstName || ''} ${addressData.lastName || ''}`.trim();
+    return '';
+  };
+
   const handleAddressComplete = async () => {
     // If parts cart, require repairType
     if (isPartsCart(cart) && !repairType) {
@@ -94,9 +102,12 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
         currency: "eur",
         cart,
         repairType,
-        shippingOption,
+        shippingOption: shippingOption || 'at_shop', // Always send a value
         email: session?.user?.email,
-        address: addressData,
+        address: {
+          ...addressData,
+          name: getName(), // Always include name
+        },
       }),
     });
     const data = await response.json();

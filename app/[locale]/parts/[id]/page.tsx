@@ -240,35 +240,54 @@ export default function PartDetailPage() {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedParts.map((relatedPart) => (
-                <Card key={relatedPart.id} className="hover:shadow-lg transition-shadow group py-0">
-                  <CardHeader className="p-0">
-                    <div className="relative overflow-hidden rounded-t-lg">
-                      <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
-                        {relatedPart.imageUrl ? (
-                          <Link href={`/parts/${relatedPart.id}`}>
-                          <FallbackImage
-                            src={relatedPart.imageUrl}
-                            alt={relatedPart.name}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                            fallbackContent={<div className="w-full h-full flex items-center justify-center text-4xl">🧩</div>}
-                          />
-                          </Link>
-                        ) : (
-                          <div className="text-center text-gray-400">
-                            <span className="text-4xl">🧩</span>
-                            <p className="text-sm mt-2">{t('relatedProducts.productImage')}</p>
-                          </div>
+                <Card key={relatedPart.id} className="hover:shadow-lg relative transition-shadow group py-0">
+                  <Link href={`/parts/${relatedPart.id}`} className="block focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-t-lg">
+                    <CardHeader className='p-0'>
+                      <div className="relative overflow-hidden rounded-t-lg">
+                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
+                          {relatedPart.imageUrl ? (
+                            <FallbackImage
+                              src={relatedPart.imageUrl}
+                              alt={relatedPart.name}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+                              fallbackContent={<div className="w-full h-full flex items-center justify-center text-4xl">🧩</div>}
+                            />
+                          ) : (
+                            <div className="text-center text-gray-400">
+                              <span className="text-4xl">🧩</span>
+                              <p className="text-sm mt-2">{t('relatedProducts.productImage')}</p>
+                            </div>
+                          )}
+                        </div>
+                        {relatedPart.inStock <= relatedPart.minStock && (
+                          <Badge className="absolute top-2 left-2" variant="outline">
+                            {t('lowStock')}
+                          </Badge>
                         )}
                       </div>
-                      {relatedPart.inStock <= relatedPart.minStock && (
-                        <Badge className="absolute top-2 left-2" variant="outline">
-                          {t('lowStock')}
-                        </Badge>
-                      )}
+                    </CardHeader>
+                  </Link>
+                  {relatedPart.quality && (
+                    <div className="absolute top-2 left-2 z-10">
+                      <Badge variant="secondary" className="text-xs">
+                        {t(`qualityOptions.${relatedPart.quality.toLowerCase()}`) || relatedPart.quality}
+                      </Badge>
                     </div>
-                  </CardHeader>
+                  )}
+                  <div className="absolute top-2 right-2 z-10">
+                    <Badge
+                      variant={relatedPart.inStock > 0 ? "default" : "destructive"}
+                      className={
+                        relatedPart.inStock > 0
+                          ? "bg-blue-100 text-blue-800 border-blue-200"
+                          : "bg-red-100 text-red-800 border-red-200"
+                      }
+                    >
+                      {relatedPart.inStock > 0 ? t('inStock') : t('outOfStock')}
+                    </Badge>
+                  </div>
                   <CardContent className="p-4">
                     <Link href={`/parts/${relatedPart.id}`}>
                     <h3 className="font-semibold text-lg mb-2 line-clamp-2">{relatedPart.name}</h3>

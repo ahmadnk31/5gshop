@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +33,15 @@ import { useTranslations } from "next-intl";
 import { formatCurrency } from "@/lib/utils";
 import { useCart } from "@/components/cart-context";
 import { FallbackImage } from "@/components/ui/fallback-image";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
+import { useSearchParams } from "next/navigation";
 
 
 const getCategoryDescriptions = (t: any) => ({
@@ -202,6 +210,8 @@ export default function AccessoriesPagePaginated() {
     initialPage: currentPage,
   });
 
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
   // Load accessories with pagination
   const loadAccessories = async (page = 1) => {
     try {
@@ -230,7 +240,7 @@ export default function AccessoriesPagePaginated() {
   // Load accessories when dependencies change
   useEffect(() => {
     loadAccessories(currentPage);
-  }, [currentPage, itemsPerPage, sortBy, sortOrder, selectedCategory]);
+  }, [currentPage, itemsPerPage, sortBy, sortOrder, selectedCategory, searchTerm]);
 
   // Trigger search when searchTerm changes
   useEffect(() => {
@@ -286,24 +296,26 @@ export default function AccessoriesPagePaginated() {
   const handleSearch = (search: string) => {
     setSearchInput(search); // Update input immediately for responsive UI
     setSelectedSuggestionIndex(-1); // Reset selection when typing
-    
-    // Generate search suggestions if there's a search input (but don't trigger main search)
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
     if (search.trim() && search.length >= 2) {
       setSearchLoading(true);
-      getAccessoriesWithFiltersPaginated({
-        page: 1,
-        limit: 5, // Limit suggestions
-        search: search,
-        inStockOnly: true,
-      }).then(suggestions => {
-        setSearchSuggestions(suggestions.data);
-        setShowSearchDropdown(true);
-        setSearchLoading(false);
-      }).catch(error => {
-        console.error('Failed to load search suggestions:', error);
-        setSearchSuggestions([]);
-        setSearchLoading(false);
-      });
+      debounceRef.current = setTimeout(() => {
+        getAccessoriesWithFiltersPaginated({
+          page: 1,
+          limit: 5, // Limit suggestions
+          search: search,
+          inStockOnly: true,
+        }).then(suggestions => {
+          setSearchSuggestions(suggestions.data);
+          setShowSearchDropdown(true);
+          setSearchLoading(false);
+        }).catch(error => {
+          setSearchSuggestions([]);
+          setSearchLoading(false);
+        });
+      }, 300); // 300ms debounce
     } else {
       setSearchSuggestions([]);
       setShowSearchDropdown(false);
@@ -458,20 +470,20 @@ export default function AccessoriesPagePaginated() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-16">
+      <section className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-10 sm:py-14 md:py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 sm:mb-6">
             {t('accessories.title')}
           </h1>
-          <p className="text-xl mb-8 opacity-90">
+          <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 opacity-90">
             {t('accessories.subtitle')}
           </p>
-          <div className="flex justify-center space-x-4 text-sm">
-            <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm">
+            <div className="flex items-center space-x-2 mb-2 sm:mb-0">
               <Truck className="h-5 w-5" />
               <span>{t('accessories.features.freeShipping')}</span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 mb-2 sm:mb-0">
               <Shield className="h-5 w-5" />
               <span>{t('accessories.features.qualityGuarantee')}</span>
             </div>
@@ -488,7 +500,7 @@ export default function AccessoriesPagePaginated() {
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-6">
             {/* Search */}
-            <div className="relative flex-1 max-w-md">
+            <div className="relative w-full sm:flex-1 sm:max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 z-10" />
               {searchLoading && (
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
@@ -503,7 +515,7 @@ export default function AccessoriesPagePaginated() {
                 onKeyDown={handleSearchKeyDown}
                 onFocus={handleSearchInputFocus}
                 onBlur={handleSearchInputBlur}
-                className="pl-10 pr-10"
+                className="pl-10 pr-10 w-full"
               />
               
               {/* Search Dropdown */}
@@ -653,58 +665,78 @@ export default function AccessoriesPagePaginated() {
           )}
         </div>
 
-        {/* Categories Grid */}
+        {/* Categories Grid as Carousel */}
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-center mb-8">
             {hasActiveFilters ? 'Categories' : 'Shop by Category'}
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {categories.map((category) => {
-              const IconComponent = category.icon;
-              const isSelected = selectedCategory === category.key;
-              return (
-                <Card 
-                  key={category.key} 
-                  className={`hover:shadow-lg transition-shadow cursor-pointer group ${
-                    isSelected ? 'ring-2 ring-blue-500 bg-blue-50' : ''
-                  }`}
-                  onClick={() => handleCategorySelect(category.key)}
-                >
-                  <CardHeader className="text-center pb-2">
-                    <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-colors ${
-                      isSelected 
-                        ? 'bg-blue-200' 
-                        : 'bg-blue-100 group-hover:bg-blue-200'
-                    }`}>
-                      <IconComponent className={`h-6 w-6 ${
-                        isSelected ? 'text-blue-700' : 'text-blue-600'
-                      }`} />
-                    </div>
-                    <CardTitle className={`text-lg ${
-                      isSelected ? 'text-blue-700' : ''
-                    }`}>
-                      {category.name}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center pt-0">
-                    <CardDescription className="mb-2">
-                      {category.description}
-                    </CardDescription>
-                    {category.count > 0 && (
-  <Badge variant={isSelected ? 'default' : 'outline'}>
-    {t('accessories.categories.items', { count: category.count })}
-  </Badge>
-)}
-                  </CardContent>
-                </Card>
-              );
-            })}
+          <div className="relative">
+            <Carousel
+              opts={{
+                align: "start",
+                slidesToScroll: 1,
+                dragFree: true,
+                containScroll: 'trimSnaps',
+                breakpoints: {
+                  640: { slidesToScroll: 2 },
+                  1024: { slidesToScroll: 3 },
+                  1280: { slidesToScroll: 4 },
+                },
+              }}
+              className="w-full"
+            >
+              <CarouselPrevious className="hidden md:flex" />
+              <CarouselContent className="py-2">
+                {categories.map((category) => {
+                  const IconComponent = category.icon;
+                  const isSelected = selectedCategory === category.key;
+                  return (
+                    <CarouselItem key={category.key} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 px-1 sm:px-2">
+                      <Card
+                        className={`hover:shadow-lg transition-shadow cursor-pointer bp-0 group h-full ${
+                          isSelected ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+                        }`}
+                        onClick={() => handleCategorySelect(category.key)}
+                      >
+                        <CardHeader className="text-center pb-2">
+                          <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-colors ${
+                            isSelected
+                              ? 'bg-blue-200'
+                              : 'bg-blue-100 group-hover:bg-blue-200'
+                          }`}>
+                            <IconComponent className={`h-6 w-6 ${
+                              isSelected ? 'text-blue-700' : 'text-blue-600'
+                            }`} />
+                          </div>
+                          <CardTitle className={`text-sm md:text-lg ${
+                            isSelected ? 'text-blue-700' : ''
+                          }`}>
+                            {category.name}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-center pt-0">
+                          <CardDescription className="mb-2">
+                            {category.description}
+                          </CardDescription>
+                          {category.count > 0 && (
+                            <Badge variant={isSelected ? 'default' : 'outline'}>
+                              {t('accessories.categories.items', { count: category.count })}
+                            </Badge>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+              <CarouselNext className="hidden md:flex" />
+            </Carousel>
           </div>
           {hasActiveFilters && (
             <div className="text-center mt-6">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 onClick={() => handleCategorySelect(null)}
               >
                 <X className="h-4 w-4 mr-2" />
@@ -717,7 +749,22 @@ export default function AccessoriesPagePaginated() {
         {/* Results Header */}
         <div id="results-section" className="mb-6">
           {/* Related Searches - always above categories, visually distinct */}
-          {searchTerm && relatedSearches.length > 0 && (
+          
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-lg md:text-xl xl:text-2xl font-bold">
+               {hasActiveFilters ? t('accessories.search.searchResults') : t('accessories.results.title')}
+              </h2>
+              <p className="text-gray-600">
+               {loading ? t('accessories.search.loading') : t('accessories.search.found', { count: totalItems })}
+              </p>
+            </div>
+          </div>
+
+          {/* Category Navigation Badges */}
+          
+        </div>
+        {searchTerm && relatedSearches.length > 0 && (
             <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded">
               <div className="text-base font-semibold text-blue-800 mb-2">Related searches for "{searchTerm}"</div>
               <div className="flex flex-wrap gap-2">
@@ -746,63 +793,11 @@ export default function AccessoriesPagePaginated() {
               </div>
             </div>
           )}
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h2 className="text-2xl font-bold">
-               {hasActiveFilters ? t('accessories.search.searchResults') : t('accessories.results.title')}
-              </h2>
-              <p className="text-gray-600">
-               {loading ? t('accessories.search.loading') : t('accessories.search.found', { count: totalItems })}
-              </p>
-            </div>
-          </div>
-
-          {/* Category Navigation Badges */}
-          {hasActiveFilters && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3 text-gray-700">
-                {searchTerm ? 'Related Categories' : 'Browse Categories'}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => {
-                  const IconComponent = category.icon;
-                  return (
-                    <Button
-                      key={category.key}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleCategorySelect(category.key)}
-                      className="flex items-center gap-2 hover:bg-blue-50 hover:border-blue-300"
-                    >
-                      <IconComponent className="h-4 w-4" />
-                      {category.name}
-                      {category.count > 0 && (
-                        <Badge variant="secondary" className="ml-1 text-xs">
-                          {category.count}
-                        </Badge>
-                      )}
-                    </Button>
-                  );
-                })}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="flex items-center gap-2 hover:bg-gray-50"
-                >
-                  <X className="h-4 w-4" />
-                  Clear All
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* Accessories Grid/List */}
         {accessories.length > 0 ? (
           <>
             <div  className={viewMode === 'grid' 
-              ? "grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8"
+              ? "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6 mb-8"
               : "space-y-4 mb-8"
             }>
               {accessories.map((accessory) => {
@@ -814,7 +809,7 @@ export default function AccessoriesPagePaginated() {
                     <CardHeader className="p-0">
                       <Link href={`/accessories/${accessory.id}`} className="block">
                         <div className="relative overflow-hidden rounded-t-lg">
-                          <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
+                          <div className="w-full h-full bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
                             <FallbackImage
                               src={accessory.imageUrl || ''}
                               alt={accessory.name}
@@ -836,26 +831,27 @@ export default function AccessoriesPagePaginated() {
                       </Link>
                     </CardHeader>
                     <CardContent className="p-4">
-                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">{accessory.name}</h3>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-xl font-bold text-blue-600">
+                      <h3 className="font-semibold text-sm md:text-lg mb-2 line-clamp-2">
+                        <Link href={`/accessories/${accessory.id}`} className="hover:underline">
+                          {accessory.name}
+                        </Link>
+                      </h3>
+                      <Link href={`/accessories/${accessory.id}`} className="hover:underline">
+                      <div className="flex flex-wrap gap-2 items-center justify-between mb-4">
+                        <span className="text-sm md:text-lg font-bold text-blue-600">
                           {formatCurrency(accessory.price, "EUR")}
                         </span>
                         <Badge variant="secondary" className="text-xs">
                           {categoryConfig?.label || accessory.category}
                         </Badge>
-                        
                       </div>
-                      <div className="flex space-x-2">
-                        <Link href={`/accessories/${accessory.id}`} className="flex-1">
-                          <Button variant="outline" size="sm" className="w-full">
-                            {t('accessories.product.viewDetails')}
-                          </Button>
-                        </Link>
+                      </Link>
+
+                     
                         <Button
                           variant="default"
                           size="sm"
-                          className="px-3"
+                          className="px-3 w-full"
                           disabled={accessory.inStock === 0}
                           onClick={() => addToCart({
                             id: accessory.id,
@@ -868,7 +864,7 @@ export default function AccessoriesPagePaginated() {
                         >
                           <ShoppingCart className="h-4 w-4" />
                         </Button>
-                      </div>
+                      
                     </CardContent>
                   </Card>
                 );

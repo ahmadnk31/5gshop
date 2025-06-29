@@ -13,7 +13,9 @@ export async function POST(req: NextRequest) {
     name: item.name,
     price: item.price,
     quantity: item.quantity,
-    type: item.type
+    type: item.type,
+    shippingOption,
+    
   }));
   
   // Optionally, validate cart and amount here
@@ -27,7 +29,9 @@ export async function POST(req: NextRequest) {
       cartItemCount: cart.length.toString(),
       totalAmount: amount.toString(),
       ...(repairType ? { repairType } : {}),
-      ...(shippingOption ? { shippingOption } : {}),
+      ...(shippingOption ? { shippingOption } : {
+
+      }),
       ...(address ? { address: JSON.stringify(address) } : {}),
     },
   });

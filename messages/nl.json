@@ -1116,6 +1116,19 @@
     "partNotFoundButton": "Terug naar onderdelen",
     "partImage": "Onderdeel afbeelding",
     "partImageNotAvailable": "Onderdeel afbeelding niet beschikbaar",
+    "qualityOptions": {
+      "oem": "OEM (Originele fabrikant)",
+      "original": "Origineel",
+      "premium": "Premium",
+      "high": "Hoge kwaliteit",
+      "standard": "Standaard kwaliteit",
+      "refurbished": "Gereviseerd",
+      "used": "Gebruikt",
+      "aftermarket": "Aftermarket",
+      "compatible": "Compatibel",
+      "generic": "Generiek",
+      "unknown": "Onbekend"
+    },
     "features": {
       "freeShipping": {
         "title": "Gratis verzending",

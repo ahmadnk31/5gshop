@@ -336,7 +336,7 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
               {relatedAccessories.map((relatedAccessory) => {
                 const relatedCategoryConfig = categoryConfigs[relatedAccessory.category as keyof typeof categoryConfigs];
                 return (
-                  <Card key={relatedAccessory.id} className="hover:shadow-lg transition-shadow group py-0">
+                  <Card key={relatedAccessory.id} className="hover:shadow-lg relative transition-shadow group py-0">
                     
                     <CardHeader className="p-0">
                       <Link href={`/accessories/${relatedAccessory.id}`} className="block relative overflow-hidden rounded-t-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -371,6 +371,20 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
                         )}
                       </Link>
                     </CardHeader>
+                    <div className="absolute top-2 right-2 z-10">
+                      <Badge
+                        variant={relatedAccessory.inStock > 0 ? "default" : "destructive"}
+                        className={
+                          relatedAccessory.inStock > 0
+                            ? "bg-blue-100 text-blue-800 border-blue-200"
+                            : "bg-red-100 text-red-800 border-red-200"
+                        }
+                      >
+                        {relatedAccessory.inStock > 0
+                          ? `${t('parts.inStock')}`
+                          : t('parts.outOfStock')}
+                      </Badge>
+                    </div>
                     <CardContent className="p-4">
                       <h3 className="font-semibold text-lg mb-2 line-clamp-2">{relatedAccessory.name}</h3>
                       

@@ -1113,6 +1113,19 @@
     "getQuote": "Get Quote",
     "buyNow": "Buy Now",
     "allParts": "All Parts",
+    "qualityOptions":{
+    "oem": "OEM (Original Equipment Manufacturer)",
+    "original": "Original",
+    "premium": "Premium",
+    "high": "High Quality",
+    "standard": "Standard Quality",
+    "refurbished": "Refurbished",
+    "used": "Used",
+    "aftermarket": "Aftermarket",
+    "compatible": "Compatible",
+    "generic": "Generic",
+    "unknown": "Unknown"
+    },
     "noPartsFound": {
       "title": "No Parts Found",
       "message": "We couldn't find any parts matching your search criteria. Please try again with different keywords or browse our categories.",

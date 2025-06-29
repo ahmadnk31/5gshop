@@ -1006,11 +1006,14 @@ export class DatabaseService {
     }
 
     if (search) {
-      where.OR = [
-        { name: { contains: search } },
-        { brand: { contains: search } },
-        { description: { contains: search } },
-      ];
+      const words = search.split(/\s+/).filter(Boolean);
+      where.AND = words.map(word => ({
+        OR: [
+          { name: { contains: word, mode: 'insensitive' } },
+          { brand: { contains: word, mode: 'insensitive' } },
+          { description: { contains: word, mode: 'insensitive' } },
+        ]
+      }));
     }
 
     if (inStockOnly) {

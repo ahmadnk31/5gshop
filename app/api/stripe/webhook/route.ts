@@ -14,6 +14,10 @@ export const config = {
 
 export async function POST(req: NextRequest) {
   const sig = req.headers.get("stripe-signature");
+  // Add basic logging for webhook receipt
+  console.log("Stripe webhook received");
+  console.log("Headers:", Object.fromEntries(req.headers.entries()));
+  // For security, do not log the full raw body, but log the event type after parsing
   const rawBody = await req.text();
   let event;
   try {
@@ -89,5 +93,30 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // Handle payment failed
+  if (event.type === "payment_intent.payment_failed") {
+    const paymentIntent = event.data.object;
+    const stripeId = paymentIntent.id;
+    await prisma.order.updateMany({
+      where: { stripeId },
+      data: { status: "failed" },
+    });
+    // Optionally notify user of failure
+  }
+
+  // Handle refund
+  if (event.type === "charge.refunded") {
+    const charge = event.data.object as any;
+    const stripeId = charge.payment_intent;
+    if (stripeId) {
+      await prisma.order.updateMany({
+        where: { stripeId },
+        data: { status: "refunded" },
+      });
+    }
+    // Optionally notify user of refund
+  }
+
   return new NextResponse("ok");
 }
+
