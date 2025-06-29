@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/components/cart-context';
 import { FallbackImage } from '@/components/ui/fallback-image';
-import { formatCurrency } from '@/lib/utils';
+import { cn, formatCurrency } from '@/lib/utils';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -170,11 +170,11 @@ export default function PartDetailPage() {
             )}
             {/* Add to Cart Section */}
             <div className="flex gap-2 flex-wrap">
-              <Button onClick={() => addToCart({ id: part.id, name: part.name, price: part.cost, image: part.imageUrl, type: 'part' })} disabled={!isInStock}>
+              <Button className='flex-1' onClick={() => addToCart({ id: part.id, name: part.name, price: part.cost, image: part.imageUrl, type: 'part' })} disabled={!isInStock}>
                 <ShoppingCart className="h-4 w-4 mr-2" />
                
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className='flex-1'>
                 <Link
                   href={`/quote?${
                     [
@@ -194,6 +194,7 @@ export default function PartDetailPage() {
               </Button>
               <Button
                 variant="default"
+                className='flex-1'
                 disabled={!isInStock}
                 onClick={() => {
                   if (!isInStock) return;
@@ -238,7 +239,7 @@ export default function PartDetailPage() {
                 {t('relatedProducts.description')}
               </p>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
               {relatedParts.map((relatedPart) => (
                 <Card key={relatedPart.id} className="hover:shadow-lg relative transition-shadow group py-0">
                   <Link href={`/parts/${relatedPart.id}`} className="block focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-t-lg">
@@ -262,7 +263,7 @@ export default function PartDetailPage() {
                           )}
                         </div>
                         {relatedPart.inStock <= relatedPart.minStock && (
-                          <Badge className="absolute top-2 left-2" variant="outline">
+                          <Badge className="absolute top-2 right-2" variant="outline">
                             {t('lowStock')}
                           </Badge>
                         )}
@@ -271,26 +272,24 @@ export default function PartDetailPage() {
                   </Link>
                   {relatedPart.quality && (
                     <div className="absolute top-2 left-2 z-10">
-                      <Badge variant="secondary" className="text-xs">
+                      <Badge variant="secondary" className="text-xs opacity-80">
                         {t(`qualityOptions.${relatedPart.quality.toLowerCase()}`) || relatedPart.quality}
                       </Badge>
                     </div>
                   )}
                   <div className="absolute top-2 right-2 z-10">
-                    <Badge
-                      variant={relatedPart.inStock > 0 ? "default" : "destructive"}
-                      className={
-                        relatedPart.inStock > 0
-                          ? "bg-blue-100 text-blue-800 border-blue-200"
-                          : "bg-red-100 text-red-800 border-red-200"
-                      }
-                    >
-                      {relatedPart.inStock > 0 ? t('inStock') : t('outOfStock')}
-                    </Badge>
+                    {relatedPart.inStock === 0 && (
+                      <Badge
+                        variant="destructive"
+                        className={cn("bg-blue-100 text-blue-800 border-blue-200")}
+                      >
+                        {t('outOfStock')}
+                      </Badge>
+                    )}
                   </div>
                   <CardContent className="p-4">
                     <Link href={`/parts/${relatedPart.id}`}>
-                    <h3 className="font-semibold text-lg mb-2 line-clamp-2">{relatedPart.name}</h3>
+                    <h3 className="font-semibold text-sm md:text-lg mb-2 line-clamp-2">{relatedPart.name}</h3>
                     <div className="flex items-center mb-3">
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
@@ -308,21 +307,17 @@ export default function PartDetailPage() {
                       </Badge>
                     </div>
                     </Link>
-                    <div className="flex space-x-2">
-                      <Link href={`/parts/${relatedPart.id}`} className="flex-1">
-                        <Button variant="outline" size="sm" className="w-full">
-                          {t('relatedProducts.viewDetails')}
-                        </Button>
-                      </Link>
+                    
+                      
                       <Button 
                         size="sm" 
                         disabled={relatedPart.inStock === 0}
-                        className="px-3"
+                        className="px-3 w-full"
                         onClick={() => addToCart({ id: relatedPart.id, name: relatedPart.name, price: relatedPart.cost, image: relatedPart.imageUrl, type: 'part' })}
                       >
                         <ShoppingCart className="h-4 w-4" />
                       </Button>
-                    </div>
+                
                   </CardContent>
                 </Card>
               ))}

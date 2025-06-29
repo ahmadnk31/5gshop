@@ -1430,4 +1430,14 @@ export class DatabaseService {
 
     return relatedParts.map(DatabaseService.mapPart);
   }
+
+  static async getFeaturedParts(limit: number = 4): Promise<Part[]> {
+    // Example: get top parts by inStock, or by some 'featured' flag if you have one
+    const parts = await prisma.part.findMany({
+      where: { inStock: { gt: 0 } }, // or your own featured logic
+      orderBy: { inStock: 'desc' },  // or another field, e.g. 'popularity'
+      take: limit,
+    });
+    return parts.map(DatabaseService.mapPart);
+  }
 }

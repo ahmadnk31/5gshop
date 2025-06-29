@@ -606,6 +606,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                                 name: part.name,
                                 price: part.cost,
                                 image: part.imageUrl,
+                                type:"part"
                               });
                             }}
                           >

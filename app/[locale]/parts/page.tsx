@@ -68,7 +68,7 @@ export default function PartsPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">{t('allParts')}</h1>
+      
       
       {/* Featured Parts Section */}
       {featuredParts.length > 0 && (
@@ -81,7 +81,7 @@ export default function PartsPage() {
               {t('featuredParts.description', { defaultValue: 'Our most popular and high-quality parts' })}
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {featuredParts.map((part) => (
               <Card key={part.id} className="hover:shadow-lg transition-shadow group py-0">
                 <Link href={`/parts/${part.id}`}>
@@ -132,23 +132,19 @@ export default function PartsPage() {
                     </Badge>
                   </div>
                   </Link>
-                  <div className="flex space-x-2">
-                    <Link href={`/parts/${part.id}`} className="flex-1">
-                      <Button variant="outline" size="sm" className="w-full">
-                        {t('relatedProducts.viewDetails')}
-                      </Button>
-                    </Link>
+                  
+                   
                     <Button
                       variant="default"
                       size="sm"
-                      className="px-3"
+                      className="px-3 w-full"
                       disabled={part.inStock === 0}
                       onClick={() => addToCart({ id: part.id, name: part.name, price: part.cost, image: part.imageUrl, type: 'part' })}
                       title={t('addToCart')}
                     >
                       <ShoppingCart className="h-4 w-4" />
                     </Button>
-                  </div>
+                  
                 </CardContent>
               </Card>
             ))}
@@ -159,9 +155,9 @@ export default function PartsPage() {
       {/* All Parts Grid */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-6 text-center">{t('allPartsList', { defaultValue: 'All Parts' })}</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {paginatedParts.map((part) => (
-            <Card key={part.id} className="hover:shadow-lg transition-shadow group py-0">
+            <Card key={part.id} className="hover:shadow-lg relative transition-shadow group py-0">
               <Link href={`/parts/${part.id}`}>
               <CardHeader className="p-0">
                 <div className="relative overflow-hidden rounded-t-lg">
@@ -189,12 +185,27 @@ export default function PartsPage() {
                   )}
                 </div>
               </CardHeader>
+                {/* Show quality badge if available */}
+                {part.quality && (
+                  <div className="absolute top-2 left-2">
+                    <Badge variant="secondary" className="text-xs">
+                      {t(`qualityOptions.${part.quality.toLowerCase()}`) || part.quality}
+                    </Badge>
+                  </div>
+                )}
+              {part.inStock === 0 && (
+                <div className="absolute top-2 right-2">
+                  <Badge variant="destructive" className="text-xs">
+                    {t('outOfStock', { defaultValue: 'Out of Stock' })}
+                  </Badge>
+                </div>
+              )}
               </Link>
               <CardContent className="p-4">
                 <Link href={`/parts/${part.id}`}>
-                <h3 className="font-semibold text-lg mb-2 line-clamp-2">{part.name}</h3>
+                <h3 className="font-semibold text-sm md:text-lg mb-2 line-clamp-2">{part.name}</h3>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-xl font-bold text-blue-600">
+                  <span className="text-lg md:text-xl font-bold text-blue-600">
                     {formatCurrency(part.cost, "EUR")}
                   </span>
                   <Badge variant="secondary" className="text-xs">
@@ -202,23 +213,17 @@ export default function PartsPage() {
                   </Badge>
                 </div>
                 </Link>
-                <div className="flex space-x-2">
-                  <Link href={`/parts/${part.id}`} className="flex-1">
-                    <Button variant="outline" size="sm" className="w-full">
-                      {t('relatedProducts.viewDetails')}
-                    </Button>
-                  </Link>
                   <Button
                     variant="default"
                     size="sm"
-                    className="px-3"
+                    className="px-3 w-full"
                     disabled={part.inStock === 0}
                     onClick={() => addToCart({ id: part.id, name: part.name, price: part.cost, image: part.imageUrl, type: 'part' })}
                     title={t('addToCart')}
                   >
                     <ShoppingCart className="h-4 w-4" />
                   </Button>
-                </div>
+                
               </CardContent>
             </Card>
           ))}
