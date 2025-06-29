@@ -27,7 +27,7 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
   // Coordinates for Leuven, Belgium - 84A Bondgenotenlaan
   // You should get exact coordinates from Google Maps or geocoding service
   const position: [number, number] = [
-    50.880199, 4.709482
+    50.880150, 4.709603
   ];
 
   // Custom marker icon

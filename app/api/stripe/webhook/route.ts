@@ -33,6 +33,8 @@ export async function POST(req: NextRequest) {
   if (event.type === "payment_intent.succeeded") {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
     // Extract address and email
+    console.log('paymentIntent.shipping:', paymentIntent.shipping);
+    console.log('paymentIntent.metadata.address:', paymentIntent.metadata?.address);
     let shipping = paymentIntent.shipping?.address;
     let name = paymentIntent.shipping?.name || "";
     const email = paymentIntent.receipt_email || paymentIntent.shipping?.name || "";
@@ -43,18 +45,21 @@ export async function POST(req: NextRequest) {
     if (!shipping && paymentIntent.metadata?.address) {
       try {
         const parsedAddress = JSON.parse(paymentIntent.metadata.address);
+        console.log('Parsed address from metadata:', parsedAddress);
         shipping = parsedAddress;
         // Type guard to check if parsedAddress has a 'name' property
         if (parsedAddress && typeof parsedAddress === "object" && "name" in parsedAddress && typeof parsedAddress.name === "string") {
           name = parsedAddress.name || name;
         }
       } catch (e) {
-        // handle parse error if needed
+        console.error('Failed to parse address from metadata:', e);
       }
     }
     // Save address
     let addressId: string | null = null;
     if (shipping) {
+      // Map both postal_code and postalCode to postalCode
+      const postalCode = (shipping as any).postalCode || (shipping as any).postal_code || "";
       const address = await prisma.orderAddress.create({
         data: {
           name,
@@ -62,7 +67,7 @@ export async function POST(req: NextRequest) {
           line2: shipping.line2 || undefined,
           city: shipping.city || "",
           state: shipping.state || undefined,
-          postalCode: shipping.postal_code || "",
+          postalCode,
           country: shipping.country || "",
         },
       });
@@ -107,7 +112,7 @@ export async function POST(req: NextRequest) {
   // Handle refund
   if (event.type === "charge.refunded") {
     const charge = event.data.object as any;
-    const stripeId = charge.payment_intent;
+    const stripeId = typeof charge.payment_intent === 'string' ? charge.payment_intent : undefined;
     if (stripeId) {
       await prisma.order.updateMany({
         where: { stripeId },

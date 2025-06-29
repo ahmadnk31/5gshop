@@ -104,6 +104,7 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
         repairType,
         shippingOption: shippingOption || 'at_shop', // Always send a value
         email: session?.user?.email,
+        userId: session?.user?.id,
         address: {
           ...addressData,
           name: getName(), // Always include name
