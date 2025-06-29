@@ -1,18 +1,18 @@
-import { notFound } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { ArrowLeft, Heart, Share2, ShoppingCart, Star, Shield, Truck, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
 import { FallbackImage } from "@/components/ui/fallback-image";
-import { ArrowLeft, Heart, Share2, ShoppingCart, Star, Shield, Truck, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { getAccessoryById, getAccessories } from "@/app/actions/accessory-actions";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { getTranslations } from 'next-intl/server';
-import { formatCurrency } from '@/lib/utils';
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { Link } from "@/i18n/navigation";
+import { formatCurrency } from "@/lib/utils";
+import { getAccessories, getAccessoryById } from "@/app/actions/accessory-actions";
+import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { useCart } from "@/components/cart-context";
 import { AccessoryDetailClientActions } from './accessory-actions';
+import { AccessoryActionButtons } from './accessory-action-buttons';
+import { RelatedAccessoryCard } from './related-accessory-card';
 
 interface AccessoryDetailPageProps {
   params: Promise<{ id: string }>;
@@ -159,14 +159,12 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
             
             {/* Action buttons */}
             <div className="flex space-x-3">
-              <Button variant="outline" size="sm" className="flex-1">
-                <Heart className="h-4 w-4 mr-2" />
-                {t('product.save')}
-              </Button>
+              
               <Button variant="outline" size="sm" className="flex-1">
                 <Share2 className="h-4 w-4 mr-2" />
                 {t('product.share')}
               </Button>
+              <AccessoryActionButtons accessory={accessory} />
             </div>
           </div>
 
@@ -336,92 +334,11 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
               {relatedAccessories.map((relatedAccessory) => {
                 const relatedCategoryConfig = categoryConfigs[relatedAccessory.category as keyof typeof categoryConfigs];
                 return (
-                  <Card key={relatedAccessory.id} className="hover:shadow-lg relative transition-shadow group py-0">
-                    
-                    <CardHeader className="p-0">
-                      <Link href={`/accessories/${relatedAccessory.id}`} className="block relative overflow-hidden rounded-t-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
-                          {relatedAccessory.imageUrl ? (
-                            <FallbackImage
-                              src={relatedAccessory.imageUrl}
-                              alt={relatedAccessory.name}
-                              fill
-                              className="object-cover"
-                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                              fallbackContent={
-                                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                  <div className="text-center">
-                                    <span className="text-4xl block">{relatedCategoryConfig?.icon || '📦'}</span>
-                                    <p className="text-sm mt-2">{t('product.imageNotAvailable')}</p>
-                                  </div>
-                                </div>
-                              }
-                            />
-                          ) : (
-                            <div className="text-center text-gray-400">
-                              <span className="text-4xl">{relatedCategoryConfig?.icon || '📦'}</span>
-                              <p className="text-sm mt-2">{t('relatedProducts.productImage')}</p>
-                            </div>
-                          )}
-                        </div>
-                        {relatedAccessory.inStock <= relatedAccessory.minStock && (
-                          <Badge className="absolute top-2 left-2" variant="outline">
-                            {t('product.lowStock')}
-                          </Badge>
-                        )}
-                      </Link>
-                    </CardHeader>
-                    <div className="absolute top-2 right-2 z-10">
-                      <Badge
-                        variant={relatedAccessory.inStock > 0 ? "default" : "destructive"}
-                        className={
-                          relatedAccessory.inStock > 0
-                            ? "bg-blue-100 text-blue-800 border-blue-200"
-                            : "bg-red-100 text-red-800 border-red-200"
-                        }
-                      >
-                        {relatedAccessory.inStock > 0
-                          ? `${t('parts.inStock')}`
-                          : t('parts.outOfStock')}
-                      </Badge>
-                    </div>
-                    <CardContent className="p-4">
-                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">{relatedAccessory.name}</h3>
-                      
-                      <div className="flex items-center mb-3">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-500 ml-2">(4.5)</span>
-                      </div>
-
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-xl font-bold text-blue-600">
-                          {formatCurrency(relatedAccessory.price, "EUR")}
-                        </span>
-                        <Badge variant="secondary" className="text-xs">
-                          {getCategoryLabel(relatedAccessory.category)}
-                        </Badge>
-                      </div>
-
-                      <div className="flex space-x-2">
-                        <Link href={`/accessories/${relatedAccessory.id}`} className="flex-1">
-                          <Button variant="outline" size="sm" className="w-full">
-                            {t('relatedProducts.viewDetails')}
-                          </Button>
-                        </Link>
-                        <Button 
-                          size="sm" 
-                          disabled={relatedAccessory.inStock === 0}
-                          className="px-3"
-                        >
-                          <ShoppingCart className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <RelatedAccessoryCard
+                    key={relatedAccessory.id}
+                    accessory={relatedAccessory}
+                    categoryConfig={relatedCategoryConfig}
+                  />
                 );
               })}
             </div>

@@ -5,11 +5,11 @@ import { useRouter } from "@/i18n/navigation";
 import { ShoppingCart } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-
 export function AccessoryDetailClientActions({ accessory, isInStock }: { accessory: any, isInStock: boolean }) {
   const { addToCart, clearCart } = useCart();
   const router = useRouter();
   const t = useTranslations('');
+
   return (
     <div className="space-y-4">
       <div className="flex space-x-4">
@@ -28,7 +28,7 @@ export function AccessoryDetailClientActions({ accessory, isInStock }: { accesso
           }}
         >
           <ShoppingCart className="h-5 w-5 mr-2" />
-         
+          {isInStock ? t('accessories.cart.addToCart', { defaultValue: 'Add to Cart' }) : t('accessories.cart.outOfStock', { defaultValue: 'Out of Stock' })}
         </Button>
         <Button
           variant="outline"

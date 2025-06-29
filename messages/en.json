@@ -135,6 +135,7 @@
     "settings": "Settings",
     "cart": "Cart",
     "myOrders": "My Orders",
+    "wishlist": "Wishlist",
     "search": "Search",
     "searchPlaceholder": "Search for repairs or accessories...",
     "allRepairs": "All Repairs",
@@ -335,6 +336,8 @@
   },
   "accessories": {
     "title": "Premium Device Accessories",
+    "addToWishlist":"Add to wishlist",
+    "removeFromWishlist":"Remove from wishlist",
     "subtitle": "Enhance your devices with our curated collection of high-quality accessories",
     "features": {
       "freeShipping": "Free Shipping",
@@ -1106,8 +1109,11 @@
     "quality": "Quality",
     "allPartsList": "All Parts",
     "back": "Back",
+    "share":"Share",
     "inStock": "in stock",
     "currentlyUnavailable": "Currently unavailable",
+    "addToWishlist":"Add to wishlist",
+    "removeFromWishlist":"Remove from wishlist",
     "description": "Description",
     "addToCart": "Add to Cart",
     "getQuote": "Get Quote",
@@ -1210,5 +1216,21 @@
       "title": "No Orders Found",
       "description": "It looks like you haven't placed any orders yet. Start shopping to see your orders here."
     }
+  },
+  "wishlist": {
+    "title": "My Wishlist",
+    "description": "Save your favorite items for later",
+    "loading": "Loading wishlist...",
+    "loginRequired": "Login Required",
+    "loginRequiredMessage": "Please log in to view your wishlist",
+    "login": "Login",
+    "emptyTitle": "Your wishlist is empty",
+    "emptyDescription": "Start adding items to your wishlist to see them here",
+    "browseParts": "Browse Parts",
+    "browseAccessories": "Browse Accessories",
+    "addToCart": "Add to Cart",
+    "removeFromWishlist": "Remove from Wishlist",
+    "outOfStock": "Out of Stock",
+    "lowStock": "Low Stock"
   }
 }

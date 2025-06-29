@@ -7,10 +7,11 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/components/cart-context';
 import { FallbackImage } from '@/components/ui/fallback-image';
 import { cn, formatCurrency } from '@/lib/utils';
+import { RelatedPartCard } from './related-part-card';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { ShoppingCart, Star, Truck, Shield, RotateCcw } from "lucide-react";
+import { ShoppingCart, Star, Truck, Shield, RotateCcw, Heart, Share2 } from "lucide-react";
 import { useLocale, useTranslations } from 'next-intl';
 import {
   Breadcrumb,
@@ -21,6 +22,7 @@ import {
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 import { Link } from '@/i18n/navigation';
+import { useSession } from 'next-auth/react';
 
 export default function PartDetailPage() {
   const t = useTranslations('parts');
@@ -31,6 +33,13 @@ export default function PartDetailPage() {
   const [part, setPart] = useState<any>(null);
   const [relatedParts, setRelatedParts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { data: session } = useSession();
+  const [inWishlist, setInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+
+  // Debug session state
+  console.log('🔍 Session state:', session);
+  console.log('🔍 User logged in:', !!session?.user?.id);
 
   useEffect(() => {
     async function fetchPartAndRelated() {
@@ -62,6 +71,49 @@ export default function PartDetailPage() {
     }
     fetchPartAndRelated();
   }, [id]);
+
+  // Check if part is in wishlist
+  useEffect(() => {
+    if (!session?.user?.id || !part?.id) return;
+    fetch(`/api/wishlist/part/${part.id}`)
+      .then(res => res.json())
+      .then(data => setInWishlist(!!data.inWishlist));
+  }, [session?.user?.id, part?.id]);
+
+  const toggleWishlist = async () => {
+    console.log('🔍 toggleWishlist called');
+    console.log('🔍 session?.user?.id:', session?.user?.id);
+    console.log('🔍 part?.id:', part?.id);
+    
+    if (!session?.user?.id || !part?.id) {
+      console.log('❌ Early return - missing session or part id');
+      return;
+    }
+    
+    setWishlistLoading(true);
+    const method = inWishlist ? 'DELETE' : 'POST';
+    const url = `/api/wishlist/part/${part.id}`;
+    
+    console.log('🔍 Making request:', method, url);
+    
+    try {
+      const response = await fetch(url, { method });
+      console.log('🔍 Response status:', response.status);
+      console.log('🔍 Response ok:', response.ok);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Wishlist request failed:', errorText);
+      } else {
+        console.log('✅ Wishlist request successful');
+      }
+    } catch (error) {
+      console.error('❌ Wishlist request error:', error);
+    }
+    
+    setInWishlist(!inWishlist);
+    setWishlistLoading(false);
+  };
 
   if (loading) return <div className="py-12 text-center">{t('loading')}</div>;
   if (!part) return <div className="py-12 text-center text-red-500">{t('notFound')}</div>;
@@ -117,14 +169,31 @@ export default function PartDetailPage() {
             </div>
             {/* Action buttons */}
             <div className="flex space-x-3 flex-wrap">
-              <Button variant="outline" size="sm" className="flex-1">
-                <Star className="h-4 w-4 mr-2 text-yellow-400" />
-                {t('save')}
-              </Button>
+              
               <Button variant="outline" size="sm" className="flex-1">
                 <Shield className="h-4 w-4 mr-2 text-green-600" />
                 {t('warranty')}
               </Button>
+              <Button variant="outline" size="sm" className="flex-1">
+                <Share2 className="h-4 w-4 mr-2" />
+                {t('share', { defaultValue: 'Share' })}
+              </Button>
+              {session?.user?.id && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1"
+                  onClick={toggleWishlist}
+                  disabled={wishlistLoading}
+                >
+                  {inWishlist ? (
+                    <Heart className="h-4 w-4 mr-2 text-red-500 fill-red-500" />
+                  ) : (
+                    <Heart className="h-4 w-4 mr-2" />
+                  )}
+                  {inWishlist ? t('removeFromWishlist', { defaultValue: 'Remove from Wishlist' }) : t('addToWishlist', { defaultValue: 'Add to Wishlist' })}
+                </Button>
+              )}
             </div>
           </div>
           {/* Product Details */}
@@ -241,85 +310,7 @@ export default function PartDetailPage() {
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
               {relatedParts.map((relatedPart) => (
-                <Card key={relatedPart.id} className="hover:shadow-lg relative transition-shadow group py-0">
-                  <Link href={`/parts/${relatedPart.id}`} className="block focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-t-lg">
-                    <CardHeader className='p-0'>
-                      <div className="relative overflow-hidden rounded-t-lg">
-                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
-                          {relatedPart.imageUrl ? (
-                            <FallbackImage
-                              src={relatedPart.imageUrl}
-                              alt={relatedPart.name}
-                              fill
-                              className="object-cover"
-                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                              fallbackContent={<div className="w-full h-full flex items-center justify-center text-4xl">🧩</div>}
-                            />
-                          ) : (
-                            <div className="text-center text-gray-400">
-                              <span className="text-4xl">🧩</span>
-                              <p className="text-sm mt-2">{t('relatedProducts.productImage')}</p>
-                            </div>
-                          )}
-                        </div>
-                        {relatedPart.inStock <= relatedPart.minStock && (
-                          <Badge className="absolute top-2 right-2" variant="outline">
-                            {t('lowStock')}
-                          </Badge>
-                        )}
-                      </div>
-                    </CardHeader>
-                  </Link>
-                  {relatedPart.quality && (
-                    <div className="absolute top-2 left-2 z-10">
-                      <Badge variant="secondary" className="text-xs opacity-80">
-                        {t(`qualityOptions.${relatedPart.quality.toLowerCase()}`) || relatedPart.quality}
-                      </Badge>
-                    </div>
-                  )}
-                  <div className="absolute top-2 right-2 z-10">
-                    {relatedPart.inStock === 0 && (
-                      <Badge
-                        variant="destructive"
-                        className={cn("bg-blue-100 text-blue-800 border-blue-200")}
-                      >
-                        {t('outOfStock')}
-                      </Badge>
-                    )}
-                  </div>
-                  <CardContent className="p-4">
-                    <Link href={`/parts/${relatedPart.id}`}>
-                    <h3 className="font-semibold text-sm md:text-lg mb-2 line-clamp-2">{relatedPart.name}</h3>
-                    <div className="flex items-center mb-3">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                        ))}
-                      </div>
-                      <span className="text-sm text-gray-500 ml-2">(4.5)</span>
-                    </div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-xl font-bold text-blue-600">
-                        {formatCurrency(relatedPart.cost, "EUR")}
-                      </span>
-                      <Badge variant="secondary" className="text-xs">
-                        {relatedPart.category}
-                      </Badge>
-                    </div>
-                    </Link>
-                    
-                      
-                      <Button 
-                        size="sm" 
-                        disabled={relatedPart.inStock === 0}
-                        className="px-3 w-full"
-                        onClick={() => addToCart({ id: relatedPart.id, name: relatedPart.name, price: relatedPart.cost, image: relatedPart.imageUrl, type: 'part' })}
-                      >
-                        <ShoppingCart className="h-4 w-4" />
-                      </Button>
-                
-                  </CardContent>
-                </Card>
+                <RelatedPartCard key={relatedPart.id} part={relatedPart} />
               ))}
             </div>
             <div className="text-center mt-8">

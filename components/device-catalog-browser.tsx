@@ -38,6 +38,7 @@ import { useCart } from "@/components/cart-context";
 import { FallbackImage } from './ui/fallback-image'
 import { Link } from '@/i18n/navigation'
 import { formatCurrency } from '@/lib/utils'
+import { PartActionButtons } from '@/app/[locale]/parts/[id]/part-action-buttons'
 
 
 interface BreadcrumbItem {
@@ -1037,7 +1038,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                         <CardHeader>
                           <CardTitle className="flex items-center justify-between">
                             <span className="flex items-center">
-                              <Package className="h-5 w-5 mr-2 text-blue-600" />
+                             
                               {part.name}
                             </span>
                             <Badge variant={part.inStock > part.minStock ? "default" : "destructive"}>
@@ -1052,6 +1053,9 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                           {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
                         </Badge>
                       </div>
+                      <div className="absolute top-2 left-2 z-10">
+                  <PartActionButtons part={part} />
+                </div>
                       <CardContent>
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
@@ -1060,7 +1064,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                               {part.inStock} {t('parts.units')}
                             </span>
                           </div>
-                          <div className="flex justify-between text-sm">
+                          <div className="flex  text-sm md:text-lg xl:text-xl text-blue-500 font-bold justify-between text-sm">
                             <span>{t('parts.price')}:</span>
                             <span className="font-medium">{formatCurrency(part.cost,'EUR')}</span>
                           </div>

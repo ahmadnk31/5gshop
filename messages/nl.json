@@ -135,6 +135,7 @@
     "settings": "Instellingen",
     "cart": "Winkelwagen",
     "myOrders": "Mijn bestellingen",
+    "wishlist": "Verlanglijst",
     "search": "Zoeken",
     "searchPlaceholder": "Zoek naar reparaties of accessoires...",
     "allRepairs": "Alle reparaties",
@@ -422,6 +423,8 @@
   },
   "accessories": {
     "title": "Premium apparaat accessoires",
+    "addToWishlist":"In wishlist Toevoegen",
+    "removeFromWishlist":"Verwijderen uit verlanglijst",
     "subtitle": "Verbeter uw apparaten met onze zorgvuldig geselecteerde collectie hoogwaardige accessoires",
     "features": {
       "freeShipping": "Gratis verzending",
@@ -1108,6 +1111,7 @@
     "getQuote": "Offerte aanvragen",
     "buyNow": "Nu kopen",
     "allParts": "Alle onderdelen",
+    "share":"Delen",
     "allPartsList": "Alle onderdelen",
     "partDetails": "Onderdeel details",
     "partNotFound": "Onderdeel niet gevonden",
@@ -1115,6 +1119,8 @@
     "partNotFoundSuggestion": "Probeer een andere zoekopdracht of blader door onze categorieën.",
     "partNotFoundButton": "Terug naar onderdelen",
     "partImage": "Onderdeel afbeelding",
+    "addToWishlist":"In wishlist Toevoegen",
+    "removeFromWishlist":"Verwijderen uit verlanglijst",
     "partImageNotAvailable": "Onderdeel afbeelding niet beschikbaar",
     "qualityOptions": {
       "oem": "OEM (Originele fabrikant)",
@@ -1196,9 +1202,19 @@
     }
   },
   "wishlist": {
-    "title": "Uw Verlanglijst",
-    "empty": "Uw verlanglijst is leeg.",
+    "title": "Mijn Verlanglijst",
+    "description": "Bewaar uw favoriete items voor later",
+    "loading": "Verlanglijst laden...",
+    "loginRequired": "Inloggen vereist",
+    "loginRequiredMessage": "Log in om uw verlanglijst te bekijken",
+    "login": "Inloggen",
+    "emptyTitle": "Uw verlanglijst is leeg",
+    "emptyDescription": "Begin met het toevoegen van items aan uw verlanglijst om ze hier te zien",
+    "browseParts": "Onderdelen bekijken",
+    "browseAccessories": "Accessoires bekijken",
     "addToCart": "Toevoegen aan winkelwagen",
-    "removeFromWishlist": "Verwijderen uit verlanglijst"
+    "removeFromWishlist": "Verwijderen van verlanglijst",
+    "outOfStock": "Niet op voorraad",
+    "lowStock": "Lage voorraad"
   }
 }

@@ -41,6 +41,7 @@ import { useState } from "react";
 import { SearchComponent } from "./search-component";
 import { ShoppingCart } from "lucide-react";
 import { CartSheet } from "@/components/cart-sheet";
+import { WishlistSheet } from "@/components/wishlist-sheet";
 import { useCart } from "@/components/cart-context";
 
 export function Navigation() {
@@ -158,6 +159,7 @@ export function Navigation() {
             </DropdownMenu>
 
             {/* Cart Icon - Desktop */}
+            <WishlistSheet />
             <button
               className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
               aria-label="Open cart"
@@ -196,6 +198,9 @@ export function Navigation() {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/account/orders">{t('myOrders')}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/wishlist">{t('wishlist')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/account/settings">{t('settings')}</Link>
@@ -339,7 +344,9 @@ export function Navigation() {
                   <DropdownMenuItem asChild>
                     <Link href="/account/orders">{t('myOrders')}</Link>
                   </DropdownMenuItem>
-                  
+                  <DropdownMenuItem asChild>
+                    <Link href="/wishlist">{t('wishlist')}</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/account/settings">{t('settings')}</Link>
                   </DropdownMenuItem>
@@ -377,6 +384,7 @@ export function Navigation() {
               </div>
             )}
             {/* Cart Icon - Desktop & Tablet */}
+            <WishlistSheet />
             <button
               className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
               aria-label="Open cart"
@@ -438,6 +446,9 @@ export function Navigation() {
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/account/orders" className="text-sm">{t('myOrders')}</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/wishlist">{t('wishlist')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link href="/account/settings" className="text-sm">{t('settings')}</Link>

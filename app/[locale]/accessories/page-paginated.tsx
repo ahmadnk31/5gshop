@@ -42,6 +42,8 @@ import {
   CarouselNext,
 } from "@/components/ui/carousel";
 import { useSearchParams } from "next/navigation";
+import { AccessoryActionButtons } from "./[id]/accessory-action-buttons";
+import { useSession } from "next-auth/react";
 
 
 const getCategoryDescriptions = (t: any) => ({
@@ -174,7 +176,7 @@ export default function AccessoriesPagePaginated() {
   const searchParams = useSearchParams();
   const t = useTranslations();
   const { addToCart } = useCart();
-  
+  const user=useSession().data
   // State
   const [accessories, setAccessories] = useState<Accessory[]>([]);
   const [allAccessories, setAllAccessories] = useState<Accessory[]>([]);
@@ -847,24 +849,25 @@ export default function AccessoriesPagePaginated() {
                       </div>
                       </Link>
 
-                     
-                        <Button
-                          variant="default"
-                          size="sm"
-                          className="px-3 w-full"
-                          disabled={accessory.inStock === 0}
-                          onClick={() => addToCart({
-                            id: accessory.id,
-                            name: accessory.name,
-                            price: accessory.price,
-                            image: accessory.imageUrl || undefined,
-                            type: 'accessory',
-                          })}
-                          title={t('accessories.product.addToCart', { defaultValue: 'Add to Cart' })}
-                        >
-                          <ShoppingCart className="h-4 w-4" />
-                        </Button>
-                      
+                        <div className="mt-3 flex items-center gap-2">
+                          <Button
+                            variant="default"
+                            size="sm"
+                            className="px-3 flex-1"
+                            disabled={accessory.inStock === 0}
+                            onClick={() => addToCart({
+                              id: accessory.id,
+                              name: accessory.name,
+                              price: accessory.price,
+                              image: accessory.imageUrl || undefined,
+                              type: 'accessory',
+                            })}
+                            title={t('accessories.product.addToCart', { defaultValue: 'Add to Cart' })}
+                          >
+                            <ShoppingCart className="h-4 w-4 mr-2" />
+                          </Button>
+                          {user && <AccessoryActionButtons accessory={accessory} />}
+                        </div>
                     </CardContent>
                   </Card>
                 );

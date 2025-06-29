@@ -13,6 +13,8 @@ import { Link } from '@/i18n/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Star } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { PartActionButtons } from './[id]/part-action-buttons';
 
 export default function PartsPage() {
   const t = useTranslations('parts');
@@ -20,7 +22,7 @@ export default function PartsPage() {
   const [featuredParts, setFeaturedParts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
-
+  const user=useSession().data
   // Use the proper pagination hook
   const pagination = usePagination({
     totalItems: parts.length,
@@ -111,6 +113,9 @@ export default function PartsPage() {
                     )}
                   </div>
                 </CardHeader>
+                <div className="absolute top-2 right-2 z-10">
+                  <PartActionButtons part={part} />
+                </div>
                 </Link>
                 {part.inStock === 0 && (
                   <div className="absolute top-2 right-2">
@@ -198,6 +203,9 @@ export default function PartsPage() {
                     </Badge>
                   )}
                 </div>
+                <div className="absolute top-2 right-2 z-10">
+                  <PartActionButtons part={part} />
+                </div>
               </CardHeader>
                 {/* Show quality badge if available */}
                 {part.quality && (
@@ -207,6 +215,7 @@ export default function PartsPage() {
                     </Badge>
                   </div>
                 )}
+                
               {part.inStock === 0 && (
                 <div className="absolute top-2 right-2">
                   <Badge variant="destructive" className="text-xs">
