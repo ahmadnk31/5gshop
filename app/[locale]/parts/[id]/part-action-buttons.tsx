@@ -19,7 +19,10 @@ export function PartActionButtons({ part }: { part: any }) {
       .then(data => setInWishlist(!!data.inWishlist));
   }, [session?.user?.id, part?.id]);
 
-  const toggleWishlist = async () => {
+  const toggleWishlist = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation if this is inside a link
+    e.stopPropagation(); // Prevent event bubbling
+    
     console.log('🔍 toggleWishlist called (part)');
     console.log('🔍 session?.user?.id:', session?.user?.id);
     console.log('🔍 part?.id:', part?.id);
@@ -45,12 +48,12 @@ export function PartActionButtons({ part }: { part: any }) {
         console.error('❌ Wishlist request failed:', errorText);
       } else {
         console.log('✅ Wishlist request successful');
+        setInWishlist(!inWishlist);
       }
     } catch (error) {
       console.error('❌ Wishlist request error:', error);
     }
     
-    setInWishlist(!inWishlist);
     setWishlistLoading(false);
   };
 

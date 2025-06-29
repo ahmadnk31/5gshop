@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
 
       if (matchScore > 0) {
         searchResults.push({
-          id: `accessory-${accessory.id}`, // Prefix to avoid ID conflicts
+          id: accessory.id, // Remove prefix to avoid ID conflicts
           name: accessory.name,
           title: accessory.name,
           description: accessory.description,
