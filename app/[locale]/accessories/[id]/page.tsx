@@ -262,109 +262,7 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
         </div>
       </div>
 
-      {/* Related Products Section */}
-      {relatedAccessories.length > 0 && (
-        <div className="bg-gray-50 py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                {t('relatedProducts.title')}
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                {t('relatedProducts.description')}
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedAccessories.map((relatedAccessory) => {
-                const relatedCategoryConfig = categoryConfigs[relatedAccessory.category as keyof typeof categoryConfigs];
-                return (
-                  <Card key={relatedAccessory.id} className="hover:shadow-lg transition-shadow group">
-                    <CardHeader className="p-0">
-                      <div className="relative overflow-hidden rounded-t-lg">
-                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
-                          {relatedAccessory.imageUrl ? (
-                            <FallbackImage
-                              src={relatedAccessory.imageUrl}
-                              alt={relatedAccessory.name}
-                              fill
-                              className="object-cover"
-                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                              fallbackContent={
-                                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                  <div className="text-center">
-                                    <span className="text-4xl block">{relatedCategoryConfig?.icon || '📦'}</span>
-                                    <p className="text-sm mt-2">{t('product.imageNotAvailable')}</p>
-                                  </div>
-                                </div>
-                              }
-                            />
-                          ) : (
-                            <div className="text-center text-gray-400">
-                              <span className="text-4xl">{relatedCategoryConfig?.icon || '📦'}</span>
-                              <p className="text-sm mt-2">{t('relatedProducts.productImage')}</p>
-                            </div>
-                          )}
-                        </div>
-                        {relatedAccessory.inStock <= relatedAccessory.minStock && (
-                          <Badge className="absolute top-2 left-2" variant="outline">
-                            {t('product.lowStock')}
-                          </Badge>
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">{relatedAccessory.name}</h3>
-                      
-                      <div className="flex items-center mb-3">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-500 ml-2">(4.5)</span>
-                      </div>
-
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-xl font-bold text-blue-600">
-                          {formatCurrency(relatedAccessory.price, "EUR")}
-                        </span>
-                        <Badge variant="secondary" className="text-xs">
-                          {getCategoryLabel(relatedAccessory.category)}
-                        </Badge>
-                      </div>
-
-                      <div className="flex space-x-2">
-                        <Link href={`/accessories/${relatedAccessory.id}`} className="flex-1">
-                          <Button variant="outline" size="sm" className="w-full">
-                            {t('relatedProducts.viewDetails')}
-                          </Button>
-                        </Link>
-                        <Button 
-                          size="sm" 
-                          disabled={relatedAccessory.inStock === 0}
-                          className="px-3"
-                        >
-                          <ShoppingCart className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
-
-            <div className="text-center mt-8">
-              <Link href="/accessories">
-                <Button variant="outline" size="lg">
-                  {t('relatedProducts.viewAllAccessories')}
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
+     
       {/* Product Specifications */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
@@ -421,6 +319,110 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
           </Card>
         </div>
       </div>
+       {/* Related Products Section */}
+       {relatedAccessories.length > 0 && (
+        <div className="bg-gray-50 py-16">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                {t('relatedProducts.title')}
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                {t('relatedProducts.description')}
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedAccessories.map((relatedAccessory) => {
+                const relatedCategoryConfig = categoryConfigs[relatedAccessory.category as keyof typeof categoryConfigs];
+                return (
+                  <Card key={relatedAccessory.id} className="hover:shadow-lg transition-shadow group py-0">
+                    
+                    <CardHeader className="p-0">
+                      <Link href={`/accessories/${relatedAccessory.id}`} className="block relative overflow-hidden rounded-t-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
+                          {relatedAccessory.imageUrl ? (
+                            <FallbackImage
+                              src={relatedAccessory.imageUrl}
+                              alt={relatedAccessory.name}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+                              fallbackContent={
+                                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                  <div className="text-center">
+                                    <span className="text-4xl block">{relatedCategoryConfig?.icon || '📦'}</span>
+                                    <p className="text-sm mt-2">{t('product.imageNotAvailable')}</p>
+                                  </div>
+                                </div>
+                              }
+                            />
+                          ) : (
+                            <div className="text-center text-gray-400">
+                              <span className="text-4xl">{relatedCategoryConfig?.icon || '📦'}</span>
+                              <p className="text-sm mt-2">{t('relatedProducts.productImage')}</p>
+                            </div>
+                          )}
+                        </div>
+                        {relatedAccessory.inStock <= relatedAccessory.minStock && (
+                          <Badge className="absolute top-2 left-2" variant="outline">
+                            {t('product.lowStock')}
+                          </Badge>
+                        )}
+                      </Link>
+                    </CardHeader>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">{relatedAccessory.name}</h3>
+                      
+                      <div className="flex items-center mb-3">
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        <span className="text-sm text-gray-500 ml-2">(4.5)</span>
+                      </div>
+
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-xl font-bold text-blue-600">
+                          {formatCurrency(relatedAccessory.price, "EUR")}
+                        </span>
+                        <Badge variant="secondary" className="text-xs">
+                          {getCategoryLabel(relatedAccessory.category)}
+                        </Badge>
+                      </div>
+
+                      <div className="flex space-x-2">
+                        <Link href={`/accessories/${relatedAccessory.id}`} className="flex-1">
+                          <Button variant="outline" size="sm" className="w-full">
+                            {t('relatedProducts.viewDetails')}
+                          </Button>
+                        </Link>
+                        <Button 
+                          size="sm" 
+                          disabled={relatedAccessory.inStock === 0}
+                          className="px-3"
+                        >
+                          <ShoppingCart className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            <div className="text-center mt-8">
+              <Link href="/accessories">
+                <Button variant="outline" size="lg">
+                  {t('relatedProducts.viewAllAccessories')}
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

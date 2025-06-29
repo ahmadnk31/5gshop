@@ -297,7 +297,8 @@
     "description": "Ontdek meer hoogwaardige accessoires voor uw toestelsetup",
     "viewDetails": "Bekijk details",
     "viewAllAccessories": "Alle accessoires bekijken",
-    "productImage": "Productafbeelding"
+    "productImage": "Productafbeelding",
+    "viewAllParts":"Alle onderdelen bekijken"
   },
   "specifications": {
     "title": "Productspecificaties",

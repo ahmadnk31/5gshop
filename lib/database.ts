@@ -1383,4 +1383,48 @@ export class DatabaseService {
     });
     return devices.map(DatabaseService.mapDevice);
   }
+
+  static async getAllDevicesByModelName(order: 'asc' | 'desc' = 'asc'): Promise<Device[]> {
+    const devices = await prisma.device.findMany({
+      orderBy: [
+        { model: order },
+        { brand: 'asc' },
+        { order: 'asc' }
+      ],
+    });
+    return devices.map(DatabaseService.mapDevice);
+  }
+
+  static async getRelatedParts(partId: string, limit: number = 4): Promise<Part[]> {
+    // Get the source part
+    const sourcePart = await prisma.part.findUnique({ where: { id: partId } });
+    if (!sourcePart) return [];
+
+    // Find related parts by deviceModel, then deviceType, then fallback
+    let relatedParts = await prisma.part.findMany({
+      where: {
+        id: { not: partId },
+        deviceModel: sourcePart.deviceModel,
+        inStock: { gt: 0 }
+      },
+      take: limit,
+      orderBy: { inStock: 'desc' }
+    });
+
+    if (relatedParts.length < limit) {
+      // Fill with same deviceType if needed
+      const moreParts = await prisma.part.findMany({
+        where: {
+          id: { notIn: [partId, ...relatedParts.map(p => p.id)] },
+          deviceType: sourcePart.deviceType,
+          inStock: { gt: 0 }
+        },
+        take: limit - relatedParts.length,
+        orderBy: { inStock: 'desc' }
+      });
+      relatedParts = [...relatedParts, ...moreParts];
+    }
+
+    return relatedParts.map(DatabaseService.mapPart);
+  }
 }

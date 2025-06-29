@@ -7,7 +7,7 @@ import { SESService } from "@/lib/ses-service";
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   // Optionally, check for admin role
-  if (!session?.user?.role || session.user.role !== 'admin') {
+  if (!session?.user?.role || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
   const { id } = await params;

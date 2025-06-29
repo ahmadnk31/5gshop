@@ -210,7 +210,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
       // Use the new backend sorting functionality
       const allDevices = await getAllDevicesByModelName(order);
       // Filter devices by type and brand
-      let filteredDevices = allDevices.filter(device => 
+      let filteredDevices = allDevices.filter((device: any) => 
         device.type === deviceType && device.brand === brand
       );
       setDevices(filteredDevices);
@@ -995,37 +995,42 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
               <>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {getPaginatedItems(parts, partsPagination).map((part) => (
-                    <Card key={part.id}>
+                    <Card key={part.id} className="relative">
                       {part.imageUrl && (
                         <Link href={`/parts/${part.id}`}>
-                        <div className="relative h-32 overflow-hidden">
-                          <FallbackImage
-                            src={part.imageUrl}
-                            alt={part.name}
-                            className="w-full h-full object-cover"
-                            fallbackContent={
-                              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                <Package className="h-8 w-8 text-gray-400" />
-                              </div>
-                            }
-                          />
-                        </div>
+                          <div className="relative h-32 overflow-hidden">
+                            <FallbackImage
+                              src={part.imageUrl}
+                              alt={part.name}
+                              className="w-full h-full object-cover"
+                              fallbackContent={
+                                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                  <Package className="h-8 w-8 text-gray-400" />
+                                </div>
+                              }
+                            />
+                          </div>
                         </Link>
                       )}
                       <Link href={`/parts/${part.id}`}>
-                      <CardHeader>
-                        <CardTitle className="flex items-center justify-between">
-                          <span className="flex items-center">
-                            <Package className="h-5 w-5 mr-2 text-blue-600" />
-                            {part.name}
-                          </span>
-                          <Badge variant={part.inStock > part.minStock ? "default" : "destructive"}>
-                            {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
-                          </Badge>
-                        </CardTitle>
-                        <CardDescription>SKU: {part.sku}</CardDescription>
-                      </CardHeader>
+                        <CardHeader>
+                          <CardTitle className="flex items-center justify-between">
+                            <span className="flex items-center">
+                              <Package className="h-5 w-5 mr-2 text-blue-600" />
+                              {part.name}
+                            </span>
+                            <Badge variant={part.inStock > part.minStock ? "default" : "destructive"}>
+                              {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
+                            </Badge>
+                          </CardTitle>
+                          <CardDescription>SKU: {part.sku}</CardDescription>
+                        </CardHeader>
                       </Link>
+                      <div className="absolute top-2 right-2 z-10">
+                        <Badge variant="secondary" className="text-xs">
+                          {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
+                        </Badge>
+                      </div>
                       <CardContent>
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">

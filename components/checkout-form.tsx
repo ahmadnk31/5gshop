@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PaymentElement, AddressElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart-context";
@@ -36,6 +36,8 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
   // New state for repair type and shipping option
   const [repairType, setRepairType] = useState<'self' | 'by_us' | null>(null);
   const [shippingOption, setShippingOption] = useState<'at_shop' | 'send' | null>(null);
+  const addressRef = useRef<any>(null);
+  const [addressData, setAddressData] = useState<any>(null);
 
   // Auto-populate address data from user session
   const getUserAddressData = () => {
@@ -60,7 +62,14 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
 
   const userAddressData = getUserAddressData();
 
-  const handleAddressComplete = () => {
+  // Listen for address completion from AddressElement
+  const handleAddressChange = (event: any) => {
+    if (event.complete && event.value) {
+      setAddressData(event.value.address);
+    }
+  };
+
+  const handleAddressComplete = async () => {
     // If parts cart, require repairType
     if (isPartsCart(cart) && !repairType) {
       setError('Please select who will perform the repair.');
@@ -71,9 +80,27 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
       setError('Please select a shipping option.');
       return;
     }
+    if (!addressData) {
+      setError('Please complete your address.');
+      return;
+    }
     setError(null);
-    // Forward meta to parent for payment intent creation
-    if (setCheckoutMeta) {
+    // Create PaymentIntent with email and address
+    const response = await fetch("/api/stripe/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: getTotal() * 100,
+        currency: "eur",
+        cart,
+        repairType,
+        shippingOption,
+        email: session?.user?.email,
+        address: addressData,
+      }),
+    });
+    const data = await response.json();
+    if (data.clientSecret && setCheckoutMeta) {
       setCheckoutMeta({
         ...(isPartsCart(cart) ? { repairType: repairType ?? undefined } : {}),
         ...(isPartsCart(cart) && repairType === 'by_us' ? { shippingOption: shippingOption ?? undefined } : {}),
@@ -158,6 +185,7 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
               mode: "shipping",
               defaultValues: userAddressData || undefined
             }} 
+            onChange={handleAddressChange}
           />
           {/* Parts-specific repair type selection with stepper */}
           {isPartsCart(cart) && (

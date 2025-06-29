@@ -5,7 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-05
   typescript: true});
 
 export async function POST(req: NextRequest) {
-  const { amount, currency, cart, repairType, shippingOption } = await req.json();
+  const { amount, currency, cart, repairType, shippingOption, email, address } = await req.json();
   
   // Create a simplified cart summary for metadata (without long image URLs)
   const cartSummary = cart.map((item: any) => ({
@@ -21,12 +21,14 @@ export async function POST(req: NextRequest) {
     amount,
     currency,
     automatic_payment_methods: { enabled: true },
+    receipt_email: email,
     metadata: {
       cart: JSON.stringify(cartSummary),
       cartItemCount: cart.length.toString(),
       totalAmount: amount.toString(),
       ...(repairType ? { repairType } : {}),
       ...(shippingOption ? { shippingOption } : {}),
+      ...(address ? { address: JSON.stringify(address) } : {}),
     },
   });
   return NextResponse.json({ clientSecret: paymentIntent.client_secret });

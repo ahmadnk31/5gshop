@@ -29,13 +29,25 @@ export async function POST(req: NextRequest) {
   if (event.type === "payment_intent.succeeded") {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
     // Extract address and email
-    const shipping = paymentIntent.shipping?.address;
-    const name = paymentIntent.shipping?.name || "";
+    let shipping = paymentIntent.shipping?.address;
+    let name = paymentIntent.shipping?.name || "";
     const email = paymentIntent.receipt_email || paymentIntent.shipping?.name || "";
     const cart = paymentIntent.metadata?.cart || "[]";
     const userId = paymentIntent.metadata?.userId || null;
     const repairType = paymentIntent.metadata?.repairType || null;
     const shippingOption = paymentIntent.metadata?.shippingOption || null;
+    if (!shipping && paymentIntent.metadata?.address) {
+      try {
+        const parsedAddress = JSON.parse(paymentIntent.metadata.address);
+        shipping = parsedAddress;
+        // Type guard to check if parsedAddress has a 'name' property
+        if (parsedAddress && typeof parsedAddress === "object" && "name" in parsedAddress && typeof parsedAddress.name === "string") {
+          name = parsedAddress.name || name;
+        }
+      } catch (e) {
+        // handle parse error if needed
+      }
+    }
     // Save address
     let addressId: string | null = null;
     if (shipping) {

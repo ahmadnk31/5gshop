@@ -536,7 +536,7 @@ export default function AccessoriesPagePaginated() {
                         <div className="text-sm font-semibold text-blue-600">{formatCurrency(accessory.price, "EUR")}</div>
                       </div>
                       <div className="text-xs text-gray-500">
-                        {categoryConfigs[accessory.category]?.label}
+                        {categoryConfigs[accessory.category]?.label || accessory.category}
                       </div>
                     </div>
                   ))}
@@ -633,7 +633,7 @@ export default function AccessoriesPagePaginated() {
             <div className="flex flex-wrap gap-2 mb-4">
               {selectedCategory && (
                 <Badge variant="secondary" className="px-3 py-1">
-                  {t('accessories.filters.category', { category: categoryConfigs[selectedCategory].label })}
+                  {t('accessories.filters.category', { category: categoryConfigs[selectedCategory]?.label || selectedCategory })}
                   <X 
                     className="h-3 w-3 ml-2 cursor-pointer" 
                     onClick={() => handleCategorySelect(null)}
@@ -812,26 +812,28 @@ export default function AccessoriesPagePaginated() {
                 return (
                   <Card key={accessory.id} className="hover:shadow-lg transition-shadow group py-0">
                     <CardHeader className="p-0">
-                      <div className="relative overflow-hidden rounded-t-lg">
-                        <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
-                          <FallbackImage
-                            src={accessory.imageUrl || ''}
-                            alt={accessory.name}
-                            className="object-cover w-full h-full"
-                            fallbackContent={
-                              <div className="text-center text-gray-400 flex flex-col items-center justify-center w-full h-full">
-                                <IconComponent className="h-16 w-16 mx-auto mb-2" />
-                                <p className="text-sm">{t('accessories.product.productImage')}</p>
-                              </div>
-                            }
-                          />
+                      <Link href={`/accessories/${accessory.id}`} className="block">
+                        <div className="relative overflow-hidden rounded-t-lg">
+                          <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
+                            <FallbackImage
+                              src={accessory.imageUrl || ''}
+                              alt={accessory.name}
+                              className="object-cover w-full h-full"
+                              fallbackContent={
+                                <div className="text-center text-gray-400 flex flex-col items-center justify-center w-full h-full">
+                                  <IconComponent className="h-16 w-16 mx-auto mb-2" />
+                                  <p className="text-sm">{t('accessories.product.productImage')}</p>
+                                </div>
+                              }
+                            />
+                          </div>
+                          {lowStock && (
+                            <Badge className="absolute top-2 left-2 opacity-50" variant="destructive">
+                              {t('accessories.product.lowStock')}
+                            </Badge>
+                          )}
                         </div>
-                        {lowStock && (
-                          <Badge className="absolute top-2 left-2 opacity-50  " variant="destructive">
-                            {t('accessories.product.lowStock')}
-                          </Badge>
-                        )}
-                      </div>
+                      </Link>
                     </CardHeader>
                     <CardContent className="p-4">
                       <h3 className="font-semibold text-lg mb-2 line-clamp-2">{accessory.name}</h3>
@@ -842,6 +844,7 @@ export default function AccessoriesPagePaginated() {
                         <Badge variant="secondary" className="text-xs">
                           {categoryConfig?.label || accessory.category}
                         </Badge>
+                        
                       </div>
                       <div className="flex space-x-2">
                         <Link href={`/accessories/${accessory.id}`} className="flex-1">

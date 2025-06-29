@@ -508,7 +508,8 @@
     "description": "Discover other parts that might interest you",
     "productImage": "Product Image",
     "viewDetails": "View Details",
-    "viewAllParts": "View All Parts"
+    "viewAllParts": "View All Parts",
+    "viewAllAccessories": "View all accessories"
   },
   "featuredParts": {
     "title": "Featured Parts",
