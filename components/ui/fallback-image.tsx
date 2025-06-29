@@ -27,10 +27,6 @@ export function FallbackImage({
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  if (imageError) {
-    return <>{fallbackContent}</>;
-  }
-
   // Only pass width/height if fill is not set
   const imageProps: any = {
     src,
@@ -55,11 +51,26 @@ export function FallbackImage({
   }
 
   return (
-    <>
-      <Image {...imageProps} />
-      {!imageLoaded && !imageError && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
+    <div className="relative w-full h-full flex items-center justify-center">
+      {/* Main image or fallback */}
+      {imageError ? (
+        <div className="w-full h-full flex items-center justify-center">
+          {fallbackContent}
+        </div>
+      ) : (
+        <Image {...imageProps} />
       )}
-    </>
+      {/* Watermark always visible */}
+      <img
+        src="/logo.svg"
+        alt="Watermark Logo"
+        className="pointer-events-none select-none opacity-10 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 max-w-xs z-10"
+        aria-hidden="true"
+      />
+      {/* Loading skeleton if image is loading */}
+      {!imageLoaded && !imageError && (
+        <div className="absolute inset-0 bg-gray-200 animate-pulse z-20" />
+      )}
+    </div>
   );
 }

@@ -148,7 +148,14 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
   const currentStep = step === "address" ? 0 : step === "payment" ? 1 : 2;
 
   return (
-    <div className="max-w-2xl w-full mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+    <div className="max-w-2xl w-full mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden">
+      {/* Watermark */}
+      <img
+        src="/logo.svg"
+        alt="Watermark Logo"
+        className="pointer-events-none select-none opacity-10 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 max-w-xs z-0"
+        aria-hidden="true"
+      />
       {/* Stepper */}
       <div className="flex justify-between mb-10">
         {steps.map((label, idx) => (

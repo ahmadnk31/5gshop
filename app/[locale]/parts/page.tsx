@@ -83,7 +83,7 @@ export default function PartsPage() {
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {featuredParts.map((part) => (
-              <Card key={part.id} className="hover:shadow-lg transition-shadow group py-0">
+              <Card key={part.id} className="hover:shadow-lg relative transition-shadow group py-0">
                 <Link href={`/parts/${part.id}`}>
                 <CardHeader className="p-0">
                   <div className="relative overflow-hidden rounded-t-lg">
@@ -112,6 +112,20 @@ export default function PartsPage() {
                   </div>
                 </CardHeader>
                 </Link>
+                {part.inStock === 0 && (
+                  <div className="absolute top-2 right-2">
+                    <Badge variant="destructive" className="text-xs">
+                      {t('outOfStock', { defaultValue: 'Out of Stock' })}
+                    </Badge>
+                  </div>
+                )}
+                {part.quality && (
+                  <div className="absolute top-2 left-2">
+                    <Badge variant="secondary" className="text-xs">
+                      {t(`qualityOptions.${part.quality.toLowerCase()}`) || part.quality}
+                    </Badge>
+                  </div>
+                )}
                 <CardContent className="p-4">
                   <Link href={`/parts/${part.id}`}>
                   <h3 className="font-semibold text-lg mb-2 line-clamp-2">{part.name}</h3>
