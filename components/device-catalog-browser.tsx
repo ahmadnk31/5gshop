@@ -40,6 +40,235 @@ import { Link } from '@/i18n/navigation'
 import { formatCurrency } from '@/lib/utils'
 import { PartActionButtons } from '@/app/[locale]/parts/[id]/part-action-buttons'
 
+// Brand logo mapping - image URLs for brand logos
+const brandLogos: Record<string, { imageUrl: string; color: string; bgColor: string }> = {
+  'Apple': { 
+    imageUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg', 
+    color: 'text-gray-800', 
+    bgColor: 'bg-gray-100' 
+  },
+  'Samsung': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Google': { 
+    imageUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg', 
+    color: 'text-blue-500', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Huawei': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/e/e6/Huawei_Logo.svg', 
+    color: 'text-red-600', 
+    bgColor: 'bg-red-50' 
+  },
+  'Xiaomi': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/ae/Xiaomi_logo.svg', 
+    color: 'text-orange-600', 
+    bgColor: 'bg-orange-50' 
+  },
+  'OnePlus': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/1e/OnePlus_logo.svg', 
+    color: 'text-red-500', 
+    bgColor: 'bg-red-50' 
+  },
+  'Sony': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/29/Sony_logo.svg', 
+    color: 'text-blue-700', 
+    bgColor: 'bg-blue-50' 
+  },
+  'LG': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/20/LG_logo.svg', 
+    color: 'text-purple-600', 
+    bgColor: 'bg-purple-50' 
+  },
+  'Motorola': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/87/Motorola_logo.svg', 
+    color: 'text-blue-800', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Nokia': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/72/Nokia_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'HTC': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3e/HTC_logo.svg', 
+    color: 'text-green-600', 
+    bgColor: 'bg-green-50' 
+  },
+  'BlackBerry': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/82/BlackBerry_logo.svg', 
+    color: 'text-gray-800', 
+    bgColor: 'bg-gray-100' 
+  },
+  'ASUS': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/2e/ASUS_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Acer': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Acer_logo.svg', 
+    color: 'text-green-600', 
+    bgColor: 'bg-green-50' 
+  },
+  'Dell': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Dell_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'HP': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Lenovo': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/85/Lenovo_logo_2015.svg', 
+    color: 'text-red-600', 
+    bgColor: 'bg-red-50' 
+  },
+  'MSI': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/b3/MSI_logo.svg', 
+    color: 'text-red-600', 
+    bgColor: 'bg-red-50' 
+  },
+  'Razer': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Razer_logo.svg', 
+    color: 'text-green-500', 
+    bgColor: 'bg-green-50' 
+  },
+  'Alienware': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/34/Alienware_logo.svg', 
+    color: 'text-gray-800', 
+    bgColor: 'bg-gray-100' 
+  },
+  'Microsoft': { 
+    imageUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoft/microsoft-original.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Gigabyte': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/37/Gigabyte_logo.svg', 
+    color: 'text-orange-600', 
+    bgColor: 'bg-orange-50' 
+  },
+  'ASRock': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/ASRock_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'EVGA': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/EVGA_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Nintendo': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Nintendo.svg', 
+    color: 'text-red-600', 
+    bgColor: 'bg-red-50' 
+  },
+  'PlayStation': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/00/PlayStation_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Xbox': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg', 
+    color: 'text-green-600', 
+    bgColor: 'bg-green-50' 
+  },
+  'Steam': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg', 
+    color: 'text-gray-800', 
+    bgColor: 'bg-gray-100' 
+  },
+  'Oculus': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Oculus_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Meta': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Fitbit': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/86/Fitbit_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Garmin': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Garmin_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'GoPro': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/5/5a/GoPro_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Canon': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/4f/Canon_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Nikon': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Nikon_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Fujifilm': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Fujifilm_logo.svg', 
+    color: 'text-green-600', 
+    bgColor: 'bg-green-50' 
+  },
+  'Panasonic': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Panasonic_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Olympus': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Olympus_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Leica': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Leica_logo.svg', 
+    color: 'text-red-600', 
+    bgColor: 'bg-red-50' 
+  },
+  'DJI': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/DJI_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Parrot': { 
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Parrot_logo.svg', 
+    color: 'text-blue-600', 
+    bgColor: 'bg-blue-50' 
+  },
+  'Generic': { 
+    imageUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ubuntu/ubuntu-plain.svg', 
+    color: 'text-gray-600', 
+    bgColor: 'bg-gray-100' 
+  },
+  'Other': { 
+    imageUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ubuntu/ubuntu-plain.svg', 
+    color: 'text-gray-600', 
+    bgColor: 'bg-gray-100' 
+  },
+  'Unknown': { 
+    imageUrl: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ubuntu/ubuntu-plain.svg', 
+    color: 'text-gray-600', 
+    bgColor: 'bg-gray-100' 
+  },
+}
+
+// Helper function to get brand logo
+const getBrandLogo = (brandName: string) => {
+  const normalizedBrand = brandName.trim()
+  return brandLogos[normalizedBrand] || brandLogos['Generic']
+}
 
 interface BreadcrumbItem {
   label: string
@@ -802,24 +1031,50 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           </TabsList>
           
           <TabsContent value="brands" className="space-y-4">
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-              {brands.map((brand) => (
-                <Card 
-                  key={brand}
-                  className="cursor-pointer hover:shadow-lg transition-shadow"
-                  onClick={() => selectBrand(brand)}
-                >
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      {brand}
-                      <ChevronRight className="h-4 w-4" />
-                    </CardTitle>
-                    <CardDescription>
-                      {t('brands.viewModels', { brand: brand, type: deviceDisplayNames[selectedType as DeviceType] })}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {brands.map((brand) => {
+                const brandLogo = getBrandLogo(brand);
+                return (
+                  <Card 
+                    key={brand}
+                    className="cursor-pointer hover:shadow-lg pt-0 h-auto transition-shadow"
+                    onClick={() => selectBrand(brand)}
+                  >
+                    <CardHeader className="p-0 pb-2">
+                      <div className="flex items-center justify-center w-full h-full">
+                        <div className={` ${brandLogo.bgColor} w-full flex items-center justify-center ${brandLogo.color} overflow-hidden`}>
+                          <div className="w-full h-full flex items-center justify-center p-4">
+                            <FallbackImage
+                              src={brandLogo.imageUrl}
+                              alt={`${brand} logo`}
+                              width={100}
+                              height={150}
+                              className="object-contain h-[150px] w-full"
+                              fallbackContent={
+                                <div className="w-12 h-12 flex items-center justify-center text-gray-400">
+                                  <Package className="w-8 h-8" />
+                                </div>
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <CardTitle className="text-center text-lg font-semibold mb-2">
+                        {brand}
+                      </CardTitle>
+                      <CardDescription className="text-center text-sm flex items-center justify-between">
+                        {t('brands.viewModels', { brand: brand, type: deviceDisplayNames[selectedType as DeviceType] })}
+                        <div className="flex justify-center mt-3">
+                        <ChevronRight className="h-4 w-4 text-gray-400" />
+                      </div>
+                      </CardDescription>
+                      
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </TabsContent>
           
