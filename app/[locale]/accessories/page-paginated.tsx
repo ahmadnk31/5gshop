@@ -171,24 +171,6 @@ function getRelatedSearches(searchTerm: string, allAccessories: Accessory[]): st
   return related.slice(0, 4); // Limit to 4 related searches
 }
 
-// Helper to get unique models for a selected category
-function getModelsForCategory(category: AccessoryCategory | null, allAccessories: Accessory[]) {
-  if (!category) return [];
-  // Group by brand+model, only for accessories in this category
-  const seen = new Set();
-  const models = [];
-  for (const acc of allAccessories) {
-    if (acc.category === category && acc.model && acc.brand) {
-      const key = acc.brand + '|' + acc.model;
-      if (!seen.has(key)) {
-        seen.add(key);
-        models.push({ brand: acc.brand, model: acc.model, imageUrl: acc.imageUrl });
-      }
-    }
-  }
-  return models;
-}
-
 export default function AccessoriesPagePaginated() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -468,8 +450,6 @@ export default function AccessoriesPagePaginated() {
   const hasActiveFilters = selectedCategory || searchTerm;
 
   const relatedSearches = getRelatedSearches(searchTerm, allAccessories);
-
-  const modelsForCategory = getModelsForCategory(selectedCategory, allAccessories);
 
   if (loading && accessories.length === 0) {
     return (
@@ -767,28 +747,6 @@ export default function AccessoriesPagePaginated() {
             </div>
           )}
         </div>
-
-        {/* Models for selected category */}
-        {selectedCategory && modelsForCategory.length > 0 && (
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-3 text-blue-800">{t('accessories.relatedModels.title', { category: categoryConfigs[selectedCategory]?.label || selectedCategory })}</h3>
-            <div className="flex overflow-x-auto gap-4 pb-2">
-              {modelsForCategory.map((m, i) => (
-                <div key={m.brand + m.model + i} className="flex flex-col items-center min-w-[100px] max-w-[120px] bg-blue-50 rounded-lg p-2 border border-blue-100">
-                  {m.imageUrl ? (
-                    <img src={m.imageUrl} alt={m.model} className="w-16 h-16 object-contain mb-2 rounded" />
-                  ) : (
-                    <div className="w-16 h-16 flex items-center justify-center bg-gray-200 rounded mb-2">
-                      <Box className="h-8 w-8 text-gray-400" />
-                    </div>
-                  )}
-                  <div className="text-xs font-medium text-blue-900 text-center truncate w-full">{m.brand}</div>
-                  <div className="text-xs text-blue-700 text-center truncate w-full">{m.model}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Results Header */}
         <div id="results-section" className="mb-6">

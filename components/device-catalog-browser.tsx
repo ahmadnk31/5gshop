@@ -362,31 +362,52 @@ function ModelSortableItem({ model, deviceWithImage, isAdmin, onClick }: ModelSo
   return (
     <div
       ref={setNodeRef}
-      className={`relative cursor-pointer hover:shadow-lg transition-shadow bg-white rounded ${isDragging ? 'opacity-50 bg-blue-50' : ''}`}
+      className={`relative cursor-pointer group hover:shadow-2xl transition-all bg-white rounded-xl border border-gray-200 ${isDragging ? 'opacity-60 ring-2 ring-blue-300' : ''}`}
       onClick={() => onClick(model)}
-      style={{ minHeight: 180 }}
+      style={{ minHeight: 200, boxShadow: isDragging ? '0 4px 24px 0 rgba(59,130,246,0.10)' : undefined }}
     >
-      <div className="flex items-center">
-        {isAdmin && (
-          <span {...attributes} {...listeners} className="p-1 cursor-grab text-gray-400 hover:text-blue-600 focus:outline-none">
-            <GripVertical className="h-5 w-5" />
-          </span>
-        )}
-        {deviceWithImage?.imageUrl && (
-          <div className="relative h-24 w-24 overflow-hidden mr-2">
-            <FallbackImage
-              src={deviceWithImage.imageUrl}
-              alt={model}
-              className="w-full h-full object-cover"
-              fallbackContent={<div className="w-full h-full bg-gray-100 flex items-center justify-center"><Package className="h-8 w-8 text-gray-400" /></div>}
-            />
+      <div className="flex flex-col items-center justify-center p-6 h-full">
+        <div className="flex items-center w-full mb-4">
+          {isAdmin && (
+            <span
+              {...attributes}
+              {...listeners}
+              className="p-1 cursor-grab text-gray-400 hover:text-blue-600 focus:outline-none transition-colors"
+              title="Drag to reorder"
+            >
+              <GripVertical className="h-5 w-5" />
+            </span>
+          )}
+          <div className="flex-1 flex justify-center">
+            {deviceWithImage?.imageUrl ? (
+              <div className="relative h-32 w-32 rounded-lg overflow-hidden shadow-sm border border-gray-100 bg-white">
+                <FallbackImage
+                  src={deviceWithImage.imageUrl}
+                  alt={model}
+                  className="w-full h-full object-contain"
+                  fallbackContent={
+                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                      <Package className="h-12 w-12 text-gray-300" />
+                    </div>
+                  }
+                />
+              </div>
+            ) : (
+              <div className="h-32 w-32 flex items-center justify-center bg-gray-100 rounded-lg border border-gray-200">
+                <Package className="h-12 w-12 text-gray-300" />
+              </div>
+            )}
           </div>
-        )}
-        <div className="flex-1">
-          <div className="font-semibold text-lg">{model}</div>
+        </div>
+        <div className="w-full text-center mt-2">
+          <div className="font-bold text-lg text-gray-800 group-hover:text-blue-700 transition-colors truncate">{model}</div>
+        </div>
+        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+          <span className="inline-block bg-gray-100 text-blue-700 text-xs px-2 py-1 rounded-full shadow-sm">View</span>
         </div>
       </div>
     </div>
+  
   );
 }
 
@@ -404,24 +425,42 @@ function PartSortableItem({ part, isAdmin, onClick }: PartSortableItemProps) {
       onClick={() => onClick(part)}
       style={{ minHeight: 120 }}
     >
-      <div className="flex items-center">
+      <div className="flex flex-row items-center gap-4 px-4 py-3">
         {isAdmin && (
-          <span {...attributes} {...listeners} className="p-1 cursor-grab text-gray-400 hover:text-blue-600 focus:outline-none">
+          <span
+            {...attributes}
+            {...listeners}
+            className="mr-3 p-1 cursor-grab text-gray-400 hover:text-blue-600 focus:outline-none"
+            title="Drag to reorder"
+            style={{ alignSelf: 'flex-start' }}
+          >
             <GripVertical className="h-5 w-5" />
           </span>
         )}
-        {part.imageUrl && (
-          <div className="relative h-16 w-16 overflow-hidden mr-2">
-            <FallbackImage
-              src={part.imageUrl}
-              alt={part.name}
-              className="w-full h-full object-cover"
-              fallbackContent={<div className="w-full h-full bg-gray-100 flex items-center justify-center"><Package className="h-8 w-8 text-gray-400" /></div>}
-            />
-          </div>
-        )}
-        <div className="flex-1">
-          <div className="font-semibold text-base">{part.name}</div>
+
+        <div className="flex-shrink-0">
+          {part.imageUrl ? (
+            <div className="relative h-20 w-20 overflow-hidden rounded bg-gray-100 flex items-center justify-center border border-gray-200">
+              <FallbackImage
+                src={part.imageUrl}
+                alt={part.name}
+                className="w-full h-full object-contain"
+                fallbackContent={
+                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                    <Package className="h-12 w-12 text-gray-400" />
+                  </div>
+                }
+              />
+            </div>
+          ) : (
+            <div className="h-20 w-20 flex items-center justify-center bg-gray-100 rounded border border-gray-200">
+              <Package className="h-12 w-12 text-gray-400" />
+            </div>
+          )}
+        </div>
+
+        <div className="flex-1 min-w-0 pl-4">
+          <div className="font-semibold text-base md:text-lg lg:text-xl truncate text-gray-900">{part.name}</div>
         </div>
       </div>
     </div>
@@ -448,6 +487,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
   const [loading, setLoading] = useState(false)
   const [isSearchMode, setIsSearchMode] = useState(false)
   const [order, setOrder] = useState<'asc' | 'desc'>(serialOrder);
+  const [modelSearch, setModelSearch] = useState('');
 
   // Pagination hooks
   const searchPagination = usePagination({
@@ -846,32 +886,36 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
       {/* Filter Indicator */}
       {searchParams.get('type') && selectedType && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <Badge variant="secondary" className="bg-blue-100 text-blue-800 w-fit">
                 {t('filter.filteredBy', { type: deviceDisplayNames[selectedType as DeviceType] })}
               </Badge>
               <span className="text-sm text-blue-700">
                 {t('filter.showing', { type: deviceDisplayNames[selectedType as DeviceType] })}
               </span>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => {
-                window.history.pushState({}, '', '/repairs')
-                setCurrentLevel('types')
-                setSelectedType(null)
-                setBrands([])
-                setServices([])
-                loadDeviceTypes()
-              }}
-            >
-              {t('filter.showAllDevices')}
-            </Button>
+            <div className="mt-2 sm:mt-0 w-full sm:w-auto flex-shrink-0">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="w-full sm:w-auto"
+                onClick={() => {
+                  window.history.pushState({}, '', '/repairs')
+                  setCurrentLevel('types')
+                  setSelectedType(null)
+                  setBrands([])
+                  setServices([])
+                  loadDeviceTypes()
+                }}
+              >
+                {t('filter.showAllDevices')}
+              </Button>
+            </div>
           </div>
         </div>
       )}
+      
 
       {/* Search Results */}
       {isSearchMode && (
@@ -1129,7 +1173,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
               )}
             </div>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 xl:gap-6">
               {deviceTypes.map((type) => {
                 const deviceType = type as DeviceType
                 const Icon = deviceIcons[deviceType]
@@ -1261,24 +1305,8 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                 type="text"
                 placeholder={t('models.filterPlaceholder')}
                 className="px-3 py-2 border border-gray-300 flex-1 w-full sm:w-auto rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onChange={(e) => {
-                  const searchTerm = e.target.value.toLowerCase()
-                  const modelCards = document.querySelectorAll('[data-model-card]')
-                  modelCards.forEach(card => {
-                    const modelName = card.getAttribute('data-model-name')?.toLowerCase() || ''
-                    const seriesContainer = card.closest('[data-series-container]')
-                    if (modelName.includes(searchTerm)) {
-                      ;(card as HTMLElement).style.display = 'block'
-                    } else {
-                      ;(card as HTMLElement).style.display = 'none'
-                    }
-                    // Hide series if no models are visible
-                    if (seriesContainer) {
-                      const visibleCards = seriesContainer.querySelectorAll('[data-model-card]:not([style*="display: none"])')
-                      ;(seriesContainer as HTMLElement).style.display = visibleCards.length > 0 ? 'block' : 'none'
-                    }
-                  })
-                }}
+                value={modelSearch}
+                onChange={e => setModelSearch(e.target.value)}
               />
             </div>
           </div>
@@ -1302,18 +1330,20 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
             }}>
               <SortableContext items={models} strategy={verticalListSortingStrategy}>
                 <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                  {models.map((model) => {
-                    const deviceWithImage = devices.find(device => device.model === model);
-                    return (
-                      <ModelSortableItem
-                        key={model}
-                        model={model}
-                        deviceWithImage={deviceWithImage}
-                        isAdmin={isAdmin}
-                        onClick={selectModel}
-                      />
-                    );
-                  })}
+                  {models
+                    .filter(model => model.toLowerCase().includes(modelSearch.toLowerCase()))
+                    .map((model) => {
+                      const deviceWithImage = devices.find(device => device.model === model);
+                      return (
+                        <ModelSortableItem
+                          key={model}
+                          model={model}
+                          deviceWithImage={deviceWithImage}
+                          isAdmin={isAdmin}
+                          onClick={selectModel}
+                        />
+                      );
+                    })}
                 </div>
               </SortableContext>
               {orderChanged && (
@@ -1334,40 +1364,42 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
             </DndContext>
           ) : (
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-              {models.map((model) => {
-                const deviceWithImage = devices.find(device => device.model === model);
-                return (
-                  <Card 
-                    key={model}
-                    className="cursor-pointer hover:shadow-lg transition-shadow"
-                    onClick={() => selectModel(model)}
-                  >
-                    {deviceWithImage?.imageUrl && (
-                      <div className="relative h-48 overflow-hidden">
-                        <FallbackImage
-                          src={deviceWithImage.imageUrl}
-                          alt={model}
-                          className="w-full h-full object-cover"
-                          fallbackContent={
-                            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                              <Package className="h-12 w-12 text-gray-400" />
-                            </div>
-                          }
-                        />
-                      </div>
-                    )}
-                    <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        {model}
-                        <ChevronRight className="h-4 w-4" />
-                      </CardTitle>
-                      <CardDescription>
-                        {t('models.viewParts', { brand: selectedBrand, model: model })}
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                );
-              })}
+              {models
+                .filter(model => model.toLowerCase().includes(modelSearch.toLowerCase()))
+                .map((model) => {
+                  const deviceWithImage = devices.find(device => device.model === model);
+                  return (
+                    <Card 
+                      key={model}
+                      className="cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => selectModel(model)}
+                    >
+                      {deviceWithImage?.imageUrl && (
+                        <div className="relative h-48 overflow-hidden">
+                          <FallbackImage
+                            src={deviceWithImage.imageUrl}
+                            alt={model}
+                            className="w-full h-full object-cover"
+                            fallbackContent={
+                              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                <Package className="h-12 w-12 text-gray-400" />
+                              </div>
+                            }
+                          />
+                        </div>
+                      )}
+                      <CardHeader>
+                        <CardTitle className="flex items-center justify-between">
+                          {model}
+                          <ChevronRight className="h-4 w-4" />
+                        </CardTitle>
+                        <CardDescription>
+                          {t('models.viewParts', { brand: selectedBrand, model: model })}
+                        </CardDescription>
+                      </CardHeader>
+                    </Card>
+                  );
+                })}
             </div>
           )}
         </div>

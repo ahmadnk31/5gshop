@@ -40,7 +40,7 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
             </Link>
           </Button>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
           {accessories.map((accessory) => (
             <Card key={accessory.id} className="hover:shadow-lg transition-shadow gap-0 cursor-pointer pt-0 relative">
               <Link href={`/accessories/${accessory.id}`} className="block group">
