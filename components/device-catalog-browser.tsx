@@ -21,7 +21,8 @@ import {
   Clock,
   Package,
   Gamepad2,
-  ShoppingCart
+  ShoppingCart,
+  GripVertical
 } from "lucide-react"
 import { DeviceType, Part, RepairService } from '@/lib/types'
 import { 
@@ -34,6 +35,10 @@ import {
 import {  getAllDevicesByOrder, getAllDevicesByModelName } from '@/app/actions/device-management-actions'
 import { useTranslations } from 'next-intl';
 import { useCart } from "@/components/cart-context";
+import { useSession } from 'next-auth/react';
+import { DndContext, closestCenter, useSensor, useSensors, PointerSensor, KeyboardSensor } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 import { FallbackImage } from './ui/fallback-image'
 import { Link } from '@/i18n/navigation'
@@ -299,6 +304,128 @@ const deviceDisplayNames: Record<DeviceType, string> = {
 interface DeviceCatalogBrowserProps {
   searchTerm?: string;
   serialOrder?: 'asc' | 'desc';
+}
+
+type DeviceTypeSortableItemProps = {
+  type: string;
+  index: number;
+  deviceTypes: string[];
+  setDeviceTypes: (types: string[]) => void;
+  isAdmin: boolean;
+};
+function DeviceTypeSortableItem({ type, index, deviceTypes, setDeviceTypes, isAdmin, selectDeviceType }: DeviceTypeSortableItemProps & { selectDeviceType: (type: string) => void }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: type });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    cursor: isAdmin ? 'grab' : 'pointer',
+    background: isDragging ? '#e0e7ff' : undefined,
+  };
+  const deviceType = type as DeviceType;
+  const Icon = deviceIcons[deviceType];
+  // Track if currently dragging to prevent click
+  const [dragging, setDragging] = useState(false);
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center gap-2 p-2 bg-white rounded shadow mb-2 cursor-pointer"
+      onClick={() => { if (!dragging) { selectDeviceType(type); } }}
+    >
+      {isAdmin && (
+        <span
+          {...attributes}
+          {...listeners}
+          className="p-1 cursor-grab text-gray-400 hover:text-blue-600 focus:outline-none"
+          onPointerDown={() => setDragging(true)}
+          onPointerUp={() => setTimeout(() => setDragging(false), 100)}
+          onPointerLeave={() => setTimeout(() => setDragging(false), 100)}
+        >
+          <GripVertical className="h-5 w-5" />
+        </span>
+      )}
+      <Icon className="h-8 w-8 text-blue-600" />
+      <span className="font-semibold text-lg">{deviceDisplayNames[deviceType]}</span>
+    </div>
+  );
+}
+
+type ModelSortableItemProps = {
+  model: string;
+  deviceWithImage: any;
+  isAdmin: boolean;
+  onClick: (model: string) => void;
+};
+function ModelSortableItem({ model, deviceWithImage, isAdmin, onClick }: ModelSortableItemProps) {
+  const { attributes, listeners, setNodeRef, isDragging } = useSortable({ id: model });
+  return (
+    <div
+      ref={setNodeRef}
+      className={`relative cursor-pointer hover:shadow-lg transition-shadow bg-white rounded ${isDragging ? 'opacity-50 bg-blue-50' : ''}`}
+      onClick={() => onClick(model)}
+      style={{ minHeight: 180 }}
+    >
+      <div className="flex items-center">
+        {isAdmin && (
+          <span {...attributes} {...listeners} className="p-1 cursor-grab text-gray-400 hover:text-blue-600 focus:outline-none">
+            <GripVertical className="h-5 w-5" />
+          </span>
+        )}
+        {deviceWithImage?.imageUrl && (
+          <div className="relative h-24 w-24 overflow-hidden mr-2">
+            <FallbackImage
+              src={deviceWithImage.imageUrl}
+              alt={model}
+              className="w-full h-full object-cover"
+              fallbackContent={<div className="w-full h-full bg-gray-100 flex items-center justify-center"><Package className="h-8 w-8 text-gray-400" /></div>}
+            />
+          </div>
+        )}
+        <div className="flex-1">
+          <div className="font-semibold text-lg">{model}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type PartSortableItemProps = {
+  part: any;
+  isAdmin: boolean;
+  onClick: (part: any) => void;
+};
+function PartSortableItem({ part, isAdmin, onClick }: PartSortableItemProps) {
+  const { attributes, listeners, setNodeRef, isDragging } = useSortable({ id: part.id });
+  return (
+    <div
+      ref={setNodeRef}
+      className={`relative cursor-pointer hover:shadow-lg transition-shadow bg-white rounded ${isDragging ? 'opacity-50 bg-blue-50' : ''}`}
+      onClick={() => onClick(part)}
+      style={{ minHeight: 120 }}
+    >
+      <div className="flex items-center">
+        {isAdmin && (
+          <span {...attributes} {...listeners} className="p-1 cursor-grab text-gray-400 hover:text-blue-600 focus:outline-none">
+            <GripVertical className="h-5 w-5" />
+          </span>
+        )}
+        {part.imageUrl && (
+          <div className="relative h-16 w-16 overflow-hidden mr-2">
+            <FallbackImage
+              src={part.imageUrl}
+              alt={part.name}
+              className="w-full h-full object-cover"
+              fallbackContent={<div className="w-full h-full bg-gray-100 flex items-center justify-center"><Package className="h-8 w-8 text-gray-400" /></div>}
+            />
+          </div>
+        )}
+        <div className="flex-1">
+          <div className="font-semibold text-base">{part.name}</div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: DeviceCatalogBrowserProps) {
@@ -665,6 +792,38 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
     }
   }, [currentLevel]);
 
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.role === 'ADMIN';
+
+  // Drag-and-drop state for device types
+  const [deviceTypesOrder, setDeviceTypesOrder] = useState(deviceTypes);
+  useEffect(() => { setDeviceTypesOrder(deviceTypes); }, [deviceTypes]);
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
+  const [orderChanged, setOrderChanged] = useState(false);
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    if (!over) return;
+    if (active.id !== over.id) {
+      const oldIndex = deviceTypesOrder.indexOf(active.id as string);
+      const newIndex = deviceTypesOrder.indexOf(over.id as string);
+      const newOrder = arrayMove(deviceTypesOrder, oldIndex, newIndex);
+      setDeviceTypesOrder(newOrder);
+      setOrderChanged(true);
+    }
+  };
+  const handleSaveOrder = async () => {
+    // Send new order to API
+    await fetch('/api/devices/reorder', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(deviceTypesOrder.map((type, idx) => ({ id: type, order: idx })))
+    });
+    setOrderChanged(false);
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -954,39 +1113,22 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
       {/* Device Types Level */}
       {currentLevel === 'types' && (
         <div className="space-y-4">
-          {searchParams.get('type') && selectedType ? (
-            // Show filtered message when coming from URL parameter
-            <div className="text-center py-8">
-              <div className="max-w-md mx-auto">
-                <h3 className="text-lg font-semibold mb-2">
-                  {deviceDisplayNames[selectedType as DeviceType]} {t('deviceSelected.selected')}
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {t('deviceSelected.chooseBrand', { type: deviceDisplayNames[selectedType as DeviceType] })}
-                </p>
-                <div className="flex gap-3 justify-center">
-                  <Button 
-                    onClick={() => selectDeviceType(selectedType)}
-                    className="flex items-center space-x-2"
-                  >
-                    <span>{t('deviceSelected.continue', { type: deviceDisplayNames[selectedType as DeviceType] })}</span>
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    onClick={() => {
-                      window.history.pushState({}, '', '/repairs')
-                      setSelectedType(null)
-                      loadDeviceTypes()
-                    }}
-                  >
-                    {t('deviceSelected.showAllTypes')}
-                  </Button>
-                </div>
-              </div>
+          {isAdmin ? (
+            <div>
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={deviceTypesOrder} strategy={verticalListSortingStrategy}>
+                  {deviceTypesOrder.map((type, idx) => (
+                    <DeviceTypeSortableItem key={type} type={type} index={idx} deviceTypes={deviceTypesOrder} setDeviceTypes={setDeviceTypesOrder} isAdmin={isAdmin} selectDeviceType={selectDeviceType} />
+                  ))}
+                </SortableContext>
+              </DndContext>
+              {orderChanged && (
+                <Button className="mt-4" onClick={handleSaveOrder}>
+                  Save Order
+                </Button>
+              )}
             </div>
           ) : (
-            // Show all device types grid
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
               {deviceTypes.map((type) => {
                 const deviceType = type as DeviceType
@@ -1146,106 +1288,88 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
               {order === 'asc' ? t('models.sortAsc', { defaultValue: 'Sort: Ascending' }) : t('models.sortDesc', { defaultValue: 'Sort: Descending' })}
             </Button>
           </div>
-          {(() => {
-            // Group sorted models by device.series if available, else fallback to parsing
-            const modelGroups: Record<string, string[]> = {};
-            models.forEach(model => {
-              const deviceObj = devices.find(d => d.model === model);
-              let groupKey = deviceObj?.series || null;
-              if (!groupKey) {
-                // fallback to old parsing logic
-                groupKey = model;
-                if (model.includes('iPhone')) {
-                  const match = model.match(/iPhone (\d+)/);
-                  if (match) groupKey = `iPhone ${match[1]}`;
-                } else if (model.includes('Galaxy S')) {
-                  const match = model.match(/Galaxy S(\d+)/);
-                  if (match) groupKey = `Galaxy S${match[1]}`;
-                } else if (model.includes('MacBook')) {
-                  groupKey = model.split(' ').slice(0, 2).join(' ');
-                } else if (model.includes('iPad')) {
-                  groupKey = model.split(' ').slice(0, 2).join(' ');
-                } else if (model.includes('Watch')) {
-                  groupKey = model.split(' ').slice(0, 3).join(' ');
-                }
+          {isAdmin ? (
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={event => {
+              const { active, over } = event;
+              if (!over) return;
+              if (active.id !== over.id) {
+                const oldIndex = models.indexOf(active.id as string);
+                const newIndex = models.indexOf(over.id as string);
+                const newOrder = arrayMove(models, oldIndex, newIndex);
+                setModels(newOrder);
+                setOrderChanged(true);
               }
-              if (!modelGroups[groupKey]) modelGroups[groupKey] = [];
-              modelGroups[groupKey].push(model);
-            });
-            
-            const allModels = Object.values(modelGroups).flat();
-            const paginatedModels = getPaginatedItems(allModels, modelsPagination);
-            
-            return (
-              <>
-                {Object.entries(modelGroups).map(([seriesName, seriesModels]) => {
-                  const paginatedSeriesModels = seriesModels.filter(model => 
-                    paginatedModels.includes(model)
-                  );
-                  
-                  if (paginatedSeriesModels.length === 0) return null;
-                  
-                  return (
-                    <div key={seriesName} className="space-y-4" data-series-container>
-                      <h4 className="text-lg font-semibold text-gray-800 border-b pb-2">
-                         {t('models.series', { series: seriesName , brand: deviceDisplayNames[selectedType as DeviceType] })}
-                        <span className="text-sm font-normal text-gray-500 ml-2">
-                          ({seriesModels.length} {t('models.model', { count: seriesModels.length })})
-                        </span>
-                      </h4>
-                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-                        {paginatedSeriesModels.map((model) => {
-                          const deviceWithImage = devices.find(device => device.model === model)
-                          return (
-                            <Card 
-                              key={model}
-                              className="cursor-pointer hover:shadow-lg transition-shadow"
-                              onClick={() => selectModel(model)}
-                              data-model-card
-                              data-model-name={model}
-                            >
-                              {deviceWithImage?.imageUrl && (
-                                <div className="relative h-48 overflow-hidden">
-                                  <FallbackImage
-                                    src={deviceWithImage.imageUrl}
-                                    alt={`${selectedBrand} ${model}`}
-                                    className="w-full h-full object-cover"
-                                    fallbackContent={
-                                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                        <Package className="h-12 w-12 text-gray-400" />
-                                      </div>
-                                    }
-                                  />
-                                </div>
-                              )}
-                              <CardHeader>
-                                <CardTitle className="flex items-center justify-between">
-                                  {model}
-                                  <ChevronRight className="h-4 w-4" />
-                                </CardTitle>
-                                <CardDescription>
-                                  {t('models.viewParts', { brand: selectedBrand, model: model })}
-                                </CardDescription>
-                              </CardHeader>
-                            </Card>
-                          )
-                        })}
+            }}>
+              <SortableContext items={models} strategy={verticalListSortingStrategy}>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                  {models.map((model) => {
+                    const deviceWithImage = devices.find(device => device.model === model);
+                    return (
+                      <ModelSortableItem
+                        key={model}
+                        model={model}
+                        deviceWithImage={deviceWithImage}
+                        isAdmin={isAdmin}
+                        onClick={selectModel}
+                      />
+                    );
+                  })}
+                </div>
+              </SortableContext>
+              {orderChanged && (
+                <Button className="mt-4" onClick={async () => {
+                  await fetch('/api/devices/models/reorder', {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(models.map((model, idx) => {
+                      const device = devices.find(d => d.model === model);
+                      return { id: device?.id, order: idx };
+                    }))
+                  });
+                  setOrderChanged(false);
+                }}>
+                  Save Model Order
+                </Button>
+              )}
+            </DndContext>
+          ) : (
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+              {models.map((model) => {
+                const deviceWithImage = devices.find(device => device.model === model);
+                return (
+                  <Card 
+                    key={model}
+                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => selectModel(model)}
+                  >
+                    {deviceWithImage?.imageUrl && (
+                      <div className="relative h-48 overflow-hidden">
+                        <FallbackImage
+                          src={deviceWithImage.imageUrl}
+                          alt={model}
+                          className="w-full h-full object-cover"
+                          fallbackContent={
+                            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                              <Package className="h-12 w-12 text-gray-400" />
+                            </div>
+                          }
+                        />
                       </div>
-                    </div>
-                  )
-                })}
-                
-                {/* Models Pagination */}
-                {allModels.length > 12 && (
-                  <div className="mt-8">
-                    <PaginationControls 
-                      pagination={modelsPagination}
-                    />
-                  </div>
-                )}
-              </>
-            )
-          })()}
+                    )}
+                    <CardHeader>
+                      <CardTitle className="flex items-center justify-between">
+                        {model}
+                        <ChevronRight className="h-4 w-4" />
+                      </CardTitle>
+                      <CardDescription>
+                        {t('models.viewParts', { brand: selectedBrand, model: model })}
+                      </CardDescription>
+                    </CardHeader>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
@@ -1258,124 +1382,135 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           </TabsList>
           
           <TabsContent value="parts" className="space-y-4">
-            {parts.length > 0 ? (
-              <>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {getPaginatedItems(parts, partsPagination).map((part) => (
-                    <Card key={part.id} className="relative">
-                      {part.imageUrl && (
-                        <Link href={`/parts/${part.id}`}>
-                          <div className="relative h-32 overflow-hidden">
-                            <FallbackImage
-                              src={part.imageUrl}
-                              alt={part.name}
-                              className="w-full h-full object-cover"
-                              fallbackContent={
-                                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                  <Package className="h-8 w-8 text-gray-400" />
-                                </div>
-                              }
-                            />
-                          </div>
-                        </Link>
-                      )}
-                      <Link href={`/parts/${part.id}`}>
-                        <CardHeader>
-                          <CardTitle className="flex items-center justify-between">
-                            <span className="flex items-center">
-                             
-                              {part.name}
-                            </span>
-                            <Badge variant={part.inStock > part.minStock ? "default" : "destructive"}>
-                              {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
-                            </Badge>
-                          </CardTitle>
-                          <CardDescription>SKU: {part.sku}</CardDescription>
-                        </CardHeader>
-                      </Link>
-                      <div className="absolute top-2 right-2 z-10">
-                        <Badge variant="secondary" className="text-xs">
-                          {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
-                        </Badge>
-                      </div>
-                      <div className="absolute top-2 left-2 z-10">
-                  <PartActionButtons part={part} />
-                </div>
-                      <CardContent>
-                        <div className="space-y-2">
-                          <div className="flex justify-between text-sm">
-                            <span>{t('parts.stock')}:</span>
-                            <span className={part.inStock <= part.minStock ? 'text-red-600' : ''}>
-                              {part.inStock} {t('parts.units')}
-                            </span>
-                          </div>
-                          <div className="flex  text-sm md:text-lg xl:text-xl text-blue-500 font-bold justify-between text-sm">
-                            <span>{t('parts.price')}:</span>
-                            <span className="font-medium">{formatCurrency(part.cost,'EUR')}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span>{t('parts.supplier')}:</span>
-                            <span>{part.supplier}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span>{t('parts.quality')}:</span>
-                            <span>{part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}</span>
-                          </div>
-                          <div className="pt-2 flex space-x-2">
-                            <Button asChild size="sm" className="flex-1" variant="outline">
-                              <Link href={`/quote?deviceType=${encodeURIComponent(part.deviceType ?? part.device_type ?? selectedType ?? '')}&brand=${encodeURIComponent(selectedBrand ?? part.brand ?? '')}&model=${encodeURIComponent(selectedModel ?? part.deviceModel ?? '')}&part=${encodeURIComponent(part.name)}&quality=${encodeURIComponent(part.quality ?? '')}&sku=${encodeURIComponent(part.sku ?? '')}&supplier=${encodeURIComponent(part.supplier ?? '')}`}>
-                                {t('parts.requestQuote')}
-                              </Link>
-                            </Button>
-                            <Button
-                              size="sm"
-                              className="flex-1"
-                              disabled={part.inStock <= 0}
-                              onClick={() => {
-                                addToCart({
-                                  id: part.id,
-                                  name: part.name,
-                                  price: part.cost,
-                                  image: part.imageUrl,
-                                });
-                              }}
-                            >
-                              <ShoppingCart className="h-4 w-4" />
-                              <span className="sr-only">
-                                {part.inStock > 0 ? t('parts.addToCart', { defaultValue: 'Add to Cart' }) : t('parts.outOfStock', { defaultValue: 'Out of Stock' })}
-                              </span>
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-                
-                {/* Parts Pagination */}
-                {parts.length > 12 && (
-                  <div className="mt-8">
-                    <PaginationControls 
-                      pagination={partsPagination}
-                    />
+            {isAdmin ? (
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={event => {
+                const { active, over } = event;
+                if (!over) return;
+                if (active.id !== over.id) {
+                  const oldIndex = parts.findIndex((p) => p.id === active.id);
+                  const newIndex = parts.findIndex((p) => p.id === over.id);
+                  const newOrder = arrayMove(parts, oldIndex, newIndex);
+                  setParts(newOrder);
+                  setOrderChanged(true);
+                }
+              }}>
+                <SortableContext items={parts.map(p => p.id)} strategy={verticalListSortingStrategy}>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {parts.map((part) => (
+                      <PartSortableItem
+                        key={part.id}
+                        part={part}
+                        isAdmin={isAdmin}
+                        onClick={() => window.location.href = `/parts/${part.id}`}
+                      />
+                    ))}
                   </div>
+                </SortableContext>
+                {orderChanged && (
+                  <Button className="mt-4" onClick={async () => {
+                    await fetch('/api/parts/reorder', {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(parts.map((part, idx) => ({ id: part.id, order: idx })))
+                    });
+                    setOrderChanged(false);
+                  }}>
+                    Save Parts Order
+                  </Button>
                 )}
-              </>
+              </DndContext>
             ) : (
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="text-center text-gray-500">
-                    <Package className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                    <p>{t('parts.noParts')}</p>
-                    <p className="text-sm mt-2">
-                      {t('parts.contactForParts')}
-                    </p>
-                    <Button asChild className="mt-4">
-                      <Link href="/contact">{t('parts.contactUs')}</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {parts.map((part) => (
+                  <Card key={part.id} className="relative">
+                    {part.imageUrl && (
+                      <Link href={`/parts/${part.id}`}>
+                        <div className="relative h-32 overflow-hidden">
+                          <FallbackImage
+                            src={part.imageUrl}
+                            alt={part.name}
+                            className="w-full h-full object-cover"
+                            fallbackContent={
+                              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                                <Package className="h-8 w-8 text-gray-400" />
+                              </div>
+                            }
+                          />
+                        </div>
+                      </Link>
+                    )}
+                    <Link href={`/parts/${part.id}`}>
+                      <CardHeader>
+                        <CardTitle className="flex items-center justify-between">
+                          <span className="flex items-center">
+                           
+                            {part.name}
+                          </span>
+                          <Badge variant={part.inStock > part.minStock ? "default" : "destructive"}>
+                            {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
+                          </Badge>
+                        </CardTitle>
+                        <CardDescription>SKU: {part.sku}</CardDescription>
+                      </CardHeader>
+                    </Link>
+                    <div className="absolute top-2 right-2 z-10">
+                      <Badge variant="secondary" className="text-xs">
+                        {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
+                      </Badge>
+                    </div>
+                    <div className="absolute top-2 left-2 z-10">
+                      <PartActionButtons part={part} />
+                    </div>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span>{t('parts.stock')}:</span>
+                          <span className={part.inStock <= part.minStock ? 'text-red-600' : ''}>
+                            {part.inStock} {t('parts.units')}
+                          </span>
+                        </div>
+                        <div className="flex  text-sm md:text-lg xl:text-xl text-blue-500 font-bold justify-between text-sm">
+                          <span>{t('parts.price')}:</span>
+                          <span className="font-medium">{formatCurrency(part.cost,'EUR')}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>{t('parts.supplier')}:</span>
+                          <span>{part.supplier}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span>{t('parts.quality')}:</span>
+                          <span>{part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}</span>
+                        </div>
+                        <div className="pt-2 flex space-x-2">
+                          <Button asChild size="sm" className="flex-1" variant="outline">
+                            <Link href={`/quote?deviceType=${encodeURIComponent(part.deviceType ?? part.device_type ?? selectedType ?? '')}&brand=${encodeURIComponent(selectedBrand ?? part.brand ?? '')}&model=${encodeURIComponent(selectedModel ?? part.deviceModel ?? '')}&part=${encodeURIComponent(part.name)}&quality=${encodeURIComponent(part.quality ?? '')}&sku=${encodeURIComponent(part.sku ?? '')}&supplier=${encodeURIComponent(part.supplier ?? '')}`}>
+                              {t('parts.requestQuote')}
+                            </Link>
+                          </Button>
+                          <Button
+                            size="sm"
+                            className="flex-1"
+                            disabled={part.inStock <= 0}
+                            onClick={() => {
+                              addToCart({
+                                id: part.id,
+                                name: part.name,
+                                price: part.cost,
+                                image: part.imageUrl,
+                              });
+                            }}
+                          >
+                            <ShoppingCart className="h-4 w-4" />
+                            <span className="sr-only">
+                              {part.inStock > 0 ? t('parts.addToCart', { defaultValue: 'Add to Cart' }) : t('parts.outOfStock', { defaultValue: 'Out of Stock' })}
+                            </span>
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             )}
           </TabsContent>
           

@@ -69,6 +69,7 @@ export interface Part {
   quality?: string | null;      // e.g. "OEM", "Original", etc.
   createdAt: string;
   updatedAt: string;
+  order: number;
 }
 
 export interface Quote {

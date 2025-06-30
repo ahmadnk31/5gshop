@@ -71,6 +71,7 @@ model Part {
   deviceModel String?      // Compatible device model for exact matching
   deviceType  String?      // Compatible device type for broader matching
   quality     String?      // e.g. "OEM", "Original", "Premium", "Aftermarket", "Refurbished"
+  order       Int          @default(0)
   repairParts RepairPart[]
 
   @@map("parts")

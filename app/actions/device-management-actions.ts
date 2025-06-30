@@ -62,9 +62,9 @@ export async function getAllDevicesBySerialNumber(order: 'asc' | 'desc' = 'asc')
 }
 
 // New function to get all devices ordered by the 'order' field
-export async function getAllDevicesByOrder(order: 'asc' | 'desc' = 'desc') {
+export async function getAllDevicesByOrder() {
   try {
-    return await DatabaseService.getAllDevicesByOrder(order);
+    return await DatabaseService.getAllDevicesByOrder();
   } catch (error) {
     console.error("Failed to get devices by order:", error);
     throw new Error("Failed to get devices by order");
@@ -101,9 +101,13 @@ export async function createPart(data: {
   deviceModel?: string;
   deviceType?: string;
   quality?: string; // Add quality
+  order?: number;
 }) {
   try {
-    const part = await DatabaseService.createPart(data);
+    const part = await DatabaseService.createPart({
+      ...data,
+      order: typeof data.order === 'number' ? data.order : 0,
+    });
     revalidatePath("/admin");
     return part;
   } catch (error) {
@@ -122,6 +126,7 @@ export async function updatePart(partId: string, data: {
   deviceModel?: string;
   deviceType?: string;
   quality?: string; // Add quality
+  order?: number;
 }) {
   try {
     const part = await DatabaseService.updatePart(partId, data);

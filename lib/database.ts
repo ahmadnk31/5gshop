@@ -199,6 +199,7 @@ export class DatabaseService {
         deviceModel: data.deviceModel,
         deviceType: data.deviceType,
         quality: data.quality, // ensure quality is saved
+        order: typeof data.order === 'number' ? data.order : 0,
       },
     })
     return DatabaseService.mapPart(part)
@@ -219,6 +220,7 @@ export class DatabaseService {
         deviceModel: data.deviceModel,
         deviceType: data.deviceType,
         quality: data.quality, // ensure quality is updated
+        order: typeof data.order === 'number' ? data.order : undefined,
       },
     })
     return DatabaseService.mapPart(part)
@@ -1264,9 +1266,10 @@ export class DatabaseService {
       description: part.description,
       deviceModel: part.deviceModel,
       deviceType: part.deviceType,
-      quality: part.quality, // <-- add this line to include quality
-      createdAt: part.createdAt.toISOString(),
-      updatedAt: part.updatedAt.toISOString(),
+      quality: part.quality,
+      createdAt: part.createdAt?.toISOString?.() ?? part.createdAt,
+      updatedAt: part.updatedAt?.toISOString?.() ?? part.updatedAt,
+      order: part.order ?? 0,
     }
   }
 

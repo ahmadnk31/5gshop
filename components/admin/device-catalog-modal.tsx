@@ -83,6 +83,7 @@ interface Part {
   quality?: string | null;
   createdAt: string;
   updatedAt: string;
+  order: number;
 }
 
 export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps) {
@@ -136,7 +137,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
     deviceType: '',
     imageUrl: '',
     description: '',
-    quality: '' // <-- Add quality
+    quality: '',
+    order: 0
   })
 
   // Image upload states
@@ -339,6 +341,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
         }
         const part = await createPart({
           ...newPart,
+          order: typeof newPart.order === 'number' ? newPart.order : 0,
           deviceModel: deviceModelValue ? deviceModelValue : undefined,
           deviceType: newPart.deviceType ? newPart.deviceType : undefined,
           quality: newPart.quality || undefined,
@@ -363,7 +366,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
           deviceType: '',
           imageUrl: '',
           description: '',
-          quality: ''
+          quality: '',
+          order: 0
         });
       } catch (error) {
         console.error('Error adding part:', error);
@@ -541,6 +545,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
         inStock: editingPart.inStock,
         minStock: editingPart.minStock,
         supplier: editingPart.supplier,
+        order: typeof editingPart.order === 'number' ? editingPart.order : 0,
         deviceModel: deviceModelValue ? deviceModelValue : undefined,
         deviceType: editingPart.deviceType ? editingPart.deviceType : undefined,
         quality: editingPart.quality || undefined,
@@ -827,6 +832,14 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                       placeholder="e.g., TechParts Co"
                       value={newPart.supplier}
                       onChange={(e) => setNewPart({ ...newPart, supplier: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Order</Label>
+                    <Input
+                      type="number"
+                      value={newPart.order || 0}
+                      onChange={(e) => setNewPart({ ...newPart, order: parseInt(e.target.value) || 0 })}
                     />
                   </div>
                 </div>
@@ -1629,6 +1642,14 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     onChange={(e) => setEditingPart({ ...editingPart, supplier: e.target.value })}
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label>Order</Label>
+                  <Input
+                    type="number"
+                    value={editingPart.order || 0}
+                    onChange={(e) => setEditingPart({ ...editingPart, order: parseInt(e.target.value) || 0 })}
+                  />
+                </div>
               </div>
 
               {/* Device Compatibility Section for Edit */}
@@ -1896,7 +1917,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                 </div>
               </div>
 
-              {editingService.specificBrand && (
+              editingService.specificBrand && (
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <p className="text-sm text-blue-800">
                     <strong>Service Scope:</strong> This service will be available for{' '}
@@ -1906,7 +1927,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     }
                   </p>
                 </div>
-              )}
+              )
 
               <div className="space-y-2">
                 <Label>Description</Label>

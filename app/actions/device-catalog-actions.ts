@@ -88,9 +88,10 @@ export async function getPartsByDeviceModel(deviceType: DeviceType, brand: strin
           }
         ]
       },
-      orderBy: {
-        name: 'asc'
-      },
+      orderBy: [
+        { order: 'asc' },
+        { name: 'asc' }
+      ],
     })
 
     console.log(`✅ Found ${parts.length} parts for ${model}`)
