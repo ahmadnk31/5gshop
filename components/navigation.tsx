@@ -104,7 +104,7 @@ export function Navigation() {
             <div className="flex items-center space-x-6">
               {/* Repairs Dropdown */}
               <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors">
+              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700  transition-colors">
                 <Wrench className="h-4 w-4" />
                 <span>{t('repairs')}</span>
                 <ChevronDown className="h-4 w-4" />
@@ -132,7 +132,7 @@ export function Navigation() {
 
             {/* Accessories Dropdown */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors">
+              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700  transition-colors">
                 <Package className="h-4 w-4" />
                 <span>{t('accessories')}</span>
                 <ChevronDown className="h-4 w-4" />
@@ -161,13 +161,13 @@ export function Navigation() {
             {/* Cart Icon - Desktop */}
             <WishlistSheet />
             <button
-              className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className="relative p-2 rounded-full transition-colors"
               aria-label="Open cart"
               onClick={() => setCartOpen(true)}
             >
               <ShoppingCart className="h-6 w-6" />
               {isMounted && totalCartItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center border border-white shadow">
+                <span className="absolute -top-1 -right-1 text-white text-xs font-bold rounded-full bg-red-700 px-1.5 py-0.5 min-w-[1.25rem] text-center border border-white shadow">
                   {totalCartItems}
                 </span>
               )}
@@ -222,7 +222,7 @@ export function Navigation() {
             ) : (
               <div className="flex items-center space-x-2">
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors">
+                  <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700  transition-colors">
                     <UserCircle className="h-4 w-4" />
                     <span>{t('account')}</span>
                     <ChevronDown className="h-4 w-4" />
@@ -240,7 +240,7 @@ export function Navigation() {
               </div>
             )}
           </div>
-          <Button asChild>
+          <Button asChild className="">
               <Link href="/quote">{t('getQuote')}</Link>
             </Button>
           </div>
@@ -249,7 +249,7 @@ export function Navigation() {
           <div className="hidden md:flex lg:hidden items-center space-x-6">
             {/* Tablet Search Icon */}
             <button
-              className="p-2 text-gray-700 hover:text-blue-600 transition-colors"
+              className="p-2 text-gray-700 transition-colors"
               aria-label="Open search"
               onClick={() => setSearchbarOpen(!searchbarOpen)}
             >
@@ -265,7 +265,7 @@ export function Navigation() {
             
             {/* Repairs Dropdown - Compact */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors text-sm">
+              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-green-700 transition-colors text-sm">
                 <Wrench className="h-4 w-4" />
                 <span>{t('repairs')}</span>
                 <ChevronDown className="h-3 w-3" />
@@ -293,7 +293,7 @@ export function Navigation() {
 
             {/* Accessories Dropdown - Compact */}
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors text-sm">
+              <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors text-sm">
                 <Package className="h-4 w-4" />
                 <span>{t('accessories')}</span>
                 <ChevronDown className="h-3 w-3" />
@@ -366,7 +366,7 @@ export function Navigation() {
             ) : (
               <div className="flex items-center space-x-2">
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors">
+                  <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors">
                     <UserCircle className="h-4 w-4" />
                     <span>{t('account')}</span>
                     <ChevronDown className="h-4 w-4" />
@@ -392,7 +392,7 @@ export function Navigation() {
             >
               <ShoppingCart className="h-6 w-6" />
               {isMounted && totalCartItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center border border-white shadow">
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center border border-white shadow">
                   {totalCartItems}
                 </span>
               )}
@@ -410,7 +410,7 @@ export function Navigation() {
             >
               <ShoppingCart className="h-6 w-6" />
               {isMounted && totalCartItems > 0 && (
-                <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center border border-white shadow">
+                <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5 min-w-[1.25rem] text-center border border-white shadow">
                   {totalCartItems}
                 </span>
               )}
@@ -590,7 +590,7 @@ export function Navigation() {
               >
                 {t('contact')}
               </Link>
-              <Button asChild className="w-fit" onClick={() => setIsOpen(false)}>
+              <Button asChild className="w-fit bg-geen-700" onClick={() => setIsOpen(false)}>
                 <Link href="/quote">{t('getQuote')}</Link>
               </Button>
             </div>

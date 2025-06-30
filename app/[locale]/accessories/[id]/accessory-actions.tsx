@@ -28,7 +28,7 @@ export function AccessoryDetailClientActions({ accessory, isInStock }: { accesso
           }}
         >
           <ShoppingCart className="h-5 w-5 mr-2" />
-          {isInStock ? t('accessories.cart.addToCart', { defaultValue: 'Add to Cart' }) : t('accessories.cart.outOfStock', { defaultValue: 'Out of Stock' })}
+          
         </Button>
         <Button
           variant="outline"

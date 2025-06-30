@@ -40,12 +40,12 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
             </Link>
           </Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {accessories.map((accessory) => (
-            <Card key={accessory.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+            <Card key={accessory.id} className="hover:shadow-lg transition-shadow gap-0 cursor-pointer pt-0 relative">
               <Link href={`/accessories/${accessory.id}`} className="block group">
-                <CardHeader className="pb-4">
-                  <div className="relative w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg overflow-hidden group-hover:ring-2 group-hover:ring-blue-400 transition">
+                <CardHeader className="p-0">
+                  <div className="relative w-full  bg-gray-200 flex items-center justify-center rounded-t-lg overflow-hidden transition">
                     <FallbackImage
                       src={accessory.imageUrl || ''}
                       alt={accessory.name}
@@ -53,22 +53,20 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
                       fallbackContent={<div className="w-full h-full flex flex-col items-center justify-center text-gray-400"><span className="text-4xl">🧩</span><p className="text-sm mt-2">{translations.productImage}</p></div>}
                     />
                   </div>
-                  <div className="flex items-center justify-between mt-2">
-                    <Badge variant="secondary">
-                      {translations.inStock.replace("{count}", String(accessory.inStock))}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-lg mt-2 group-hover:underline">{accessory.name}</CardTitle>
-                  <CardDescription className="text-sm line-clamp-2">
-                    {accessory.description}
-                  </CardDescription>
-                  <div className="text-xs text-gray-500 mt-1">
-                    SKU: {generateSkuFromPartName(accessory.name)}
-                  </div>
+                 
                 </CardHeader>
               </Link>
               <CardContent>
-                <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between">
+                    <Badge variant="secondary" className="absolute top-2 left-2">
+                      {translations.inStock.replace("{count}", String(accessory.inStock))}
+                    </Badge>
+                  </div>
+                  <CardTitle className="text-sm md:text-lg xl:text-xl my-2 group-hover:underline">{accessory.name}</CardTitle>
+                  <div className="text-xs text-gray-500 mt-2">
+                    SKU: {generateSkuFromPartName(accessory.name)}
+                  </div>
+                <div className="flex items-center justify-between my-4">
                   <span className="text-2xl font-bold text-green-600">
                     {formatCurrency(accessory.price, "EUR")}
                   </span>
@@ -77,7 +75,7 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
                   <Button
                     variant="default"
                     size="sm"
-                    className="flex-1 min-w-[0] px-3 truncate"
+                    className="flex-1 min-w-[0] px-3 truncate bg-green-700 hover:bg-green-600"
                     disabled={accessory.inStock === 0}
                     title={translations.addToCart}
                     onClick={() => addToCart({

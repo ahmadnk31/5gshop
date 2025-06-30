@@ -168,7 +168,7 @@ export default function PartDetailPage() {
               )}
             </div>
             {/* Action buttons */}
-            <div className="flex space-x-3 flex-wrap">
+            <div className="flex gap-4 flex-wrap">
               
               <Button variant="outline" size="sm" className="flex-1">
                 <Shield className="h-4 w-4 mr-2 text-green-600" />
@@ -214,7 +214,7 @@ export default function PartDetailPage() {
                   </Badge>
                 )}
               </div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{part.name}</h1>
+              <h1 className="text-lg md:text-2xl xl:text-3xl font-bold text-gray-900 mb-2">{part.name}</h1>
               <div className="flex items-center gap-4 text-sm text-gray-600">
                 <span><strong>{t('sku')}:</strong> {part.sku}</span>
                 <span><strong>{t('supplier')}:</strong> {part.supplier}</span>

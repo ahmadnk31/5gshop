@@ -119,6 +119,23 @@
       "learnMore": "Meer informatie"
     }
   },
+  "homepageHero": {
+    "brandTitle": "Alles voor je apparaat op één plek",
+    "brandSubtitle": "Accessoires, onderdelen en reparaties voor elk apparaat.",
+    "brandCta": "Nu winkelen",
+    "accessoryTitle": "Shop Accessoires",
+    "accessorySubtitle": "Vind het perfecte accessoire voor je telefoon of tablet.",
+    "accessoryCta": "Bekijk accessoires",
+    "partTitle": "Vind vervangende onderdelen",
+    "partSubtitle": "Hoogwaardige onderdelen voor alle grote merken.",
+    "partCta": "Bekijk onderdelen",
+    "repairTitle": "Boek een reparatie",
+    "repairSubtitle": "Snelle, gecertificeerde reparaties door experts.",
+    "repairCta": "Boek nu",
+    "uspTitle": "Waarom kiezen voor ons?",
+    "uspSubtitle": "Gratis verzending, garantie en topservice.",
+    "uspCta": "Meer informatie"
+  },
   "navigation": {
     "home": "Home",
     "repairs": "Reparaties",
@@ -1217,7 +1234,21 @@
     "addToCart": "Toevoegen aan winkelwagen",
     "removeFromWishlist": "Verwijderen van verlanglijst",
     "outOfStock": "Niet op voorraad",
-    "lowStock": "Lage voorraad"
+    "lowStock": "Lage voorraad",
+    "qualityOptions":{
+      "oem":"OEM",
+      "incell":"Incell",
+      "aftermarket":"Aftermarket",
+      "compatible":"Compatibel",
+      "generic":"Generiek",
+      "high":"Hoge kwaliteit",
+      "original":"Origineel",
+      "premium":"Premium",
+      "refurbished":"Gereviseerd",
+      "standard":"Standaard kwaliteit",
+      "unknown":"Onbekend",
+      "used":"Gebruikt"
+    }
   },
   "orderEmails": {
     "confirmation": {

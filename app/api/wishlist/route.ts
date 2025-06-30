@@ -23,6 +23,7 @@ export async function GET() {
             imageUrl: true,
             inStock: true,
             minStock: true,
+            quality:true
           },
         },
         accessory: {

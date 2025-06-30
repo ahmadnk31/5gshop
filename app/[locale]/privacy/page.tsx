@@ -20,10 +20,25 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useCookieConsent } from "@/components/cookie-consent-context";
+import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react';
 
 export default function PrivacyPolicyPage() {
   const lastUpdated = "June 22, 2025";
   const { consent, openSettings } = useCookieConsent();
+  const [loading, setLoading] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Skeleton className="w-1/2 h-10 mb-6" />
+        <Skeleton className="w-1/3 h-8 mb-4" />
+        {[...Array(3)].map((_, i) => (
+          <Skeleton key={i} className="h-32 w-full mb-4" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen">

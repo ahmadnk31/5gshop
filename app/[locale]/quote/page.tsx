@@ -42,6 +42,7 @@ import { useGoogleAnalytics } from "@/components/google-analytics";
 import { QuoteRequestTracker, PageSectionTracker } from "@/components/analytics-components";
 import { useTranslations } from 'next-intl';
 import { useSession } from "next-auth/react";
+import { Skeleton } from '@/components/ui/skeleton';
 
 function QuotePageContent() {
 	const searchParams = useSearchParams();
@@ -267,29 +268,21 @@ useEffect(() => {
 		<div className="flex flex-col min-h-screen">
 			<QuoteRequestTracker deviceType={formData.deviceType || 'unknown'} repairType={formData.service || formData.part || 'general_repair'} />
 			{/* Hero Section */}
-			<section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-8 sm:py-12 lg:py-16">
-				<PageSectionTracker sectionName="quote-hero" />
-				<div className="container mx-auto px-4 text-center">
-					<h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
-						{t('hero.title')}
+			<section
+				className="relative flex items-center justify-center min-h-[220px] sm:min-h-[300px] md:min-h-[350px] lg:min-h-[400px] animate-gradient-x bg-[length:200%_200%] px-4"
+				style={{
+					background: 'linear-gradient(120deg, #16A34A 0%, #2563EB 50%, #14B8A6 100%)',
+					backgroundSize: '200% 200%',
+					animation: 'gradient-x 8s ease-in-out infinite',
+				}}
+			>
+				<div className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto py-8 sm:py-12">
+					<h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-3 sm:mb-4 drop-shadow-lg">
+						{t('hero.title', { defaultValue: 'Get a Free Quote' })}
 					</h1>
-					<p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-						{t('hero.description')}
+					<p className="text-base sm:text-lg md:text-2xl text-white/90 mb-0 max-w-xl mx-auto">
+						{t('hero.subtitle', { defaultValue: 'Tell us about your device and we\'ll send you a quote.' })}
 					</p>
-					<div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 lg:gap-8 text-sm sm:text-base md:text-lg">
-						<div className="flex items-center">
-							<CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-2" />
-							<span>{t('hero.benefits.freeDiagnostic')}</span>
-						</div>
-						<div className="flex items-center">
-							<Clock className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-2" />
-							<span>{t('hero.benefits.fastResponse')}</span>
-						</div>
-						<div className="flex items-center">
-							<DollarSign className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 mr-2" />
-							<span>{t('hero.benefits.transparentPricing')}</span>
-						</div>
-					</div>
 				</div>
 			</section>
 
@@ -824,7 +817,16 @@ useEffect(() => {
 
 export default function QuotePage() {
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
+		<Suspense fallback={
+			<div className="container mx-auto px-4 py-8">
+				<Skeleton className="w-1/2 h-8 mb-4" />
+				<Skeleton className="w-1/3 h-6 mb-6" />
+				{[...Array(6)].map((_, i) => (
+					<Skeleton key={i} className="w-full h-12 mb-4" />
+				))}
+				<Skeleton className="w-1/3 h-10 mt-8" />
+			</div>
+		}>
 			<QuotePageContent />
 		</Suspense>
 	);

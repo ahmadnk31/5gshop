@@ -16,9 +16,12 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from 'next-intl';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react';
 
 export default function AboutPage() {
   const t = useTranslations('about');
+  const [loading, setLoading] = useState(false);
 
   const teamMembers = [
     {
@@ -117,10 +120,22 @@ export default function AboutPage() {
     }
   ];
 
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Skeleton className="w-1/2 h-10 mb-6" />
+        <Skeleton className="w-1/3 h-8 mb-4" />
+        {[...Array(3)].map((_, i) => (
+          <Skeleton key={i} className="h-32 w-full mb-4" />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-20">
+      <section className="bg-gradient-to-r from-primary to-secondary text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             {t('hero.title')}
@@ -321,7 +336,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-indigo-600 text-white py-16">
+      <section className="bg-secondary text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">{t('cta.title')}</h2>
           <p className="text-xl mb-8">{t('cta.subtitle')}</p>

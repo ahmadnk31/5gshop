@@ -11,6 +11,7 @@ import { FallbackImage } from '@/components/ui/fallback-image';
 import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { Link } from '@/i18n/navigation';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface WishlistItem {
   id: string;
@@ -22,6 +23,7 @@ interface WishlistItem {
     inStock: number;
     minStock: number;
     category?: string;
+    quality?: string;
   };
   accessory?: {
     id: string;
@@ -31,6 +33,7 @@ interface WishlistItem {
     inStock: number;
     minStock: number;
     category: string;
+    quality?: string;
   };
   createdAt: string;
 }
@@ -105,8 +108,17 @@ export default function WishlistPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-12">
-        <div className="text-center">{t('loading')}</div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="p-2">
+              <Skeleton className="w-full aspect-square mb-3" />
+              <Skeleton className="w-2/3 h-5 mb-2" />
+              <Skeleton className="w-1/2 h-4" />
+              <Skeleton className="w-full h-8 mt-2" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
@@ -133,90 +145,179 @@ export default function WishlistPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
           {wishlistItems.map((item) => {
-            const product = item.part || item.accessory;
-            const itemType = item.part ? 'part' : 'accessory';
-            const isInStock = product && product.inStock > 0;
-            const isLowStock = product && product.inStock <= product.minStock;
-
-            if (!product) return null;
-
-            return (
-              <Card key={`${itemType}-${product.id}`} className="hover:shadow-lg transition-shadow">
-                <CardHeader className="p-0">
-                  <div className="relative">
+            if (item.part) {
+              const product = item.part;
+              const itemType = 'part';
+              const isInStock = product.inStock > 0;
+              const isLowStock = product.inStock <= product.minStock;
+              return (
+                <Card key={`part-${product.id}`} className="hover:shadow-lg py-0 gap-0 transition-shadow">
+                  <CardHeader className="p-0">
+                    <div className="relative">
+                      <Link href={`/${itemType}s/${product.id}`}>
+                        <div className="aspect-square bg-gray-100 relative overflow-hidden">
+                          {product.imageUrl ? (
+                            <FallbackImage
+                              src={product.imageUrl}
+                              alt={product.name}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                              fallbackContent={<div className="w-full h-full flex items-center justify-center text-4xl">📦</div>}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-4xl">📦</div>
+                          )}
+                        </div>
+                      </Link>
+                      {/* Stock badges */}
+                      <div className="absolute top-2 left-2">
+                        {!isInStock && (
+                          <Badge variant="destructive" className="text-xs">
+                            {t('outOfStock')}
+                          </Badge>
+                        )}
+                        {isLowStock && isInStock && (
+                          <Badge variant="outline" className="text-xs border-orange-200 text-orange-700">
+                            {t('lowStock')}
+                          </Badge>
+                        )}
+                        {/* Quality badge */}
+                        {product.quality && (
+                          <div className="">
+                            <Badge variant="secondary" className="text-xs">
+                              {t(`qualityOptions.${product.quality.toLowerCase()}`) || product.quality}
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                      {/* Remove from wishlist button */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                        onClick={() => removeFromWishlist(itemType, product.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-4">
                     <Link href={`/${itemType}s/${product.id}`}>
-                      <div className="aspect-square bg-gray-100 relative overflow-hidden">
-                        {product.imageUrl ? (
-                          <FallbackImage
-                            src={product.imageUrl}
-                            alt={product.name}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                            fallbackContent={<div className="w-full h-full flex items-center justify-center text-4xl">📦</div>}
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-4xl">📦</div>
+                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.name}</h3>
+                      <div className="flex items-center mb-3">
+                        <span className="text-xl font-bold text-blue-600">
+                          {formatCurrency(product.cost, "EUR")}
+                        </span>
+                        {product.category && (
+                          <Badge variant="secondary" className="text-xs ml-2">
+                            {product.category}
+                          </Badge>
                         )}
                       </div>
                     </Link>
-                    
-                    {/* Stock badges */}
-                    <div className="absolute top-2 left-2">
-                      {!isInStock && (
-                        <Badge variant="destructive" className="text-xs">
-                          {t('outOfStock')}
-                        </Badge>
-                      )}
-                      {isLowStock && isInStock && (
-                        <Badge variant="outline" className="text-xs border-orange-200 text-orange-700">
-                          {t('lowStock')}
-                        </Badge>
-                      )}
-                    </div>
-
-                    {/* Remove from wishlist button */}
                     <Button
-                      variant="ghost"
+                      variant="default"
                       size="sm"
-                      className="absolute top-2 right-2 bg-white/80 hover:bg-white"
-                      onClick={() => removeFromWishlist(itemType, product.id)}
+                      className="px-3 w-full"
+                      disabled={product.inStock === 0}
+                      onClick={() => addToCartFromWishlist(item)}
+                      title={t('addToCart')}
                     >
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <ShoppingCart className="h-4 w-4" />
                     </Button>
-                  </div>
-                </CardHeader>
-
-                <CardContent className="p-4">
-                  <Link href={`/${itemType}s/${product.id}`}>
-                    <h3 className="font-semibold text-sm mb-2 line-clamp-2 hover:text-blue-600">
-                      {product.name}
-                    </h3>
-                  </Link>
-                  
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-lg font-bold text-blue-600">
-                      {formatCurrency(item.part ? item.part.cost : item.accessory!.price, "EUR")}
-                    </span>
-                    <Badge variant="secondary" className="text-xs">
-                      {product.category}
-                    </Badge>
-                  </div>
-
-                  <Button
-                    size="sm"
-                    className="w-full"
-                    disabled={!isInStock}
-                    onClick={() => addToCartFromWishlist(item)}
-                  >
-                    <ShoppingCart className="h-4 w-4 mr-2" />
-                    {isInStock ? t('addToCart') : t('outOfStock')}
-                  </Button>
-                </CardContent>
-              </Card>
-            );
+                  </CardContent>
+                </Card>
+              );
+            } else if (item.accessory) {
+              const product = item.accessory;
+              const itemType = 'accessory';
+              const isInStock = product.inStock > 0;
+              const isLowStock = product.inStock <= product.minStock;
+              return (
+                <Card key={`accessory-${product.id}`} className="hover:shadow-lg py-0 gap-0 transition-shadow">
+                  <CardHeader className="p-0">
+                    <div className="relative">
+                      <Link href={`/${itemType}s/${product.id}`}>
+                        <div className="aspect-square bg-gray-100 relative overflow-hidden">
+                          {product.imageUrl ? (
+                            <FallbackImage
+                              src={product.imageUrl}
+                              alt={product.name}
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                              fallbackContent={<div className="w-full h-full flex items-center justify-center text-4xl">📦</div>}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-4xl">📦</div>
+                          )}
+                        </div>
+                      </Link>
+                      {/* Stock badges */}
+                      <div className="absolute top-2 left-2">
+                        {!isInStock && (
+                          <Badge variant="destructive" className="text-xs">
+                            {t('outOfStock')}
+                          </Badge>
+                        )}
+                        {isLowStock && isInStock && (
+                          <Badge variant="outline" className="text-xs border-orange-200 text-orange-700">
+                            {t('lowStock')}
+                          </Badge>
+                        )}
+                        {/* Quality badge */}
+                        {typeof product.quality === 'string' && product.quality && (
+                          <div className="mt-8">
+                            <Badge variant="secondary" className="text-xs">
+                              {t(`qualityOptions.${product.quality.toLowerCase()}`) || product.quality}
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+                      {/* Remove from wishlist button */}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                        onClick={() => removeFromWishlist(itemType, product.id)}
+                      >
+                        <Trash2 className="h-4 w-4 text-red-500" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <Link href={`/${itemType}s/${product.id}`}>
+                      <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.name}</h3>
+                      <div className="flex items-center mb-3">
+                        <span className="text-xl font-bold text-blue-600">
+                          {formatCurrency(product.price, "EUR")}
+                        </span>
+                        {product.category && (
+                          <Badge variant="secondary" className="text-xs ml-2">
+                            {product.category}
+                          </Badge>
+                        )}
+                      </div>
+                    </Link>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      className="px-3 w-full"
+                      disabled={product.inStock === 0}
+                      onClick={() => addToCartFromWishlist(item)}
+                      title={t('addToCart')}
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            } else {
+              return null;
+            }
           })}
         </div>
       )}

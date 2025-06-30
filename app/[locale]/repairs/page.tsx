@@ -15,6 +15,7 @@ import {
   Star,
   Award
 } from "lucide-react";
+import { Skeleton } from '@/components/ui/skeleton';
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -145,10 +146,25 @@ function RepairsPageContent() {
     return deviceTypeMap[deviceType];
   };
 
+  if (loading) return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className="p-2">
+            <Skeleton className="w-full aspect-square mb-3" />
+            <Skeleton className="w-2/3 h-5 mb-2" />
+            <Skeleton className="w-1/2 h-4" />
+            <Skeleton className="w-full h-8 mt-2" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-6 sm:py-10 lg:py-16">
+      <section className="bg-gradient-to-r from-green-600 to-blue-800 text-white py-6 sm:py-10 lg:py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-3 sm:mb-6">
             {t('hero.title')}

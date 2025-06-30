@@ -51,6 +51,8 @@ export default function AccessoriesPage() {
   const [selectedCategory, setSelectedCategory] = useState<AccessoryCategory | null>(
     (searchParams.get('category') as AccessoryCategory) || null
   );
+  const [searchResults, setSearchResults] = useState<Accessory[] | null>(null);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   // Load accessories on component mount
   useEffect(() => {
@@ -68,6 +70,31 @@ export default function AccessoriesPage() {
 
     loadAccessories();
   }, []);
+
+  // Fetch smarter search results from backend API
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (!searchTerm) {
+        setSearchResults(null);
+        return;
+      }
+      setSearchLoading(true);
+      try {
+        const res = await fetch(`/api/search/accessories?q=${encodeURIComponent(searchTerm)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(data);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (err) {
+        setSearchResults([]);
+      } finally {
+        setSearchLoading(false);
+      }
+    };
+    fetchSearchResults();
+  }, [searchTerm]);
 
   // Update URL when filters change
   const updateURL = (category: AccessoryCategory | null, search: string) => {
@@ -99,15 +126,15 @@ export default function AccessoriesPage() {
   };
 
   // Filter accessories based on current filters
-  const filteredAccessories = allAccessories.filter(accessory => {
-    const matchesCategory = !selectedCategory || accessory.category === selectedCategory;
-    const matchesSearch = !searchTerm || 
-      accessory.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      accessory.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      accessory.description?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    return matchesCategory && matchesSearch && accessory.inStock > 0;
-  });
+  const filteredAccessories = searchTerm && searchResults !== null
+    ? (selectedCategory
+        ? searchResults.filter((a) => a.category === selectedCategory && a.inStock > 0)
+        : searchResults.filter((a) => a.inStock > 0)
+      )
+    : allAccessories.filter(accessory => {
+        const matchesCategory = !selectedCategory || accessory.category === selectedCategory;
+        return matchesCategory && accessory.inStock > 0;
+      });
 
   // Group accessories by category for statistics
   const categoryCounts = allAccessories.reduce((acc, accessory) => {

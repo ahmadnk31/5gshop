@@ -39,6 +39,7 @@ import { FallbackImage } from './ui/fallback-image'
 import { Link } from '@/i18n/navigation'
 import { formatCurrency } from '@/lib/utils'
 import { PartActionButtons } from '@/app/[locale]/parts/[id]/part-action-buttons'
+import { Skeleton } from '@/components/ui/skeleton';
 
 // Brand logo mapping - image URLs for brand logos
 const brandLogos: Record<string, { imageUrl: string; color: string; bgColor: string }> = {
@@ -94,8 +95,8 @@ const brandLogos: Record<string, { imageUrl: string; color: string; bgColor: str
   },
   'HTC': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3e/HTC_logo.svg', 
-    color: 'text-green-600', 
-    bgColor: 'bg-green-50' 
+    color: 'text-primary', 
+    bgColor: 'bg-primary-50' 
   },
   'BlackBerry': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/82/BlackBerry_logo.svg', 
@@ -109,8 +110,8 @@ const brandLogos: Record<string, { imageUrl: string; color: string; bgColor: str
   },
   'Acer': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Acer_logo.svg', 
-    color: 'text-green-600', 
-    bgColor: 'bg-green-50' 
+    color: 'text-primary-600', 
+    bgColor: 'bg-primary-50' 
   },
   'Dell': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Dell_logo.svg', 
@@ -134,8 +135,8 @@ const brandLogos: Record<string, { imageUrl: string; color: string; bgColor: str
   },
   'Razer': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Razer_logo.svg', 
-    color: 'text-green-500', 
-    bgColor: 'bg-green-50' 
+    color: 'text-primary-500', 
+    bgColor: 'bg-primary-50' 
   },
   'Alienware': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/34/Alienware_logo.svg', 
@@ -174,8 +175,8 @@ const brandLogos: Record<string, { imageUrl: string; color: string; bgColor: str
   },
   'Xbox': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/f/f9/Xbox_one_logo.svg', 
-    color: 'text-green-600', 
-    bgColor: 'bg-green-50' 
+    color: 'text-primary-600', 
+    bgColor: 'bg-primary-50' 
   },
   'Steam': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg', 
@@ -219,8 +220,8 @@ const brandLogos: Record<string, { imageUrl: string; color: string; bgColor: str
   },
   'Fujifilm': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Fujifilm_logo.svg', 
-    color: 'text-green-600', 
-    bgColor: 'bg-green-50' 
+    color: 'text-primary-600', 
+    bgColor: 'bg-primary-50' 
   },
   'Panasonic': { 
     imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Panasonic_logo.svg', 
@@ -458,19 +459,6 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
       setBrands(brandsData)
       setServices(servicesData)
       setCurrentLevel('brands')
-      
-      // Scroll to show the results after a brief delay
-      setTimeout(() => {
-        const browserSection = document.getElementById('device-browser');
-        if (browserSection) {
-          const navHeight = 80; // Account for sticky navigation
-          const elementTop = browserSection.offsetTop - navHeight;
-          window.scrollTo({
-            top: elementTop,
-            behavior: 'smooth'
-          });
-        }
-      }, 100);
     } catch (error) {
       console.error('Error loading brands:', error)
     } finally {
@@ -480,38 +468,17 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
 
   const selectBrand = async (brand: string) => {
     if (!selectedType) return
-    
     setLoading(true)
     try {
       setSelectedBrand(brand)
-      modelsPagination.goToFirstPage(); // Reset pagination when selecting new brand
-      
-      // Load devices with images for this brand FIRST
+      modelsPagination.goToFirstPage();
       await loadDevicesForBrand(selectedType as DeviceType, brand, order);
-      
-      // Then load and sort models using the device data
       const modelsData = await getModelsByBrand(selectedType as DeviceType, brand)
-      // Sort models according to current order (now devices are loaded)
       const sortedModels = sortModelsArray(modelsData, order)
       setModels(sortedModels)
-      
-      // Load brand-specific services
       const servicesData = await getRepairServicesForDevice(selectedType as DeviceType, brand)
       setServices(servicesData)
       setCurrentLevel('models')
-      
-      // Scroll to keep the user in context
-      setTimeout(() => {
-        const browserSection = document.getElementById('device-browser');
-        if (browserSection) {
-          const navHeight = 80;
-          const elementTop = browserSection.offsetTop - navHeight;
-          window.scrollTo({
-            top: elementTop,
-            behavior: 'smooth'
-          });
-        }
-      }, 100);
     } catch (error) {
       console.error('Error loading models:', error)
     } finally {
@@ -683,16 +650,40 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
     return items.slice(pagination.startIndex, pagination.endIndex + 1);
   };
 
+  // Add this useEffect after all state and function declarations
+  useEffect(() => {
+    if (currentLevel === 'brands' || currentLevel === 'models' || currentLevel === 'parts') {
+      const browserSection = document.getElementById('device-browser');
+      if (browserSection) {
+        const navHeight = 80;
+        const elementTop = browserSection.offsetTop - navHeight;
+        window.scrollTo({
+          top: elementTop,
+          behavior: 'smooth',
+        });
+      }
+    }
+  }, [currentLevel]);
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="p-2">
+              <Skeleton className="w-full aspect-square mb-3" />
+              <Skeleton className="w-2/3 h-5 mb-2" />
+              <Skeleton className="w-1/2 h-4" />
+              <Skeleton className="w-full h-8 mt-2" />
+            </div>
+          ))}
+        </div>
       </div>
-    )
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <section id="device-browser">
       {/* Filter Indicator */}
       {searchParams.get('type') && selectedType && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -773,10 +764,9 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                     <Link href={`/parts/${part.id}`} className="hover:underline">
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
-                        <Link href={`/parts/${part.id}`} className="flex items-center hover:underline">
-                          <Package className="h-5 w-5 mr-2 text-blue-600" />
+                        
                           {part.name}
-                        </Link>
+                        
                         <Badge
                           variant={part.inStock > 0 ? "default" : "destructive"}
                           className={
@@ -803,7 +793,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                       <Link href={`/parts/${part.id}`} className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>{t('parts.stock')}:</span>
-                          <span className={part.inStock <= part.minStock ? 'text-red-600' : 'text-green-600'}>
+                          <span className={part.inStock <= part.minStock ? 'text-red-600' : ''}>
                             {part.inStock} {t('parts.units')}
                           </span>
                         </div>
@@ -931,7 +921,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
         <>
       {/* Breadcrumb Navigation */}
       <nav
-        className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-gray-600"
+        className="flex flex-wrap mb-4 items-center gap-x-2 gap-y-1 text-sm text-gray-600"
         aria-label="Breadcrumb"
       >
         {getBreadcrumbs().map((crumb, index) => (
@@ -1315,7 +1305,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                         <div className="space-y-2">
                           <div className="flex justify-between text-sm">
                             <span>{t('parts.stock')}:</span>
-                            <span className={part.inStock <= part.minStock ? 'text-red-600' : 'text-green-600'}>
+                            <span className={part.inStock <= part.minStock ? 'text-red-600' : ''}>
                               {part.inStock} {t('parts.units')}
                             </span>
                           </div>
@@ -1432,7 +1422,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
       )}
         </>
       )}
-    </div>
+    </section>
   )
 }
 

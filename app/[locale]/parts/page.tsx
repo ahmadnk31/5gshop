@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { ShoppingCart, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { PartActionButtons } from './[id]/part-action-buttons';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function PartsPage() {
   const t = useTranslations('parts');
@@ -65,7 +66,20 @@ export default function PartsPage() {
   // Get paginated parts
   const paginatedParts = parts.slice(pagination.startIndex, pagination.endIndex + 1);
 
-  if (loading) return <div className="py-12 text-center">{t('loading')}</div>;
+  if (loading) return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className="p-2">
+            <Skeleton className="w-full aspect-square mb-3" />
+            <Skeleton className="w-2/3 h-5 mb-2" />
+            <Skeleton className="w-1/2 h-4" />
+            <Skeleton className="w-full h-8 mt-2" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
   if (!parts.length) return <div className="py-12 text-center text-red-500">{t('notFound')}</div>;
 
   return (

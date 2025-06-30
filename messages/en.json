@@ -1,4 +1,21 @@
 {
+  "homepageHero": {
+    "brandTitle": "All Your Device Needs in One Place",
+    "brandSubtitle": "Accessories, parts, and repairs for every device.",
+    "brandCta": "Shop Now",
+    "accessoryTitle": "Shop Accessories",
+    "accessorySubtitle": "Find the perfect accessory for your phone or tablet.",
+    "accessoryCta": "See Accessories",
+    "partTitle": "Find Replacement Parts",
+    "partSubtitle": "High-quality parts for all major brands.",
+    "partCta": "Browse Parts",
+    "repairTitle": "Book a Repair",
+    "repairSubtitle": "Fast, certified repairs by experts.",
+    "repairCta": "Book Now",
+    "uspTitle": "Why Choose Us?",
+    "uspSubtitle": "Free shipping, warranty, and top-rated service.",
+    "uspCta": "Learn More"
+  },
   "homepage": {
     "parts": {
       "addToCart": "Add to Cart",
@@ -1233,7 +1250,21 @@
     "addToCart": "Add to Cart",
     "removeFromWishlist": "Remove from Wishlist",
     "outOfStock": "Out of Stock",
-    "lowStock": "Low Stock"
+    "lowStock": "Low Stock",
+    "qualityOptions":{
+      "oem":"OEM",
+      "original":"Original",
+      "aftermarket":"Aftermarket",
+      "premium":"Premium",
+      "compatible":"Compatible",
+      "incell":"Incell",
+      "generic":"Generic",
+      "refurbished":"Refurbished",
+      "high":"High Quality",
+      "standard":"Standard Quality",
+      "unknown":"Unknown",
+      "used":"Used"
+    }
   },
   "orderEmails": {
     "confirmation": {

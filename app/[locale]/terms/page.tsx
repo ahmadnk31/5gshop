@@ -14,14 +14,29 @@ import {
   XCircle
 } from "lucide-react";
 import Link from "next/link";
+import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react';
 
 export default function TermsOfServicePage() {
   const lastUpdated = "June 22, 2025";
+  const [loading, setLoading] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Skeleton className="w-1/2 h-10 mb-6" />
+        <Skeleton className="w-1/3 h-8 mb-4" />
+        {[...Array(3)].map((_, i) => (
+          <Skeleton key={i} className="h-32 w-full mb-4" />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-16">
+      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center mb-6">
             <Scale className="h-12 w-12 mr-4" />

@@ -13,13 +13,40 @@ import {
 import { TrackablePhoneLink, PageSectionTracker } from "@/components/analytics-components";
 import { useTranslations } from 'next-intl';
 import ContactMapClientWrapper from "./contact-map-client-wrapper";
+import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react';
 
 export default function ContactPage() {
   const t = useTranslations('contact');
+  const [loading, setLoading] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Skeleton className="w-1/2 h-10 mb-6" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-40 w-full mb-4" />
+          ))}
+        </div>
+        <div className="grid lg:grid-cols-2 gap-12 mb-12">
+          <Skeleton className="h-96 w-full mb-4" />
+          <Skeleton className="h-96 w-full mb-4" />
+        </div>
+        <Skeleton className="w-1/3 h-8 mb-4" />
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {[...Array(2)].map((_, i) => (
+            <Skeleton key={i} className="h-32 w-full mb-4" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-16">
+      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             {t('hero.title')}

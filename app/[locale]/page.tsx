@@ -11,23 +11,85 @@ import { getRepairServices } from "@/app/actions/repair-services-actions";
 import { getDeviceTypes } from "@/app/actions/device-catalog-actions";
 import { getHomepageParts } from "@/app/actions/homepage-parts";
 import { Accessory, RepairService, Part } from "@/lib/types";
+import { getAllDevices } from '@/app/actions/device-management-actions';
 
 import { PageSectionTracker, ScrollDepthTracker } from "@/components/analytics-components";
-import { HomePageCTAs } from "@/components/homepage-ctas";
 import { getTranslations } from 'next-intl/server';
 import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/utils";
+import HomepageHeroCarouselClient from '@/components/homepage-hero-carousel-client';
 
+function shuffleArray(array: any[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+async function HomepageHeroCarousel() {
+  const t = await getTranslations('homepageHero');
+  // Use fixed slides for best practice
+  const slides = [
+    {
+      type: 'brand',
+      id: 'brand',
+      name: t('brandTitle'),
+      subtitle: t('brandSubtitle'),
+      imageUrl: '/hero-lifestyle.jpg',
+      link: '/accessories',
+      cta: t('brandCta'),
+    },
+    {
+      type: 'accessory',
+      id: 'accessory',
+      name: t('accessoryTitle'),
+      subtitle: t('accessorySubtitle'),
+      imageUrl: '/hero-accessories.jpg',
+      link: '/accessories',
+      cta: t('accessoryCta'),
+    },
+    {
+      type: 'part',
+      id: 'part',
+      name: t('partTitle'),
+      subtitle: t('partSubtitle'),
+      imageUrl: '/hero-parts.jpg',
+      link: '/parts',
+      cta: t('partCta'),
+    },
+    {
+      type: 'repair',
+      id: 'repair',
+      name: t('repairTitle'),
+      subtitle: t('repairSubtitle'),
+      imageUrl: '/hero-repairs.jpg',
+      link: '/repairs',
+      cta: t('repairCta'),
+    },
+    {
+      type: 'usp',
+      id: 'usp',
+      name: t('uspTitle'),
+      subtitle: t('uspSubtitle'),
+      imageUrl: '/hero-usp.png',
+      link: '/about',
+      cta: t('uspCta'),
+    },
+  ];
+  return <HomepageHeroCarouselClient items={slides} />;
+}
 
 export default async function Home() {
   const t = await getTranslations('homepage');
 
   // Fetch featured data
-  const [accessories, services, deviceTypes, homepageParts] = await Promise.all([
+  const [accessories, services, deviceTypes, homepageParts, allDevices] = await Promise.all([
     getAccessories(),
     getRepairServices(),
     getDeviceTypes(),
-    getHomepageParts()
+    getHomepageParts(),
+    getAllDevices()
   ]);
 
   // Get featured accessories (top 6 by stock)
@@ -118,22 +180,12 @@ export default async function Home() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-[var(--background)] ">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-10 sm:py-16 lg:py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
-            {t('hero.title')}
-          </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-            {t('hero.subtitle')}
-          </p>
-          <HomePageCTAs />
-        </div>
-      </section>
+      <HomepageHeroCarousel />
 
       {/* Services Overview */}
-      <section className="py-16 bg-gray-50" data-section="services_overview">
+      <section className="py-16 bg-[var(--background)]" data-section="services_overview">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">{t('services.title')}</h2>
           <PageSectionTracker sectionName="services_overview" />
@@ -167,7 +219,7 @@ export default async function Home() {
                     {t('services.repairs.features.softwareTroubleshooting')}
                   </li>
                 </ul>
-                <Button asChild className="w-full">
+                <Button asChild className="w-full bg-green-700 hover:bg-green-600">
                   <Link href="/repairs">{t('services.repairs.learnMore')}</Link>
                 </Button>
               </CardContent>
@@ -226,7 +278,7 @@ export default async function Home() {
       />
 
       {/* Popular Repair Services */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-[var(--background)]">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-lg md:text-3xl text-truncate font-bold">{t('popularServices.title')}</h2>
@@ -255,8 +307,8 @@ export default async function Home() {
                   <Card className="hover:shadow-lg transition-shadow cursor-pointer">
                     <CardHeader className="pb-4">
                       <div className="flex items-center justify-between">
-                        <div className="p-2 bg-blue-100 rounded-lg">
-                          <Wrench className="h-6 w-6 text-blue-600" />
+                        <div className="p-2 bg-green-100 rounded-lg">
+                          <Wrench className="h-6 w-6 text-green-600" />
                         </div>
                         <Badge variant="outline">
                           {service.deviceTypes?.[0] || 'Multiple'}
@@ -270,7 +322,7 @@ export default async function Home() {
                     <CardContent>
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="text-2xl font-bold text-blue-600">
+                          <span className="text-2xl font-bold text-green-600">
                             {formatCurrency(service.basePrice, "EUR")}
                           </span>
                           <span className="text-sm text-gray-500 ml-1">{t('popularServices.starting')}</span>
@@ -289,13 +341,13 @@ export default async function Home() {
       </section>
 
       {/* Device Categories */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-[var(--primary)]">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">{t('deviceCategories.title')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {deviceCategories.map((category) => {
               const IconComponent = category.icon;
-              const deviceCount = deviceTypes.filter((type: string) => type === category.type).length;
+              const modelCount = allDevices.filter((device: any) => device.type === category.type).length;
               // Map device types to repair page parameter format
               const repairTypeMap: Record<string, string> = {
                 'SMARTPHONE': 'smartphone',
@@ -315,7 +367,7 @@ export default async function Home() {
                       <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
                       <p className="text-gray-600 text-sm mb-3">{category.description}</p>
                       <Badge variant="secondary">
-                        {t('deviceCategories.modelsSupported', { count: deviceCount })}
+                        {t('deviceCategories.modelsSupported', { count: modelCount })}
                       </Badge>
                     </CardContent>
                   </Card>
@@ -330,7 +382,7 @@ export default async function Home() {
       <PricingComparison />
 
       {/* Why Choose Us */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-[var(--background)]">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">{t('whyChooseUs.title')}</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -364,7 +416,7 @@ export default async function Home() {
       <Testimonials testimonials={testimonials} />
 
       {/* CTA Section */}
-      <section className="bg-gray-900 text-white py-16">
+      <section className="bg-[var(--primary)] text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">{t('cta.title')}</h2>
           <p className="text-xl mb-8">{t('cta.subtitle')}</p>
