@@ -1296,5 +1296,12 @@
         "manualShipping": "Verwerk deze bestelling en stuur het verzendlabel handmatig naar de klant."
       }
     }
+  },
+  "multiDeviceNav": {
+    "brands": "Merken",
+    "browse":"Blader apparaten",
+    "series": "Series",
+    "models": "Modellen",
+    "parts": "Onderdelen"
   }
 }

@@ -43,6 +43,7 @@ import { ShoppingCart } from "lucide-react";
 import { CartSheet } from "@/components/cart-sheet";
 import { WishlistSheet } from "@/components/wishlist-sheet";
 import { useCart } from "@/components/cart-context";
+import { MultiStepDeviceNav } from './MultiStepDeviceNav'
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -597,6 +598,7 @@ export function Navigation() {
           </div>
         )}
       </div>
+      <MultiStepDeviceNav />
     </nav>
   );
 }

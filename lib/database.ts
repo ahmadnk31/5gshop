@@ -1443,4 +1443,9 @@ export class DatabaseService {
     });
     return parts.map(DatabaseService.mapPart);
   }
+
+  static async getPartsByFilter(where: any): Promise<Part[]> {
+    const parts = await prisma.part.findMany({ where });
+    return parts.map(DatabaseService.mapPart);
+  }
 }

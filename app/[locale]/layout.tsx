@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono,Lato } from "next/font/google";
 import "../globals.css";
 
 // Add a declaration for window.dataLayer to avoid TypeScript errors
@@ -22,6 +22,12 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
+
+const lato=Lato({
+  variable:"--font-lato",
+  subsets:["latin","latin-ext"],
+  weight:["100","300","400","700","900"]
+})
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -60,9 +66,9 @@ export default  async function RootLayout({
           rel="stylesheet"
         />
       </head>
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q17J2K3TRC"></script>
+       <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q17J2K3TRC"></script>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${lato.variable} antialiased`}
       >
          <Provider>
          <NextIntlClientProvider>

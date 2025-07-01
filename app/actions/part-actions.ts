@@ -81,3 +81,20 @@ export async function getFeaturedParts(limit: number = 4) {
     throw new Error("Failed to get featured parts");
   }
 }
+
+export async function getPartsByTypeBrandModel(type?: string, _brand?: string, model?: string) {
+  try {
+    if (!type) throw new Error('type is required');
+    const where = {
+      OR: [
+        model ? { deviceModel: model } : {},
+        { deviceType: type, deviceModel: null }
+      ]
+    };
+    if (!model) where.OR = [{ deviceType: type, deviceModel: null }];
+    return await DatabaseService.getPartsByFilter(where);
+  } catch (error) {
+    console.error('Failed to get parts by type, brand, model:', error);
+    throw new Error('Failed to get parts by type, brand, model');
+  }
+}

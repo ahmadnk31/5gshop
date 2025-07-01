@@ -46,6 +46,8 @@ function RepairsPageContent() {
   useEffect(() => {
     const type = searchParams.get('type');
     const search = searchParams.get('search');
+    const brand = searchParams.get('brand');
+    const model = searchParams.get('model');
     
     if (search) {
       setSearchTerm(search);
@@ -67,8 +69,8 @@ function RepairsPageContent() {
       setActiveTab(mappedType);
     }
     
-    // Load initial services for the active tab
-    loadServicesForDevice(activeTab);
+    // Load initial services for the active tab, brand, and model
+    loadServicesForDevice(activeTab, brand, model);
   }, [searchParams]);
 
   // Load services when tab changes
@@ -76,10 +78,10 @@ function RepairsPageContent() {
     loadServicesForDevice(activeTab);
   }, [activeTab]);
 
-  const loadServicesForDevice = async (deviceType: DeviceType) => {
+  const loadServicesForDevice = async (deviceType: DeviceType, brand?: string | null, model?: string | null) => {
     setLoading(true);
     try {
-      const servicesData = await getRepairServicesForDevice(deviceType);
+      const servicesData = await getRepairServicesForDevice(deviceType, brand || undefined, model || undefined);
       setServices(servicesData);
     } catch (error) {
       console.error('Error loading services:', error);

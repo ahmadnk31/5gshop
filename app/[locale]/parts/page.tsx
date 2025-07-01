@@ -16,6 +16,7 @@ import { ShoppingCart, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { PartActionButtons } from './[id]/part-action-buttons';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useSearchParams } from 'next/navigation';
 
 export default function PartsPage() {
   const t = useTranslations('parts');
@@ -24,18 +25,28 @@ export default function PartsPage() {
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
   const user=useSession().data
+  const searchParams = useSearchParams();
   // Use the proper pagination hook
   const pagination = usePagination({
     totalItems: parts.length,
     itemsPerPage: 12,
   });
 
+  const type = searchParams.get('type');
+  const brand = searchParams.get('brand');
+  const model = searchParams.get('model');
   useEffect(() => {
     async function fetchParts() {
       setLoading(true);
       try {
-        // Fetch all parts
-        const res = await fetch('/api/parts');
+        // Build query string for server-side filtering
+        const params = [];
+        if (type) params.push(`type=${encodeURIComponent(type)}`);
+        if (brand) params.push(`brand=${encodeURIComponent(brand)}`);
+        if (model) params.push(`model=${encodeURIComponent(model)}`);
+        const query = params.length ? `?${params.join('&')}` : '';
+        // Try to fetch filtered parts from backend
+        const res = await fetch(`/api/parts/filter${query}`);
         if (res.ok) {
           let data = await res.json();
           if (data && Array.isArray(data.data)) {
@@ -44,16 +55,23 @@ export default function PartsPage() {
             data = [];
           }
           setParts(data);
+        } else {
+          // fallback: fetch all parts and filter client-side
+          const fallbackRes = await fetch('/api/parts');
+          let data = await fallbackRes.json();
+          if (data && Array.isArray(data.data)) {
+            data = data.data;
+          } else if (!Array.isArray(data)) {
+            data = [];
+          }
+          setParts(data);
         }
-        
         // Fetch featured parts using the new backend API
         const featuredRes = await fetch('/api/parts/featured?limit=4');
         if (featuredRes.ok) {
           const featuredData = await featuredRes.json();
-          console.log('🎯 Backend returned featured parts:', featuredData.length);
           setFeaturedParts(featuredData);
         } else {
-          console.error('❌ Failed to fetch featured parts from backend');
           setFeaturedParts([]);
         }
       } finally {
@@ -61,9 +79,9 @@ export default function PartsPage() {
       }
     }
     fetchParts();
-  }, []);
+  }, [type, brand, model]);
 
-  // Get paginated parts
+  // Use backend-filtered parts directly
   const paginatedParts = parts.slice(pagination.startIndex, pagination.endIndex + 1);
 
   if (loading) return (
@@ -97,9 +115,9 @@ export default function PartsPage() {
               {t('featuredParts.description', { defaultValue: 'Our most popular and high-quality parts' })}
             </p>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6 mb-8">
             {featuredParts.map((part) => (
-              <Card key={part.id} className="hover:shadow-lg relative transition-shadow group py-0">
+              <Card key={part.id} className="hover:shadow-lg relative transition-shadow group py-0 gap-0">
                 <Link href={`/parts/${part.id}`}>
                 <CardHeader className="p-0">
                   <div className="relative overflow-hidden rounded-t-lg">
@@ -147,7 +165,7 @@ export default function PartsPage() {
                 )}
                 <CardContent className="p-4">
                   <Link href={`/parts/${part.id}`}>
-                  <h3 className="font-semibold text-lg mb-2 line-clamp-2">{part.name}</h3>
+                  <h3 className="font-semibold text-sm md:text-lg xl:text-xl mb-2 line-clamp-2">{part.name}</h3>
                   <div className="flex items-center mb-3">
                     <div className="flex items-center">
                       {[...Array(5)].map((_, i) => (
@@ -188,9 +206,9 @@ export default function PartsPage() {
       {/* All Parts Grid */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-6 text-center">{t('allPartsList', { defaultValue: 'All Parts' })}</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
           {paginatedParts.map((part) => (
-            <Card key={part.id} className="hover:shadow-lg relative transition-shadow group py-0">
+            <Card key={part.id} className="hover:shadow-lg relative transition-shadow group py-0 gap-0">
               <Link href={`/parts/${part.id}`}>
               <CardHeader className="p-0">
                 <div className="relative overflow-hidden rounded-t-lg">

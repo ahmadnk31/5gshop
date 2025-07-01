@@ -1312,5 +1312,12 @@
         "manualShipping": "Please process this order and send the shipping label to the customer manually."
       }
     }
+  },
+  "multiDeviceNav": {
+    "brands": "Brands",
+    "browse":"Browse devices",
+    "series": "Series",
+    "models": "Models",
+    "parts": "Parts"
   }
 }
