@@ -48,6 +48,11 @@ export async function getModelsByBrand(deviceType: DeviceType, brand: string) {
       select: {
         model: true,
       },
+      orderBy: [
+        { order: 'desc' },
+        { model: 'desc' },
+        { brand: 'desc' }
+      ],
       distinct: ['model'],
     })
     
@@ -89,8 +94,8 @@ export async function getPartsByDeviceModel(deviceType: DeviceType, brand: strin
         ]
       },
       orderBy: [
-        { order: 'asc' },
-        { name: 'asc' }
+        { order: 'desc' },
+        { name: 'desc' }
       ],
     })
 
@@ -118,21 +123,8 @@ export async function getPartsByDeviceModel(deviceType: DeviceType, brand: strin
     
     console.log(`🔧 Filtered to ${repairParts.length} repair parts (removed accessories)`)
     
-    // Sort to prioritize exact matches
-    const sortedParts = repairParts.sort((a, b) => {
-      // Exact model matches first
-      if (a.deviceModel === model && b.deviceModel !== model) return -1
-      if (a.deviceModel !== model && b.deviceModel === model) return 1
-      
-      // Then universal parts (deviceModel is null)
-      if (!a.deviceModel && b.deviceModel) return 1
-      if (a.deviceModel && !b.deviceModel) return -1
-      
-      // Default alphabetical sort
-      return a.name.localeCompare(b.name)
-    })
-    
-    return sortedParts
+    // Do NOT re-sort here; preserve DB order
+    return repairParts
   } catch (error) {
     console.error('❌ Error fetching parts:', error)
     console.error('❌ Error details:', {
@@ -173,6 +165,7 @@ export async function getAllDevicesWithRepairData() {
         { type: 'asc' },
         { brand: 'asc' },
         { model: 'asc' },
+        { order: 'asc' }
       ],
     })
     

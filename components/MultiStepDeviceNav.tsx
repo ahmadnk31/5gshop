@@ -1,12 +1,12 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   NavigationMenu,
   NavigationMenuList,
   NavigationMenuItem,
   NavigationMenuTrigger,
-  NavigationMenuContent,
-  NavigationMenuLink,
+  NavigationMenuContent
 } from '@/components/ui/navigation-menu'
 import { useTranslations } from 'next-intl'
 
@@ -33,58 +33,40 @@ function getPartUrl(part: any) {
 }
 
 export function MultiStepDeviceNav({ deviceType = 'SMARTPHONE' }: { deviceType?: DeviceType }) {
-  const [brands, setBrands] = useState<string[]>([])
   const [hoveredBrand, setHoveredBrand] = useState<string | null>(null)
-  const [seriesMap, setSeriesMap] = useState<Record<string, string[]>>({})
   const [hoveredSeries, setHoveredSeries] = useState<string | null>(null)
-  const [models, setModels] = useState<string[]>([])
   const [hoveredModel, setHoveredModel] = useState<string | null>(null)
-  const [parts, setParts] = useState<any[]>([])
-  const [loadingParts, setLoadingParts] = useState(false)
   const t = useTranslations('multiDeviceNav')
 
-  // Load brands on mount
-  useEffect(() => {
-    getBrandsByType(deviceType).then(setBrands)
-  }, [deviceType])
+  // Brands
+  const { data: brands = [], isLoading: brandsLoading } = useQuery({
+    queryKey: ['brands', deviceType],
+    queryFn: () => getBrandsByType(deviceType),
+    staleTime: 1000 * 60 * 10,
+  });
 
-  // Load models/series when a brand is hovered
-  useEffect(() => {
-    if (hoveredBrand) {
-      getModelsByBrandDetailed(hoveredBrand).then((devices) => {
-        // Group by series if available
-        const grouped = groupModelsBySeries(devices)
-        setSeriesMap(grouped)
-        setHoveredSeries(null)
-        setModels([])
-      })
-    } else {
-      setSeriesMap({})
-      setHoveredSeries(null)
-      setModels([])
-    }
-  }, [hoveredBrand])
+  // Models/Series
+  const { data: modelsData = [], isLoading: modelsLoading } = useQuery({
+    queryKey: ['models', hoveredBrand],
+    queryFn: () => hoveredBrand ? getModelsByBrandDetailed(hoveredBrand) : [],
+    enabled: !!hoveredBrand,
+    staleTime: 1000 * 60 * 10,
+  });
 
-  // Set models when a series is hovered
-  useEffect(() => {
-    if (hoveredSeries && seriesMap[hoveredSeries]) {
-      setModels(seriesMap[hoveredSeries])
-    } else {
-      setModels([])
-    }
-  }, [hoveredSeries, seriesMap])
+  // Group models by series
+  const seriesMap = groupModelsBySeries(modelsData);
+  const models = hoveredSeries && seriesMap[hoveredSeries] ? seriesMap[hoveredSeries] : [];
 
-  // Fetch parts when a model is hovered
-  useEffect(() => {
-    if (hoveredModel && hoveredBrand) {
-      setLoadingParts(true)
-      getPartsByDeviceModel(deviceType, hoveredBrand, hoveredModel)
-        .then((data) => setParts(data))
-        .finally(() => setLoadingParts(false))
-    } else {
-      setParts([])
-    }
-  }, [hoveredModel, hoveredBrand, deviceType])
+  // Parts
+  const { data: parts = [], isLoading: loadingParts } = useQuery({
+    queryKey: ['parts', deviceType, hoveredBrand, hoveredModel],
+    queryFn: () =>
+      hoveredBrand && hoveredModel
+        ? getPartsByDeviceModel(deviceType, hoveredBrand, hoveredModel)
+        : [],
+    enabled: !!hoveredBrand && !!hoveredModel,
+    staleTime: 1000 * 60 * 10,
+  });
 
   return (
     <div className="bg-white border-b shadow-sm">
@@ -97,7 +79,7 @@ export function MultiStepDeviceNav({ deviceType = 'SMARTPHONE' }: { deviceType?:
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div
-                  className="flex min-h-[220px] overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-blue-50"
+                  className="flex min-h-[220px] overflow-x-auto sm:overflow-x-visible max-w-full whitespace-nowrap scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-blue-50"
                   onMouseLeave={() => {
                     setHoveredBrand(null);
                     setHoveredSeries(null);
@@ -105,7 +87,7 @@ export function MultiStepDeviceNav({ deviceType = 'SMARTPHONE' }: { deviceType?:
                   }}
                 >
                   {/* Brands column */}
-                  <div className="min-w-[160px] border-r pr-2 max-h-[80vh] overflow-y-auto">
+                  <div className="min-w-[160px] border-r pr-2 max-h-[80vh] overflow-y-auto overflox-x-auto">
                     <div className="font-semibold text-gray-700 px-4 py-2">{t('brands')}</div>
                     {brands.map(brand => (
                       <div

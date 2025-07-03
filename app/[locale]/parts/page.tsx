@@ -1,7 +1,7 @@
 // Simple Parts List Page for /parts
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useCart } from '@/components/cart-context';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -17,74 +17,81 @@ import { useSession } from 'next-auth/react';
 import { PartActionButtons } from './[id]/part-action-buttons';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 
 export default function PartsPage() {
   const t = useTranslations('parts');
-  const [parts, setParts] = useState<any[]>([]);
-  const [featuredParts, setFeaturedParts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
-  const user=useSession().data
+  const user = useSession().data;
   const searchParams = useSearchParams();
-  // Use the proper pagination hook
+  const type = searchParams.get('type');
+  const brand = searchParams.get('brand');
+  const model = searchParams.get('model');
+
+  // Fetch parts
+  const {
+    data: parts = [],
+    isLoading: partsLoading,
+  } = useQuery({
+    queryKey: ['parts', type, brand, model],
+    queryFn: async () => {
+      const params = [];
+      if (type) params.push(`type=${encodeURIComponent(type)}`);
+      if (brand) params.push(`brand=${encodeURIComponent(brand)}`);
+      if (model) params.push(`model=${encodeURIComponent(model)}`);
+      const query = params.length ? `?${params.join('&')}` : '';
+      const res = await fetch(`/api/parts/filter${query}`);
+      if (res.ok) {
+        let data = await res.json();
+        if (data && Array.isArray(data.data)) {
+          return data.data;
+        } else if (!Array.isArray(data)) {
+          return [];
+        }
+        return data;
+      } else {
+        // fallback: fetch all parts and filter client-side
+        const fallbackRes = await fetch('/api/parts');
+        let data = await fallbackRes.json();
+        if (data && Array.isArray(data.data)) {
+          return data.data;
+        } else if (!Array.isArray(data)) {
+          return [];
+        }
+        return data;
+      }
+    },
+  });
+
+  // Fetch featured parts
+  const {
+    data: featuredParts = [],
+    isLoading: featuredLoading,
+  } = useQuery({
+    queryKey: ['featuredParts', type, brand, model],
+    queryFn: async () => {
+      const params = [];
+      if (type) params.push(`type=${encodeURIComponent(type)}`);
+      if (brand) params.push(`brand=${encodeURIComponent(brand)}`);
+      if (model) params.push(`model=${encodeURIComponent(model)}`);
+      const query = params.length ? `?${params.join('&')}` : '';
+      const featuredRes = await fetch(`/api/parts/featured${query}&limit=4`.replace('?&', '?'));
+      if (featuredRes.ok) {
+        return await featuredRes.json();
+      } else {
+        return [];
+      }
+    },
+  });
+
+  // Use backend-filtered parts directly
   const pagination = usePagination({
     totalItems: parts.length,
     itemsPerPage: 12,
   });
-
-  const type = searchParams.get('type');
-  const brand = searchParams.get('brand');
-  const model = searchParams.get('model');
-  useEffect(() => {
-    async function fetchParts() {
-      setLoading(true);
-      try {
-        // Build query string for server-side filtering
-        const params = [];
-        if (type) params.push(`type=${encodeURIComponent(type)}`);
-        if (brand) params.push(`brand=${encodeURIComponent(brand)}`);
-        if (model) params.push(`model=${encodeURIComponent(model)}`);
-        const query = params.length ? `?${params.join('&')}` : '';
-        // Try to fetch filtered parts from backend
-        const res = await fetch(`/api/parts/filter${query}`);
-        if (res.ok) {
-          let data = await res.json();
-          if (data && Array.isArray(data.data)) {
-            data = data.data;
-          } else if (!Array.isArray(data)) {
-            data = [];
-          }
-          setParts(data);
-        } else {
-          // fallback: fetch all parts and filter client-side
-          const fallbackRes = await fetch('/api/parts');
-          let data = await fallbackRes.json();
-          if (data && Array.isArray(data.data)) {
-            data = data.data;
-          } else if (!Array.isArray(data)) {
-            data = [];
-          }
-          setParts(data);
-        }
-        // Fetch featured parts using the new backend API
-        const featuredRes = await fetch('/api/parts/featured?limit=4');
-        if (featuredRes.ok) {
-          const featuredData = await featuredRes.json();
-          setFeaturedParts(featuredData);
-        } else {
-          setFeaturedParts([]);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchParts();
-  }, [type, brand, model]);
-
-  // Use backend-filtered parts directly
   const paginatedParts = parts.slice(pagination.startIndex, pagination.endIndex + 1);
 
-  if (loading) return (
+  if (partsLoading || featuredLoading) return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {[...Array(8)].map((_, i) => (
@@ -116,7 +123,7 @@ export default function PartsPage() {
             </p>
           </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6 mb-8">
-            {featuredParts.map((part) => (
+            {featuredParts.map((part:any) => (
               <Card key={part.id} className="hover:shadow-lg relative transition-shadow group py-0 gap-0">
                 <Link href={`/parts/${part.id}`}>
                 <CardHeader className="p-0">
@@ -207,7 +214,7 @@ export default function PartsPage() {
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-6 text-center">{t('allPartsList', { defaultValue: 'All Parts' })}</h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
-          {paginatedParts.map((part) => (
+          {paginatedParts.map((part:any) => (
             <Card key={part.id} className="hover:shadow-lg relative transition-shadow group py-0 gap-0">
               <Link href={`/parts/${part.id}`}>
               <CardHeader className="p-0">

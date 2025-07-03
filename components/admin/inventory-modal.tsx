@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -130,6 +130,20 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
     }
   };
 
+  // Debounce map for stock updates
+  const stockDebounceRef = useRef<{ [partId: string]: NodeJS.Timeout }>({});
+
+  // Debounced stock update function
+  const debouncedUpdateStock = (partId: string, newQuantity: number, operation: 'add' | 'subtract' | 'set' = 'set') => {
+    if (stockDebounceRef.current[partId]) {
+      clearTimeout(stockDebounceRef.current[partId]);
+    }
+    stockDebounceRef.current[partId] = setTimeout(() => {
+      handleUpdateStock(partId, newQuantity, operation);
+      delete stockDebounceRef.current[partId];
+    }, 400);
+  };
+
   const handleUpdateStock = async (partId: string, newQuantity: number, operation: 'add' | 'subtract' | 'set' = 'set') => {
     if (operation === 'set' && newQuantity >= 0) {
       try {
@@ -146,11 +160,12 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
     }
   };
 
+  // Replace handleQuickUpdate to use debounce
   const handleQuickUpdate = (part: Part, change: number) => {
     if (change > 0) {
-      handleUpdateStock(part.id, change, 'add');
+      debouncedUpdateStock(part.id, change, 'add');
     } else if (change < 0) {
-      handleUpdateStock(part.id, Math.abs(change), 'subtract');
+      debouncedUpdateStock(part.id, Math.abs(change), 'subtract');
     }
   };
 
@@ -356,7 +371,7 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
                             <Input
                               type="number"
                               value={part.inStock}
-                              onChange={(e) => handleUpdateStock(part.id, parseInt(e.target.value) || 0, 'set')}
+                              onChange={(e) => debouncedUpdateStock(part.id, parseInt(e.target.value) || 0, 'set')}
                               className="w-20 text-center"
                               min="0"
                             />

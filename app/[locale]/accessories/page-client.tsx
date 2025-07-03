@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +26,7 @@ import {
 import Link from "next/link";
 import { getAccessories } from "@/app/actions/accessory-actions";
 import { Accessory, AccessoryCategory } from "@/lib/types";
+import { useQuery } from '@tanstack/react-query';
 
 // Category configurations matching the database schema
 const categoryConfigs = {
@@ -45,56 +46,30 @@ const categoryConfigs = {
 export default function AccessoriesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [allAccessories, setAllAccessories] = useState<Accessory[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState<AccessoryCategory | null>(
     (searchParams.get('category') as AccessoryCategory) || null
   );
-  const [searchResults, setSearchResults] = useState<Accessory[] | null>(null);
-  const [searchLoading, setSearchLoading] = useState(false);
 
-  // Load accessories on component mount
-  useEffect(() => {
-    const loadAccessories = async () => {
-      try {
-        setLoading(true);
-        const accessories = await getAccessories();
-        setAllAccessories(accessories);
-      } catch (error) {
-        console.error('Failed to load accessories:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Fetch all accessories
+  const { data: allAccessories = [], isLoading: loading } = useQuery({
+    queryKey: ['accessories'],
+    queryFn: getAccessories,
+    staleTime: 1000 * 60 * 10,
+  });
 
-    loadAccessories();
-  }, []);
-
-  // Fetch smarter search results from backend API
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (!searchTerm) {
-        setSearchResults(null);
-        return;
-      }
-      setSearchLoading(true);
-      try {
-        const res = await fetch(`/api/search/accessories?q=${encodeURIComponent(searchTerm)}`);
-        if (res.ok) {
-          const data = await res.json();
-          setSearchResults(data);
-        } else {
-          setSearchResults([]);
-        }
-      } catch (err) {
-        setSearchResults([]);
-      } finally {
-        setSearchLoading(false);
-      }
-    };
-    fetchSearchResults();
-  }, [searchTerm]);
+  // Fetch search results
+  const { data: searchResults = null, isLoading: searchLoading } = useQuery({
+    queryKey: ['accessorySearch', searchTerm],
+    queryFn: async () => {
+      if (!searchTerm) return null;
+      const res = await fetch(`/api/search/accessories?q=${encodeURIComponent(searchTerm)}`);
+      if (res.ok) return await res.json();
+      return [];
+    },
+    enabled: !!searchTerm,
+    staleTime: 1000 * 60 * 2,
+  });
 
   // Update URL when filters change
   const updateURL = (category: AccessoryCategory | null, search: string) => {
@@ -128,8 +103,8 @@ export default function AccessoriesPage() {
   // Filter accessories based on current filters
   const filteredAccessories = searchTerm && searchResults !== null
     ? (selectedCategory
-        ? searchResults.filter((a) => a.category === selectedCategory && a.inStock > 0)
-        : searchResults.filter((a) => a.inStock > 0)
+        ? searchResults.filter((a: { category: string; inStock: number; }) => a.category === selectedCategory && a.inStock > 0)
+        : searchResults.filter((a: { inStock: number; }) => a.inStock > 0)
       )
     : allAccessories.filter(accessory => {
         const matchesCategory = !selectedCategory || accessory.category === selectedCategory;
@@ -327,7 +302,18 @@ export default function AccessoriesPage() {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {(hasActiveFilters ? filteredAccessories : featuredAccessories).map((accessory) => {
+            {(hasActiveFilters ? filteredAccessories : featuredAccessories).map((accessory: {
+              id: string;
+              name: string;
+              brand: string;
+              description?: string;
+              price: number;
+              inStock: number;
+              minStock: number;
+              imageUrl?: string;
+              category: keyof typeof categoryConfigs;
+              compatibility?: string;
+            }) => {
               const categoryConfig = categoryConfigs[accessory.category];
               const IconComponent = categoryConfig.icon;
               

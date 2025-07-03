@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getPartById } from '@/app/actions/part-actions';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  let { id } = params;
+  let { id } = await params;
   if (id.startsWith('part-')) {
     id = id.replace(/^part-/, '');
   }

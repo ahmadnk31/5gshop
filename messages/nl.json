@@ -1152,6 +1152,7 @@
       "aftermarket": "Aftermarket",
       "compatible": "Compatibel",
       "generic": "Generiek",
+      "incell": "Incell",
       "unknown": "Onbekend"
     },
     "features": {

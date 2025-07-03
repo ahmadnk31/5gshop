@@ -131,7 +131,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
     sku: '',
     cost: 0,
     inStock: 0,
-    minStock: 5,
+    minStock: 1,
     supplier: '',
     deviceModel: '',
     deviceType: '',
@@ -152,6 +152,9 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   // All available models
   const [allDevices, setAllDevices] = useState<Device[]>([])
   const [allModels, setAllModels] = useState<string[]>([])
+
+  // Add error state for part creation
+  const [partError, setPartError] = useState<string | null>(null);
 
   // Load initial data
   useEffect(() => {
@@ -312,11 +315,15 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   const handleAddDevice = async () => {
     if (newDevice.type && newDevice.brand && newDevice.model) {
       try {
+        // Generate order if not provided
+        let order = newDevice.order && Number.isFinite(newDevice.order) && newDevice.order !== 0
+          ? newDevice.order
+          : Math.floor(Date.now() / 1000);
         const device = await createDevice({
           type: newDevice.type as DeviceType,
           brand: newDevice.brand,
           model: newDevice.model,
-          order: typeof newDevice.order === 'number' ? newDevice.order : 0,
+          order,
           series: newDevice.series || null,
           imageUrl: newDevice.imageUrl,
           description: newDevice.description
@@ -330,48 +337,70 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   }
 
   const handleAddPart = async () => {
-    if (newPart.name && newPart.sku) {
-      try {
-        let deviceModelValue = newPart.deviceModel;
-        if (deviceModelValue && deviceModelValue !== 'all') {
-          const foundDevice = allDevices.find((d) => d.id === deviceModelValue);
-          deviceModelValue = foundDevice ? foundDevice.model : deviceModelValue;
-        } else if (deviceModelValue === 'all') {
-          deviceModelValue = '';
-        }
-        const part = await createPart({
-          ...newPart,
-          order: typeof newPart.order === 'number' ? newPart.order : 0,
-          deviceModel: deviceModelValue ? deviceModelValue : undefined,
-          deviceType: newPart.deviceType ? newPart.deviceType : undefined,
-          quality: newPart.quality || undefined,
-        });
-        setParts([
-          ...parts,
-          {
-            ...part,
-            quality: part.quality ?? null,
-            createdAt: part.createdAt ?? new Date().toISOString(),
-            updatedAt: part.updatedAt ?? new Date().toISOString(),
-          },
-        ]);
-        setNewPart({
-          name: '',
-          sku: '',
-          cost: 0,
-          inStock: 0,
-          minStock: 5,
-          supplier: '',
-          deviceModel: '',
-          deviceType: '',
-          imageUrl: '',
-          description: '',
-          quality: '',
-          order: 0
-        });
-      } catch (error) {
-        console.error('Error adding part:', error);
+    setPartError(null);
+    if (!newPart.name) {
+      setPartError('Part name is required.');
+      return;
+    }
+    if (!newPart.minStock || newPart.minStock < 1) {
+      setPartError('Minimum stock must be at least 1.');
+      return;
+    }
+    try {
+      let deviceModelValue = newPart.deviceModel;
+      if (deviceModelValue && deviceModelValue !== 'all') {
+        const foundDevice = allDevices.find((d) => d.id === deviceModelValue);
+        deviceModelValue = foundDevice ? foundDevice.model : deviceModelValue;
+      } else if (deviceModelValue === 'all') {
+        deviceModelValue = '';
       }
+      // Generate SKU if not provided
+      let sku = newPart.sku && newPart.sku.trim() !== ''
+        ? newPart.sku.trim()
+        : newPart.name
+            .toUpperCase()
+            .replace(/\s+/g, '-')
+            .replace(/[^A-Z0-9-]/g, '')
+            .replace(/-+/g, '-');
+      // Generate order if not provided
+      let order = newPart.order && Number.isFinite(newPart.order) && newPart.order !== 0
+        ? newPart.order
+        : Math.floor(Date.now() / 1000);
+      const part = await createPart({
+        ...newPart,
+        sku,
+        order,
+        minStock: Math.max(1, newPart.minStock),
+        deviceModel: deviceModelValue ? deviceModelValue : undefined,
+        deviceType: newPart.deviceType ? newPart.deviceType : undefined,
+        quality: newPart.quality || undefined,
+      });
+      setParts([
+        ...parts,
+        {
+          ...part,
+          quality: part.quality ?? null,
+          createdAt: part.createdAt ?? new Date().toISOString(),
+          updatedAt: part.updatedAt ?? new Date().toISOString(),
+        },
+      ]);
+      setNewPart({
+        name: '',
+        sku: '',
+        cost: 0,
+        inStock: 0,
+        minStock: 1,
+        supplier: '',
+        deviceModel: '',
+        deviceType: '',
+        imageUrl: '',
+        description: '',
+        quality: '',
+        order: 0
+      });
+    } catch (error) {
+      setPartError('Error adding part.');
+      console.error('Error adding part:', error);
     }
   }
 
@@ -823,7 +852,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     <Input
                       type="number"
                       value={newPart.minStock}
-                      onChange={(e) => setNewPart({ ...newPart, minStock: parseInt(e.target.value) || 0 })}
+                      min={1}
+                      onChange={(e) => setNewPart({ ...newPart, minStock: Math.max(1, parseInt(e.target.value) || 1) })}
                     />
                   </div>
                   <div className="space-y-2">
@@ -967,6 +997,11 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     </SelectContent>
                   </Select>
                 </div>
+
+                {/* Error message */}
+                {partError && (
+                  <div className="text-red-500 text-sm mb-2">{partError}</div>
+                )}
 
                 <Button onClick={handleAddPart} className="mt-4">
                   <Plus className="h-4 w-4 mr-2" />

@@ -516,6 +516,10 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
     'other': 'OTHER'
   }
 
+  // Add simple in-memory cache for search results
+  const searchCache = new Map<string, any[]>();
+  const filteredSearchCache = new Map<string, any[]>();
+
   // Load device types on mount and handle URL parameters
   useEffect(() => {
     const type = searchParams.get('type')
@@ -546,6 +550,12 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
 
   const performSearch = async (query: string) => {
     setLoading(true)
+    const cacheKey = query.trim().toLowerCase();
+    if (searchCache.has(cacheKey)) {
+      setSearchResults(searchCache.get(cacheKey) || []);
+      setLoading(false);
+      return;
+    }
     try {
       const response = await fetch(`/api/search/repairs?q=${encodeURIComponent(query)}`)
       if (response.ok) {
@@ -559,6 +569,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           const hasStock = typeof part.inStock === 'number';
           return hasId && hasName && hasCost && hasImage && hasStock;
         });
+        searchCache.set(cacheKey, results);
         setSearchResults(results)
       } else {
         setSearchResults([])
@@ -573,6 +584,12 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
 
   const performFilteredSearch = async (query: string, deviceType: DeviceType) => {
     setLoading(true)
+    const cacheKey = `${query.trim().toLowerCase()}|${deviceType}`;
+    if (filteredSearchCache.has(cacheKey)) {
+      setSearchResults(filteredSearchCache.get(cacheKey) || []);
+      setLoading(false);
+      return;
+    }
     try {
       const response = await fetch(`/api/search/repairs?q=${encodeURIComponent(query)}&deviceType=${deviceType}`)
       if (response.ok) {
@@ -582,6 +599,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           (result.deviceType === deviceType || result.deviceType === 'GENERAL') &&
           !!result.id && !!result.name && typeof result.cost === 'number' && !isNaN(result.cost) && result.cost > 0 && !!result.imageUrl && typeof result.inStock === 'number'
         );
+        filteredSearchCache.set(cacheKey, results);
         setSearchResults(results)
       }
     } catch (error) {
@@ -1357,6 +1375,13 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                     }))
                   });
                   setOrderChanged(false);
+                  // Reload devices and models to reflect new order from backend
+                  if (selectedType && selectedBrand) {
+                    await loadDevicesForBrand(selectedType as DeviceType, selectedBrand, order);
+                    const modelsData = await getModelsByBrand(selectedType as DeviceType, selectedBrand);
+                    const sortedModels = sortModelsArray(modelsData, order);
+                    setModels(sortedModels);
+                  }
                 }}>
                   Save Model Order
                 </Button>

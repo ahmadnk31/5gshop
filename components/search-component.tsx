@@ -28,6 +28,7 @@ import {
 import { Link, useRouter } from '@/i18n/navigation';
 import { formatCurrency } from '@/lib/utils';
 import Image from 'next/image';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 type SearchFilter = 'all' | 'parts' | 'accessories';
 
 interface SearchResult {
@@ -48,87 +49,86 @@ export function SearchComponent() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<SearchFilter>('all');
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Search function
-  const performSearch = async (query: string, searchFilter: SearchFilter) => {
-    if (!query.trim() || query.trim().length < 2) {
-      setResults([]);
-      return;
+  // Query key based on search term and filter
+  const searchQueryKey = ['search', searchTerm, filter];
+
+  // Search function for react-query
+  const fetchSearchResults = async (): Promise<SearchResult[]> => {
+    if (!searchTerm.trim() || searchTerm.trim().length < 2) {
+      return [];
     }
-
-    setIsLoading(true);
-
-    try {
-      const searchResults: SearchResult[] = [];
-
-      if (searchFilter === 'parts' || searchFilter === 'all') {
-        const response = await fetch(`/api/search/repairs?q=${encodeURIComponent(query)}`);
-        if (response.ok) {
-          const partsData = await response.json();
-          partsData.forEach((part: any) => {
-            searchResults.push({
-              id: part.id,
-              title: part.name || part.title,
-              type: 'part',
-              deviceType: part.deviceType,
-              price: part.price,
-              category: part.category || t('categories.replacementPart'),
-              url: part.url,
-              description: part.description,
-              matchScore: part.matchScore,
-              imageUrl: part.imageUrl || '/placeholder.png' // Use a placeholder if no image URL
-            });
+    const searchResults: SearchResult[] = [];
+    if (filter === 'parts' || filter === 'all') {
+      const response = await fetch(`/api/search/repairs?q=${encodeURIComponent(searchTerm)}`);
+      if (response.ok) {
+        const partsData = await response.json();
+        partsData.forEach((part: any) => {
+          searchResults.push({
+            id: part.id,
+            title: part.name || part.title,
+            type: 'part',
+            deviceType: part.deviceType,
+            price: part.price,
+            category: part.category || t('categories.replacementPart'),
+            url: part.url,
+            description: part.description,
+            matchScore: part.matchScore,
+            imageUrl: part.imageUrl || '/placeholder.png',
           });
-        }
+        });
       }
-
-      if (searchFilter === 'accessories' || searchFilter === 'all') {
-        const response = await fetch(`/api/search/accessories?q=${encodeURIComponent(query)}`);
-        if (response.ok) {
-          const accessoriesData = await response.json();
-          accessoriesData.forEach((acc: any) => {
-            searchResults.push({
-              id: acc.id,
-              title: acc.name || acc.title,
-              type: 'accessory',
-              deviceType: acc.deviceType,
-              price: acc.price,
-              category: acc.category || t('categories.accessory'),
-              url: acc.url,
-              description: acc.description,
-              matchScore: acc.matchScore,
-              imageUrl: acc.imageUrl
-            });
-          });
-        }
-      }
-
-      setResults(searchResults);
-    } catch (error) {
-      console.error('Search error:', error);
-      setResults([]);
-    } finally {
-      setIsLoading(false);
     }
+    if (filter === 'accessories' || filter === 'all') {
+      const response = await fetch(`/api/search/accessories?q=${encodeURIComponent(searchTerm)}`);
+      if (response.ok) {
+        const accessoriesData = await response.json();
+        accessoriesData.forEach((acc: any) => {
+          searchResults.push({
+            id: acc.id,
+            title: acc.name || acc.title,
+            type: 'accessory',
+            deviceType: acc.deviceType,
+            price: acc.price,
+            category: acc.category || t('categories.accessory'),
+            url: acc.url,
+            description: acc.description,
+            matchScore: acc.matchScore,
+            imageUrl: acc.imageUrl,
+          });
+        });
+      }
+    }
+    return searchResults;
   };
 
-  // Debounced search
+  // Use TanStack Query for search
+  const {
+    data: results = [],
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: searchQueryKey,
+    queryFn: fetchSearchResults,
+    enabled: searchTerm.length >= 2,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    placeholderData: keepPreviousData,
+  });
+
+  // Debounced search open/close logic
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchTerm.length >= 2) {
-        performSearch(searchTerm, filter);
+        setIsOpen(true);
+        refetch();
       } else {
-        setResults([]);
-        setIsLoading(false);
+        setIsOpen(false);
       }
     }, 500);
-
     return () => clearTimeout(timer);
-  }, [searchTerm, filter]);
+  }, [searchTerm, filter, refetch]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -311,7 +311,6 @@ export function SearchComponent() {
             <button
               onClick={() => {
                 setSearchTerm('');
-                setResults([]);
                 setIsOpen(false);
               }}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"

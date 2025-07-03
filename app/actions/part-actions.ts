@@ -73,9 +73,9 @@ export async function getRelatedParts(partId: string, limit: number = 4) {
   }
 }
 
-export async function getFeaturedParts(limit: number = 4) {
+export async function getFeaturedParts(limit: number = 4, type?: string, brand?: string, model?: string) {
   try {
-    return await DatabaseService.getFeaturedParts(limit);
+    return await DatabaseService.getFeaturedParts(limit, type, brand, model);
   } catch (error) {
     console.error("Failed to get featured parts:", error);
     throw new Error("Failed to get featured parts");

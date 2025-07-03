@@ -503,7 +503,7 @@ export class DatabaseService {
     const devices = await prisma.device.findMany({
       select: { brand: true },
       distinct: ['brand'],
-      orderBy: { brand: 'asc' },
+      orderBy: { brand: 'desc' },
     })
     return devices.map(d => d.brand)
   }
@@ -511,7 +511,10 @@ export class DatabaseService {
   static async getModelsByBrandDetailed(brand: string): Promise<Device[]> {
     const devices = await prisma.device.findMany({
       where: { brand },
-      orderBy: { model: 'asc' },
+      orderBy: [
+        { order: 'desc' },
+        { model: 'desc' }
+      ],
     })
     return devices.map(DatabaseService.mapDevice)
   }
@@ -1434,14 +1437,33 @@ export class DatabaseService {
     return relatedParts.map(DatabaseService.mapPart);
   }
 
-  static async getFeaturedParts(limit: number = 4): Promise<Part[]> {
-    // Example: get top parts by inStock, or by some 'featured' flag if you have one
-    const parts = await prisma.part.findMany({
-      where: { inStock: { gt: 0 } }, // or your own featured logic
-      orderBy: { inStock: 'desc' },  // or another field, e.g. 'popularity'
-      take: limit,
-    });
-    return parts.map(DatabaseService.mapPart);
+  static async getFeaturedParts(limit: number = 4, type?: string, brand?: string, model?: string): Promise<Part[]> {
+    let parts: any[] = [];
+    if (model) {
+      parts = await prisma.part.findMany({
+        where: { deviceModel: model, inStock: { gt: 0 } },
+        orderBy: { inStock: 'desc' },
+        take: limit,
+      });
+    }
+    if ((!parts || parts.length < limit) && type) {
+      const moreParts = await prisma.part.findMany({
+        where: { deviceType: type, inStock: { gt: 0 } },
+        orderBy: { inStock: 'desc' },
+        take: limit - (parts ? parts.length : 0),
+      });
+      parts = [...(parts || []), ...moreParts];
+    }
+    if (!parts || parts.length < limit) {
+      const fallbackParts = await prisma.part.findMany({
+        where: { inStock: { gt: 0 } },
+        orderBy: { inStock: 'desc' },
+        take: limit - (parts ? parts.length : 0),
+      });
+      parts = [...(parts || []), ...fallbackParts];
+    }
+    const uniqueParts = Array.from(new Map((parts || []).map(p => [p.id, p])).values()).slice(0, limit);
+    return uniqueParts.length ? uniqueParts.map(DatabaseService.mapPart) : [];
   }
 
   static async getPartsByFilter(where: any): Promise<Part[]> {

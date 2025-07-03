@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react'
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useCart } from '@/components/cart-context';
@@ -12,6 +12,7 @@ import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { Link } from '@/i18n/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface WishlistItem {
   id: string;
@@ -42,31 +43,24 @@ export default function WishlistPage() {
   const { data: session } = useSession();
   const { addToCart } = useCart();
   const t = useTranslations('wishlist');
-  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!session?.user?.id) return;
-    
-    fetch('/api/wishlist')
-      .then(res => res.json())
-      .then(data => {
-        setWishlistItems(data.items || []);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching wishlist:', error);
-        setLoading(false);
-      });
-  }, [session?.user?.id]);
+  const queryClient = useQueryClient();
+  const { data: wishlistItems = [], isLoading: loading, refetch } = useQuery({
+    queryKey: ['wishlist', session?.user?.id],
+    queryFn: async () => {
+      if (!session?.user?.id) return [];
+      const res = await fetch('/api/wishlist');
+      if (!res.ok) throw new Error('Failed to fetch wishlist');
+      const data = await res.json();
+      return data.items || [];
+    },
+    enabled: !!session?.user?.id,
+    staleTime: 1000 * 60 * 2,
+  });
 
   const removeFromWishlist = async (itemType: 'part' | 'accessory', itemId: string) => {
     try {
       await fetch(`/api/wishlist/${itemType}/${itemId}`, { method: 'DELETE' });
-      setWishlistItems(prev => prev.filter(item => 
-        (itemType === 'part' && item.part?.id !== itemId) ||
-        (itemType === 'accessory' && item.accessory?.id !== itemId)
-      ));
+      await queryClient.invalidateQueries({ queryKey: ['wishlist', session?.user?.id] });
     } catch (error) {
       console.error('Error removing from wishlist:', error);
     }
@@ -132,7 +126,7 @@ export default function WishlistPage() {
 
       {wishlistItems.length === 0 ? (
         <div className="text-center py-12">
-          <Heart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+          <Heart className="h-20 w-20 text-gray-300 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('emptyTitle')}</h2>
           <p className="text-gray-600 mb-6">{t('emptyDescription')}</p>
           <div className="space-x-4">
@@ -146,7 +140,7 @@ export default function WishlistPage() {
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
-          {wishlistItems.map((item) => {
+          {wishlistItems.map((item: WishlistItem) => {
             if (item.part) {
               const product = item.part;
               const itemType = 'part';
