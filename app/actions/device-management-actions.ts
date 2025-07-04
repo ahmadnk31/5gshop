@@ -127,6 +127,7 @@ export async function updatePart(partId: string, data: {
   deviceType?: string;
   quality?: string; // Add quality
   order?: number;
+  imageUrl?: string;
 }) {
   try {
     const part = await DatabaseService.updatePart(partId, data);

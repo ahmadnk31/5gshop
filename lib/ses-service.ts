@@ -1166,12 +1166,15 @@ This email was sent from 5gphones.be in response to your quote request.
               ${productRows.join('')}
             </tbody>
           </table>
-          <p style="margin-top:24px;">Order total: <strong>€${(order.amount / 100).toFixed(2)}</strong></p>
+          <p style="margin-top:24px;">Order total: <strong>
+          ${formatCurrency(order.amount,'EUR')}
+          </strong></p>
           <p style="color:#6b7280;font-size:13px;margin-top:24px;">Thank you for shopping with us!</p>
         </div>
       </div>
     `;
-    const text = `Order status: ${statusMsg}\n\nProducts:\n${products.map(p => `- ${p.name} x${p.quantity} (${formatCurrency(p.price,'EUR')})`).join('\n')}\nOrder total: €${(order.amount / 100).toFixed(2)}`;
+    const text = `Order status: ${statusMsg}\n\nProducts:\n${products.map(p => `- ${p.name} x${p.quantity} (${formatCurrency(p.price,'EUR')})`).join('\n')}\nOrder total: 
+    ${formatCurrency(order.amount,'EUR')}`;
     return this.sendRawEmail({ to, subject, html, text });
   }
 

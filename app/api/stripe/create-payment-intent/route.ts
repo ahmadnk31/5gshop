@@ -7,13 +7,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-05
 export async function POST(req: NextRequest) {
   const { amount, currency, cart, repairType, shippingOption, email, address, userId } = await req.json();
   
-  // Create a simplified cart summary for metadata (without long image URLs)
+  // Create a simplified cart summary for metadata (now including image)
   const cartSummary = cart.map((item: any) => ({
     id: item.id,
     name: item.name,
     price: item.price,
     quantity: item.quantity,
     type: item.type,
+    image: item.image,
     shippingOption
   }));
   

@@ -60,47 +60,47 @@ export function SearchComponent() {
     if (!searchTerm.trim() || searchTerm.trim().length < 2) {
       return [];
     }
-    const searchResults: SearchResult[] = [];
+      const searchResults: SearchResult[] = [];
     if (filter === 'parts' || filter === 'all') {
       const response = await fetch(`/api/search/repairs?q=${encodeURIComponent(searchTerm)}`);
-      if (response.ok) {
-        const partsData = await response.json();
-        partsData.forEach((part: any) => {
-          searchResults.push({
-            id: part.id,
-            title: part.name || part.title,
-            type: 'part',
-            deviceType: part.deviceType,
-            price: part.price,
-            category: part.category || t('categories.replacementPart'),
-            url: part.url,
-            description: part.description,
-            matchScore: part.matchScore,
+        if (response.ok) {
+          const partsData = await response.json();
+          partsData.forEach((part: any) => {
+            searchResults.push({
+              id: part.id,
+              title: part.name || part.title,
+              type: 'part',
+              deviceType: part.deviceType,
+              price: part.price,
+              category: part.category || t('categories.replacementPart'),
+              url: part.url,
+              description: part.description,
+              matchScore: part.matchScore,
             imageUrl: part.imageUrl || '/placeholder.png',
+            });
           });
-        });
+        }
       }
-    }
     if (filter === 'accessories' || filter === 'all') {
       const response = await fetch(`/api/search/accessories?q=${encodeURIComponent(searchTerm)}`);
-      if (response.ok) {
-        const accessoriesData = await response.json();
-        accessoriesData.forEach((acc: any) => {
-          searchResults.push({
-            id: acc.id,
-            title: acc.name || acc.title,
-            type: 'accessory',
-            deviceType: acc.deviceType,
-            price: acc.price,
-            category: acc.category || t('categories.accessory'),
-            url: acc.url,
-            description: acc.description,
-            matchScore: acc.matchScore,
+        if (response.ok) {
+          const accessoriesData = await response.json();
+          accessoriesData.forEach((acc: any) => {
+            searchResults.push({
+              id: acc.id,
+              title: acc.name || acc.title,
+              type: 'accessory',
+              deviceType: acc.deviceType,
+              price: acc.price,
+              category: acc.category || t('categories.accessory'),
+              url: acc.url,
+              description: acc.description,
+              matchScore: acc.matchScore,
             imageUrl: acc.imageUrl,
+            });
           });
-        });
+        }
       }
-    }
     return searchResults;
   };
 

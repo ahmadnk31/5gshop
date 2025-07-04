@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { PaymentElement, AddressElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { PaymentElement, AddressElement, useStripe, useElements, Elements } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart-context";
 import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
+import { loadStripe } from "@stripe/stripe-js";
 
 // Dynamically import LeafletMap to avoid SSR issues
 const LeafletMap = dynamic(() => import("./leaflet-map").then(mod => ({ default: mod.LeafletMap })), {
@@ -21,7 +22,54 @@ function isPartsCart(cart: any[]): boolean {
   return cart.some(item => item.type === 'part');
 }
 
-export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: string, setCheckoutMeta?: (meta: { repairType?: string, shippingOption?: string }) => void }) {
+// Add prop types for CheckoutPaymentForm
+interface CheckoutPaymentFormProps {
+  clientSecret: string;
+  onResult: (success: boolean, errorMsg?: string) => void;
+  t: (key: string, params?: any) => string;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function CheckoutPaymentForm({ clientSecret, onResult, t, loading, setLoading }: CheckoutPaymentFormProps) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+    setLoading(true);
+    setError(null);
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {},
+      redirect: "if_required",
+    });
+    setLoading(false);
+    if (error) {
+      setError(error.message || t('error.paymentFailed'));
+      setSuccess(false);
+      if (onResult) onResult(false, error.message || t('error.paymentFailed'));
+    } else {
+      setSuccess(true);
+      if (onResult) onResult(true);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <PaymentElement />
+      <Button type="submit" disabled={loading}>
+        {loading ? t('processing') : t('pay')}
+      </Button>
+      {error && <div className="text-red-600 text-base mt-2">{error}</div>}
+    </form>
+  );
+}
+
+export function CheckoutForm({ setCheckoutMeta }: { setCheckoutMeta?: (meta: { repairType?: string, shippingOption?: string }) => void }) {
   const stripe = useStripe();
   const elements = useElements();
   const { cart, getTotal } = useCart();
@@ -31,13 +79,13 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [step, setStep] = useState<"address" | "payment" | "result">("address");
-  // For substeps in address (repairType/shippingOption)
   const [addressSubStep, setAddressSubStep] = useState<"repair" | "shipping" | null>(null);
-  // New state for repair type and shipping option
   const [repairType, setRepairType] = useState<'self' | 'by_us' | null>(null);
   const [shippingOption, setShippingOption] = useState<'at_shop' | 'send' | 'receive' | null>(null);
   const addressRef = useRef<any>(null);
   const [addressData, setAddressData] = useState<any>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [elementsInstance, setElementsInstance] = useState<any>(null);
 
   // Auto-populate address data from user session
   const getUserAddressData = () => {
@@ -93,6 +141,7 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
       return;
     }
     setError(null);
+    setLoading(true);
     // Create PaymentIntent with email and address
     const response = await fetch("/api/stripe/create-payment-intent", {
       method: "POST",
@@ -102,44 +151,28 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
         currency: "eur",
         cart,
         repairType,
-        shippingOption: shippingOption || 'at_shop', // Always send a value
+        shippingOption: shippingOption || 'at_shop',
         email: session?.user?.email,
         userId: session?.user?.id,
         address: {
           ...addressData,
-          name: getName(), // Always include name
+          name: getName(),
         },
       }),
     });
     const data = await response.json();
-    if (data.clientSecret && setCheckoutMeta) {
-      setCheckoutMeta({
-        ...(isPartsCart(cart) ? { repairType: repairType ?? undefined } : {}),
-        ...(isPartsCart(cart) && repairType === 'by_us' ? { shippingOption: shippingOption ?? undefined } : {}),
-      });
-    }
-    setStep("payment");
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
-    setLoading(true);
-    setError(null);
-    
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {},
-      redirect: "if_required",
-    });
-    
     setLoading(false);
-    setStep("result");
-    if (error) {
-      setError(error.message || t('error.paymentFailed'));
-      setSuccess(false);
+    if (data.clientSecret) {
+      setClientSecret(data.clientSecret);
+      if (setCheckoutMeta) {
+        setCheckoutMeta({
+          ...(isPartsCart(cart) ? { repairType: repairType ?? undefined } : {}),
+          ...(isPartsCart(cart) && repairType === 'by_us' ? { shippingOption: shippingOption ?? undefined } : {}),
+        });
+      }
+      setStep("payment");
     } else {
-      setSuccess(true);
+      setError('Failed to create payment intent.');
     }
   };
 
@@ -235,12 +268,12 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
                     </label>
                   </div>
                   <div className="flex gap-2 mt-4">
-                    <Button type="button" className="flex-1" onClick={() => setStep("payment")}>Skip</Button>
+                    <Button type="button" className="flex-1" onClick={handleAddressComplete}>Skip</Button>
                     <Button type="button" className="flex-1" onClick={() => {
                       if (!repairType) { setError(t('repair.errorSelectRepairType')); return; }
                       setError(null);
                       if (repairType === 'by_us') setAddressSubStep('shipping');
-                      else setStep('payment');
+                      else handleAddressComplete();
                     }}>Next</Button>
                   </div>
                 </>
@@ -299,7 +332,7 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
                     <Button type="button" className="flex-1" onClick={() => {
                       if (!shippingOption) { setError(t('repair.errorSelectShippingOption')); return; }
                       setError(null);
-                      setStep('payment');
+                      handleAddressComplete();
                     }}>{t('next')}</Button>
                   </div>
                 </>
@@ -309,20 +342,26 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta }: { clientSecret: 
           {error && <div className="text-red-600 text-base mt-2">{error}</div>}
           {/* If not parts cart, just continue */}
           {!isPartsCart(cart) && (
-            <Button className="w-full mt-8 py-3 text-lg" onClick={() => setStep('payment')} type="button">
-              {t('continue')}
+            <Button onClick={handleAddressComplete} disabled={loading}>
+              {loading ? t('loading') : t('continueToPayment')}
             </Button>
           )}
         </div>
       )}
-      {step === "payment" && (
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <PaymentElement />
-          {error && <div className="text-red-600 text-base mt-2">{error}</div>}
-          <Button type="submit" disabled={!stripe || loading} className="w-full py-3 text-lg mt-4">
-            {loading ? t('paying') : t('pay')}
-          </Button>
-        </form>
+      {step === "payment" && clientSecret && (
+        <Elements stripe={loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)} options={{ clientSecret }}>
+          <CheckoutPaymentForm
+            clientSecret={clientSecret}
+            t={t}
+            loading={loading}
+            setLoading={setLoading}
+            onResult={(success, errorMsg) => {
+              setSuccess(success);
+              setStep("result");
+              if (errorMsg) setError(errorMsg);
+            }}
+          />
+        </Elements>
       )}
       {step === "result" && (
         <div className="text-center py-16">

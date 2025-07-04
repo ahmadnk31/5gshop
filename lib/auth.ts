@@ -21,11 +21,17 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Please enter both email and password");
+        }
         const user = await prisma.user.findUnique({ where: { email: credentials.email } });
-        if (!user || !user.hashedPassword) return null;
+        if (!user || !user.hashedPassword) {
+          throw new Error("No user found with this email");
+        }
         const isValid = await compare(credentials.password, user.hashedPassword);
-        if (!isValid) return null;
+        if (!isValid) {
+          throw new Error("Invalid password");
+        }
         return {
           id: user.id,
           email: user.email,

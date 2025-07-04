@@ -1025,6 +1025,7 @@
     "continue": "Doorgaan",
     "back": "Terug",
     "pay": "Nu betalen",
+    "processing": "Bezig met betalen...",
     "paying": "Bezig met betalen...",
     "orderSummary": "Besteloverzicht",
     "total": "Totaal",
