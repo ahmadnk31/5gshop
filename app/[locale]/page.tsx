@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { FeaturedPartsSection } from "@/components/FeaturedPartsSection";
 import { FeaturedAccessoriesSection } from "@/components/FeaturedAccessoriesSection";
+import { RecentlyViewedSection } from "@/components/recently-viewed-section";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Smartphone, Wrench, ShoppingBag, Star, Clock, Shield, CheckCircle, ArrowRight, Zap, Cable, Headphones, Monitor, ShoppingCart } from "lucide-react";
@@ -276,6 +277,9 @@ export default async function Home() {
           productImage: t('accessories.product.productImage'),
         }}
       />
+
+      {/* Recently Viewed & Search-Based Recommendations */}
+      <RecentlyViewedSection />
 
       {/* Popular Repair Services */}
       <section className="py-16 bg-[var(--background)]">

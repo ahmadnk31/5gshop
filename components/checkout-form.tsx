@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { loadStripe } from "@stripe/stripe-js";
+import { MapPin, CreditCard, CheckCircle, ArrowRight } from "lucide-react";
 
 // Dynamically import LeafletMap to avoid SSR issues
 const LeafletMap = dynamic(() => import("./leaflet-map").then(mod => ({ default: mod.LeafletMap })), {
@@ -59,9 +60,14 @@ function CheckoutPaymentForm({ clientSecret, onResult, t, loading, setLoading }:
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="space-y-6">
       <PaymentElement />
-      <Button type="submit" disabled={loading}>
+      <Button 
+        type="submit" 
+        disabled={loading}
+        className="w-full py-3 text-lg font-semibold"
+        size="lg"
+      >
         {loading ? t('processing') : t('pay')}
       </Button>
       {error && <div className="text-red-600 text-base mt-2">{error}</div>}
@@ -69,22 +75,28 @@ function CheckoutPaymentForm({ clientSecret, onResult, t, loading, setLoading }:
   );
 }
 
-export function CheckoutForm({ setCheckoutMeta }: { setCheckoutMeta?: (meta: { repairType?: string, shippingOption?: string }) => void }) {
+interface CheckoutFormProps {
+  clientSecret: string;
+  setCheckoutMeta?: (meta: { repairType?: string; shippingOption?: string }) => void;
+  onPaymentSuccess?: () => void;
+}
+
+export function CheckoutForm({ clientSecret, setCheckoutMeta, onPaymentSuccess }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
-  const { cart, getTotal } = useCart();
+  const { cart, getTotal, getBuyNowTotal, buyNowCart, clearCart } = useCart();
   const { data: session } = useSession();
   const t = useTranslations('checkout');
+  const [step, setStep] = useState<"address" | "payment" | "result">("address");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [step, setStep] = useState<"address" | "payment" | "result">("address");
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
   const [addressSubStep, setAddressSubStep] = useState<"repair" | "shipping" | null>(null);
   const [repairType, setRepairType] = useState<'self' | 'by_us' | null>(null);
   const [shippingOption, setShippingOption] = useState<'at_shop' | 'send' | 'receive' | null>(null);
   const addressRef = useRef<any>(null);
   const [addressData, setAddressData] = useState<any>(null);
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [elementsInstance, setElementsInstance] = useState<any>(null);
 
   // Auto-populate address data from user session
@@ -147,7 +159,7 @@ export function CheckoutForm({ setCheckoutMeta }: { setCheckoutMeta?: (meta: { r
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        amount: getTotal() * 100,
+        amount: (buyNowCart ? getBuyNowTotal() : getTotal()) * 100,
         currency: "eur",
         cart,
         repairType,
@@ -163,7 +175,7 @@ export function CheckoutForm({ setCheckoutMeta }: { setCheckoutMeta?: (meta: { r
     const data = await response.json();
     setLoading(false);
     if (data.clientSecret) {
-      setClientSecret(data.clientSecret);
+      setOrderId(data.orderId);
       if (setCheckoutMeta) {
         setCheckoutMeta({
           ...(isPartsCart(cart) ? { repairType: repairType ?? undefined } : {}),
@@ -177,8 +189,30 @@ export function CheckoutForm({ setCheckoutMeta }: { setCheckoutMeta?: (meta: { r
   };
 
   // Stepper UI
-  const steps = [t('stepper.address'), t('stepper.payment'), t('stepper.result')];
+  const steps = [
+    { label: t('stepper.address'), icon: MapPin, step: "address" },
+    { label: t('stepper.payment'), icon: CreditCard, step: "payment" },
+    { label: t('stepper.result'), icon: CheckCircle, step: "result" }
+  ];
   const currentStep = step === "address" ? 0 : step === "payment" ? 1 : 2;
+
+  const handleStepClick = (stepIndex: number, stepName: string) => {
+    // Only allow navigation to completed steps or current step
+    if (stepIndex <= currentStep) {
+      if (stepName === "address") {
+        setStep("address");
+      } else if (stepName === "payment" && clientSecret) {
+        setStep("payment");
+      }
+    }
+  };
+
+  // Trigger payment success callback when step changes to result
+  useEffect(() => {
+    if (step === "result" && onPaymentSuccess) {
+      onPaymentSuccess();
+    }
+  }, [step, onPaymentSuccess]);
 
   return (
     <div className="max-w-2xl w-full mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100 relative overflow-hidden">
@@ -190,13 +224,57 @@ export function CheckoutForm({ setCheckoutMeta }: { setCheckoutMeta?: (meta: { r
         aria-hidden="true"
       />
       {/* Stepper */}
-      <div className="flex justify-between mb-10">
-        {steps.map((label, idx) => (
-          <div key={label} className="flex-1 flex flex-col items-center">
-            <div className={`rounded-full w-10 h-10 flex items-center justify-center mb-1 text-white text-lg font-bold ${idx <= currentStep ? 'bg-blue-600' : 'bg-gray-300'}`}>{idx + 1}</div>
-            <span className={`text-sm ${idx === currentStep ? 'font-bold text-blue-700' : 'text-gray-500'}`}>{label}</span>
-          </div>
-        ))}
+      <div className="flex justify-between mb-10 relative">
+        {/* Background connector line */}
+        <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-300 z-0" />
+        
+        {steps.map((stepItem, idx) => {
+          const Icon = stepItem.icon;
+          const isCompleted = idx < currentStep;
+          const isCurrent = idx === currentStep;
+          const isClickable = idx <= currentStep && (stepItem.step !== "payment" || clientSecret);
+          
+          return (
+            <div key={stepItem.label} className="flex-1 flex flex-col items-center relative z-10">
+              {/* Progress line overlay for completed steps */}
+              {idx < steps.length - 1 && isCompleted && (
+                <div className="absolute top-5 left-1/2 w-full h-0.5 bg-blue-600 z-5" />
+              )}
+              
+              <button
+                type="button"
+                onClick={() => handleStepClick(idx, stepItem.step)}
+                disabled={!isClickable}
+                className={`group flex flex-col items-center transition-all duration-200 ${
+                  isClickable ? 'cursor-pointer hover:scale-105' : 'cursor-not-allowed'
+                }`}
+              >
+                <div className={`rounded-full w-10 h-10 flex items-center justify-center mb-2 text-white text-lg font-bold transition-all duration-200 relative z-10 ${
+                  isCompleted 
+                    ? 'bg-green-600 shadow-lg' 
+                    : isCurrent 
+                    ? 'bg-blue-600 shadow-lg' 
+                    : 'bg-gray-300'
+                } ${isClickable && !isCurrent ? 'group-hover:bg-blue-500' : ''}`}>
+                  {isCompleted ? (
+                    <CheckCircle className="h-5 w-5" />
+                  ) : (
+                    <Icon className="h-5 w-5" />
+                  )}
+                </div>
+                <span className={`text-sm text-center transition-colors duration-200 ${
+                  isCurrent 
+                    ? 'font-bold text-blue-700' 
+                    : isCompleted 
+                    ? 'font-medium text-green-700' 
+                    : 'text-gray-500'
+                } ${isClickable && !isCurrent ? 'group-hover:text-blue-600' : ''}`}>
+                  {stepItem.label}
+                </span>
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       {/* Cart Summary */}
@@ -216,7 +294,7 @@ export function CheckoutForm({ setCheckoutMeta }: { setCheckoutMeta?: (meta: { r
         </ul>
         <div className="flex justify-between font-bold text-lg mt-2">
           <span>{t('cart.total')}</span>
-          <span>€{getTotal().toFixed(2)}</span>
+          <span>€{(buyNowCart ? getBuyNowTotal() : getTotal()).toFixed(2)}</span>
         </div>
       </div>
 
@@ -356,7 +434,7 @@ export function CheckoutForm({ setCheckoutMeta }: { setCheckoutMeta?: (meta: { r
             loading={loading}
             setLoading={setLoading}
             onResult={(success, errorMsg) => {
-              setSuccess(success);
+              setPaymentSuccess(success);
               setStep("result");
               if (errorMsg) setError(errorMsg);
             }}
@@ -365,7 +443,7 @@ export function CheckoutForm({ setCheckoutMeta }: { setCheckoutMeta?: (meta: { r
       )}
       {step === "result" && (
         <div className="text-center py-16">
-          {success ? (
+          {paymentSuccess ? (
             <>
               <h2 className="text-3xl font-bold mb-4 text-green-700">{t('success.title')}</h2>
               <p className="text-lg">{t('success.message')}</p>

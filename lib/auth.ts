@@ -22,15 +22,21 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error("Please enter both email and password");
+          return null;
         }
         const user = await prisma.user.findUnique({ where: { email: credentials.email } });
         if (!user || !user.hashedPassword) {
-          throw new Error("No user found with this email");
+          return null;
         }
+        
+        // Check if user is banned
+        if (user.role === 'BANNED') {
+          return null; // Return null for banned users
+        }
+        
         const isValid = await compare(credentials.password, user.hashedPassword);
         if (!isValid) {
-          throw new Error("Invalid password");
+          return null;
         }
         return {
           id: user.id,
@@ -48,6 +54,16 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Check if user is banned during sign in
+      if (user && user.email) {
+        const dbUser = await prisma.user.findUnique({ where: { email: user.email } });
+        if (dbUser && dbUser.role === 'BANNED') {
+          return false; // Prevent sign in for banned users
+        }
+      }
+      return true;
+    },
     async session({ session, token }) {
       if (session?.user) {
         session.user.id = token.sub ?? "";
@@ -81,6 +97,7 @@ export const authOptions: NextAuthOptions = {
           token.lastName = dbUser.lastName || undefined;
         }
       }
+      
       //if user has admin role allow to access admin routes
       if (account?.provider === "google" && !token.role) {
         const dbUser = await prisma.user.findUnique({ where: { email: user?.email || "" } });

@@ -31,6 +31,7 @@ import { getAccessoriesWithFiltersPaginated } from "@/app/actions/pagination-act
 import { Accessory, AccessoryCategory } from "@/lib/types";
 import { useTranslations } from "next-intl";
 import { formatCurrency } from "@/lib/utils";
+import { addSearchHistory } from "@/lib/view-history";
 import { useCart } from "@/components/cart-context";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { Link, useRouter } from "@/i18n/navigation";
@@ -326,6 +327,10 @@ export default function AccessoriesPagePaginated() {
   };
 
   const handleSearchSuggestionClick = (accessory: Accessory) => {
+    // Track search history when user clicks a suggestion
+    if (searchInput.trim().length >= 2) {
+      addSearchHistory(searchInput.trim());
+    }
     // Navigate to the accessory detail page
     router.push(`/accessories/${accessory.id}`);
   };
@@ -344,6 +349,10 @@ export default function AccessoriesPagePaginated() {
   const handleSearchKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      // Track search history when user presses Enter
+      if (searchInput.trim().length >= 2) {
+        addSearchHistory(searchInput.trim());
+      }
       // Submit search with current input
       setSearchTerm(searchInput);
       setShowSearchDropdown(false);
@@ -815,7 +824,7 @@ export default function AccessoriesPagePaginated() {
                             <FallbackImage
                               src={accessory.imageUrl || ''}
                               alt={accessory.name}
-                              className="object-cover w-full h-full"
+                              className="object-cover w-full h-full aspect-square"
                               fallbackContent={
                                 <div className="text-center text-gray-400 flex flex-col items-center justify-center w-full h-full">
                                   <IconComponent className="h-16 w-16 mx-auto mb-2" />

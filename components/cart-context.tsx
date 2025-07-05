@@ -12,11 +12,15 @@ export type CartItem = {
 
 interface CartContextType {
   items: CartItem[];
+  buyNowCart: CartItem[] | null;
   addToCart: (item: Omit<CartItem, "quantity">) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;
   updateQuantity: (id: string, quantity: number) => void;
+  setCart: (items: CartItem[]) => void;
+  setBuyNowCart: (items: CartItem[] | null) => void;
   getTotal: () => number;
+  getBuyNowTotal: () => number;
   // Add cart alias for items
   cart: CartItem[];
 }
@@ -38,8 +42,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     return [];
   });
 
+  const [buyNowCart, setBuyNowCart] = useState<CartItem[] | null>(null);
+
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(items));
+  }, [items]);
+
+  // Clear buyNowCart when items change (user adds/removes from main cart)
+  useEffect(() => {
+    if (buyNowCart) {
+      setBuyNowCart(null);
+    }
   }, [items]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
@@ -66,10 +79,28 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     );
   };
 
+  const setCart = (newItems: CartItem[]) => {
+    setItems(newItems);
+  };
+
   const getTotal = () => items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  const getBuyNowTotal = () => buyNowCart ? buyNowCart.reduce((sum, item) => sum + item.price * item.quantity, 0) : 0;
+
   return (
-    <CartContext.Provider value={{ items, addToCart, removeFromCart, clearCart, updateQuantity, getTotal, cart: items }}>
+    <CartContext.Provider value={{ 
+      items, 
+      buyNowCart,
+      addToCart, 
+      removeFromCart, 
+      clearCart, 
+      updateQuantity, 
+      setCart, 
+      setBuyNowCart,
+      getTotal, 
+      getBuyNowTotal,
+      cart: buyNowCart || items 
+    }}>
       {children}
     </CartContext.Provider>
   );

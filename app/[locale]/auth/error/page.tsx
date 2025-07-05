@@ -14,6 +14,8 @@ export default function AuthErrorPage() {
   const errorMessages: Record<string, string> = {
     CredentialsSignin: t("invalidCredentials"),
     AccessDenied: t("accessDenied"),
+    AccountBanned: "Your account has been suspended. Please contact support for assistance.",
+    "Your account has been suspended. Please contact support for assistance.": "Your account has been suspended. Please contact support for assistance.",
     default: t("default")
   };
 

@@ -49,7 +49,7 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
                     <FallbackImage
                       src={accessory.imageUrl || ''}
                       alt={accessory.name}
-                      className="object-contain w-full h-full"
+                      className="object-contain aspect-square w-full h-full"
                       fallbackContent={<div className="w-full h-full flex flex-col items-center justify-center text-gray-400"><span className="text-4xl">🧩</span><p className="text-sm mt-2">{translations.productImage}</p></div>}
                     />
                   </div>

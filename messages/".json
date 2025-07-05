@@ -205,6 +205,19 @@
       "termsOfService": "Terms of Service",
       "contactUs": "Contact Us"
     },
+    "paymentMethods": {
+    "title": "Payment Methods",
+    "description": "We accept the following payment methods:",
+    "visa": "Visa",
+    "mastercard": "Mastercard",
+    "amex": "American Express",
+    "applePay": "Apple Pay",
+    "stripe": "Stripe",
+    "klarna": "Klarna",
+    "bancontact": "Bancontact",
+    "belfius": "Belfius",
+    "payconiq": "Payconiq"
+  },
     "copyright": "All rights reserved.",
     "poweredBy": "Powered by Next JS and Tailwind CSS"
   },
@@ -482,10 +495,24 @@
       "camera": "Camera"
     }
   },
+  
   "navigationAccessory": {
     "home": "Home",
     "accessories": "Accessories",
     "backToAccessories": "Back to Accessories"
+  },
+  "recentlyViewed": {
+    "title": "Recently Viewed",
+    "viewDetails": "View Details"
+  },
+  "searchBased": {
+    "title": "Based on Your Search",
+    "basedOn": "Based on",
+    "viewMore": "View More"
+  },
+  "badges": {
+    "part": "Part",
+    "accessory": "Accessory"
   },
   "product": {
     "outOfStock": "Out of Stock",
@@ -712,6 +739,20 @@
     "repairServices": "Repair Services",
     "availableParts": "Available Parts",
     "availableServices": "Available Services"
+  },
+  "badges": {
+    "part": "Part",
+    "accessory": "Accessory"
+  },
+  "searchBased": {
+    "title": "Based on Your Search",
+    "basedOn": "Based on",
+    "viewMore": "View More"
+  },
+  "searchResults": {
+    "browseAllDeviceTypes": "Browse All Device Types",
+    "searchAllDeviceTypes": "Search All Device Types",
+    "browseAllServices": "Browse All Services"
   }
 },
   "about": {
@@ -1042,6 +1083,7 @@
     "next": "Next",
     "confirm": "Confirm Order",
     "confirmOrder": "Confirm Order",
+    "continueToPayment": "Continue to Payment",
     "paying": "Processing payment...",
     "orderSummary": "Order Summary",
     "total": "Total",

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
@@ -62,26 +64,26 @@ export default function ResetPasswordPage() {
         />
         {error && <div className="text-red-600 text-sm">{error}</div>}
         {message && <div className="text-green-600 text-sm">{t("success")}</div>}
-        <button type="submit" disabled={loading} className="w-full bg-indigo-600 text-white py-2 rounded disabled:opacity-50">
+        <Button size='lg' type="submit" disabled={loading} className="w-full text-white py-2 rounded disabled:opacity-50">
           {loading ? t("resetting") : t("button")}
-        </button>
+        </Button>
       </form>
       <div className="flex items-center my-4">
         <div className="flex-grow border-t border-gray-200" />
         <span className="mx-2 text-gray-400 text-xs">or</span>
         <div className="flex-grow border-t border-gray-200" />
       </div>
-      <button
+      <Button
         type="button"
         onClick={() => window.location.href = '/auth/login'}
         className="w-full flex items-center justify-center gap-2 border border-gray-300 py-2 rounded hover:bg-gray-50 mb-2"
       >
         <img src="/google.svg" alt="Google" className="h-5 w-5" />
         <span>Sign in with Google</span>
-      </button>
+      </Button>
       <div className="flex justify-between mt-4 text-sm">
-        <a href="/auth/login" className="text-indigo-600 hover:underline">{t("back")}</a>
-        <a href="/auth/register" className="text-indigo-600 hover:underline">Register</a>
+        <Link href="/auth/login" className="text-secondary hover:underline">{t("back")}</Link>
+        <Link href="/auth/register" className="text-secondary hover:underline">Register</Link>
       </div>
     </div>
   );

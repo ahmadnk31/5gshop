@@ -29,6 +29,8 @@ import { Link, useRouter } from '@/i18n/navigation';
 import { formatCurrency } from '@/lib/utils';
 import Image from 'next/image';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { addSearchHistory } from '@/lib/view-history';
+import { FallbackImage } from '@/components/ui/fallback-image';
 type SearchFilter = 'all' | 'parts' | 'accessories';
 
 interface SearchResult {
@@ -194,6 +196,11 @@ export function SearchComponent() {
   };
 
   const handleResultClick = (result: SearchResult) => {
+    // Track the search when user clicks a result
+    if (searchTerm.trim().length >= 2) {
+      addSearchHistory(searchTerm.trim());
+    }
+    
     if (result.type === 'part' && result.id) {
       router.push(`/parts/${result.id.replace(/^part-/, '')}`);
     } else if (result.type === 'accessory' && result.id) {
@@ -212,6 +219,9 @@ export function SearchComponent() {
       setIsOpen(false);
       setSearchTerm('');
     } else if (e.key === 'Enter' && searchTerm.trim().length >= 2) {
+      // Track the search when user presses Enter
+      addSearchHistory(searchTerm.trim());
+      
       if (results.length > 0) {
         const bestResult = results.reduce((prev, curr) => (curr.matchScore || 0) > (prev.matchScore || 0) ? curr : prev, results[0]);
         if (bestResult.type === 'part') {
@@ -327,6 +337,8 @@ export function SearchComponent() {
           onClick={() => {
             if (searchTerm.trim() && searchTerm.length >= 2) {
               const trimmedSearch = searchTerm.trim();
+              // Track search history when user clicks search button
+              addSearchHistory(trimmedSearch);
               // If user just clicks search, always go to browser page with search term
               const partCount = results.filter(r => r.type === 'part').length;
               const accessoryCount = results.filter(r => r.type === 'accessory').length;
@@ -368,19 +380,22 @@ export function SearchComponent() {
                   className="w-full px-3 py-3 text-left hover:bg-gray-50 border-b last:border-b-0 focus:bg-gray-50 focus:outline-none"
                 >
                   <div className="flex items-start space-x-3">
-                    {result.imageUrl ? (
-                      <Image
-                        src={result.imageUrl}
-                        alt={result.title}
-                        width={40}
-                        height={40}
-                        className="h-10 w-10 rounded-md object-cover flex-shrink-0"
-                      />
-                    ) : (
-                      <div className="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center flex-shrink-0">
-                        {getResultIcon(result)}
-                      </div>
-                    )}
+                    <div className="h-10 w-10 rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      {result.imageUrl ? (
+                        <FallbackImage
+                          src={result.imageUrl}
+                          alt={result.title}
+                          width={40}
+                          height={40}
+                          className="h-10 w-10 rounded-md object-cover"
+                          fallbackContent={getResultIcon(result)}
+                        />
+                      ) : (
+                        <div className="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center">
+                          {getResultIcon(result)}
+                        </div>
+                      )}
+                    </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
                         <p className="text-sm font-medium text-gray-900 truncate">
@@ -422,7 +437,12 @@ export function SearchComponent() {
                         <Link
                           href={`/repairs?search=${encodeURIComponent(searchTerm || '')}`}
                           className="text-sm text-blue-600 hover:text-blue-800 font-medium block truncate"
-                          onClick={() => setIsOpen(false)}
+                          onClick={() => {
+                            if (searchTerm.trim().length >= 2) {
+                              addSearchHistory(searchTerm.trim());
+                            }
+                            setIsOpen(false);
+                          }}
                         >
                           {t(partResults.length === 1 ? 'results.viewParts' : 'results.viewParts_plural', { 
                             count: partResults.length, 
@@ -432,7 +452,12 @@ export function SearchComponent() {
                         <Link
                           href={`/accessories?search=${encodeURIComponent(searchTerm || '')}`}
                           className="text-sm text-green-600 hover:text-green-800 font-medium block truncate"
-                          onClick={() => setIsOpen(false)}
+                          onClick={() => {
+                            if (searchTerm.trim().length >= 2) {
+                              addSearchHistory(searchTerm.trim());
+                            }
+                            setIsOpen(false);
+                          }}
                         >
                           {t(accessoryResults.length === 1 ? 'results.viewAccessories' : 'results.viewAccessories_plural', { 
                             count: accessoryResults.length, 
@@ -448,7 +473,12 @@ export function SearchComponent() {
                       <Link
                         href={`/repairs?search=${encodeURIComponent(searchTerm || '')}`}
                         className="text-sm text-blue-600 hover:text-blue-800 font-medium block truncate"
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => {
+                          if (searchTerm.trim().length >= 2) {
+                            addSearchHistory(searchTerm.trim());
+                          }
+                          setIsOpen(false);
+                        }}
                       >
                         {t(partResults.length === 1 ? 'results.viewParts' : 'results.viewParts_plural', { 
                           count: partResults.length, 
@@ -463,7 +493,12 @@ export function SearchComponent() {
                       <Link
                         href={`/accessories?search=${encodeURIComponent(searchTerm || '')}`}
                         className="text-sm text-green-600 hover:text-green-800 font-medium block truncate"
-                        onClick={() => setIsOpen(false)}
+                        onClick={() => {
+                          if (searchTerm.trim().length >= 2) {
+                            addSearchHistory(searchTerm.trim());
+                          }
+                          setIsOpen(false);
+                        }}
                       >
                         {t(accessoryResults.length === 1 ? 'results.viewAccessories' : 'results.viewAccessories_plural', { 
                           count: accessoryResults.length, 
@@ -477,7 +512,12 @@ export function SearchComponent() {
                     <Link
                       href={`${getSmartDestination()}?search=${encodeURIComponent(searchTerm || '')}`}
                       className="text-sm text-blue-600 hover:text-blue-800 font-medium block truncate"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => {
+                        if (searchTerm.trim().length >= 2) {
+                          addSearchHistory(searchTerm.trim());
+                        }
+                        setIsOpen(false);
+                      }}
                     >
                       {t('results.viewAll', { query: searchTerm })}
                     </Link>

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -67,13 +69,14 @@ export default function RegisterPage() {
           className="w-full border rounded px-3 py-2"
           required
         />
-        <button
+        <Button
+          size='lg'
           type="submit"
-          className="w-full bg-indigo-600 text-white py-2 rounded disabled:opacity-50"
+          className="w-full text-white py-2 rounded disabled:opacity-50"
           disabled={loading}
         >
           {loading ? t("registering") : t("button")}
-        </button>
+        </Button>
         {error && <div className="text-red-600">{t("error")}</div>}
         {success && <div className="text-green-600">{t("success")}</div>}
       </form>
@@ -82,16 +85,16 @@ export default function RegisterPage() {
         <span className="mx-2 text-gray-400 text-xs">or</span>
         <div className="flex-grow border-t border-gray-200" />
       </div>
-      <button
+      <Button
         type="button"
         onClick={() => signIn("google")}
         className="w-full flex items-center justify-center gap-2 border border-gray-300 py-2 rounded hover:bg-gray-50 mb-2"
       >
         <img src="/google.svg" alt="Google" className="h-5 w-5" />
         <span>Sign up with Google</span>
-      </button>
+      </Button>
       <div className="flex justify-between mt-4 text-sm">
-        <a href="/auth/login" className="text-indigo-600 hover:underline">{t("login")}</a>
+        <Link href="/auth/login" className="text-secondary hover:underline">{t("login")}</Link>
       </div>
     </div>
   );

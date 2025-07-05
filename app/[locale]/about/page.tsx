@@ -343,7 +343,7 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold mb-4">{t('cta.title')}</h2>
           <p className="text-xl mb-8">{t('cta.subtitle')}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary">
+            <Button asChild size="lg" >
               <Link href="/repairs">{t('cta.bookRepair')}</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="text-white bg-transparent border-white hover:bg-white hover:text-indigo-600">

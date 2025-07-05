@@ -188,6 +188,19 @@
       "getQuote": "Offerte aanvragen",
       "aboutUs": "Over ons"
     },
+    "paymentMethods": {
+    "title": "Betaalmethoden",
+    "description": "We accepteren de volgende betaalmethoden:",
+    "visa": "Visa",
+    "mastercard": "Mastercard",
+    "amex": "American Express",
+    "applePay": "Apple Pay",
+    "stripe": "Stripe",
+    "klarna": "Klarna",
+    "bancontact": "Bancontact",
+    "belfius": "Belfius",
+    "payconiq": "Payconiq"
+  },
     "contactInfo": {
       "title": "Contactinformatie",
       "address": "Bondgenotenlaan 84A, Leuven",
@@ -604,10 +617,12 @@
       "viewAccessories": "Bekijk {count} accessoire voor \"{query}\"",
       "viewAccessories_plural": "Bekijk {count} accessoires voor \"{query}\""
     },
-    "badges": {
-      "part": "Onderdeel",
-      "accessory": "Accessoire"
-    },
+  
+  "searchBased": {
+    "title": "Gebaseerd op Uw Zoekopdracht",
+    "basedOn": "Gebaseerd op",
+    "viewMore": "Meer Bekijken"
+  },
     "categories": {
       "replacementPart": "Vervangingsonderdeel",
       "accessory": "Accessoire",
@@ -624,6 +639,19 @@
       "speaker": "Luidspreker",
       "camera": "Camera"
     }
+  },
+  "recentlyViewed": {
+    "title": "Recent Bekeken",
+    "viewDetails": "Details Bekijken"
+  },
+  "badges": {
+    "part": "Onderdeel",
+    "accessory": "Accessoire"
+  },
+  "searchBased": {
+    "title": "Gebaseerd op Uw Zoekopdracht",
+    "basedOn": "Gebaseerd op",
+    "viewMore": "Meer Bekijken"
   },
   "features": {
     "freeShipping": {

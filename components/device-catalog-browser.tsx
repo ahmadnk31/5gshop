@@ -1108,7 +1108,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                     }
                   }}
                 >
-                  {t('searchResults.searchAllDeviceTypes')}
+                  {t('search.results.searchAllDeviceTypes')}
                 </Button>
               )}
               <Button 

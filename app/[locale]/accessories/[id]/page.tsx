@@ -13,6 +13,7 @@ import { useCart } from "@/components/cart-context";
 import { AccessoryDetailClientActions } from './accessory-actions';
 import { AccessoryActionButtons } from './accessory-action-buttons';
 import { RelatedAccessoryCard } from './related-accessory-card';
+import { AccessoryViewTracker } from './accessory-view-tracker';
 
 interface AccessoryDetailPageProps {
   params: Promise<{ id: string }>;
@@ -80,6 +81,9 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Track this accessory as recently viewed */}
+      <AccessoryViewTracker accessory={accessory} />
+      
       {/* Breadcrumb Navigation */}
       <div className="bg-gray-50 border-b">
         <div className="container mx-auto px-4 py-3">

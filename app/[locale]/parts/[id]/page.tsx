@@ -23,12 +23,13 @@ import {
 } from '@/components/ui/breadcrumb';
 import { Link } from '@/i18n/navigation';
 import { useSession } from 'next-auth/react';
+import { addRecentlyViewed } from '@/lib/view-history';
 
 export default function PartDetailPage() {
   const t = useTranslations('parts');
   const locale = useLocale();
   const { id } = useParams();
-  const { addToCart, clearCart } = useCart();
+  const { addToCart, setCart, setBuyNowCart } = useCart();
   const router = useRouter();
   const [part, setPart] = useState<any>(null);
   const [relatedParts, setRelatedParts] = useState<any[]>([]);
@@ -79,6 +80,21 @@ export default function PartDetailPage() {
       .then(res => res.json())
       .then(data => setInWishlist(!!data.inWishlist));
   }, [session?.user?.id, part?.id]);
+
+  // Track recently viewed part
+  useEffect(() => {
+    if (part) {
+      addRecentlyViewed({
+        id: part.id,
+        name: part.name,
+        price: part.cost,
+        imageUrl: part.imageUrl,
+        type: 'part',
+        category: part.category,
+        url: `/parts/${part.id}`
+      });
+    }
+  }, [part]);
 
   const toggleWishlist = async () => {
     console.log('🔍 toggleWishlist called');
@@ -267,8 +283,15 @@ export default function PartDetailPage() {
                 disabled={!isInStock}
                 onClick={() => {
                   if (!isInStock) return;
-                  clearCart();
-                  addToCart({ id: part.id, name: part.name, price: part.cost, image: part.imageUrl, type: 'part' });
+                  // Set buy now cart to only contain this item (doesn't affect main cart)
+                  setBuyNowCart([{
+                    id: part.id,
+                    name: part.name,
+                    price: part.cost,
+                    image: part.imageUrl,
+                    type: 'part',
+                    quantity: 1
+                  }]);
                   router.push('/checkout');
                 }}
               >

@@ -17,6 +17,7 @@ import { ContactList } from "@/components/admin/contact-list";
 import { QuotesList } from "@/components/admin/quotes-list";
 import { ReportsModal } from "@/components/admin/reports-modal";
 import { OrdersTable } from "@/components/admin/orders-table";
+import { UserManagement } from "@/components/admin/user-management";
 import { Repair, Customer, Priority, RepairStatus, Part } from "@/lib/types";
 import { 
   DollarSign, 
@@ -42,7 +43,8 @@ import {
   Activity,
   PieChart,
   LineChart,
-  MessageSquare
+  MessageSquare,
+  Shield
 } from "lucide-react";
 
 function AdminDashboardContent() {
@@ -58,7 +60,7 @@ function AdminDashboardContent() {
   const [showCustomerEditModal, setShowCustomerEditModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<RepairStatus | 'all'>('all');
-  const [activeTab, setActiveTab] = useState<'overview' | 'repairs' | 'customers' | 'contacts' | 'quotes' | 'analytics' | 'inventory' | 'orders'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'repairs' | 'customers' | 'contacts' | 'quotes' | 'analytics' | 'inventory' | 'orders' | 'users'>('overview');
   const [customerSearchTerm, setCustomerSearchTerm] = useState('');
   const [showTodayFilter, setShowTodayFilter] = useState(false);
   const [showReportsModal, setShowReportsModal] = useState(false);
@@ -229,7 +231,8 @@ function AdminDashboardContent() {
                 { id: 'quotes', label: 'Quotes', icon: DollarSign },
                 { id: 'analytics', label: 'Analytics', icon: PieChart },
                 { id: 'inventory', label: 'Inventory', icon: Package },
-                { id: 'orders', label: 'Orders', icon: Box }
+                { id: 'orders', label: 'Orders', icon: Box },
+                { id: 'users', label: 'Users', icon: Shield }
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -1071,6 +1074,11 @@ function AdminDashboardContent() {
             <h2 className="text-xl font-bold mb-4">Orders Management</h2>
             <OrdersTable />
           </div>
+        )}
+
+        {/* Users Tab */}
+        {activeTab === 'users' && (
+          <UserManagement />
         )}
       </div>
 

@@ -6,7 +6,7 @@ import { ShoppingCart } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export function AccessoryDetailClientActions({ accessory, isInStock }: { accessory: any, isInStock: boolean }) {
-  const { addToCart, clearCart } = useCart();
+  const { addToCart, setBuyNowCart } = useCart();
   const router = useRouter();
   const t = useTranslations('');
 
@@ -36,15 +36,15 @@ export function AccessoryDetailClientActions({ accessory, isInStock }: { accesso
           className="flex-1"
           onClick={() => {
             if (!isInStock) return;
-            // Use context clearCart and addToCart for correct state update (like parts)
-            clearCart();
-            addToCart({
+            // Set buy now cart to only contain this item (doesn't affect main cart)
+            setBuyNowCart([{
               id: accessory.id,
               name: accessory.name,
               price: accessory.price,
               image: accessory.imageUrl || undefined,
               type: 'accessory',
-            });
+              quantity: 1
+            }]);
             router.push('/checkout');
           }}
           disabled={!isInStock}

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -17,12 +19,43 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
+    
+    console.log('Login attempt for email:', email);
+    
+    // First check if user is banned
+    try {
+      console.log('Checking user status...');
+      const checkUserResponse = await fetch('/api/auth/check-user-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      
+      console.log('User status response:', checkUserResponse.status);
+      
+      if (checkUserResponse.ok) {
+        const userData = await checkUserResponse.json();
+        console.log('User data:', userData);
+        if (userData.role === 'BANNED') {
+          console.log('User is banned, showing error');
+          setError("Your account has been suspended. Please contact support for assistance.");
+          setLoading(false);
+          return;
+        }
+      }
+    } catch (error) {
+      // Continue with normal login if check fails
+      console.log('User status check failed, proceeding with login:', error);
+    }
+    
+    console.log('Proceeding with NextAuth login...');
     const res = await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
     setLoading(false);
+    console.log('NextAuth response:', res);
     if (res?.error) {
       setError(res.error);
     } else if (res?.url?.includes("/auth/error")) {
@@ -55,10 +88,10 @@ export default function LoginPage() {
           required
           className="w-full border rounded px-3 py-2"
         />
-        {error && <div className="text-red-600 text-sm">{t("error")}</div>}
-        <button type="submit" disabled={loading} className="w-full bg-indigo-600 text-white py-2 rounded disabled:opacity-50">
+        {error && <div className="text-red-600 text-sm">{error}</div>}
+        <Button size='lg' type="submit" disabled={loading} className="w-full text-white py-2 rounded disabled:opacity-50">
           {loading ? t("loggingIn") : t("button")}
-        </button>
+        </Button>
       </form>
       <div className="flex items-center my-4">
         <div className="flex-grow border-t border-gray-200" />
@@ -74,8 +107,8 @@ export default function LoginPage() {
         <span>Sign in with Google</span>
       </button>
       <div className="flex justify-between mt-4 text-sm">
-        <a href="/auth/forgot" className="text-indigo-600 hover:underline">{t("forgot")}</a>
-        <a href="/auth/register" className="text-indigo-600 hover:underline">{t("register")}</a>
+        <Link href="/auth/forgot" className="text-secondary hover:underline">{t("forgot")}</Link>
+        <Link href="/auth/register" className="text-secondary hover:underline">{t("register")}</Link>
       </div>
     </div>
   );
