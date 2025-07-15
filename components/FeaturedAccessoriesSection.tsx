@@ -57,15 +57,15 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
                 </CardHeader>
               </Link>
               <CardContent>
-              <div className="flex items-center justify-between">
-                    <Badge variant="secondary" className="absolute top-2 left-2">
-                      {translations.inStock.replace("{count}", String(accessory.inStock))}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-sm md:text-lg xl:text-xl my-2 group-hover:underline">{accessory.name}</CardTitle>
-                  <div className="text-xs text-gray-500 mt-2">
-                    SKU: {generateSkuFromPartName(accessory.name)}
-                  </div>
+                <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
+                  <Badge variant="secondary">
+                    {translations.inStock.replace("{count}", String(accessory.inStock))}
+                  </Badge>
+                </div>
+                <CardTitle className="text-sm md:text-lg xl:text-xl my-2 group-hover:underline line-clamp-2 min-h-[3.5rem]">{accessory.name}</CardTitle>
+                <div className="text-xs text-gray-500 mt-2">
+                  SKU: {generateSkuFromPartName(accessory.name)}
+                </div>
                 <div className="flex items-center justify-between my-4">
                   <span className="text-2xl font-bold text-green-600">
                     {formatCurrency(accessory.price, "EUR")}

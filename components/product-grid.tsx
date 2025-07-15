@@ -41,22 +41,26 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
                   </div>
                 )}
               </div>
-              {product.badge && (
-                <Badge 
-                  className="absolute top-2 left-2" 
-                  variant={
-                    product.badge === "Sale" ? "destructive" : 
-                    product.badge === "New" ? "default" : 
-                    "secondary"
-                  }
-                >
-                  {product.badge}
+              <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
+                {product.badge && (
+                  <Badge 
+                    variant={
+                      product.badge === "Sale" ? "destructive" : 
+                      product.badge === "New" ? "default" : 
+                      "secondary"
+                    }
+                  >
+                    {product.badge}
+                  </Badge>
+                )}
+                <Badge variant="secondary" className="text-xs">
+                  {product.category}
                 </Badge>
-              )}
+              </div>
             </div>
           </CardHeader>
           <CardContent className="p-4">
-            <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.name}</h3>
+            <h3 className="font-semibold text-lg mb-2 line-clamp-2 min-h-[3.5rem]">{product.name}</h3>
             
             {/* Rating */}
             <div className="flex items-center mb-3">
@@ -84,13 +88,6 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
                   Save ${(product.originalPrice - product.price).toFixed(2)}
                 </Badge>
               )}
-            </div>
-
-            {/* Category */}
-            <div className="mb-4">
-              <Badge variant="secondary" className="text-xs">
-                {product.category}
-              </Badge>
             </div>
 
             {/* Add to Cart Button */}

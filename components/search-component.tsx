@@ -398,12 +398,14 @@ export function SearchComponent() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-medium text-gray-900 truncate line-clamp-2 min-h-[2.5rem]">
                           {result.title}
                         </p>
-                        <Badge variant="secondary" className="text-xs flex-shrink-0">
-                          {result.type === 'part' ? t('badges.part') : t('badges.accessory')}
-                        </Badge>
+                        <div className="flex flex-col gap-1">
+                          <Badge variant="secondary" className="text-xs flex-shrink-0">
+                            {result.type === 'part' ? t('badges.part') : t('badges.accessory')}
+                          </Badge>
+                        </div>
                       </div>
                       {result.description && (
                         <p className="text-xs text-gray-500 line-clamp-2 sm:truncate">

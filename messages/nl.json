@@ -623,6 +623,10 @@
     "basedOn": "Gebaseerd op",
     "viewMore": "Meer Bekijken"
   },
+  "badges": {
+    "part": "Onderdeel",
+    "accessory": "Accessoire"
+  },
     "categories": {
       "replacementPart": "Vervangingsonderdeel",
       "accessory": "Accessoire",

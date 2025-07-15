@@ -984,30 +984,26 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                     </Link>
                     <Link href={`/parts/${part.id}`} className="hover:underline">
                     <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        
+                      <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
+                        {part.quality && (
+                          <Badge variant="secondary" className="text-xs">
+                            {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
+                          </Badge>
+                        )}
+                        {/* Add other badges here as needed */}
+                      </div>
+                      <CardTitle className="flex items-center justify-between min-h-[3.5rem] line-clamp-2">
+                        <span className="flex items-center">
                           {part.name}
-                        
-                        <Badge
-                          variant={part.inStock > 0 ? "default" : "destructive"}
-                          className={
-                            part.inStock > 0
-                              ? "bg-blue-100 text-blue-800 border-blue-200"
-                              : "bg-red-100 text-red-800 border-red-200"
-                          }
-                        >
+                        </span>
+                        <Badge variant={part.inStock > part.minStock ? "default" : "destructive"}>
                           {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
                         </Badge>
                       </CardTitle>
                       <CardDescription>
-                          SKU: {part.sku}
+                        SKU: {part.sku}
                       </CardDescription>
                     </CardHeader>
-                    <div className="absolute top-2 left-2">
-                          <Badge variant="secondary" className="text-xs">
-                            {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
-                          </Badge>
-                        </div>
                     </Link>
                     <CardContent>
                       <div className="space-y-2">
@@ -1498,16 +1494,25 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                     )}
                     <Link href={`/parts/${part.id}`}>
                       <CardHeader>
-                        <CardTitle className="flex items-center justify-between">
+                        <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
+                          {part.quality && (
+                            <Badge variant="secondary" className="text-xs">
+                              {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
+                            </Badge>
+                          )}
+                          {/* Add other badges here as needed */}
+                        </div>
+                        <CardTitle className="flex items-center justify-between min-h-[3.5rem] line-clamp-2">
                           <span className="flex items-center">
-                           
                             {part.name}
                           </span>
                           <Badge variant={part.inStock > part.minStock ? "default" : "destructive"}>
                             {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
                           </Badge>
                         </CardTitle>
-                        <CardDescription>SKU: {part.sku}</CardDescription>
+                        <CardDescription>
+                          SKU: {part.sku}
+                        </CardDescription>
                       </CardHeader>
                     </Link>
                     <div className="absolute top-2 right-2 z-10">

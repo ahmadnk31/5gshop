@@ -31,11 +31,13 @@ export function PricingCard({
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader>
         <div className="flex justify-between items-start">
-          <CardTitle className="text-lg">{title}</CardTitle>
+          <CardTitle className="text-lg line-clamp-2 min-h-[2.5rem]">{title}</CardTitle>
           {badge && (
-            <Badge variant={badge === "Best Value" ? "default" : "secondary"}>
-              {badge}
-            </Badge>
+            <div className="flex flex-col gap-1">
+              <Badge variant={badge === "Best Value" ? "default" : "secondary"}>
+                {badge}
+              </Badge>
+            </div>
           )}
         </div>
         {description && (

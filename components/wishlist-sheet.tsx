@@ -165,15 +165,12 @@ export function WishlistSheet() {
 
                     <div className="flex-1 min-w-0">
                       <Link href={`/${itemType}s/${product.id}`}>
-                        <h4 className="font-medium text-sm line-clamp-2 hover:text-blue-600">
+                        <h4 className="font-medium text-sm line-clamp-2 min-h-[2.5rem] hover:text-blue-600">
                           {product.name}
                         </h4>
                       </Link>
                       
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="font-bold text-blue-600">
-                          {formatCurrency(item.part ? item.part.cost : item.accessory!.price, "EUR")}
-                        </span>
+                      <div className="flex flex-col gap-1 mt-1">
                         {!isInStock && (
                           <Badge variant="destructive" className="text-xs">
                             {t('outOfStock')}

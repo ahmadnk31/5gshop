@@ -57,22 +57,24 @@ export function FeaturedPartsSection({ parts, t }: { parts: any[]; t: any }) {
                       }
                     />
                   </div>
-                  {part.inStock <= part.minStock && (
-                    <Badge className="absolute top-2 left-2" variant="outline">
-                      {t("parts.lowStock")}
+                  <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
+                    {part.inStock <= part.minStock && (
+                      <Badge variant="outline">
+                        {t("parts.lowStock")}
+                      </Badge>
+                    )}
+                    <Badge variant="secondary" className="text-xs">
+                      {part.category}
                     </Badge>
-                  )}
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="p-4">
-                <h3 className="font-semibold text-lg mb-2 line-clamp-2">{part.name}</h3>
+                <h3 className="font-semibold text-lg mb-2 line-clamp-2 min-h-[3.5rem]">{part.name}</h3>
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xl font-bold text-blue-600">
                     {part.cost} €
                   </span>
-                  <Badge variant="secondary" className="text-xs">
-                    {part.category}
-                  </Badge>
                 </div>
                 <div className="flex space-x-2">
                   <Link href={`/parts/${part.id}`} className="flex-1">

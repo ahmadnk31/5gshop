@@ -171,12 +171,12 @@ export function RecentlyViewedSection() {
                 {recentlyViewed.map((item) => (
                   <Card key={item.id} className="hover:shadow-lg transition-shadow">
                     <CardHeader className="pb-2">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-1">
                         <Badge variant="secondary" className="text-xs">
                           {item.type === 'part' ? t('badges.part', { defaultValue: 'Part' }) : t('badges.accessory', { defaultValue: 'Accessory' })}
                         </Badge>
-                        <Eye className="h-4 w-4 text-gray-400" />
                       </div>
+                      <Eye className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="aspect-square mb-3">
@@ -187,7 +187,7 @@ export function RecentlyViewedSection() {
                           fallbackContent={<Package className="h-full w-full text-gray-300" />}
                         />
                       </div>
-                      <h3 className="font-medium text-sm mb-2 truncate">{item.name}</h3>
+                      <h3 className="font-medium text-sm mb-2 truncate line-clamp-2 min-h-[2.5rem]">{item.name}</h3>
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-green-600">
                           {formatCurrency(item.price, 'EUR')}
@@ -223,12 +223,12 @@ export function RecentlyViewedSection() {
                 {searchBasedItems.map((item) => (
                   <Card key={item.id} className="hover:shadow-lg transition-shadow">
                     <CardHeader className="pb-2">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col gap-1">
                         <Badge variant="secondary" className="text-xs">
                           {item.type === 'part' ? t('badges.part', { defaultValue: 'Part' }) : t('badges.accessory', { defaultValue: 'Accessory' })}
                         </Badge>
-                        <Search className="h-4 w-4 text-gray-400" />
                       </div>
+                      <Search className="h-4 w-4 text-gray-400" />
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="aspect-square mb-3">
@@ -239,7 +239,7 @@ export function RecentlyViewedSection() {
                           fallbackContent={<Package className="h-full w-full text-gray-300" />}
                         />
                       </div>
-                      <h3 className="font-medium text-sm mb-2 truncate">{item.name}</h3>
+                      <h3 className="font-medium text-sm mb-2 truncate line-clamp-2 min-h-[2.5rem]">{item.name}</h3>
                       <p className="text-xs text-gray-500 mb-2">
                         {t('searchBased.basedOn', { defaultValue: 'Based on' })} "{item.searchTerm}"
                       </p>
