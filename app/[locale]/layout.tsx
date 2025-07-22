@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono,Lato } from "next/font/google";
 import "../globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 // Add a declaration for window.dataLayer to avoid TypeScript errors
 declare global {
@@ -36,6 +37,16 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "5gphones Leuven - Device Repair & Accessories",
+  alternates: {
+    canonical: "https://5gphones.be",
+  },
+  openGraph: {
+    images: [
+      {
+        url: "/og.png",
+      },
+    ],
+  },
   description: "Professional device repair services and premium accessories for all your devices",
 };
 
@@ -75,6 +86,7 @@ export default  async function RootLayout({
         <CookieConsentProvider>
           <GoogleAnalytics />
           <Navigation />
+          <Analytics />
           <main>{children}</main>
           <Footer />
           <CookieConsentBanner />

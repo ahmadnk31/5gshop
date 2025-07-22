@@ -199,7 +199,6 @@ export class DatabaseService {
         deviceModel: data.deviceModel,
         deviceType: data.deviceType,
         quality: data.quality, // ensure quality is saved
-        order: typeof data.order === 'number' ? data.order : 0,
       },
     })
     return DatabaseService.mapPart(part)
@@ -220,7 +219,6 @@ export class DatabaseService {
         deviceModel: data.deviceModel,
         deviceType: data.deviceType,
         quality: data.quality, // ensure quality is updated
-        order: typeof data.order === 'number' ? data.order : undefined,
       },
     })
     return DatabaseService.mapPart(part)
@@ -503,7 +501,7 @@ export class DatabaseService {
     const devices = await prisma.device.findMany({
       select: { brand: true },
       distinct: ['brand'],
-      orderBy: { brand: 'desc' },
+      orderBy: { brand: 'asc' },
     })
     return devices.map(d => d.brand)
   }
@@ -511,10 +509,7 @@ export class DatabaseService {
   static async getModelsByBrandDetailed(brand: string): Promise<Device[]> {
     const devices = await prisma.device.findMany({
       where: { brand },
-      orderBy: [
-        { order: 'desc' },
-        { model: 'desc' }
-      ],
+      orderBy: { model: 'asc' },
     })
     return devices.map(DatabaseService.mapDevice)
   }
@@ -1011,14 +1006,11 @@ export class DatabaseService {
     }
 
     if (search) {
-      const words = search.split(/\s+/).filter(Boolean);
-      where.AND = words.map(word => ({
-        OR: [
-          { name: { contains: word, mode: 'insensitive' } },
-          { brand: { contains: word, mode: 'insensitive' } },
-          { description: { contains: word, mode: 'insensitive' } },
-        ]
-      }));
+      where.OR = [
+        { name: { contains: search } },
+        { brand: { contains: search } },
+        { description: { contains: search } },
+      ];
     }
 
     if (inStockOnly) {
@@ -1269,10 +1261,9 @@ export class DatabaseService {
       description: part.description,
       deviceModel: part.deviceModel,
       deviceType: part.deviceType,
-      quality: part.quality,
-      createdAt: part.createdAt?.toISOString?.() ?? part.createdAt,
-      updatedAt: part.updatedAt?.toISOString?.() ?? part.updatedAt,
-      order: part.order ?? 0,
+      quality: part.quality, // <-- add this line to include quality
+      createdAt: part.createdAt.toISOString(),
+      updatedAt: part.updatedAt.toISOString(),
     }
   }
 
@@ -1391,83 +1382,5 @@ export class DatabaseService {
       ],
     });
     return devices.map(DatabaseService.mapDevice);
-  }
-
-  static async getAllDevicesByModelName(order: 'asc' | 'desc' = 'asc'): Promise<Device[]> {
-    const devices = await prisma.device.findMany({
-      orderBy: [
-        { model: order },
-        { brand: 'asc' },
-        { order: 'asc' }
-      ],
-    });
-    return devices.map(DatabaseService.mapDevice);
-  }
-
-  static async getRelatedParts(partId: string, limit: number = 4): Promise<Part[]> {
-    // Get the source part
-    const sourcePart = await prisma.part.findUnique({ where: { id: partId } });
-    if (!sourcePart) return [];
-
-    // Find related parts by deviceModel, then deviceType, then fallback
-    let relatedParts = await prisma.part.findMany({
-      where: {
-        id: { not: partId },
-        deviceModel: sourcePart.deviceModel,
-        inStock: { gt: 0 }
-      },
-      take: limit,
-      orderBy: { inStock: 'desc' }
-    });
-
-    if (relatedParts.length < limit) {
-      // Fill with same deviceType if needed
-      const moreParts = await prisma.part.findMany({
-        where: {
-          id: { notIn: [partId, ...relatedParts.map(p => p.id)] },
-          deviceType: sourcePart.deviceType,
-          inStock: { gt: 0 }
-        },
-        take: limit - relatedParts.length,
-        orderBy: { inStock: 'desc' }
-      });
-      relatedParts = [...relatedParts, ...moreParts];
-    }
-
-    return relatedParts.map(DatabaseService.mapPart);
-  }
-
-  static async getFeaturedParts(limit: number = 4, type?: string, brand?: string, model?: string): Promise<Part[]> {
-    let parts: any[] = [];
-    if (model) {
-      parts = await prisma.part.findMany({
-        where: { deviceModel: model, inStock: { gt: 0 } },
-        orderBy: { inStock: 'desc' },
-        take: limit,
-      });
-    }
-    if ((!parts || parts.length < limit) && type) {
-      const moreParts = await prisma.part.findMany({
-        where: { deviceType: type, inStock: { gt: 0 } },
-        orderBy: { inStock: 'desc' },
-        take: limit - (parts ? parts.length : 0),
-      });
-      parts = [...(parts || []), ...moreParts];
-    }
-    if (!parts || parts.length < limit) {
-      const fallbackParts = await prisma.part.findMany({
-        where: { inStock: { gt: 0 } },
-        orderBy: { inStock: 'desc' },
-        take: limit - (parts ? parts.length : 0),
-      });
-      parts = [...(parts || []), ...fallbackParts];
-    }
-    const uniqueParts = Array.from(new Map((parts || []).map(p => [p.id, p])).values()).slice(0, limit);
-    return uniqueParts.length ? uniqueParts.map(DatabaseService.mapPart) : [];
-  }
-
-  static async getPartsByFilter(where: any): Promise<Part[]> {
-    const parts = await prisma.part.findMany({ where });
-    return parts.map(DatabaseService.mapPart);
   }
 }

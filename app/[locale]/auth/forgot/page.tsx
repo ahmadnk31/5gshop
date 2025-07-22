@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -43,9 +45,9 @@ export default function ForgotPasswordPage() {
         />
         {error && <div className="text-red-600 text-sm">{t("error")}</div>}
         {message && <div className="text-green-600 text-sm">{t("success")}</div>}
-        <button type="submit" disabled={loading} className="w-full bg-indigo-600 text-white py-2 rounded disabled:opacity-50">
+        <Button size='lg' type="submit" disabled={loading} className="w-full text-white py-2 rounded disabled:opacity-50">
           {loading ? t("sending") : t("button")}
-        </button>
+        </Button>
       </form>
       <div className="flex items-center my-4">
         <div className="flex-grow border-t border-gray-200" />
@@ -61,8 +63,8 @@ export default function ForgotPasswordPage() {
         <span>Sign in with Google</span>
       </button>
       <div className="flex justify-between mt-4 text-sm">
-        <a href="/auth/login" className="text-indigo-600 hover:underline">{t("back")}</a>
-        <a href="/auth/register" className="text-indigo-600 hover:underline">Register</a>
+        <Link href="/auth/login" className="text-secondary hover:underline">{t("back")}</Link>
+        <Link href="/auth/register" className="text-secondary hover:underline">Register</Link>
       </div>
     </div>
   );

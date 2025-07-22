@@ -22,6 +22,41 @@ interface Order {
   };
 }
 
+const ORDER_STATUS_STEPS = [
+  'CREATED',
+  'PAID',
+  'SUCCEEDED',
+  'RECEIVED',
+  'IN_PROGRESS',
+  'READY',
+  'SHIPPED',
+  'DELIVERED',
+  'FINISHED',
+  'FAILED',
+  'REFUNDED',
+  'CANCELLED',
+];
+
+function OrderStatusStepper({ status }: { status: string }) {
+  const currentStep = ORDER_STATUS_STEPS.indexOf(status.toUpperCase());
+  return (
+    <ol className="relative border-l border-gray-200 ml-4 my-4">
+      {ORDER_STATUS_STEPS.map((step, idx) => (
+        <li key={step} className="mb-4 ml-6">
+          <span className={`absolute -left-3 flex items-center justify-center w-6 h-6 rounded-full border-2 text-xs font-bold
+            ${idx < currentStep ? 'bg-blue-500 border-blue-500 text-white' : ''}
+            ${idx === currentStep ? 'bg-white border-blue-600 text-blue-600 ring-2 ring-blue-300' : ''}
+            ${idx > currentStep ? 'bg-gray-200 border-gray-300 text-gray-400' : ''}
+          `}>
+            {idx < currentStep ? '✓' : idx + 1}
+          </span>
+          <span className={`text-sm font-medium ${idx === currentStep ? 'text-blue-700' : idx < currentStep ? 'text-gray-500' : 'text-gray-400'}`}>{step.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export default function OrdersPage() {
   const t = useTranslations("orders");
   const { data: session, status } = useSession();
@@ -127,6 +162,7 @@ export default function OrdersPage() {
                   <div>{t("postalCode")}: {order.address.postalCode}</div>
                 </div>
               )}
+              <OrderStatusStepper status={order.status} />
             </div>
           ))}
         </div>
