@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
     const enrichedParts = parts.map((part: any) => {
       let foundDevice = null;
       if (part.deviceModel) {
-        foundDevice = devices.find((device: any) =>
-          device.model === part.deviceModel &&
+        foundDevice = devices.find((device: any) => 
+          device.model === part.deviceModel && 
           device.type === part.deviceType
         );
       }
@@ -76,11 +76,11 @@ export async function GET(request: NextRequest) {
       const inStock = typeof item.inStock === 'number' ? item.inStock : 0;
       const id = item.id ? `part-${item.id}` : undefined;
       const name = displayName || item.name || '';
-      if (id && name && cost > 0 && imageUrl && inStock >= 0) {
+if (id && name && cost > 0 && imageUrl && inStock >= 0) {
         return {
-          id,
-          name,
-          title: name,
+    id,
+    name,
+    title: name,
           description:
             item.description ||
             `${item.name} for ${
@@ -91,20 +91,20 @@ export async function GET(request: NextRequest) {
           cost,
           price,
           sku: item.sku || '',
-          category: 'Replacement Part',
+    category: 'Replacement Part',
           deviceType: item.deviceType || 'GENERAL',
           deviceBrand: item.deviceBrand || 'Universal',
           brand: item.deviceBrand || 'Universal',
           deviceModel: item.deviceModel || 'Compatible',
           partName: item.name,
-          inStock,
+    inStock,
           url: `/parts/${item.id}`,
-          type: 'part',
-          imageUrl,
+    type: 'part',
+    imageUrl,
           supplier: item.supplier || '',
           quality: item.quality || 'Unknown',
         };
-      }
+}
       return null;
     }).filter(Boolean);
 

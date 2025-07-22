@@ -381,20 +381,20 @@ export function SearchComponent() {
                 >
                   <div className="flex items-start space-x-3">
                     <div className="h-10 w-10 rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden">
-                      {result.imageUrl ? (
+                    {result.imageUrl ? (
                         <FallbackImage
-                          src={result.imageUrl}
-                          alt={result.title}
-                          width={40}
-                          height={40}
+                        src={result.imageUrl}
+                        alt={result.title}
+                        width={40}
+                        height={40}
                           className="h-10 w-10 rounded-md object-cover"
                           fallbackContent={getResultIcon(result)}
-                        />
-                      ) : (
+                      />
+                    ) : (
                         <div className="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center">
-                          {getResultIcon(result)}
-                        </div>
-                      )}
+                        {getResultIcon(result)}
+                      </div>
+                    )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2 mb-1">
@@ -402,9 +402,9 @@ export function SearchComponent() {
                           {result.title}
                         </p>
                         <div className="flex flex-col gap-1">
-                          <Badge variant="secondary" className="text-xs flex-shrink-0">
-                            {result.type === 'part' ? t('badges.part') : t('badges.accessory')}
-                          </Badge>
+                        <Badge variant="secondary" className="text-xs flex-shrink-0">
+                          {result.type === 'part' ? t('badges.part') : t('badges.accessory')}
+                        </Badge>
                         </div>
                       </div>
                       {result.description && (

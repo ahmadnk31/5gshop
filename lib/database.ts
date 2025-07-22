@@ -1261,7 +1261,8 @@ export class DatabaseService {
       description: part.description,
       deviceModel: part.deviceModel,
       deviceType: part.deviceType,
-      quality: part.quality, // <-- add this line to include quality
+      quality: part.quality,
+      order: part.order || 0,
       createdAt: part.createdAt.toISOString(),
       updatedAt: part.updatedAt.toISOString(),
     }
@@ -1373,12 +1374,147 @@ export class DatabaseService {
     return part ? DatabaseService.mapPart(part) : null;
   }
 
+  // Get related parts based on a source part
+  static async getRelatedParts(partId: string, limit: number = 4): Promise<Part[]> {
+    try {
+      const sourcePart = await prisma.part.findUnique({ where: { id: partId } });
+      if (!sourcePart) return [];
+
+      const excludeIds = [partId];
+      let relatedParts: any[] = [];
+
+      // Priority 1: Same device model
+      if (sourcePart.deviceModel && relatedParts.length < limit) {
+        const sameModelParts = await prisma.part.findMany({
+          where: {
+            id: { notIn: excludeIds },
+            deviceModel: sourcePart.deviceModel,
+            inStock: { gt: 0 }
+          },
+          orderBy: { inStock: 'desc' },
+          take: limit - relatedParts.length
+        });
+        relatedParts.push(...sameModelParts);
+        excludeIds.push(...sameModelParts.map(p => p.id));
+      }
+
+      // Priority 2: Same device type
+      if (sourcePart.deviceType && relatedParts.length < limit) {
+        const sameTypeParts = await prisma.part.findMany({
+          where: {
+            id: { notIn: excludeIds },
+            deviceType: sourcePart.deviceType,
+            inStock: { gt: 0 }
+          },
+          orderBy: { inStock: 'desc' },
+          take: limit - relatedParts.length
+        });
+        relatedParts.push(...sameTypeParts);
+        excludeIds.push(...sameTypeParts.map(p => p.id));
+      }
+
+      // Priority 3: Same quality
+      if (sourcePart.quality && relatedParts.length < limit) {
+        const sameQualityParts = await prisma.part.findMany({
+          where: {
+            id: { notIn: excludeIds },
+            quality: sourcePart.quality,
+            inStock: { gt: 0 }
+          },
+          orderBy: { inStock: 'desc' },
+          take: limit - relatedParts.length
+        });
+        relatedParts.push(...sameQualityParts);
+        excludeIds.push(...sameQualityParts.map(p => p.id));
+      }
+
+      // Priority 4: Same supplier
+      if (sourcePart.supplier && relatedParts.length < limit) {
+        const sameSupplierParts = await prisma.part.findMany({
+          where: {
+            id: { notIn: excludeIds },
+            supplier: sourcePart.supplier,
+            inStock: { gt: 0 }
+          },
+          orderBy: { inStock: 'desc' },
+          take: limit - relatedParts.length
+        });
+        relatedParts.push(...sameSupplierParts);
+      }
+
+      return relatedParts.map(DatabaseService.mapPart);
+    } catch (error) {
+      console.error('Error getting related parts:', error);
+      return [];
+    }
+  }
+
+  // Get featured parts with optional filtering
+  static async getFeaturedParts(limit: number = 4, type?: string, brand?: string, model?: string): Promise<Part[]> {
+    try {
+      const where: any = {
+        inStock: { gt: 0 }
+      };
+
+      if (type) {
+        where.deviceType = type;
+      }
+
+      if (model) {
+        where.deviceModel = model;
+      }
+
+      const parts = await prisma.part.findMany({
+        where,
+        orderBy: [
+          { inStock: 'desc' },
+          { cost: 'asc' }
+        ],
+        take: limit
+      });
+
+      return parts.map(DatabaseService.mapPart);
+    } catch (error) {
+      console.error('Error getting featured parts:', error);
+      return [];
+    }
+  }
+
+  // Get parts by filter criteria
+  static async getPartsByFilter(where: any): Promise<Part[]> {
+    try {
+      const parts = await prisma.part.findMany({
+        where: {
+          ...where,
+          inStock: { gt: 0 }
+        },
+        orderBy: { name: 'asc' }
+      });
+
+      return parts.map(DatabaseService.mapPart);
+    } catch (error) {
+      console.error('Error getting parts by filter:', error);
+      return [];
+    }
+  }
+
   // Get all devices ordered by the 'order' field (primary), then serialNumber (secondary)
   static async getAllDevicesByOrder(): Promise<Device[]> {
     const devices = await prisma.device.findMany({
       orderBy: [
         { order: 'asc' },
         { serialNumber: 'asc' },
+      ],
+    });
+    return devices.map(DatabaseService.mapDevice);
+  }
+
+  // Get all devices ordered by model name
+  static async getAllDevicesByModelName(order: 'asc' | 'desc' = 'asc'): Promise<Device[]> {
+    const devices = await prisma.device.findMany({
+      orderBy: [
+        { model: order },
+        { brand: 'asc' },
       ],
     });
     return devices.map(DatabaseService.mapDevice);

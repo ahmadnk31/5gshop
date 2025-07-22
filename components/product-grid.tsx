@@ -42,17 +42,17 @@ export function ProductGrid({ products, onAddToCart }: ProductGridProps) {
                 )}
               </div>
               <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
-                {product.badge && (
-                  <Badge 
-                    variant={
-                      product.badge === "Sale" ? "destructive" : 
-                      product.badge === "New" ? "default" : 
-                      "secondary"
-                    }
-                  >
-                    {product.badge}
-                  </Badge>
-                )}
+              {product.badge && (
+                <Badge 
+                  variant={
+                    product.badge === "Sale" ? "destructive" : 
+                    product.badge === "New" ? "default" : 
+                    "secondary"
+                  }
+                >
+                  {product.badge}
+                </Badge>
+              )}
                 <Badge variant="secondary" className="text-xs">
                   {product.category}
                 </Badge>

@@ -1001,7 +1001,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                         </Badge>
                       </CardTitle>
                       <CardDescription>
-                        SKU: {part.sku}
+                          SKU: {part.sku}
                       </CardDescription>
                     </CardHeader>
                     </Link>

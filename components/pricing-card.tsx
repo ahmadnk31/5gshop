@@ -34,9 +34,9 @@ export function PricingCard({
           <CardTitle className="text-lg line-clamp-2 min-h-[2.5rem]">{title}</CardTitle>
           {badge && (
             <div className="flex flex-col gap-1">
-              <Badge variant={badge === "Best Value" ? "default" : "secondary"}>
-                {badge}
-              </Badge>
+            <Badge variant={badge === "Best Value" ? "default" : "secondary"}>
+              {badge}
+            </Badge>
             </div>
           )}
         </div>

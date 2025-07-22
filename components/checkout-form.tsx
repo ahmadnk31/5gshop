@@ -177,12 +177,12 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta, onPaymentSuccess }
     if (data.clientSecret) {
       setOrderId(data.orderId);
       if (setCheckoutMeta) {
-        setCheckoutMeta({
-          ...(isPartsCart(cart) ? { repairType: repairType ?? undefined } : {}),
-          ...(isPartsCart(cart) && repairType === 'by_us' ? { shippingOption: shippingOption ?? undefined } : {}),
-        });
-      }
-      setStep("payment");
+      setCheckoutMeta({
+        ...(isPartsCart(cart) ? { repairType: repairType ?? undefined } : {}),
+        ...(isPartsCart(cart) && repairType === 'by_us' ? { shippingOption: shippingOption ?? undefined } : {}),
+      });
+    }
+    setStep("payment");
     } else {
       setError('Failed to create payment intent.');
     }
@@ -272,7 +272,7 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta, onPaymentSuccess }
                   {stepItem.label}
                 </span>
               </button>
-            </div>
+          </div>
           );
         })}
       </div>

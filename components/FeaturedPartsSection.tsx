@@ -58,11 +58,11 @@ export function FeaturedPartsSection({ parts, t }: { parts: any[]; t: any }) {
                     />
                   </div>
                   <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
-                    {part.inStock <= part.minStock && (
+                  {part.inStock <= part.minStock && (
                       <Badge variant="outline">
-                        {t("parts.lowStock")}
-                      </Badge>
-                    )}
+                      {t("parts.lowStock")}
+                    </Badge>
+                  )}
                     <Badge variant="secondary" className="text-xs">
                       {part.category}
                     </Badge>

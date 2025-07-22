@@ -13,12 +13,34 @@ import { getDeviceTypes } from "@/app/actions/device-catalog-actions";
 import { getHomepageParts } from "@/app/actions/homepage-parts";
 import { Accessory, RepairService, Part } from "@/lib/types";
 import { getAllDevices } from '@/app/actions/device-management-actions';
+import { generatePageMetadata } from "@/lib/seo";
+import { Metadata } from "next";
 
 import { PageSectionTracker, ScrollDepthTracker } from "@/components/analytics-components";
 import { getTranslations } from 'next-intl/server';
 import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/utils";
 import HomepageHeroCarouselClient from '@/components/homepage-hero-carousel-client';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return await generatePageMetadata({
+    title: "5gphones Leuven - Expert Device Repair & Premium Accessories",
+    description: "Professional repair services for smartphones, tablets, laptops & more in Leuven. Premium accessories, fast repairs, and competitive prices. Visit us today!",
+    path: "",
+    keywords: [
+      "device repair Leuven",
+      "smartphone repair",
+      "iPhone repair Leuven", 
+      "Samsung repair",
+      "tablet repair",
+      "laptop repair",
+      "phone accessories",
+      "screen replacement",
+      "battery replacement",
+      "Belgium repair shop"
+    ]
+  });
+}
 
 function shuffleArray(array: any[]) {
   for (let i = array.length - 1; i > 0; i--) {

@@ -14,9 +14,34 @@ import { AccessoryDetailClientActions } from './accessory-actions';
 import { AccessoryActionButtons } from './accessory-action-buttons';
 import { RelatedAccessoryCard } from './related-accessory-card';
 import { AccessoryViewTracker } from './accessory-view-tracker';
+import { generateProductMetadata } from "@/lib/seo";
+import { Metadata } from "next";
 
 interface AccessoryDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: AccessoryDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const accessory = await getAccessoryById(id);
+
+  if (!accessory) {
+    return {
+      title: 'Accessory Not Found',
+      description: 'The requested accessory could not be found.'
+    };
+  }
+
+  return await generateProductMetadata({
+    productName: accessory.name,
+    description: accessory.description || `High-quality ${accessory.name} for ${accessory.model || 'various devices'}. ${accessory.category} accessory with premium quality and fast shipping.`,
+    price: accessory.price,
+    images: accessory.imageUrl ? [accessory.imageUrl] : undefined,
+    category: accessory.category,
+    brand: accessory.brand,
+    availability: accessory.inStock > 0 ? 'in_stock' : 'out_of_stock',
+    path: `/accessories/${accessory.id}`
+  });
 }
 
 // Category configurations for related products

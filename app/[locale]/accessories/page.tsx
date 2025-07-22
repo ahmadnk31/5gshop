@@ -1,6 +1,28 @@
 import { Suspense } from "react";
 import AccessoriesPagePaginated from "./page-paginated";
 import { Skeleton } from '@/components/ui/skeleton';
+import { generatePageMetadata } from "@/lib/seo";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return await generatePageMetadata({
+    title: "Premium Phone & Device Accessories",
+    description: "Shop high-quality accessories for smartphones, tablets, laptops & more. Cases, chargers, cables, screen protectors & more. Fast shipping in Belgium.",
+    path: "/accessories",
+    keywords: [
+      "phone accessories",
+      "smartphone cases",
+      "phone chargers", 
+      "cables",
+      "screen protectors",
+      "tablet accessories",
+      "laptop accessories",
+      "wireless chargers",
+      "Belgium accessories",
+      "Leuven phone shop"
+    ]
+  });
+}
 
 function AccessoriesPageWithSuspense() {
   return (

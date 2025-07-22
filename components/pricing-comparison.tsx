@@ -78,12 +78,12 @@ export async function PricingComparison() {
                         <div className="flex items-center justify-between mb-2">
                           <h3 className="font-semibold text-lg text-gray-900 line-clamp-2 min-h-[2.5rem]">{item.service}</h3>
                           <div className="flex flex-col gap-1">
-                            {item.popular && (
-                              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                                <Star className="h-3 w-3 mr-1" />
-                                {t('comparison.popular')}
-                              </Badge>
-                            )}
+                          {item.popular && (
+                            <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                              <Star className="h-3 w-3 mr-1" />
+                              {t('comparison.popular')}
+                            </Badge>
+                          )}
                             <Badge variant="outline" className="text-xs">
                               {item.deviceType.toLowerCase().replace('_', ' ')}
                             </Badge>
@@ -120,12 +120,12 @@ export async function PricingComparison() {
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="font-semibold text-lg text-gray-900 line-clamp-2 min-h-[2.5rem]">{item.service}</h3>
                           <div className="flex flex-col gap-1">
-                            {item.popular && (
-                              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
-                                <Star className="h-3 w-3 mr-1" />
-                                {t('comparison.popular')}
-                              </Badge>
-                            )}
+                          {item.popular && (
+                            <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                              <Star className="h-3 w-3 mr-1" />
+                              {t('comparison.popular')}
+                            </Badge>
+                          )}
                             <Badge variant="outline" className="text-xs">
                               {item.deviceType.toLowerCase().replace('_', ' ')}
                             </Badge>
