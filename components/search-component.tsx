@@ -301,24 +301,25 @@ export function SearchComponent() {
             <Button 
               variant="outline" 
               size="sm"
+              aria-label='Search filter'
               className="rounded-r-none border-r-0 flex items-center space-x-1 px-2 sm:px-3 min-w-[80px] sm:min-w-[100px] border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
             >
               {getFilterIcon()}
               <span className="hidden sm:inline text-xs sm:text-sm">{getFilterLabel()}</span>
-              <ChevronDown className="h-3 w-3" />
+              <ChevronDown aria-label='Toggle search filter' className="h-3 w-3" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
             <DropdownMenuItem onClick={() => setFilter('all')}>
-              <Package className="h-4 w-4 mr-2" />
+              <Package aria-label='All filters' className="h-4 w-4 mr-2" />
               {t('filters.all')}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setFilter('parts')}>
-              <Package className="h-4 w-4 mr-2" />
+              <Package aria-label='Parts filter' className="h-4 w-4 mr-2" />
               {t('filters.parts')}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setFilter('accessories')}>
-              <Package className="h-4 w-4 mr-2" />
+              <Package aria-label='Accessories filter' className="h-4 w-4 mr-2" />
               {t('filters.accessories')}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -327,6 +328,7 @@ export function SearchComponent() {
         {/* Search Input */}
         <div className="relative flex-1">
           <Input
+            aria-label='Search input'
             type="text"
             placeholder={t('placeholder')}
             value={searchTerm}
@@ -346,6 +348,10 @@ export function SearchComponent() {
           />
           {searchTerm && (
             <button
+              type="button"
+              onMouseDown={(e) => e.preventDefault()} // Prevent focus loss
+              onMouseUp={(e) => e.preventDefault()} // Prevent focus loss
+              aria-labelledby='Clear search'
               onClick={() => {
                 setSearchTerm('');
                 setIsOpen(false);
@@ -353,13 +359,14 @@ export function SearchComponent() {
               className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-400 flex items-center justify-center rounded-full p-1 z-10"
               aria-label="Clear search"
             >
-              <X className="h-3 w-3 hover:text-gray-600" />
+              <X aria-label='Clear search' className="h-3 w-3 hover:text-gray-600" />
             </button>
           )}
         </div>
 
         {/* Search Button */}
         <Button 
+        aria-lzabel='Search button'
           size="sm" 
           className="rounded-l-none px-2 sm:px-3 border-gray-300  text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
           onClick={() => {
@@ -379,21 +386,21 @@ export function SearchComponent() {
             }
           }}
         >
-          <Search className="h-4 w-4" />
+          <Search aria-label='Search button' className="h-4 w-4" />
         </Button>
       </div>
 
       {/* Search Results Dropdown */}
       {isOpen && (searchTerm.length >= 2 || results.length > 0) && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-md shadow-lg z-40 max-h-96 overflow-y-auto">
+        <div role="listbox" className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-md shadow-lg z-40 max-h-96 overflow-y-auto">
           {isLoading ? (
-            <div className="p-4 text-center text-gray-500">
+            <div aria-label='Loading results' className="p-4 text-center text-gray-500">
               <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-2"></div>
               {t('results.searching')}
             </div>
           ) : searchTerm.length < 2 ? (
             <div className="p-4 text-center text-gray-500">
-              <Search className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+              <Search aria-label='Search input' className="h-8 w-8 mx-auto mb-2 text-gray-300" />
               <p className="text-sm">{t('results.minCharacters')}</p>
             </div>
           ) : results.length > 0 ? (
@@ -403,6 +410,10 @@ export function SearchComponent() {
               </div>
               {results.map((result) => (
                 <button
+                  type="button"
+                  role="option"
+                  aria-selected="false"
+                  aria-label={`Search result for ${result.title}`}
                   key={result.id}
                   onClick={() => handleResultClick(result)}
                   className="w-full px-3 py-3 text-left hover:bg-gray-50 border-b last:border-b-0 focus:bg-gray-50 focus:outline-none"
@@ -411,6 +422,7 @@ export function SearchComponent() {
                     <div className="h-10 w-10 rounded-md flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {result.imageUrl ? (
                         <FallbackImage
+
                         src={result.imageUrl}
                         alt={result.title}
                         width={40}
@@ -419,7 +431,7 @@ export function SearchComponent() {
                           fallbackContent={getResultIcon(result)}
                       />
                     ) : (
-                        <div className="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center">
+                        <div aria-label={`Search result for ${result.title}`} className="h-10 w-10 bg-gray-200 rounded-md flex items-center justify-center">
                         {getResultIcon(result)}
                       </div>
                     )}
@@ -430,13 +442,13 @@ export function SearchComponent() {
                           {result.title}
                         </p>
                         <div className="flex flex-col gap-1">
-                        <Badge variant="secondary" className="text-xs flex-shrink-0">
+                        <Badge aria-label={`Search result type: ${result.type}`} variant="secondary" className="text-xs flex-shrink-0">
                           {result.type === 'part' ? t('badges.part') : t('badges.accessory')}
                         </Badge>
                         </div>
                       </div>
                       {result.description && (
-                        <p className="text-xs text-gray-500 line-clamp-2 sm:truncate">
+                        <p about={`Search result description for ${result.title}`} className="text-xs text-gray-500 line-clamp-2 sm:truncate">
                           {result.description}
                         </p>
                       )}
@@ -445,7 +457,7 @@ export function SearchComponent() {
                           {result.category || result.deviceType?.replace('_', ' ')}
                         </span>
                         {result.price && (
-                          <span className="text-sm font-medium text-green-600 flex-shrink-0">
+                          <span aria-label={`Search result price for ${result.title}`} className="text-sm font-medium text-green-600 flex-shrink-0">
                             {formatCurrency(result.price,'EUR')}
                           </span>
                         )}
@@ -456,15 +468,16 @@ export function SearchComponent() {
               ))}
               
               {/* Enhanced View All Results Link */}
-              <div className="px-3 py-2 border-t bg-gray-50">
+              <div role="region" aria-label="View all results" className="px-3 py-2 border-t bg-gray-50">
                 {(() => {
                   const partResults = results.filter(r => r.type === 'part');
                   const accessoryResults = results.filter(r => r.type === 'accessory');
                   
                   if (partResults.length > 0 && accessoryResults.length > 0) {
                     return (
-                      <div className="space-y-1">
+                      <div aria-label='View all parts and accessories results' className="space-y-1">
                         <Link
+                         aria-label='View all parts results'
                           href={`/repairs?search=${encodeURIComponent(searchTerm || '')}`}
                           className="text-sm text-blue-600 hover:text-blue-800 font-medium block truncate"
                           onClick={() => {
@@ -480,6 +493,7 @@ export function SearchComponent() {
                           })}
                         </Link>
                         <Link
+                          aria-label='View all accessories results'
                           href={`/accessories?search=${encodeURIComponent(searchTerm || '')}`}
                           className="text-sm text-green-600 hover:text-green-800 font-medium block truncate"
                           onClick={() => {
@@ -501,6 +515,7 @@ export function SearchComponent() {
                   if (partResults.length > 0) {
                     return (
                       <Link
+                          aria-label='View all parts results'
                         href={`/repairs?search=${encodeURIComponent(searchTerm || '')}`}
                         className="text-sm text-blue-600 hover:text-blue-800 font-medium block truncate"
                         onClick={() => {
@@ -521,6 +536,7 @@ export function SearchComponent() {
                   if (accessoryResults.length > 0) {
                     return (
                       <Link
+                        aria-label='View all accessories results'
                         href={`/accessories?search=${encodeURIComponent(searchTerm || '')}`}
                         className="text-sm text-green-600 hover:text-green-800 font-medium block truncate"
                         onClick={() => {
@@ -540,6 +556,7 @@ export function SearchComponent() {
                   
                   return (
                     <Link
+                      aria-label='View all results'
                       href={`${getSmartDestination()}?search=${encodeURIComponent(searchTerm || '')}`}
                       className="text-sm text-blue-600 hover:text-blue-800 font-medium block truncate"
                       onClick={() => {
@@ -557,7 +574,7 @@ export function SearchComponent() {
             </div>
           ) : searchTerm.trim() && searchTerm.length >= 2 ? (
             <div className="p-4 text-center text-gray-500">
-              <Search className="h-8 w-8 mx-auto mb-2 text-gray-300" />
+              <Search aria-label={`Search for ${searchTerm}`} className="h-8 w-8 mx-auto mb-2 text-gray-300" />
               <p className="text-sm">{t('results.noResults', { query: searchTerm })}</p>
               <p className="text-xs text-gray-400 mt-1">{t('results.noResultsHint')}</p>
             </div>
