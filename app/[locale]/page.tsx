@@ -13,8 +13,11 @@ import { getDeviceTypes } from "@/app/actions/device-catalog-actions";
 import { getHomepageParts } from "@/app/actions/homepage-parts";
 import { Accessory, RepairService, Part } from "@/lib/types";
 import { getAllDevices } from '@/app/actions/device-management-actions';
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata, generateLocalBusinessSchema, generateFAQSchema } from "@/lib/seo";
 import { Metadata } from "next";
+import { StructuredData } from "@/components/structured-data";
+import { generateLocalSEOFAQ, generateRepairServiceSchema, generateEnhancedLocalBusiness } from "@/lib/local-seo";
+import { generateCompleteLocalBusinessSchema } from "@/lib/local-business";
 
 import { PageSectionTracker, ScrollDepthTracker } from "@/components/analytics-components";
 import { getTranslations } from 'next-intl/server';
@@ -24,20 +27,56 @@ import HomepageHeroCarouselClient from '@/components/homepage-hero-carousel-clie
 
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata({
-    title: "5gphones Leuven - Expert Device Repair & Premium Accessories",
-    description: "Professional repair services for smartphones, tablets, laptops & more in Leuven. Premium accessories, fast repairs, and competitive prices. Visit us today!",
+    title: "GSM Reparatie Leuven | Telefoon Reparatie | 5gphones",
+    description: "Professionele GSM reparatie en telefoon reparatie in Leuven. iPhone, Samsung, Huawei reparatie ✓ Scherm vervanging ✓ Batterij reparatie ✓ Snelle service ✓ Garantie. Bondgenotenlaan 84A, Leuven.",
     path: "",
     keywords: [
-      "device repair Leuven",
-      "smartphone repair",
-      "iPhone repair Leuven", 
-      "Samsung repair",
-      "tablet repair",
-      "laptop repair",
-      "phone accessories",
-      "screen replacement",
-      "battery replacement",
-      "Belgium repair shop"
+      // Primary Dutch keywords for local search
+      "gsm reparatie leuven",
+      "telefoon reparatie leuven",
+      "smartphone reparatie leuven", 
+      "iphone reparatie leuven",
+      "samsung reparatie leuven",
+      "huawei reparatie leuven",
+      "xiaomi reparatie leuven",
+      "scherm reparatie leuven",
+      "batterij vervanging leuven",
+      "gsm winkel leuven",
+      "telefoon winkel leuven",
+      "smartphone winkel leuven",
+      "gsm onderdelen leuven",
+      "telefoon accessoires leuven",
+      
+      // English keywords for international students/visitors
+      "phone repair leuven",
+      "device repair leuven",
+      "smartphone repair leuven", 
+      "mobile repair leuven",
+      "cell phone repair leuven",
+      "iphone repair leuven",
+      "samsung repair leuven",
+      "screen replacement leuven",
+      "battery replacement leuven",
+      "phone shop leuven",
+      "electronics repair leuven",
+      
+      // Location-specific variations
+      "leuven gsm reparatie",
+      "leuven telefoon reparatie", 
+      "reparatie leuven centrum",
+      "gsm reparatie centrum leuven",
+      "telefoon reparatie bondgenotenlaan",
+      "smartphone reparatie vlaams brabant",
+      
+      // Service-specific
+      "snelle reparatie leuven",
+      "goedkope reparatie leuven", 
+      "professionele reparatie leuven",
+      "reparatie met garantie leuven",
+      "same day repair leuven",
+      "fast repair leuven",
+      "reliable repair leuven",
+      "professional repair leuven"
     ]
   });
 }
@@ -204,6 +243,11 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--background)] ">
+      {/* Enhanced Local SEO Structured Data */}
+      <StructuredData data={generateCompleteLocalBusinessSchema()} />
+      <StructuredData data={generateLocalSEOFAQ()} />
+      <StructuredData data={generateRepairServiceSchema()} />
+      
       {/* Hero Section */}
       <HomepageHeroCarousel />
 

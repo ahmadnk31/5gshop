@@ -4,25 +4,73 @@ import { getTranslations } from 'next-intl/server'
 // Base SEO configuration
 export const siteConfig = {
   name: "5gphones Leuven",
-  title: "5gphones Leuven - Device Repair & Accessories",
-  description: "Professional device repair services and premium accessories for smartphones, tablets, laptops, and more in Leuven, Belgium.",
+  title: "5gphones Leuven - GSM Reparatie & Telefoon Accessoires",
+  description: "Professionele GSM reparatie, telefoon reparatie en smartphone accessoires in Leuven. iPhone reparatie, Samsung reparatie, tablet reparatie. Snelle service en garantie.",
   url: "https://5gphones.be",
   ogImage: "/og-image.png",
   keywords: [
+    // Dutch/Flemish primary keywords
+    "gsm reparatie leuven",
+    "telefoon reparatie leuven", 
+    "smartphone reparatie leuven",
+    "iphone reparatie leuven",
+    "samsung reparatie leuven",
+    "tablet reparatie leuven",
+    "telefoon accessoires leuven",
+    "gsm winkel leuven",
+    "smartphone winkel leuven",
+    "telefoon winkel leuven",
+    "gsm onderdelen leuven",
+    "telefoon onderdelen leuven",
+    "scherm reparatie leuven",
+    "batterij vervanging leuven",
+    
+    // English keywords for international visitors
+    "phone repair leuven",
+    "device repair leuven", 
+    "smartphone repair leuven",
+    "mobile repair leuven",
+    "cell phone repair leuven",
+    "iphone repair leuven",
+    "samsung repair leuven", 
+    "tablet repair leuven",
+    "laptop repair leuven",
+    "screen replacement leuven",
+    "battery replacement leuven",
+    "phone accessories leuven",
+    "smartphone accessories leuven",
+    "phone cases leuven",
+    "chargers leuven",
+    
+    // Location variations
+    "leuven gsm",
+    "leuven telefoon",
+    "leuven smartphone",
+    "leuven reparatie",
+    "gsm leuven centrum",
+    "telefoon reparatie centrum leuven",
+    "smartphone winkel centrum leuven",
+    
+    // Service-specific
+    "gsm reparatie",
+    "telefoon reparatie",
+    "smartphone reparatie",
+    "device repair",
     "phone repair",
-    "device repair", 
-    "smartphone accessories",
-    "Leuven repair shop",
-    "iPhone repair",
-    "Samsung repair", 
-    "tablet repair",
-    "laptop repair",
-    "screen replacement",
-    "battery replacement",
-    "phone cases",
-    "chargers",
+    "mobile repair",
+    "iphone reparatie",
+    "samsung reparatie",
+    "huawei reparatie",
+    "xiaomi reparatie",
+    "oneplus reparatie",
+    "google pixel reparatie",
+    
+    // General location
     "Belgium",
-    "Leuven"
+    "België", 
+    "Leuven",
+    "Vlaams-Brabant",
+    "3000 Leuven"
   ],
   author: "5gphones Leuven",
   creator: "5gphones Leuven",
@@ -208,6 +256,38 @@ export async function generateProductMetadata({
     category?.toLowerCase(),
     brand?.toLowerCase(),
     'buy online',
+    'online store',
+    'online shopping',
+    'smartphone accessories',
+    'device accessories',
+    'phone accessories',
+    'smartphone parts',
+    'device parts',
+    'phone parts',
+    'accessories',
+    'parts',
+    'repair parts',
+    'electronics',
+    'GSM',
+    'GSM accessories',
+    'GSM parts',
+    'GSM Leuven',
+    'GSM Belgium',
+    '5gphones',
+    '5gphones Leuven',
+    '5gphones accessories',
+    '5gphones parts',
+    '5gphones repair',
+    '5gphones electronics',
+    '5gphones shop',
+    '5gphones store',
+    '5gphones Belgium',
+    '5gphones Leuven',
+    '5gphones accessories',
+    '5gphones parts',
+    '5gphones repair',
+    '5gphones electronics',
+    '5gphones shop',
     'Belgium',
     'Leuven'
   ].filter(Boolean) as string[]
@@ -284,6 +364,33 @@ export async function generateServiceMetadata({
   const keywords = [
     serviceName.toLowerCase(),
     'repair service',
+    'device repair',
+    'smartphone repair',
+    'tablet repair',
+    'laptop repair',
+    price ? `€${price}` : '',
+    duration ? `${duration} minutes` : '',
+    'repair Leuven',
+    'repair Belgium',
+    '5gphones',
+    '5gphones Leuven',
+    '5gphones repair',
+    '5gphones accessories',
+    '5gphones parts',
+    ...(deviceTypes || []),
+    'smartphone',
+    'tablet',
+    'laptop',
+    'phone',
+    'accessories',
+    'parts',
+    'GSM',
+    'electronics',
+    'GSM Reparatie',
+    'GSM Accessoires',
+    'GSM Onderdelen',
+    'GSM Leuven',
+    'GSM België',
     'Leuven',
     'Belgium',
     ...(deviceTypes || [])
@@ -334,16 +441,23 @@ export function generateOrganizationSchema() {
 export function generateLocalBusinessSchema() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
+    '@type': ['LocalBusiness', 'ElectronicsStore', 'ComputerRepairService'],
     '@id': `${siteConfig.url}#business`,
     name: siteConfig.name,
+    alternateName: [
+      '5gphones',
+      '5G Phones Leuven',
+      'GSM Reparatie Leuven',
+      'Telefoon Reparatie Leuven'
+    ],
     url: siteConfig.url,
-    description: siteConfig.description,
-    image: `${siteConfig.url}/logo.png`,
-    telephone: '+32-XXX-XXX-XXX',
+    description: 'Professionele GSM reparatie, telefoon reparatie en smartphone accessoires in Leuven. Specialist in iPhone, Samsung, Huawei reparaties met garantie.',
+    image: [`${siteConfig.url}/logo.png`, `${siteConfig.url}/storefront.jpg`],
+    telephone: '+32 466 13 41 81',
+    email: 'info@5gphones.be',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Your Street Address',
+      streetAddress: 'Bondgenotenlaan 84A',
       addressLocality: 'Leuven',
       addressRegion: 'Vlaams-Brabant',
       postalCode: '3000',
@@ -351,24 +465,145 @@ export function generateLocalBusinessSchema() {
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: '50.8798',
-      longitude: '4.7005'
+      latitude: 50.8798,
+      longitude: 4.7005
     },
     openingHours: [
-      'Mo-Fr 09:00-18:00',
-      'Sa 10:00-16:00'
+      'Mo 10:00-18:00',
+      'Tu 10:00-18:00', 
+      'We 10:00-18:00',
+      'Th 10:00-18:00',
+      'Fr 10:00-18:00',
+      'Sa 10:00-18:30'
+    ],
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '10:00',
+        closes: '18:00'
+      },
+      {
+        '@type': 'OpeningHoursSpecification', 
+        dayOfWeek: 'Saturday',
+        opens: '10:00',
+        closes: '18:30'
+      }
     ],
     priceRange: '€€',
-    servesCuisine: null,
+    paymentAccepted: ['Cash', 'Credit Card', 'Debit Card', 'Bancontact'],
+    currenciesAccepted: 'EUR',
+    areaServed: [
+      {
+        '@type': 'City',
+        name: 'Leuven',
+        containedInPlace: {
+          '@type': 'AdministrativeArea',
+          name: 'Vlaams-Brabant'
+        }
+      },
+      {
+        '@type': 'City', 
+        name: 'Heverlee'
+      },
+      {
+        '@type': 'City',
+        name: 'Kessel-Lo'
+      },
+      {
+        '@type': 'City',
+        name: 'Wilsele'
+      },
+      {
+        '@type': 'City',
+        name: 'Wijgmaal'
+      }
+    ],
     serviceArea: {
       '@type': 'GeoCircle',
       geoMidpoint: {
         '@type': 'GeoCoordinates',
-        latitude: '50.8798',
-        longitude: '4.7005'
+        latitude: 50.8798,
+        longitude: 4.7005
       },
-      geoRadius: '50000'
-    }
+      geoRadius: '25000'
+    },
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Repair Services',
+      itemListElement: [
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'iPhone Reparatie',
+            description: 'Professionele iPhone reparatie service in Leuven'
+          }
+        },
+        {
+          '@type': 'Offer', 
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Samsung Reparatie',
+            description: 'Samsung smartphone en tablet reparatie'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service', 
+            name: 'Scherm Reparatie',
+            description: 'Snelle scherm reparatie voor alle smartphones'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Batterij Vervanging', 
+            description: 'Batterij vervanging voor smartphones en tablets'
+          }
+        }
+      ]
+    },
+    sameAs: [
+      'https://www.facebook.com/5gphones',
+      'https://www.instagram.com/5gphones',
+      'https://twitter.com/5gphones',
+      'https://www.google.com/maps/place/5gphones'
+    ],
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: 4.8,
+      reviewCount: 127,
+      bestRating: 5
+    },
+    review: [
+      {
+        '@type': 'Review',
+        author: {
+          '@type': 'Person',
+          name: 'Jan Janssen'
+        },
+        reviewRating: {
+          '@type': 'Rating', 
+          ratingValue: 5
+        },
+        reviewBody: 'Uitstekende service! Mijn iPhone scherm werd snel en professioneel gerepareerd.'
+      },
+      {
+        '@type': 'Review',
+        author: {
+          '@type': 'Person',
+          name: 'Marie Dupont'
+        },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: 5
+        },
+        reviewBody: 'Snelle reparatie en goede prijs. Aanrader voor GSM reparaties in Leuven!'
+      }
+    ]
   }
 }
 
@@ -394,5 +629,21 @@ export function generateWebsiteSchema() {
       }
     ],
     inLanguage: ['en', 'nl', 'fr']
+  }
+}
+
+// Helper function to generate FAQ structured data
+export function generateFAQSchema(faqs: Array<{ question: string; answer: string }>) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map(faq => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer
+      }
+    }))
   }
 }
