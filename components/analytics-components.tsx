@@ -170,47 +170,71 @@ export function PageSectionTracker({
     if (!isEnabled) return;
 
     if (!trackOnVisible) {
-      // Delay non-critical tracking
-      const timer = setTimeout(() => {
+      // Use requestIdleCallback for non-critical tracking
+      const scheduleTracking = () => {
         trackEvent('page_section_view', { section_name: sectionName });
-      }, 1000);
-      return () => clearTimeout(timer);
+      };
+
+      if ('requestIdleCallback' in window) {
+        const id = requestIdleCallback(scheduleTracking, { timeout: 2000 });
+        return () => cancelIdleCallback(id);
+      } else {
+        const timer = setTimeout(scheduleTracking, 1000);
+        return () => clearTimeout(timer);
+      }
     }
 
-    // Use a lighter intersection observer implementation
+    // Optimized intersection observer implementation
     let hasTracked = false;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (hasTracked) return;
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            hasTracked = true;
-            trackEvent('page_section_view', { section_name: sectionName });
-            observer.disconnect();
-          }
-        });
-      },
-      { 
-        threshold: 0.3, // Lower threshold for faster triggering
-        rootMargin: '50px' // Trigger earlier
-      }
-    );
+    let observer: IntersectionObserver | null = null;
+    
+    const initObserver = () => {
+      if (hasTracked) return;
+      
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (hasTracked) return;
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              hasTracked = true;
+              // Use requestIdleCallback for non-critical analytics
+              if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => {
+                  trackEvent('page_section_view', { section_name: sectionName });
+                });
+              } else {
+                trackEvent('page_section_view', { section_name: sectionName });
+              }
+              observer?.disconnect();
+            }
+          });
+        },
+        { 
+          threshold: 0.1, // Lower threshold for better performance
+          rootMargin: '100px' // Larger root margin for earlier triggering
+        }
+      );
 
-    // Use requestIdleCallback for non-critical setup
-    const setupObserver = () => {
       const element = document.querySelector(`[data-section="${sectionName}"]`);
       if (element) {
         observer.observe(element);
       }
     };
 
+    // Use requestIdleCallback for non-critical setup
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(setupObserver, { timeout: 2000 });
+      const id = requestIdleCallback(initObserver, { timeout: 3000 });
+      return () => {
+        cancelIdleCallback(id);
+        observer?.disconnect();
+      };
     } else {
-      setTimeout(setupObserver, 1000);
+      const timer = setTimeout(initObserver, 1500);
+      return () => {
+        clearTimeout(timer);
+        observer?.disconnect();
+      };
     }
-
-    return () => observer.disconnect();
   }, [sectionName, trackOnVisible, trackEvent, isEnabled]);
 
   return <div data-section={sectionName} style={{ height: 0, visibility: 'hidden' }} />;
@@ -263,42 +287,67 @@ export function ScrollDepthTracker() {
     // Don't run if analytics is disabled
     if (!isEnabled) return;
 
-    const scrollDepths = [50, 90]; // Reduced tracking points for performance
+    const scrollDepths = [50, 90]; // Essential tracking points only
     const trackedDepths = new Set<number>();
-    let ticking = false;
+    let rafId: number | null = null;
 
     const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollPercent = Math.round(
-            (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
-          );
+      if (rafId) return; // Throttle using RAF
+      
+      rafId = requestAnimationFrame(() => {
+        try {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const documentHeight = document.documentElement.scrollHeight - window.innerHeight;
+          
+          if (documentHeight <= 0) {
+            rafId = null;
+            return;
+          }
+          
+          const scrollPercent = Math.round((scrollTop / documentHeight) * 100);
 
           scrollDepths.forEach(depth => {
             if (scrollPercent >= depth && !trackedDepths.has(depth)) {
               trackedDepths.add(depth);
-              // Delay tracking to avoid blocking scroll
-              setTimeout(() => {
-                trackEvent('scroll_depth', { 
-                  scroll_depth: depth,
-                  page_type: 'mobile'
+              // Use requestIdleCallback for non-critical analytics
+              if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => {
+                  trackEvent('scroll_depth', { 
+                    scroll_depth: depth,
+                    page_type: window.innerWidth < 768 ? 'mobile' : 'desktop'
+                  });
                 });
-              }, 100);
+              } else {
+                setTimeout(() => {
+                  trackEvent('scroll_depth', { 
+                    scroll_depth: depth,
+                    page_type: window.innerWidth < 768 ? 'mobile' : 'desktop'
+                  });
+                }, 50);
+              }
             }
           });
-          ticking = false;
-        });
-        ticking = true;
-      }
+        } catch (error) {
+          console.warn('Scroll tracking error:', error);
+        } finally {
+          rafId = null;
+        }
+      });
     };
 
-    // Delay the scroll listener setup
+    // Delay the scroll listener setup to avoid blocking initial render
     const timer = setTimeout(() => {
-      window.addEventListener('scroll', handleScroll, { passive: true });
-    }, 3000); // Wait 3 seconds before starting scroll tracking
+      window.addEventListener('scroll', handleScroll, { 
+        passive: true,
+        capture: false 
+      });
+    }, 2000);
 
     return () => {
       clearTimeout(timer);
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
       window.removeEventListener('scroll', handleScroll);
     };
   }, [trackEvent, isEnabled]);

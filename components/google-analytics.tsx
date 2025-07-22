@@ -16,40 +16,50 @@ export function GoogleAnalytics({ measurementId = GA_MEASUREMENT_ID }: GoogleAna
 
   // Initialize Google Analytics only when user has consented or after user interaction
   useEffect(() => {
-    if (!isInitialized && (consent?.analytics || document.visibilityState === 'visible')) {
-      // Delay initialization to improve initial page load performance
-      const timer = setTimeout(() => {
+    if (!isInitialized && consent?.analytics) {
+      // Use requestIdleCallback for non-critical initialization
+      const initAnalytics = () => {
         if (measurementId) {
           initGoogleAnalytics(measurementId);
           setIsInitialized(true);
         }
-      }, 2000); // 2 second delay
+      };
 
-      return () => clearTimeout(timer);
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(initAnalytics, { timeout: 5000 });
+      } else {
+        // Delay initialization to improve initial page load performance
+        const timer = setTimeout(initAnalytics, 1000);
+        return () => clearTimeout(timer);
+      }
     }
   }, [measurementId, consent?.analytics, isInitialized]);
 
-  // Update consent when user preferences change
+  // Update consent when user preferences change - debounced
   useEffect(() => {
-    if (consent && isInitialized) {
+    if (!consent || !isInitialized) return;
+    
+    const timer = setTimeout(() => {
       updateGoogleAnalyticsConsent({
         analytics: consent.analytics,
         marketing: consent.marketing,
         preferences: consent.preferences,
       });
-    }
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [consent, isInitialized]);
 
   // Track page views when route changes (only if analytics consent is given and initialized)
   useEffect(() => {
-    if (consent?.analytics && pathname && isInitialized) {
-      // Debounce page view tracking
-      const timer = setTimeout(() => {
-        gtag.pageView(pathname);
-      }, 100);
+    if (!consent?.analytics || !pathname || !isInitialized) return;
+    
+    // Debounce page view tracking with longer delay for SPA navigation
+    const timer = setTimeout(() => {
+      gtag.pageView(pathname);
+    }, 200);
 
-      return () => clearTimeout(timer);
-    }
+    return () => clearTimeout(timer);
   }, [pathname, consent?.analytics, isInitialized]);
 
   return null; // This component doesn't render anything

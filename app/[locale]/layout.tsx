@@ -3,6 +3,7 @@ import { Geist, Geist_Mono,Lato } from "next/font/google";
 import "../globals.css";
 import { Analytics } from "@vercel/analytics/next"
 import { baseMetadata } from "@/lib/seo";
+import { PerformanceMonitor } from "@/components/performance-monitor-wrapper";
 
 // Add a declaration for window.dataLayer to avoid TypeScript errors
 declare global {
@@ -26,28 +27,31 @@ import { generateOrganizationSchema, generateLocalBusinessSchema, generateWebsit
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  display: 'swap', // Add font-display swap for better performance
-  preload: false, // Disable preload to improve initial load
+  display: 'swap',
+  preload: true, // Enable preload for critical font
+  fallback: ['system-ui', 'arial'], // Add fallback fonts
 });
 
 const lato = Lato({
   variable: "--font-lato",
-  subsets: ["latin"], // Remove latin-ext to reduce load
-  weight: ["400", "700"], // Reduce font weights to essential ones only
+  subsets: ["latin"],
+  weight: ["400", "700"],
   display: 'swap',
-  preload: false,
+  preload: false, // Keep secondary font as non-preload
+  fallback: ['system-ui', 'arial'],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
   display: 'swap',
-  preload: false,
+  preload: false, // Mono font not critical
+  fallback: ['monospace'],
 });
 
 export const metadata: Metadata = baseMetadata;
 
-export default  async function RootLayout({
+export default async function RootLayout({
   children,
   params,
 }: Readonly<{
@@ -55,15 +59,19 @@ export default  async function RootLayout({
   params: Promise<{ locale: string; }>;
   
 }>) {
-   const {locale} = await params;
+  const { locale } = await params;
+  
+  // Fast locale validation without expensive operations
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
 
-  // Generate structured data
-  const organizationSchema = generateOrganizationSchema();
-  const localBusinessSchema = generateLocalBusinessSchema();
-  const websiteSchema = generateWebsiteSchema();
+  // Pre-generate structured data to avoid runtime computation
+  const structuredData = {
+    organization: generateOrganizationSchema(),
+    localBusiness: generateLocalBusinessSchema(), 
+    website: generateWebsiteSchema()
+  };
 
   return (
     <html lang={locale}>
@@ -74,16 +82,22 @@ export default  async function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         
+        {/* Hreflang for international SEO */}
+        <link rel="alternate" hrefLang="en" href="https://5gphones.be/en" />
+        <link rel="alternate" hrefLang="nl" href="https://5gphones.be/nl" />
+        <link rel="alternate" hrefLang="fr" href="https://5gphones.be/fr" />
+        <link rel="alternate" hrefLang="x-default" href="https://5gphones.be/en" />
         
-        
-        {/* Optimized font loading */}
+        {/* Optimized font loading - preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
-        {/* DNS Prefetch for external resources - only essential ones */}
+        {/* Resource hints for critical external resources */}
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="//tire-files.s3.us-east-1.amazonaws.com" />
         
-        {/* Remove duplicate Google Analytics script - will be loaded by component */}
+        {/* Preload critical CSS */}
+        <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${lato.variable} antialiased`}
@@ -108,10 +122,12 @@ export default  async function RootLayout({
             <CookieSettingsModal />
             {/* Load Analytics after main content */}
             <Analytics />
+            {/* Performance monitoring in development */}
+            <PerformanceMonitor />
           </AccessibilityProvider>
           
           {/* Structured Data */}
-          <StructuredData data={[organizationSchema, localBusinessSchema, websiteSchema]} />
+          <StructuredData data={[structuredData.organization, structuredData.localBusiness, structuredData.website]} />
         </CookieConsentProvider>
         </NextIntlClientProvider>
         </Provider>

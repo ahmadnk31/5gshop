@@ -46,7 +46,13 @@ export function NewRepairModal({ isOpen, onClose }: NewRepairModalProps) {
   });
   const [uploadedFiles, setUploadedFiles] = useState<Array<{ url: string; key: string }>>([]);
 
-  const generateId = () => Math.random().toString(36).substr(2, 9);
+  const generateId = () => {
+    // Use crypto.randomUUID if available, fallback to timestamp-based ID
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  };
 
   const handleSubmit = async () => {
     try {
@@ -63,6 +69,10 @@ export function NewRepairModal({ isOpen, onClose }: NewRepairModalProps) {
         customer = await actions.addCustomer(customerData);
       }
 
+      // Calculate estimated completion date on the client side
+      const estimatedCompletionDate = new Date();
+      estimatedCompletionDate.setDate(estimatedCompletionDate.getDate() + repairDetails.estimatedDays);
+
       // For now, we'll create a device separately in the server action
       // The server action should handle creating the device if needed
       const repairData = {
@@ -73,7 +83,7 @@ export function NewRepairModal({ isOpen, onClose }: NewRepairModalProps) {
         status: 'PENDING' as RepairStatus,
         priority: repairDetails.priority,
         cost: repairDetails.estimatedCost,
-        estimatedCompletion: new Date(Date.now() + repairDetails.estimatedDays * 24 * 60 * 60 * 1000).toISOString(),
+        estimatedCompletion: estimatedCompletionDate.toISOString(),
         assignedTechnician: 'Auto-assigned',
         // Device data for creation
         deviceData: {

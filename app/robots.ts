@@ -20,7 +20,21 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: 'Googlebot',
-        allow: '/',
+        allow: [
+          '/',
+          '/en/',
+          '/nl/', 
+          '/fr/',
+          '/en/accessories/',
+          '/nl/accessories/',
+          '/fr/accessories/',
+          '/en/parts/',
+          '/nl/parts/',
+          '/fr/parts/',
+          '/en/repairs/',
+          '/nl/repairs/',
+          '/fr/repairs/'
+        ],
         disallow: [
           '/admin/',
           '/api/',
