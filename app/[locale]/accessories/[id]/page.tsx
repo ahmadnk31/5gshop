@@ -110,8 +110,8 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
       <AccessoryViewTracker accessory={accessory} />
       
       {/* Breadcrumb Navigation */}
-      <div className="bg-gray-50 border-b">
-        <div className="container mx-auto px-4 py-3">
+      <div className="bg-gray-50 border-b breadcrumb-container">
+        <div className="container mx-auto px-4 py-6">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>

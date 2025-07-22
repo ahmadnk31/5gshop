@@ -5,40 +5,56 @@
 
 export const GA_MEASUREMENT_ID = 'G-Q17J2K3TRC'; // Replace with your GA4 Measurement ID
 
-// Initialize Google Analytics with Consent Mode v2
+// Initialize Google Analytics with lazy loading for better performance
 export function initGoogleAnalytics(measurementId: string = GA_MEASUREMENT_ID) {
-  // Create and load the Google Analytics script
-  const script1 = document.createElement('script');
-  script1.async = true;
-  script1.src = `https://www.googletagmanager.com/gtag/js?id=G-Q17J2K3TRC`;
-  document.head.appendChild(script1);
+  // Only load if not already loaded
+  if (isGoogleAnalyticsLoaded()) {
+    return;
+  }
 
-  // Initialize gtag with consent mode
-  const script2 = document.createElement('script');
-  script2.innerHTML = `
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    
-    // Configure default consent state (denied until user consents)
-    gtag('consent', 'default', {
-      'analytics_storage': 'denied',
-      'ad_storage': 'denied',
-      'ad_user_data': 'denied',
-      'ad_personalization': 'denied',
-      'functionality_storage': 'denied',
-      'personalization_storage': 'denied',
-      'security_storage': 'granted' // Always granted for security
-    });
-    
-    // Configure Google Analytics
-    gtag('config', '${measurementId}', {
-      page_title: document.title,
-      page_location: window.location.href,
-      anonymize_ip: true, // GDPR compliance
-    });
-  `;
-  document.head.appendChild(script2);
+  // Use requestIdleCallback for non-critical script loading
+  const loadAnalytics = () => {
+    // Create and load the Google Analytics script
+    const script1 = document.createElement('script');
+    script1.async = true;
+    script1.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+    document.head.appendChild(script1);
+
+    // Initialize gtag with consent mode
+    const script2 = document.createElement('script');
+    script2.innerHTML = `
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      
+      // Configure default consent state (denied until user consents)
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'functionality_storage': 'denied',
+        'personalization_storage': 'denied',
+        'security_storage': 'granted'
+      });
+      
+      // Configure Google Analytics
+      gtag('config', '${measurementId}', {
+        page_title: document.title,
+        page_location: window.location.href,
+        anonymize_ip: true,
+        send_page_view: false // Don't auto-send page views
+      });
+    `;
+    document.head.appendChild(script2);
+  };
+
+  // Load analytics when the browser is idle or after 3 seconds
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadAnalytics, { timeout: 3000 });
+  } else {
+    setTimeout(loadAnalytics, 3000);
+  }
 }
 
 // Update consent based on user preferences

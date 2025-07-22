@@ -28,6 +28,19 @@ export default function HomepageHeroCarouselClient({ items }: { items: any[] }) 
   const [api, setApi] = useState<any>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [hasInteracted, setHasInteracted] = useState(false);
+
+  // Pause auto-play initially to improve performance
+  useEffect(() => {
+    // Only start auto-play after user interaction or delay
+    const timer = setTimeout(() => {
+      if (!hasInteracted) {
+        setPlaying(true);
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [hasInteracted]);
 
   useEffect(() => {
     if (!api) return;
@@ -63,6 +76,8 @@ export default function HomepageHeroCarouselClient({ items }: { items: any[] }) 
         backgroundSize: '200% 200%',
         animation: 'gradient-x 8s ease-in-out infinite',
       }}
+      role="banner"
+      aria-label="Featured products and services carousel"
     >
       <style>{`
         @keyframes gradient-x {
@@ -83,31 +98,58 @@ export default function HomepageHeroCarouselClient({ items }: { items: any[] }) 
       `}</style>
       <div className="container mx-auto px-0 sm:px-4 py-0 sm:py-8 lg:py-12">
         <div className="relative rounded-2xl overflow-hidden shadow-xl">
-          <Carousel setApi={setApi} opts={{ loop: true }} className="relative">
+          <Carousel 
+            setApi={setApi} 
+            opts={{ loop: true }} 
+            className="relative"
+            aria-label="Product showcase carousel"
+            role="region"
+          >
             <CarouselContent>
               {items.map((item, idx) => (
-                <CarouselItem key={item.type + '-' + item.id} className="flex flex-col items-center justify-center text-center p-0 min-h-[350px] sm:min-h-[420px] lg:min-h-[500px] relative">
+                <CarouselItem 
+                  key={item.type + '-' + item.id} 
+                  className="flex flex-col items-center justify-center text-center p-0 min-h-[350px] sm:min-h-[420px] lg:min-h-[500px] relative"
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`Slide ${idx + 1} of ${items.length}: ${item.name}`}
+                >
                   <div className="absolute inset-0 w-full h-full z-0">
                     <Image
                       src={item.imageUrl || '/logo.svg'}
-                      alt={item.name}
+                      alt={`${item.name} - ${item.subtitle || 'Featured product showcase'}`}
                       fill
                       style={{ objectFit: 'cover', objectPosition: 'center' }}
                       className={`transition-transform duration-700 ${selectedIndex === idx ? 'fade-in' : ''}`}
-                      priority={idx === 0}
-                      sizes="(max-width: 768px) 100vw, 1200px"
+                      priority={idx === 0} // Only first image gets priority
+                      loading={idx === 0 ? 'eager' : 'lazy'} // Lazy load other images
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 1200px, 1400px"
                       {...(item.blurDataURL ? { placeholder: 'blur', blurDataURL: item.blurDataURL } : {})}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
                   </div>
                   <div className="relative z-20 flex flex-col items-center justify-center h-full w-full px-4 py-8">
-                    <span className={`inline-block px-3 py-1 mb-4 rounded-full bg-white/80 text-xs font-semibold uppercase tracking-wider text-gray-800 shadow ${selectedIndex === idx ? 'fade-in' : ''}`}>{item.type}</span>
-                    <h2 className={`text-2xl sm:text-3xl md:text-4xl font-extrabold mb-1 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${selectedIndex === idx ? 'fade-in' : ''}`}>{item.name}</h2>
+                    <span className={`inline-block px-3 py-1 mb-4 rounded-full bg-white/90 text-xs font-semibold uppercase tracking-wider text-gray-900 shadow ${selectedIndex === idx ? 'fade-in' : ''}`}>
+                      {item.type}
+                    </span>
+                    <h2 className={`text-2xl sm:text-3xl md:text-4xl font-extrabold mb-1 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${selectedIndex === idx ? 'fade-in' : ''}`}>
+                      {item.name}
+                    </h2>
                     {item.subtitle && (
-                      <p className={`mb-3 text-base sm:text-lg text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${selectedIndex === idx ? 'fade-in' : ''}`}>{item.subtitle}</p>
+                      <p className={`mb-3 text-base sm:text-lg text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)] ${selectedIndex === idx ? 'fade-in' : ''}`}>
+                        {item.subtitle}
+                      </p>
                     )}
-                    <Button asChild variant="secondary" size="lg" className={`mt-2 ${selectedIndex === idx ? 'fade-in' : ''}`}>
-                      <Link href={item.link}>
+                    <Button 
+                      asChild 
+                      variant="secondary" 
+                      size="lg" 
+                      className={`mt-2 focus:ring-4 focus:ring-white/50 focus:outline-none ${selectedIndex === idx ? 'fade-in' : ''}`}
+                    >
+                      <Link 
+                        href={item.link}
+                        aria-label={`${item.cta || (item.type === 'accessory' ? 'Shop Accessory' : item.type === 'part' ? 'View Part' : 'View Device')} for ${item.name}`}
+                      >
                         {item.cta || (item.type === 'accessory' ? 'Shop Accessory' : item.type === 'part' ? 'View Part' : 'View Device')}
                       </Link>
                     </Button>
@@ -115,9 +157,32 @@ export default function HomepageHeroCarouselClient({ items }: { items: any[] }) 
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="z-30" />
-            <CarouselNext className="z-30" />
+            <CarouselPrevious 
+              className="z-30 focus:ring-4 focus:ring-white/50 focus:outline-none" 
+              aria-label="Previous slide"
+            />
+            <CarouselNext 
+              className="z-30 focus:ring-4 focus:ring-white/50 focus:outline-none" 
+              aria-label="Next slide"
+            />
             <PlayPauseButton playing={playing} onClick={() => setPlaying(p => !p)} />
+            
+            {/* Carousel indicators for better navigation */}
+            <div className="absolute bottom-4 right-4 z-30 flex space-x-2" role="tablist" aria-label="Carousel navigation">
+              {items.map((_, idx) => (
+                <button
+                  key={idx}
+                  className={`w-3 h-3 rounded-full transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none ${
+                    selectedIndex === idx ? 'bg-white' : 'bg-white/50'
+                  }`}
+                  onClick={() => api?.scrollTo(idx)}
+                  aria-label={`Go to slide ${idx + 1}`}
+                  role="tab"
+                  aria-selected={selectedIndex === idx}
+                  tabIndex={selectedIndex === idx ? 0 : -1}
+                />
+              ))}
+            </div>
           </Carousel>
         </div>
       </div>

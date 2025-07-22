@@ -274,7 +274,7 @@ export function SearchComponent() {
             <Button 
               variant="outline" 
               size="sm"
-              className="rounded-r-none border-r-0 flex items-center space-x-1 px-2 sm:px-3 min-w-[80px] sm:min-w-[100px]"
+              className="rounded-r-none border-r-0 flex items-center space-x-1 px-2 sm:px-3 min-w-[80px] sm:min-w-[100px] border-gray-300 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
             >
               {getFilterIcon()}
               <span className="hidden sm:inline text-xs sm:text-sm">{getFilterLabel()}</span>
@@ -315,7 +315,7 @@ export function SearchComponent() {
               }
             }}
             onKeyDown={handleKeyDown}
-            className="rounded-l-none rounded-r-none border-l-0 border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-sm"
+            className="rounded-l-none rounded-r-none border-l  border-r text-sm focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 border-gray-300 focus:border-blue-500"
           />
           {searchTerm && (
             <button
@@ -323,9 +323,10 @@ export function SearchComponent() {
                 setSearchTerm('');
                 setIsOpen(false);
               }}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-400 flex items-center justify-center rounded-full p-1 z-10"
+              aria-label="Clear search"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3 w-3 hover:text-gray-600" />
             </button>
           )}
         </div>
@@ -333,7 +334,7 @@ export function SearchComponent() {
         {/* Search Button */}
         <Button 
           size="sm" 
-          className="rounded-l-none px-2 sm:px-3"
+          className="rounded-l-none px-2 sm:px-3 border-gray-300  text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
           onClick={() => {
             if (searchTerm.trim() && searchTerm.length >= 2) {
               const trimmedSearch = searchTerm.trim();
@@ -357,7 +358,7 @@ export function SearchComponent() {
 
       {/* Search Results Dropdown */}
       {isOpen && (searchTerm.length >= 2 || results.length > 0) && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-md shadow-lg z-40 max-h-96 overflow-y-auto">
           {isLoading ? (
             <div className="p-4 text-center text-gray-500">
               <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-2"></div>

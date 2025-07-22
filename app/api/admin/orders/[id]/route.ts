@@ -4,7 +4,7 @@ import { prisma } from "@/lib/database";
 import { NextResponse } from "next/server";
 import { SESService } from "@/lib/ses-service";
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await getServerSession(authOptions);
   // Optionally, check for admin role
   if (!session?.user?.role || session.user.role !== 'ADMIN') {

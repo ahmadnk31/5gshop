@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useCookieConsent } from '@/components/cookie-consent-context';
 import { initGoogleAnalytics, updateGoogleAnalyticsConsent, gtag, GA_MEASUREMENT_ID } from '@/lib/google-analytics';
@@ -12,31 +12,45 @@ interface GoogleAnalyticsProps {
 export function GoogleAnalytics({ measurementId = GA_MEASUREMENT_ID }: GoogleAnalyticsProps) {
   const { consent } = useCookieConsent();
   const pathname = usePathname();
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize Google Analytics when component mounts
+  // Initialize Google Analytics only when user has consented or after user interaction
   useEffect(() => {
-    if (measurementId) {
-      initGoogleAnalytics(measurementId);
+    if (!isInitialized && (consent?.analytics || document.visibilityState === 'visible')) {
+      // Delay initialization to improve initial page load performance
+      const timer = setTimeout(() => {
+        if (measurementId) {
+          initGoogleAnalytics(measurementId);
+          setIsInitialized(true);
+        }
+      }, 2000); // 2 second delay
+
+      return () => clearTimeout(timer);
     }
-  }, [measurementId]);
+  }, [measurementId, consent?.analytics, isInitialized]);
 
   // Update consent when user preferences change
   useEffect(() => {
-    if (consent) {
+    if (consent && isInitialized) {
       updateGoogleAnalyticsConsent({
         analytics: consent.analytics,
         marketing: consent.marketing,
         preferences: consent.preferences,
       });
     }
-  }, [consent]);
+  }, [consent, isInitialized]);
 
-  // Track page views when route changes (only if analytics consent is given)
+  // Track page views when route changes (only if analytics consent is given and initialized)
   useEffect(() => {
-    if (consent?.analytics && pathname) {
-      gtag.pageView(pathname);
+    if (consent?.analytics && pathname && isInitialized) {
+      // Debounce page view tracking
+      const timer = setTimeout(() => {
+        gtag.pageView(pathname);
+      }, 100);
+
+      return () => clearTimeout(timer);
     }
-  }, [pathname, consent?.analytics]);
+  }, [pathname, consent?.analytics, isInitialized]);
 
   return null; // This component doesn't render anything
 }

@@ -140,22 +140,28 @@ export default function PartDetailPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Breadcrumbs & Back Button */}
-      <div className="container mx-auto px-4 pt-6 pb-2 flex flex-col gap-2">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href={`/${locale}`}>Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href={`/${locale}/parts`}>{t('allParts')}</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{part.name}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+      <div className="bg-gray-50 border-b breadcrumb-container">
+        <div className="container mx-auto px-4 py-6">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href={`/${locale}`}>Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href={`/${locale}/parts`}>{t('allParts')}</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{part.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+      </div>
+      
+      {/* Back Button */}
+      <div className="container mx-auto px-4 pt-6 pb-2">
         <button
           type="button"
           className="inline-flex items-center text-sm text-blue-600 hover:underline w-fit mt-2"

@@ -4,7 +4,7 @@ import { prisma } from "@/lib/database";
 import { NextRequest, NextResponse } from "next/server";
 
 // itemType: 'part' or 'accessory'
-export async function POST(req: NextRequest, { params }: { params: { itemType: string, itemId: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ itemType: string, itemId: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest, { params }: { params: { itemType: s
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { itemType: string, itemId: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ itemType: string, itemId: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -63,7 +63,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { itemType:
   return NextResponse.json({ success: true });
 }
 
-export async function GET(req: NextRequest, { params }: { params: { itemType: string, itemId: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ itemType: string, itemId: string }> }) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

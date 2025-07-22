@@ -4,12 +4,13 @@ import { StructuredData } from '@/components/structured-data'
 import { generateLocalSEOFAQ, generateRepairServiceSchema } from '@/lib/local-seo'
 import { generateCompleteLocalBusinessSchema } from '@/lib/local-business'
 
-export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
   return generatePageMetadata({
     title: 'Telefoon Reparatie Leuven | GSM Herstelling | iPhone Samsung Reparatie',
     description: 'Professionele telefoon reparatie in Leuven. iPhone, Samsung, Huawei herstelling ✓ Scherm reparatie ✓ Batterij vervanging ✓ Snelle service ✓ Garantie. Bondgenotenlaan 84A.',
     path: '/repairs',
-    locale: params.locale,
+    locale: locale,
     keywords: [
       // Primary local repair keywords
       'telefoon reparatie leuven',

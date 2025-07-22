@@ -92,7 +92,7 @@ export function WishlistSheet() {
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="sm" className="relative">
-          <Heart className="h-5 w-5" />
+          <Heart className="h-6 w-6" />
           {wishlistItems.length > 0 && (
             <Badge 
               variant="destructive" 
@@ -106,7 +106,7 @@ export function WishlistSheet() {
       <SheetContent className="w-full sm:max-w-lg">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5" />
+            <Heart className="h-6 w-6" />
             {t('title')}
             {wishlistItems.length > 0 && (
               <Badge variant="secondary">{wishlistItems.length}</Badge>

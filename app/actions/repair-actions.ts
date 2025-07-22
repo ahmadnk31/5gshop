@@ -19,7 +19,11 @@ export async function createRepair(data: CreateRepairData) {
     
     // Create device if deviceData is provided and no deviceId
     if (!deviceId && data.deviceData) {
-      const device = await DatabaseService.createDevice(data.deviceData);
+      const deviceDataWithOrder = {
+        ...data.deviceData,
+        order: data.deviceData.order ?? 0
+      };
+      const device = await DatabaseService.createDevice(deviceDataWithOrder);
       deviceId = device.id;
     }
     

@@ -33,6 +33,7 @@ export function NewRepairModal({ isOpen, onClose }: NewRepairModalProps) {
     type: 'SMARTPHONE',
     brand: '',
     model: '',
+    order: 0,
     serialNumber: '',
     purchaseDate: ''
   });
@@ -92,7 +93,7 @@ export function NewRepairModal({ isOpen, onClose }: NewRepairModalProps) {
       setStep(1);
       setSelectedCustomer(null);
       setNewCustomer({ firstName: '', lastName: '', email: '', phone: '', address: '' });
-      setDevice({ type: 'SMARTPHONE', brand: '', model: '', serialNumber: '', purchaseDate: '' });
+      setDevice({ type: 'SMARTPHONE', brand: '', model: '', order: 0, serialNumber: '', purchaseDate: '' });
       setRepairDetails({ issue: '', description: '', priority: 'MEDIUM', estimatedCost: 0, estimatedDays: 2 });
       setUploadedFiles([]);
       

@@ -155,7 +155,7 @@ export function QuoteRequestTracker({
   return null; // This component doesn't render anything
 }
 
-// Page view tracker for specific sections
+// Page view tracker for specific sections - optimized for performance
 export function PageSectionTracker({ 
   sectionName, 
   trackOnVisible = true 
@@ -163,36 +163,57 @@ export function PageSectionTracker({
   sectionName: string;
   trackOnVisible?: boolean;
 }) {
-  const { trackEvent } = useGoogleAnalytics();
+  const { trackEvent, isEnabled } = useGoogleAnalytics();
 
   useEffect(() => {
+    // Don't run if analytics is disabled
+    if (!isEnabled) return;
+
     if (!trackOnVisible) {
-      trackEvent('page_section_view', { section_name: sectionName });
-      return;
+      // Delay non-critical tracking
+      const timer = setTimeout(() => {
+        trackEvent('page_section_view', { section_name: sectionName });
+      }, 1000);
+      return () => clearTimeout(timer);
     }
 
-    // Track when section becomes visible using Intersection Observer
+    // Use a lighter intersection observer implementation
+    let hasTracked = false;
     const observer = new IntersectionObserver(
       (entries) => {
+        if (hasTracked) return;
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
+            hasTracked = true;
             trackEvent('page_section_view', { section_name: sectionName });
-            observer.disconnect(); // Track only once
+            observer.disconnect();
           }
         });
       },
-      { threshold: 0.5 } // Trigger when 50% visible
+      { 
+        threshold: 0.3, // Lower threshold for faster triggering
+        rootMargin: '50px' // Trigger earlier
+      }
     );
 
-    const element = document.querySelector(`[data-section="${sectionName}"]`);
-    if (element) {
-      observer.observe(element);
+    // Use requestIdleCallback for non-critical setup
+    const setupObserver = () => {
+      const element = document.querySelector(`[data-section="${sectionName}"]`);
+      if (element) {
+        observer.observe(element);
+      }
+    };
+
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(setupObserver, { timeout: 2000 });
+    } else {
+      setTimeout(setupObserver, 1000);
     }
 
     return () => observer.disconnect();
-  }, [sectionName, trackOnVisible, trackEvent]);
+  }, [sectionName, trackOnVisible, trackEvent, isEnabled]);
 
-  return <div data-section={sectionName} />;
+  return <div data-section={sectionName} style={{ height: 0, visibility: 'hidden' }} />;
 }
 
 // Download link tracker
@@ -234,33 +255,53 @@ export function AnalyticsDownloadLink({
   );
 }
 
-// Scroll depth tracker
+// Scroll depth tracker - optimized with throttling and lazy loading
 export function ScrollDepthTracker() {
-  const { trackEvent } = useGoogleAnalytics();
+  const { trackEvent, isEnabled } = useGoogleAnalytics();
 
   useEffect(() => {
-    const scrollDepths = [25, 50, 75, 90, 100];
+    // Don't run if analytics is disabled
+    if (!isEnabled) return;
+
+    const scrollDepths = [50, 90]; // Reduced tracking points for performance
     const trackedDepths = new Set<number>();
+    let ticking = false;
 
     const handleScroll = () => {
-      const scrollPercent = Math.round(
-        (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
-      );
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollPercent = Math.round(
+            (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
+          );
 
-      scrollDepths.forEach(depth => {
-        if (scrollPercent >= depth && !trackedDepths.has(depth)) {
-          trackedDepths.add(depth);
-          trackEvent('scroll_depth', { 
-            scroll_depth: depth,
-            page_location: window.location.href 
+          scrollDepths.forEach(depth => {
+            if (scrollPercent >= depth && !trackedDepths.has(depth)) {
+              trackedDepths.add(depth);
+              // Delay tracking to avoid blocking scroll
+              setTimeout(() => {
+                trackEvent('scroll_depth', { 
+                  scroll_depth: depth,
+                  page_type: 'mobile'
+                });
+              }, 100);
+            }
           });
-        }
-      });
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [trackEvent]);
+    // Delay the scroll listener setup
+    const timer = setTimeout(() => {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }, 3000); // Wait 3 seconds before starting scroll tracking
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [trackEvent, isEnabled]);
 
   return null;
 }
@@ -273,7 +314,7 @@ export function AnalyticsStatus() {
   if (process.env.NODE_ENV !== 'development') return null;
 
   return (
-    <div className="fixed bottom-4 left-4 bg-gray-800 text-white p-2 rounded text-sm z-50">
+    <div className="fixed bottom-4 left-4 bg-gray-800 text-white p-2 rounded text-sm z-40">
       <div>Analytics: {isEnabled ? '✅ Enabled' : '❌ Disabled'}</div>
       <div>Consent: {consent?.analytics ? '✅ Given' : '❌ Not given'}</div>
     </div>

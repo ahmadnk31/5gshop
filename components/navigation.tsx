@@ -258,7 +258,7 @@ export function Navigation() {
             </button>
             {/* Tablet Search Bar - Toggleable */}
             {searchbarOpen && (
-              <div className="absolute left-0 right-0 top-16 z-50 bg-white border-b border-gray-200 shadow-md px-4 py-3">
+              <div className="absolute left-0 right-0 top-16 z-40 bg-white border-b border-gray-200 shadow-md px-4 py-3">
                 <SearchComponent />
               </div>
             )}
@@ -591,7 +591,7 @@ export function Navigation() {
               >
                 {t('contact')}
               </Link>
-              <Button asChild className="w-fit bg-geen-700" onClick={() => setIsOpen(false)}>
+              <Button asChild className="w-fit" onClick={() => setIsOpen(false)}>
                 <Link href="/quote">{t('getQuote')}</Link>
               </Button>
             </div>

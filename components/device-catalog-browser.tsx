@@ -1138,7 +1138,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
         <>
       {/* Breadcrumb Navigation */}
       <nav
-        className="flex flex-wrap mb-4 items-center gap-x-2 gap-y-1 text-sm text-gray-600"
+        className="flex flex-wrap mb-6 p-4 bg-gray-50 rounded-lg items-center gap-x-2 gap-y-1 text-sm text-gray-600"
         aria-label="Breadcrumb"
       >
         {getBreadcrumbs().map((crumb, index) => (

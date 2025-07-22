@@ -1,0 +1,124 @@
+/* Critical CSS - Only essential styles for above-the-fold content */
+:root {
+  --background: #F3F4F6;
+  --foreground: #1F2937;
+  --primary: #16A34A;
+  --primary-foreground: #FFFFFF;
+  --secondary: #16A34A;
+  --accent: #14B8A6;
+  --card: #FFFFFF;
+  --border: #E5E7EB;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Navigation critical styles */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero section critical styles */
+.hero-section {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Button critical styles with your theme colors */
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.625rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #15803d; /* Darker green for hover */
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  color: var(--primary-foreground);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.625rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  background-color: #15803d; /* Darker green for hover */
+}
+
+.btn-accent {
+  background-color: var(--accent);
+  color: var(--primary-foreground);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.625rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.btn-accent:hover {
+  background-color: #0f766e; /* Darker teal for hover */
+}
+
+/* Layout critical styles */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Hide non-critical content initially */
+.non-critical {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Prevent layout shift */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

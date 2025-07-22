@@ -109,6 +109,13 @@ export class DatabaseService {
     return DatabaseService.mapCustomer(customer)
   }
 
+  static async findCustomerByEmail(email: string): Promise<Customer | null> {
+    const customer = await prisma.customer.findUnique({
+      where: { email },
+    })
+    return customer ? DatabaseService.mapCustomer(customer) : null
+  }
+
   static async deleteCustomer(id: string): Promise<void> {
     await prisma.customer.delete({
       where: { id },
@@ -156,6 +163,16 @@ export class DatabaseService {
       },
     })
     return DatabaseService.mapDevice(device)
+  }
+
+  static async findDeviceByModel(brand: string, model: string): Promise<Device | null> {
+    const device = await prisma.device.findFirst({
+      where: { 
+        brand: { equals: brand, mode: 'insensitive' },
+        model: { equals: model, mode: 'insensitive' }
+      },
+    })
+    return device ? DatabaseService.mapDevice(device) : null
   }
 
   // Part operations

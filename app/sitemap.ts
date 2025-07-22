@@ -6,6 +6,7 @@ import { getRepairServices } from '@/app/actions/repair-services-actions'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://5gphones.be'
+  const locales = ['en', 'nl', 'fr']
   
   // Static pages
   const staticPages = [
@@ -22,12 +23,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/auth/register'
   ]
 
-  const staticRoutes = staticPages.map(route => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: route === '' ? 1 : 0.8,
-  }))
+  // Generate routes for all locales
+  const staticRoutes = staticPages.flatMap(route => 
+    locales.map(locale => ({
+      url: `${baseUrl}/${locale}${route}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: route === '' ? 1 : 0.8,
+    }))
+  )
 
   try {
     // Dynamic product pages
@@ -38,29 +42,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       getRepairServices()
     ])
 
-    // Accessory pages
-    const accessoryRoutes = accessories.map((accessory: any) => ({
-      url: `${baseUrl}/accessories/${accessory.id}`,
-      lastModified: new Date(accessory.updatedAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    }))
+    // Accessory pages (all locales)
+    const accessoryRoutes = accessories.flatMap((accessory: any) =>
+      locales.map(locale => ({
+        url: `${baseUrl}/${locale}/accessories/${accessory.id}`,
+        lastModified: new Date(accessory.updatedAt),
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      }))
+    )
 
-    // Part pages  
-    const partRoutes = parts.map((part: any) => ({
-      url: `${baseUrl}/parts/${part.id}`,
-      lastModified: new Date(part.updatedAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
-    }))
+    // Part pages (all locales)
+    const partRoutes = parts.flatMap((part: any) =>
+      locales.map(locale => ({
+        url: `${baseUrl}/${locale}/parts/${part.id}`,
+        lastModified: new Date(part.updatedAt),
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      }))
+    )
 
-    // Service pages (if they have individual pages)
-    const serviceRoutes = services.map((service: any) => ({
-      url: `${baseUrl}/repairs/${service.id}`,
-      lastModified: new Date(service.updatedAt),
-      changeFrequency: 'monthly' as const,
-      priority: 0.6,
-    }))
+    // Service pages (all locales)
+    const serviceRoutes = services.flatMap((service: any) =>
+      locales.map(locale => ({
+        url: `${baseUrl}/${locale}/repairs/${service.id}`,
+        lastModified: new Date(service.updatedAt),
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      }))
+    )
 
     return [
       ...staticRoutes,
