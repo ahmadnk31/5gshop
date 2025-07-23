@@ -1,5 +1,3 @@
-'use client';
-
 // Google Analytics 4 integration with Cookie Consent
 // Replace 'GA_MEASUREMENT_ID' with your actual Google Analytics Measurement ID
 
@@ -7,6 +5,9 @@ export const GA_MEASUREMENT_ID = 'G-Q17J2K3TRC'; // Replace with your GA4 Measur
 
 // Initialize Google Analytics with lazy loading for better performance
 export function initGoogleAnalytics(measurementId: string = GA_MEASUREMENT_ID) {
+  // Only run on client side
+  if (typeof window === 'undefined') return;
+  
   // Only load if not already loaded
   if (isGoogleAnalyticsLoaded()) {
     return;

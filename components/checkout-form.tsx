@@ -9,12 +9,7 @@ import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { loadStripe } from "@stripe/stripe-js";
 import { MapPin, CreditCard, CheckCircle, ArrowRight } from "lucide-react";
-
-// Dynamically import LeafletMap to avoid SSR issues
-const LeafletMap = dynamic(() => import("./leaflet-map").then(mod => ({ default: mod.LeafletMap })), {
-  ssr: false,
-  loading: () => <div className="h-64 w-full rounded-lg bg-gray-200 animate-pulse flex items-center justify-center">Loading map...</div>
-});
+import LeafletMapWrapper from './leaflet-map-wrapper';
 
 // Helper to check if any cart items are parts (not accessories)
 function isPartsCart(cart: any[]): boolean {
@@ -177,12 +172,12 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta, onPaymentSuccess }
     if (data.clientSecret) {
       setOrderId(data.orderId);
       if (setCheckoutMeta) {
-      setCheckoutMeta({
-        ...(isPartsCart(cart) ? { repairType: repairType ?? undefined } : {}),
-        ...(isPartsCart(cart) && repairType === 'by_us' ? { shippingOption: shippingOption ?? undefined } : {}),
-      });
-    }
-    setStep("payment");
+        setCheckoutMeta({
+          ...(isPartsCart(cart) ? { repairType: repairType ?? undefined } : {}),
+          ...(isPartsCart(cart) && repairType === 'by_us' ? { shippingOption: shippingOption ?? undefined } : {}),
+        });
+      }
+      setStep("payment");
     } else {
       setError('Failed to create payment intent.');
     }
@@ -272,7 +267,7 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta, onPaymentSuccess }
                   {stepItem.label}
                 </span>
               </button>
-          </div>
+            </div>
           );
         })}
       </div>
@@ -393,7 +388,7 @@ export function CheckoutForm({ clientSecret, setCheckoutMeta, onPaymentSuccess }
                   </div>
                   {/* Show something for each shipping option */}
                   {shippingOption === 'at_shop' && (
-                    <div className="mt-4"><LeafletMap /></div>
+                    <div className="mt-4"><LeafletMapWrapper /></div>
                   )}
                   {shippingOption === 'send' && (
                     <div className="mt-4 text-blue-700 font-semibold">

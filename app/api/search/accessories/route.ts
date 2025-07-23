@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService } from '@/lib/database';
-import Fuse from 'fuse.js';
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,6 +9,9 @@ export async function GET(request: NextRequest) {
     if (!query) {
       return NextResponse.json([]);
     }
+
+    // Dynamically import Fuse.js to prevent build-time issues
+    const Fuse = (await import('fuse.js')).default;
 
     // Get all accessories and search through them
     const accessories = await DatabaseService.getAllAccessoriesSimple();

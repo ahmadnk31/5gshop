@@ -366,7 +366,7 @@ export function SearchComponent() {
 
         {/* Search Button */}
         <Button 
-        aria-lzabel='Search button'
+        aria-label='Search button'
           size="sm" 
           className="rounded-l-none px-2 sm:px-3 border-gray-300  text-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1"
           onClick={() => {

@@ -4,14 +4,14 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const nextConfig: NextConfig = {
   // Performance optimizations for TTFB reduction
   experimental: {
-    // Optimize package imports to reduce bundle size
-    optimizePackageImports: [
-      'lucide-react', 
-      '@radix-ui/react-icons',
-      '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-dialog',
-      'framer-motion'
-    ],
+    // Temporarily disable package optimizations to test build
+    // optimizePackageImports: [
+    //   'lucide-react', 
+    //   '@radix-ui/react-icons',
+    //   '@radix-ui/react-dropdown-menu',
+    //   '@radix-ui/react-dialog',
+    //   'framer-motion'
+    // ],
     // Enable concurrent features for better performance
     serverActions: {
       allowedOrigins: ['localhost:3000'],
@@ -48,14 +48,42 @@ const nextConfig: NextConfig = {
   
   // Bundle optimization
   webpack: (config, { isServer }) => {
-    // Optimize bundle size
-    if (!isServer) {
+    // Add self polyfill for server builds to prevent "self is not defined" error
+    if (isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         net: false,
         tls: false,
       };
+      
+      // Add self polyfill
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new (require('webpack')).DefinePlugin({
+          'typeof self': '"undefined"',
+          'self': 'undefined',
+        })
+      );
+    } else {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    
+    // Exclude problematic libraries from server bundle
+    if (isServer) {
+      config.externals = config.externals || [];
+      config.externals.push(
+        'leaflet', 
+        'react-leaflet',
+        'react-confetti',
+        'fuse.js',
+        'recharts'
+      );
     }
     
     // Split chunks for better caching
@@ -80,13 +108,7 @@ const nextConfig: NextConfig = {
             test: /[\\/](google-analytics|analytics)[\\/]/,
             priority: 15,
           },
-          // Common vendor chunks
-          vendor: {
-            name: 'vendor',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/]/,
-            priority: 10,
-          },
+          
         },
       },
     };

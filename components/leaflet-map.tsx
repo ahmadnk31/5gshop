@@ -1,9 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import { useEffect, useState } from "react";
 
 interface LeafletMapProps {
   address?: string;
@@ -14,21 +11,54 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
   address = "84A Bondgenotenlaan, 3000 Leuven, Belgium",
   className = "h-64 w-full rounded-lg"
 }) => {
-  // Fix for default markers in React Leaflet
+  const [isClient, setIsClient] = useState(false);
+  const [mapComponents, setMapComponents] = useState<any>(null);
+  const [leaflet, setLeaflet] = useState<any>(null);
+
   useEffect(() => {
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-      iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-      shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    });
+    setIsClient(true);
+    
+    // Load everything dynamically on client side only
+    if (typeof window !== 'undefined') {
+      Promise.all([
+        import("react-leaflet"),
+        import("leaflet")
+      ]).then(([reactLeaflet, L]) => {
+        // Import CSS dynamically
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        document.head.appendChild(link);
+        
+        // Fix for default markers
+        delete (L.Icon.Default.prototype as any)._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+          iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+          shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+        });
+        
+        setMapComponents(reactLeaflet);
+        setLeaflet(L);
+      }).catch(console.error);
+    }
   }, []);
 
+  if (!isClient || !mapComponents || !leaflet) {
+    return (
+      <div className={className} style={{ backgroundColor: '#f0f0f0' }}>
+        <div className="flex items-center justify-center h-full">
+          <p>Loading map...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { MapContainer, TileLayer, Marker, Popup } = mapComponents;
+  const L = leaflet;
+  
   // Coordinates for Leuven, Belgium - 84A Bondgenotenlaan
-  // You should get exact coordinates from Google Maps or geocoding service
-  const position: [number, number] = [
-    50.880150, 4.709603
-  ];
+  const position: [number, number] = [50.880150, 4.709603];
 
   // Custom marker icon
   const customIcon = new L.Icon({
@@ -37,7 +67,6 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
     iconAnchor: [12, 41],
     popupAnchor: [0, -41],
   });
-  
 
   return (
     <div className={className}>
@@ -61,7 +90,6 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
               <p className="text-sm text-gray-600 mb-1">3000 Leuven, Belgium</p>
               <p className="text-sm text-gray-600 mb-2">+32 (466) 13 41 81</p>
               <a 
-              
                 href="https://www.openstreetmap.org/directions?from=&to=50.880150%2C4.709603" 
                 target="_blank" 
                 rel="noopener noreferrer"
@@ -77,5 +105,5 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
   );
 };
 
-// Export the component directly
 export const LeafletMap = LeafletMapComponent;
+

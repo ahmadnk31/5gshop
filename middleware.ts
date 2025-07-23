@@ -83,15 +83,22 @@ export default async function middleware(req: NextRequest) {
 
   // For all other routes, use optimized next-intl middleware
   try {
-    const response = createMiddleware(routing)(req);
+    // Create the intl middleware with optimized settings
+    const intlMiddleware = createMiddleware({
+      ...routing,
+      // Optimize locale detection
+      localeDetection: true
+    });
     
-    // Add performance monitoring in development
+    const response = intlMiddleware(req);
+    
+    // Add performance monitoring in development only
     if (process.env.NODE_ENV === 'development') {
       const duration = Date.now() - startTime;
       response.headers.set('X-Middleware-Time', `${duration}ms`);
       
       // Warn about slow middleware
-      if (duration > 100) {
+      if (duration > 50) {
         console.warn(`🐌 Slow middleware: ${pathname} took ${duration}ms`);
       }
     }
@@ -99,6 +106,7 @@ export default async function middleware(req: NextRequest) {
     return response;
   } catch (error) {
     console.error('Middleware error:', error);
+    // Fast fallback without redirect
     return NextResponse.next();
   }
 }
