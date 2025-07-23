@@ -108,13 +108,6 @@ const nextConfig: NextConfig = {
             test: /[\\/](google-analytics|analytics)[\\/]/,
             priority: 15,
           },
-          // Common vendor chunks
-          vendor: {
-            name: 'vendor',
-            chunks: 'all',
-            test: /[\\/]node_modules[\\/]/,
-            priority: 10,
-          },
         },
       },
     };
