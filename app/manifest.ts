@@ -15,7 +15,7 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ['shopping', 'business', 'utilities'],
     screenshots: [
       {
-        src: '/screenshots/wide.png',
+        src: '/og.png',
         sizes: '1280x720',
         type: 'image/png',
         form_factor: 'wide',
