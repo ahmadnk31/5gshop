@@ -1,4 +1,4 @@
-# TechFix Pro - Device Repair & Accessories Platform
+# 5gphones - Device Repair & Accessories Platform
 
 A comprehensive platform for managing a device repair shop with accessories sales. Built with Next.js 15, TypeScript, and shadcn/ui components.
 
