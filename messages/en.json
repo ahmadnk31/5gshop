@@ -417,7 +417,16 @@
       "clear": "Clear",
       "clearAll": "Clear Filters",
       "category": "Category: {category}",
-      "searchFilter": "Search: \"{query}\""
+      "searchFilter": "Search: \"{query}\"",
+      "title": "Filters",
+      "categories": "Categories",
+      "brands": "Brands",
+      "priceRange": "Price Range",
+      "stockStatus": "Stock Status",
+      "compatibility": "Compatibility",
+      "inStockOnly": "In Stock Only",
+      "moreBrands": "more brands",
+      "moreDevices": "more devices"
     },
     "sorting": {
       "name": "Name",
@@ -1161,7 +1170,14 @@
   },
   "parts": {
     "loading": "Loading...",
-    "notFound": "Part not found",
+    "notFound": {
+      "title": "No Parts Found",
+      "description": "We couldn't find any parts matching your search criteria. Try adjusting your filters or browse our available parts.",
+      "browseAll": "Browse All Parts",
+      "backToRepairs": "Back to Repairs",
+      "needHelp": "Need help finding what you're looking for?",
+      "contactUs": "Contact Us"
+    },
     "save": "Save",
     "warranty": "Warranty",
     "outOfStock": "Out of Stock",
@@ -1363,6 +1379,16 @@
     "series": "Series",
     "models": "Models",
     "parts": "Parts"
+  },
+  "deviceTypeNavbar": {
+    "notFound": {
+      "title": "No Items Found",
+      "description": "We couldn't find any items matching your selection.",
+      "retry": "Try Again",
+      "browseAll": "Browse All Parts",
+      "needHelp": "Need help?",
+      "contactUs": "Contact Us"
+    }
   },
   "seo":{
     "siteTitle": "Phone Repair Leuven & Belgium | 5gphones - Mobile, iPhone, Samsung, iPad, Laptop Repair",

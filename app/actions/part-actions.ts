@@ -85,13 +85,21 @@ export async function getFeaturedParts(limit: number = 4, type?: string, brand?:
 export async function getPartsByTypeBrandModel(type?: string, _brand?: string, model?: string) {
   try {
     if (!type) throw new Error('type is required');
+    
+    // If a specific model is requested, search for that model
+    if (model) {
+      const where = { deviceModel: model };
+      return await DatabaseService.getPartsByFilter(where);
+    }
+    
+    // Otherwise, search for all parts of this device type (both with and without specific models)
     const where = {
       OR: [
-        model ? { deviceModel: model } : {},
-        { deviceType: type, deviceModel: null }
+        { deviceType: type, deviceModel: null },  // Universal parts
+        { deviceType: type }  // All parts of this type (including specific models)
       ]
     };
-    if (!model) where.OR = [{ deviceType: type, deviceModel: null }];
+    
     return await DatabaseService.getPartsByFilter(where);
   } catch (error) {
     console.error('Failed to get parts by type, brand, model:', error);

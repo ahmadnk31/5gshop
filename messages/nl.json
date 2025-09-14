@@ -505,7 +505,16 @@
       "clear": "Wissen",
       "clearAll": "Alle filters wissen",
       "category": "Categorie: {category}",
-      "searchFilter": "Zoek: \"{query}\""
+      "searchFilter": "Zoek: \"{query}\"",
+      "title": "Filters",
+      "categories": "Categorieën",
+      "brands": "Merken",
+      "priceRange": "Prijsbereik",
+      "stockStatus": "Voorraadstatus",
+      "compatibility": "Compatibiliteit",
+      "inStockOnly": "Alleen op voorraad",
+      "moreBrands": "meer merken",
+      "moreDevices": "meer apparaten"
     },
     "sorting": {
       "name": "Naam",
@@ -1147,7 +1156,14 @@
   
   "parts": {
     "loading": "Laden...",
-    "notFound": "Onderdeel niet gevonden",
+    "notFound": {
+      "title": "Geen Onderdelen Gevonden",
+      "description": "We konden geen onderdelen vinden die overeenkomen met uw zoekcriteria. Probeer uw filters aan te passen of blader door onze beschikbare onderdelen.",
+      "browseAll": "Alle Onderdelen Bekijken",
+      "backToRepairs": "Terug naar Reparaties",
+      "needHelp": "Hulp nodig bij het vinden van wat u zoekt?",
+      "contactUs": "Neem Contact Op"
+    },
     "save": "Opslaan",
     "warranty": "Garantie",
     "outOfStock": "Niet op voorraad",
@@ -1337,6 +1353,16 @@
     "series": "Series",
     "models": "Modellen",
     "parts": "Onderdelen"
+  },
+  "deviceTypeNavbar": {
+    "notFound": {
+      "title": "Geen Items Gevonden",
+      "description": "We konden geen items vinden die overeenkomen met uw selectie.",
+      "retry": "Opnieuw Proberen",
+      "browseAll": "Alle Onderdelen Bekijken",
+      "needHelp": "Hulp nodig?",
+      "contactUs": "Neem Contact Op"
+    }
   },
   "seo":{
     "siteTitle": "Telefoon Reparatie Leuven & België | 5gphones - Smartphone, iPhone, Samsung, iPad, Laptop Reparatie",

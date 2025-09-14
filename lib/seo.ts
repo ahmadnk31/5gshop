@@ -7,7 +7,7 @@ export const siteConfig = {
   title: "5gphones Leuven - GSM Reparatie & Telefoon Accessoires",
   description: "Professionele GSM reparatie, telefoon reparatie en smartphone accessoires in Leuven. iPhone reparatie, Samsung reparatie, tablet reparatie. Snelle service en garantie.",
   url: "https://5gphones.be",
-  ogImage: "/og-image.png",
+  ogImage: "https://5gphones.be/og.png",
   keywords: [
     // Dutch/Flemish primary keywords
     "gsm reparatie leuven",
@@ -194,6 +194,11 @@ export async function generatePageMetadata({
   const url = `${siteConfig.url}${path}`
   const pageImages = images || [siteConfig.ogImage]
   
+  // Ensure all image URLs are absolute
+  const absolutePageImages = pageImages.map(img => 
+    img.startsWith('http') ? img : `${siteConfig.url}${img.startsWith('/') ? '' : '/'}${img}`
+  )
+  
   return {
     title,
     description,
@@ -213,7 +218,7 @@ export async function generatePageMetadata({
       url,
       title: title || siteConfig.title,
       description: description || siteConfig.description,
-      images: pageImages.map(img => ({
+      images: absolutePageImages.map(img => ({
         url: img,
         width: 1200,
         height: 630,
@@ -223,7 +228,7 @@ export async function generatePageMetadata({
     twitter: {
       title: title || siteConfig.title,
       description: description || siteConfig.description,
-      images: pageImages
+      images: absolutePageImages
     }
   }
 }

@@ -60,13 +60,6 @@ export function FallbackImage({
       ) : (
         <Image {...imageProps} />
       )}
-      {/* Watermark always visible */}
-      <img
-        src="/logo.svg"
-        alt="Watermark Logo"
-        className="pointer-events-none select-none opacity-10 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2/3 max-w-xs z-10"
-        aria-hidden="true"
-      />
       {/* Loading skeleton if image is loading */}
       {!imageLoaded && !imageError && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse z-20" />

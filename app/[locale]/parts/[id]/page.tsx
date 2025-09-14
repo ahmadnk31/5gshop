@@ -337,7 +337,7 @@ export default function PartDetailPage() {
                 {t('relatedProducts.description')}
               </p>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6 items-stretch">
               {relatedParts.map((relatedPart) => (
                 <RelatedPartCard key={relatedPart.id} part={relatedPart} />
               ))}

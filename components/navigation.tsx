@@ -44,6 +44,7 @@ import { CartSheet } from "@/components/cart-sheet";
 import { WishlistSheet } from "@/components/wishlist-sheet";
 import { useCart } from "@/components/cart-context";
 import { MultiStepDeviceNav } from './MultiStepDeviceNav'
+import { DeviceTypeNavbar } from "./device-type-navbar";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -598,7 +599,7 @@ export function Navigation() {
           </div>
         )}
       </div>
-      <MultiStepDeviceNav />
+      <DeviceTypeNavbar />
     </nav>
   );
 }

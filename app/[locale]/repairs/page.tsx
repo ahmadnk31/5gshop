@@ -166,15 +166,19 @@ function RepairsPageContent() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-green-600 to-blue-800 text-white py-6 sm:py-10 lg:py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-lg sm:text-2xl md:text-3xl lg:text-5xl font-bold mb-3 sm:mb-6">
+      <section className="relative bg-gradient-to-br from-green-600 via-blue-700 to-blue-900 text-white py-12 sm:py-16 lg:py-20 overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-transparent to-black/20"></div>
+        
+        <div className="relative container mx-auto px-4 text-center">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 lg:mb-8 leading-tight">
             {t('hero.title')}
           </h1>
-          <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 lg:mb-10 max-w-4xl mx-auto leading-relaxed opacity-95">
             {t('hero.description')}
           </p>
-          <Button asChild size="lg" variant="secondary" className="text-xs sm:text-sm sm:text-base">
+          <Button asChild size="lg" variant="secondary" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-lg hover:shadow-xl transition-all duration-300">
             <Link href="/quote">{t('hero.cta')}</Link>
           </Button>
         </div>
@@ -214,11 +218,13 @@ function RepairsPageContent() {
       )}
 
       {/* Device Catalog Browser */}
-      <section id="device-browser" className="py-16 scroll-mt-20">
+      <section id="device-browser" className="py-12 sm:py-16 lg:py-20 scroll-mt-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">{t('deviceBrowser.title')}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
+              {t('deviceBrowser.title')}
+            </h2>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               {t('deviceBrowser.description')}
             </p>
           </div>
@@ -228,18 +234,28 @@ function RepairsPageContent() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-8 sm:py-12 md:py-16 bg-gray-50">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-gray-100">
         <div className="container mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-12">{t('whyChooseUs.title')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
+              {t('whyChooseUs.title')}
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {whyChooseUs.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <Icon className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-blue-600 mx-auto mb-2 sm:mb-4" />
-                    <CardTitle className="text-base sm:text-lg md:text-xl">{feature.title}</CardTitle>
-                    <CardDescription className="text-xs sm:text-sm md:text-base">{feature.description}</CardDescription>
+                <Card key={index} className="text-center hover:shadow-xl transition-all duration-300 border-0 shadow-md bg-white">
+                  <CardHeader className="pb-4">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                      <Icon className="h-8 w-8 sm:h-10 sm:w-10 text-blue-600" />
+                    </div>
+                    <CardTitle className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+                      {feature.title}
+                    </CardTitle>
+                    <CardDescription className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                      {feature.description}
+                    </CardDescription>
                   </CardHeader>
                 </Card>
               );
@@ -249,32 +265,44 @@ function RepairsPageContent() {
       </section>
 
       {/* Popular Repair Services */}
-      <section className="py-8 sm:py-12 md:py-16 bg-gray-50">
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-12">{t('popularServices.title')}</h2>
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
+              {t('popularServices.title')}
+            </h2>
+          </div>
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            <div className="flex items-center justify-center py-16">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {getPopularServices().map((repair, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <repair.icon className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 text-blue-600 mx-auto mb-2 sm:mb-4" />
-                    <CardTitle className="text-base sm:text-lg md:text-xl">{repair.title}</CardTitle>
-                    <CardDescription className="text-xs sm:text-sm md:text-base">{repair.description}</CardDescription>
+                <Card key={index} className="text-center hover:shadow-xl transition-all duration-300 border-0 shadow-md bg-white group">
+                  <CardHeader className="pb-4">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:bg-green-200 transition-colors duration-300">
+                      <repair.icon className="h-8 w-8 sm:h-10 sm:w-10 text-green-600" />
+                    </div>
+                    <CardTitle className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+                      {repair.title}
+                    </CardTitle>
+                    <CardDescription className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                      {repair.description}
+                    </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-2">
+                  <CardContent className="space-y-3 pt-0">
                     <div className="flex items-center justify-center space-x-2">
-                      <Clock className="h-4 w-4 text-gray-600" />
-                      <span className="text-xs sm:text-sm text-gray-600">{repair.timeframe}</span>
+                      <Clock className="h-4 w-4 text-gray-500" />
+                      <span className="text-sm text-gray-600">{repair.timeframe}</span>
                     </div>
                     <div className="flex items-center justify-center space-x-2">
-                      <DollarSign className="h-4 w-4 text-gray-600" />
-                      <span className="text-xs sm:text-sm font-semibold">{repair.price}</span>
+                      <DollarSign className="h-4 w-4 text-gray-500" />
+                      <span className="text-sm font-semibold text-green-600">{repair.price}</span>
                     </div>
-                    <Badge variant="outline" className="text-xs sm:text-sm">{repair.warranty}</Badge>
+                    <Badge variant="outline" className="text-xs border-green-200 text-green-700 bg-green-50">
+                      {repair.warranty}
+                    </Badge>
                   </CardContent>
                 </Card>
               ))}
@@ -284,43 +312,67 @@ function RepairsPageContent() {
       </section>
 
       {/* Process */}
-      <section className="py-8 sm:py-12 md:py-16">
+      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="container mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-center mb-6 sm:mb-12">{t('process.title')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
-            <div className="text-center">
-              <div className="bg-blue-100 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4 text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
+              {t('process.title')}
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
+            <div className="text-center relative">
+              <div className="bg-blue-600 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white shadow-lg">
                 1
               </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-1 sm:mb-2">{t('process.steps.diagnosis.title')}</h3>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600">{t('process.steps.diagnosis.description')}</p>
+              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900">
+                {t('process.steps.diagnosis.title')}
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                {t('process.steps.diagnosis.description')}
+              </p>
             </div>
-            <div className="text-center">
-              <div className="bg-blue-100 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4 text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
+            <div className="text-center relative">
+              <div className="bg-blue-600 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white shadow-lg">
                 2
               </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-1 sm:mb-2">{t('process.steps.quote.title')}</h3>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600">{t('process.steps.quote.description')}</p>
+              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900">
+                {t('process.steps.quote.title')}
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                {t('process.steps.quote.description')}
+              </p>
             </div>
-            <div className="text-center">
-              <div className="bg-blue-100 w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4 text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
+            <div className="text-center relative">
+              <div className="bg-blue-600 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white shadow-lg">
                 3
               </div>
-              <h3 className="text-base sm:text-lg md:text-xl font-semibold mb-1 sm:mb-2">{t('process.steps.repair.title')}</h3>
-              <p className="text-xs sm:text-sm md:text-base text-gray-600">{t('process.steps.repair.description')}</p>
+              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900">
+                {t('process.steps.repair.title')}
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                {t('process.steps.repair.description')}
+              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Dynamic Pricing */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">{t('pricing.title')}</h2>
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as DeviceType)} className="max-w-4xl mx-auto">
-            <TabsList className="grid w-full grid-cols-4">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
+              {t('pricing.title')}
+            </h2>
+          </div>
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as DeviceType)} className="max-w-6xl mx-auto">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8 bg-gray-100 p-1 rounded-lg">
               {deviceTypes.map((deviceType) => (
-                <TabsTrigger key={deviceType.value} value={deviceType.value}>
+                <TabsTrigger 
+                  key={deviceType.value} 
+                  value={deviceType.value}
+                  className="text-sm sm:text-base font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
+                >
                   {deviceType.label}
                 </TabsTrigger>
               ))}
@@ -329,29 +381,29 @@ function RepairsPageContent() {
             {deviceTypes.map((deviceType) => (
               <TabsContent key={deviceType.value} value={deviceType.value} className="mt-8">
                 {loading ? (
-                  <div className="flex items-center justify-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  <div className="flex items-center justify-center py-16">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
                   </div>
                 ) : (
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="grid lg:grid-cols-2 gap-8">
                     {services.length > 0 ? (
                       <>
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>
+                        <Card className="border-0 shadow-lg">
+                          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
+                            <CardTitle className="text-xl font-semibold text-gray-900">
                               {t('pricing.commonRepairs', { deviceType: getDeviceTypeLabel(deviceType.value) })}
                             </CardTitle>
-                            <CardDescription>
+                            <CardDescription className="text-gray-600">
                               {t('pricing.commonRepairsDescription', { 
                                 deviceType: getDeviceTypeLabel(deviceType.value).toLowerCase() 
                               })}
                             </CardDescription>
                           </CardHeader>
-                          <CardContent className="space-y-4">
+                          <CardContent className="space-y-4 p-6">
                             {services.slice(0, Math.ceil(services.length / 2)).map((service) => (
-                              <div key={service.id} className="flex justify-between items-center">
-                                <span className="flex-1">{service.name}</span>
-                                <span className="font-semibold text-blue-600">
+                              <div key={service.id} className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
+                                <span className="flex-1 text-gray-700 font-medium">{service.name}</span>
+                                <span className="font-bold text-blue-600 text-lg">
                                   {formatCurrency(service.basePrice, "EUR")}
                                   {service.priceVariations && Object.keys(service.priceVariations).length > 0 && '+'}
                                 </span>
@@ -361,18 +413,20 @@ function RepairsPageContent() {
                         </Card>
                         
                         {services.length > 1 && (
-                          <Card>
-                            <CardHeader>
-                              <CardTitle>{t('pricing.additionalServices')}</CardTitle>
-                              <CardDescription>
+                          <Card className="border-0 shadow-lg">
+                            <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
+                              <CardTitle className="text-xl font-semibold text-gray-900">
+                                {t('pricing.additionalServices')}
+                              </CardTitle>
+                              <CardDescription className="text-gray-600">
                                 {t('pricing.additionalServicesDescription')}
                               </CardDescription>
                             </CardHeader>
-                            <CardContent className="space-y-4">
+                            <CardContent className="space-y-4 p-6">
                               {services.slice(Math.ceil(services.length / 2)).map((service) => (
-                                <div key={service.id} className="flex justify-between items-center">
-                                  <span className="flex-1">{service.name}</span>
-                                  <span className="font-semibold text-blue-600">
+                                <div key={service.id} className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
+                                  <span className="flex-1 text-gray-700 font-medium">{service.name}</span>
+                                  <span className="font-bold text-green-600 text-lg">
                                     {formatCurrency(service.basePrice, "EUR")}
                                     {service.priceVariations && Object.keys(service.priceVariations).length > 0 && '+'}
                                   </span>
@@ -383,16 +437,16 @@ function RepairsPageContent() {
                         )}
                       </>
                     ) : (
-                      <Card className="md:col-span-2">
-                        <CardContent className="text-center py-12">
-                          <Wrench className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                          <h3 className="text-lg font-semibold mb-2">{t('pricing.noServicesFound.title')}</h3>
-                          <p className="text-gray-600">
+                      <Card className="lg:col-span-2 border-0 shadow-lg">
+                        <CardContent className="text-center py-16">
+                          <Wrench className="h-20 w-20 mx-auto mb-6 text-gray-300" />
+                          <h3 className="text-xl font-semibold mb-4 text-gray-900">{t('pricing.noServicesFound.title')}</h3>
+                          <p className="text-gray-600 mb-6 max-w-md mx-auto">
                             {t('pricing.noServicesFound.description', { 
                               deviceType: getDeviceTypeLabel(deviceType.value).toLowerCase() 
                             })}
                           </p>
-                          <Button asChild className="mt-4">
+                          <Button asChild size="lg" className="px-8">
                             <Link href="/contact">{t('pricing.noServicesFound.cta')}</Link>
                           </Button>
                         </CardContent>
@@ -404,11 +458,11 @@ function RepairsPageContent() {
             ))}
           </Tabs>
           
-          <div className="text-center mt-8">
-            <p className="text-sm text-gray-600 mb-4">
+          <div className="text-center mt-12">
+            <p className="text-sm sm:text-base text-gray-600 mb-6 max-w-2xl mx-auto">
               {t('pricing.disclaimer')}
             </p>
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
               <Link href="/quote">{t('pricing.cta')}</Link>
             </Button>
           </div>
@@ -416,15 +470,23 @@ function RepairsPageContent() {
       </section>
 
       {/* CTA */}
-      <section className="bg-blue-600 text-white py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">{t('finalCta.title')}</h2>
-          <p className="text-xl mb-8">{t('finalCta.description')}</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary">
+      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-16 sm:py-20 lg:py-24 overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-transparent to-black/20"></div>
+        
+        <div className="relative container mx-auto px-4 text-center">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6">
+            {t('finalCta.title')}
+          </h2>
+          <p className="text-lg sm:text-xl lg:text-2xl mb-8 sm:mb-10 max-w-3xl mx-auto opacity-95">
+            {t('finalCta.description')}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+            <Button asChild size="lg" variant="secondary" className="px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
               <Link href="/quote">{t('finalCta.primaryCta')}</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-white bg-transparent border-white hover:bg-white hover:text-blue-600">
+            <Button asChild size="lg" variant="outline" className="px-8 py-4 text-lg text-white bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 transition-all duration-300">
               <Link href="/contact">{t('finalCta.secondaryCta')}</Link>
             </Button>
           </div>

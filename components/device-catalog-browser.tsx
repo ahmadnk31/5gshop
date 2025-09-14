@@ -440,13 +440,15 @@ function PartSortableItem({ part, isAdmin, onClick }: PartSortableItemProps) {
 
         <div className="flex-shrink-0">
           {part.imageUrl ? (
-            <div className="relative h-20 w-20 overflow-hidden rounded bg-gray-100 flex items-center justify-center border border-gray-200">
+            <div className="relative h-20 w-20 flex items-center justify-center">
               <FallbackImage
                 src={part.imageUrl}
                 alt={part.name}
-                className="w-full h-full object-contain"
+                width={80}
+                height={80}
+                className="object-contain w-full h-full"
                 fallbackContent={
-                  <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <div className="w-full h-full flex items-center justify-center">
                     <Package className="h-12 w-12 text-gray-400" />
                   </div>
                 }
@@ -523,6 +525,8 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
   // Load device types on mount and handle URL parameters
   useEffect(() => {
     const type = searchParams.get('type')
+    const brand = searchParams.get('brand')
+    const model = searchParams.get('model')
     const urlSearchTerm = searchParams.get('search') || searchTerm
     
     if (urlSearchTerm && type && urlToDeviceTypeMap[type]) {
@@ -536,17 +540,78 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
       setIsSearchMode(true)
       performSearch(urlSearchTerm)
     } else if (type && urlToDeviceTypeMap[type]) {
-      // Only device type - auto-select the device type
+      // Device type specified - restore navigation state
       const deviceType = urlToDeviceTypeMap[type]
       setSelectedType(deviceType)
       setIsSearchMode(false)
-      selectDeviceType(deviceType)
+      
+      if (model && brand) {
+        // Full navigation path: type -> brand -> model
+        setSelectedBrand(brand)
+        setSelectedModel(model)
+        setCurrentLevel('parts')
+        // Load the full navigation state
+        restoreNavigationState(deviceType, brand, model)
+      } else if (brand) {
+        // Partial navigation: type -> brand
+        setSelectedBrand(brand)
+        setCurrentLevel('models')
+        // Load brands and models
+        restoreBrandState(deviceType, brand)
+      } else {
+        // Only device type - load brands
+        setCurrentLevel('brands')
+        selectDeviceType(deviceType)
+      }
     } else {
       // No parameters - load all device types
       setIsSearchMode(false)
       loadDeviceTypes()
     }
   }, [searchParams, searchTerm])
+
+  // Helper functions to restore navigation state from URL
+  const restoreNavigationState = async (deviceType: DeviceType, brand: string, model: string) => {
+    setLoading(true)
+    try {
+      // Load all necessary data for the full navigation path
+      const [brandsData, modelsData, partsData, servicesData] = await Promise.all([
+        getBrandsByType(deviceType),
+        getModelsByBrand(deviceType, brand),
+        getPartsByDeviceModel(deviceType, brand, model),
+        getRepairServicesForDevice(deviceType, brand, model)
+      ])
+      
+      setBrands(brandsData)
+      setModels(sortModelsArray(modelsData, order))
+      setParts(partsData)
+      setServices(servicesData)
+    } catch (error) {
+      console.error('Error restoring navigation state:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const restoreBrandState = async (deviceType: DeviceType, brand: string) => {
+    setLoading(true)
+    try {
+      // Load brands and models for the brand level
+      const [brandsData, modelsData, servicesData] = await Promise.all([
+        getBrandsByType(deviceType),
+        getModelsByBrand(deviceType, brand),
+        getRepairServicesForDevice(deviceType, brand)
+      ])
+      
+      setBrands(brandsData)
+      setModels(sortModelsArray(modelsData, order))
+      setServices(servicesData)
+    } catch (error) {
+      console.error('Error restoring brand state:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const performSearch = async (query: string) => {
     setLoading(true)
@@ -644,6 +709,11 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
       setBrands(brandsData)
       setServices(servicesData)
       setCurrentLevel('brands')
+      
+      // Update URL to maintain navigation state
+      const url = new URL(window.location.href)
+      url.searchParams.set('type', type.toLowerCase())
+      window.history.pushState({}, '', url.toString())
     } catch (error) {
       console.error('Error loading brands:', error)
     } finally {
@@ -664,6 +734,11 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
       const servicesData = await getRepairServicesForDevice(selectedType as DeviceType, brand)
       setServices(servicesData)
       setCurrentLevel('models')
+      
+      // Update URL to maintain navigation state
+      const url = new URL(window.location.href)
+      url.searchParams.set('brand', brand)
+      window.history.pushState({}, '', url.toString())
     } catch (error) {
       console.error('Error loading models:', error)
     } finally {
@@ -681,6 +756,12 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
       let brandToUse: string | undefined = selectedBrand || undefined;
       setSelectedModel(model)
       partsPagination.goToFirstPage(); // Reset pagination when selecting new model
+      
+      // Update URL to maintain navigation state
+      const url = new URL(window.location.href)
+      url.searchParams.set('model', model)
+      window.history.pushState({}, '', url.toString())
+      
       // Try to load parts with selectedBrand (may be undefined)
       let partsData: any[] = [];
       try {
@@ -772,6 +853,8 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
         setModels([])
         setParts([])
         setServices([])
+        // Clear all URL parameters
+        window.history.pushState({}, '', '/repairs')
         loadDeviceTypes()
         break
       case 1: // Selected Type (go to brands)
@@ -781,6 +864,11 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           setSelectedModel(null)
           setModels([])
           setParts([])
+          // Update URL to only include type
+          const url = new URL(window.location.href)
+          url.searchParams.delete('brand')
+          url.searchParams.delete('model')
+          window.history.pushState({}, '', url.toString())
           // Keep the brands and services as they're already loaded
         }
         break
@@ -789,6 +877,10 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           setCurrentLevel('models')
           setSelectedModel(null)
           setParts([])
+          // Update URL to only include type and brand
+          const url = new URL(window.location.href)
+          url.searchParams.delete('model')
+          window.history.pushState({}, '', url.toString())
           // Keep the models as they're already loaded
         }
         break
@@ -964,78 +1056,80 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {getPaginatedItems(searchResults, searchPagination).map((part) => (
-                  <Card key={part.id} className='relative'>
-                    
-                    <Link href={`/parts/${part.id}`} className="block  rounded-t-lg">
-                      {part.imageUrl && (
-                        <div className="relative h-32 overflow-hidden">
+                  <Card key={part.id} className="relative overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                    <Link href={`/parts/${part.id}`} className="block">
+                      {/* Image Section */}
+                      <div className="relative h-40 bg-gray-50 flex items-center justify-center p-3">
+                        {part.imageUrl ? (
                           <FallbackImage
                             src={part.imageUrl}
                             alt={part.name}
-                            className="w-full h-full object-cover"
+                            width={200}
+                            height={200}
+                            className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-200"
                             fallbackContent={
-                              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                <Package className="h-8 w-8 text-gray-400" />
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Package className="h-12 w-12 text-gray-400" />
                               </div>
                             }
                           />
-                        </div>
-                      )}
-                    </Link>
-                    <Link href={`/parts/${part.id}`} className="hover:underline">
-                    <CardHeader>
-                      <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
-                        {part.quality && (
-                          <Badge variant="secondary" className="text-xs">
-                            {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
-                          </Badge>
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Package className="h-12 w-12 text-gray-400" />
+                          </div>
                         )}
-                        {/* Add other badges here as needed */}
+                        
+                        {/* Quality Badge */}
+                        {part.quality && (
+                          <div className="absolute top-3 left-3 z-10">
+                            <Badge 
+                              variant="secondary" 
+                              className="text-xs font-bold bg-white/95 backdrop-blur-sm border-2 shadow-lg text-gray-900"
+                            >
+                              {part.quality}
+                            </Badge>
+                          </div>
+                        )}
+                        
+                        {/* Stock Status Badge - Only show when out of stock */}
+                        {part.inStock <= 0 && (
+                          <div className="absolute top-3 right-3 z-10">
+                            <Badge 
+                              variant="secondary"
+                              className="text-xs font-bold bg-red-500 text-white border-2 shadow-lg"
+                            >
+                              Out of Stock
+                            </Badge>
+                          </div>
+                        )}
                       </div>
-                      <CardTitle className="flex items-center justify-between min-h-[3.5rem] line-clamp-2">
-                        <span className="flex items-center">
+
+                      {/* Content Section */}
+                      <div className="p-3 space-y-2">
+                        {/* Name */}
+                        <h3 className="font-semibold text-gray-900 line-clamp-2 leading-tight">
                           {part.name}
-                        </span>
-                        <Badge variant={part.inStock > part.minStock ? "default" : "destructive"}>
-                          {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
-                        </Badge>
-                      </CardTitle>
-                      <CardDescription>
-                          SKU: {part.sku}
-                      </CardDescription>
-                    </CardHeader>
-                    </Link>
-                    <CardContent>
-                      <div className="space-y-2">
-                      <Link href={`/parts/${part.id}`} className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>{t('parts.stock')}:</span>
-                          <span className={part.inStock <= part.minStock ? 'text-red-600' : ''}>
-                            {part.inStock} {t('parts.units')}
+                        </h3>
+                        
+                       
+                        
+                        {/* Price */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-xl font-bold text-blue-600">
+                            {formatCurrency(part.cost, 'EUR')}
                           </span>
                         </div>
-                        <div className="flex justify-between text-sm">
-                          <span>{t('parts.price')}:</span>
-                          <span className="font-medium">{formatCurrency(part.cost,'EUR')}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>{t('parts.supplier')}:</span>
-                          <span>{part.supplier}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>{t('parts.quality')}:</span>
-                          <span>{part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}</span>
-                        </div>
-                        </Link>
-                        <div className="pt-2 flex space-x-2">
+                        
+                        {/* Action Buttons */}
+                        <div className="pt-1 flex space-x-2">
                           <Button asChild size="sm" className="flex-1" variant="outline">
                             <Link href={`/quote?deviceType=${encodeURIComponent(part.deviceType ?? part.device_type ?? selectedType ?? '')}&brand=${encodeURIComponent(selectedBrand ?? part.brand ?? '')}&model=${encodeURIComponent(selectedModel ?? part.deviceModel ?? '')}&part=${encodeURIComponent(part.name)}&quality=${encodeURIComponent(part.quality ?? '')}&sku=${encodeURIComponent(part.sku ?? '')}&supplier=${encodeURIComponent(part.supplier ?? '')}`}>
-                              {t('parts.requestQuote')}
+                              Quote
                             </Link>
                           </Button>
                           <Button
                             size="sm"
-                            className="flex-1"
+                            variant="default"
                             disabled={part.inStock <= 0}
                             onClick={() => {
                               addToCart({
@@ -1049,12 +1143,12 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                           >
                             <ShoppingCart className="h-4 w-4" />
                             <span className="sr-only">
-                              {part.inStock > 0 ? t('parts.addToCart', { defaultValue: 'Add to Cart' }) : t('parts.outOfStock', { defaultValue: 'Out of Stock' })}
+                              {part.inStock > 0 ? 'Add to Cart' : 'Out of Stock'}
                             </span>
                           </Button>
                         </div>
                       </div>
-                    </CardContent>
+                    </Link>
                   </Card>
                 ))}
               </div>
@@ -1194,15 +1288,12 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                 return (
                   <Card 
                     key={type} 
-                    className="cursor-pointer hover:shadow-lg transition-shadow"
+                    className="cursor-pointer hover:shadow-md transition-shadow"
                     onClick={() => selectDeviceType(type)}
                   >
-                    <CardHeader className="text-center">
-                      <Icon className="h-12 w-12 mx-auto mb-4 text-blue-600" />
-                      <CardTitle>{deviceDisplayNames[deviceType]}</CardTitle>
-                      <CardDescription>
-                        {t('types.browse', { type: deviceDisplayNames[deviceType] })}
-                      </CardDescription>
+                    <CardHeader className="text-center p-4">
+                      <Icon className="h-12 w-12 mx-auto mb-3 text-blue-600" />
+                      <CardTitle className="text-base font-medium">{deviceDisplayNames[deviceType]}</CardTitle>
                     </CardHeader>
                   </Card>
                 )
@@ -1227,41 +1318,30 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                 return (
                   <Card 
                     key={brand}
-                    className="cursor-pointer hover:shadow-lg pt-0 h-auto transition-shadow"
+                    className="cursor-pointer hover:shadow-md transition-shadow"
                     onClick={() => selectBrand(brand)}
                   >
-                    <CardHeader className="p-0 pb-2">
-                      <div className="flex items-center justify-center w-full h-full">
-                        <div className={` ${brandLogo.bgColor} w-full flex items-center justify-center ${brandLogo.color} overflow-hidden`}>
-                          <div className="w-full h-full flex items-center justify-center p-4">
-                            <FallbackImage
-                              src={brandLogo.imageUrl}
-                              alt={`${brand} logo`}
-                              width={100}
-                              height={150}
-                              className="object-contain h-[150px] w-full"
-                              fallbackContent={
-                                <div className="w-12 h-12 flex items-center justify-center text-gray-400">
-                                  <Package className="w-8 h-8" />
-                                </div>
-                              }
-                            />
-                          </div>
+                    <CardHeader className="p-4">
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="w-20 h-20 mb-3 flex items-center justify-center">
+                          <FallbackImage
+                            src={brandLogo.imageUrl}
+                            alt={`${brand} logo`}
+                            width={80}
+                            height={80}
+                            className="object-contain w-full h-full"
+                            fallbackContent={
+                              <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                <Package className="w-6 h-6" />
+                              </div>
+                            }
+                          />
                         </div>
+                        <CardTitle className="text-center text-base font-medium">
+                          {brand}
+                        </CardTitle>
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-0">
-                      <CardTitle className="text-center text-lg font-semibold mb-2">
-                        {brand}
-                      </CardTitle>
-                      <CardDescription className="text-center text-sm flex items-center justify-between">
-                        {t('brands.viewModels', { brand: brand, type: deviceDisplayNames[selectedType as DeviceType] })}
-                        <div className="flex justify-center mt-3">
-                        <ChevronRight className="h-4 w-4 text-gray-400" />
-                      </div>
-                      </CardDescription>
-                      
-                    </CardContent>
                   </Card>
                 );
               })}
@@ -1392,31 +1472,35 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                   return (
                     <Card 
                       key={model}
-                      className="cursor-pointer hover:shadow-lg transition-shadow"
+                      className="cursor-pointer hover:shadow-md transition-shadow"
                       onClick={() => selectModel(model)}
                     >
-                      {deviceWithImage?.imageUrl && (
-                        <div className="relative h-48 overflow-hidden">
-                          <FallbackImage
-                            src={deviceWithImage.imageUrl}
-                            alt={model}
-                            className="w-full h-full object-cover"
-                            fallbackContent={
-                              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                <Package className="h-12 w-12 text-gray-400" />
-                              </div>
-                            }
-                          />
+                      <CardHeader className="p-4">
+                        <div className="flex flex-col items-center justify-center">
+                          {deviceWithImage?.imageUrl ? (
+                            <div className="h-28 w-28 mb-3 flex items-center justify-center">
+                              <FallbackImage
+                                src={deviceWithImage.imageUrl}
+                                alt={model}
+                                width={112}
+                                height={112}
+                                className="object-contain w-full h-full"
+                                fallbackContent={
+                                  <div className="w-full h-full flex items-center justify-center">
+                                    <Package className="h-8 w-8 text-gray-400" />
+                                  </div>
+                                }
+                              />
+                            </div>
+                          ) : (
+                            <div className="h-28 w-28 mb-3 flex items-center justify-center">
+                              <Package className="h-8 w-8 text-gray-400" />
+                            </div>
+                          )}
+                          <CardTitle className="text-center text-base font-medium">
+                            {model}
+                          </CardTitle>
                         </div>
-                      )}
-                      <CardHeader>
-                        <CardTitle className="flex items-center justify-between">
-                          {model}
-                          <ChevronRight className="h-4 w-4" />
-                        </CardTitle>
-                        <CardDescription>
-                          {t('models.viewParts', { brand: selectedBrand, model: model })}
-                        </CardDescription>
                       </CardHeader>
                     </Card>
                   );
@@ -1448,7 +1532,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                 }
               }}>
                 <SortableContext items={parts.map(p => p.id)} strategy={verticalListSortingStrategy}>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
                     {parts.map((part) => (
                       <PartSortableItem
                         key={part.id}
@@ -1473,85 +1557,82 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                 )}
               </DndContext>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                 {parts.map((part) => (
-                  <Card key={part.id} className="relative">
-                    {part.imageUrl && (
-                      <Link href={`/parts/${part.id}`}>
-                        <div className="relative h-32 overflow-hidden">
+                  <Card key={part.id} className="relative overflow-hidden hover:shadow-lg py-0 transition-shadow cursor-pointer group">
+                    <Link href={`/parts/${part.id}`} className="block">
+                      {/* Image Section */}
+                      <div className="relative h-40 bg-gray-50 flex items-center justify-center p-3">
+                        {part.imageUrl ? (
                           <FallbackImage
                             src={part.imageUrl}
                             alt={part.name}
-                            className="w-full h-full object-cover"
+                            width={200}
+                            height={200}
+                            className="object-contain w-full h-full group-hover:scale-105 transition-transform duration-200"
                             fallbackContent={
-                              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                                <Package className="h-8 w-8 text-gray-400" />
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Package className="h-12 w-12 text-gray-400" />
                               </div>
                             }
                           />
-                        </div>
-                      </Link>
-                    )}
-                    <Link href={`/parts/${part.id}`}>
-                      <CardHeader>
-                        <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
-                          {part.quality && (
-                            <Badge variant="secondary" className="text-xs">
-                              {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Package className="h-12 w-12 text-gray-400" />
+                          </div>
+                        )}
+                        
+                        {/* Quality Badge */}
+                        {part.quality && (
+                          <div className="absolute top-3 left-3 z-10">
+                            <Badge 
+                              variant="secondary" 
+                              className="text-xs font-bold bg-white/95 backdrop-blur-sm border-2 shadow-lg text-gray-900"
+                            >
+                              {part.quality}
                             </Badge>
-                          )}
-                          {/* Add other badges here as needed */}
-                        </div>
-                        <CardTitle className="flex items-center justify-between min-h-[3.5rem] line-clamp-2">
-                          <span className="flex items-center">
-                            {part.name}
+                          </div>
+                        )}
+                        
+                        {/* Stock Status Badge - Only show when out of stock */}
+                        {part.inStock <= 0 && (
+                          <div className="absolute top-3 right-3 z-10">
+                            <Badge 
+                              variant="secondary"
+                              className="text-xs font-bold bg-red-500 text-white border-2 shadow-lg"
+                            >
+                              Out of Stock
+                            </Badge>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Content Section */}
+                      <div className="p-3 space-y-2">
+                        {/* Name */}
+                        <h3 className="font-semibold text-gray-900 line-clamp-2 leading-tight">
+                          {part.name}
+                        </h3>
+                        
+                        
+                        
+                        {/* Price */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-xl font-bold text-blue-600">
+                            {formatCurrency(part.cost, 'EUR')}
                           </span>
-                          <Badge variant={part.inStock > part.minStock ? "default" : "destructive"}>
-                            {part.inStock > 0 ? t('parts.inStock') : t('parts.outOfStock')}
-                          </Badge>
-                        </CardTitle>
-                        <CardDescription>
-                          SKU: {part.sku}
-                        </CardDescription>
-                      </CardHeader>
-                    </Link>
-                    <div className="absolute top-2 right-2 z-10">
-                      <Badge variant="secondary" className="text-xs">
-                        {part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}
-                      </Badge>
-                    </div>
-                    <div className="absolute top-2 left-2 z-10">
-                      <PartActionButtons part={part} />
-                    </div>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>{t('parts.stock')}:</span>
-                          <span className={part.inStock <= part.minStock ? 'text-red-600' : ''}>
-                            {part.inStock} {t('parts.units')}
-                          </span>
                         </div>
-                        <div className="flex  text-sm md:text-lg xl:text-xl text-blue-500 font-bold justify-between text-sm">
-                          <span>{t('parts.price')}:</span>
-                          <span className="font-medium">{formatCurrency(part.cost,'EUR')}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>{t('parts.supplier')}:</span>
-                          <span>{part.supplier}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                          <span>{t('parts.quality')}:</span>
-                          <span>{part.quality ? t(`parts.qualityOptions.${part.quality.toLowerCase()}`) || part.quality : t('parts.unknownQuality')}</span>
-                        </div>
-                        <div className="pt-2 flex space-x-2">
+                        
+                        {/* Action Buttons */}
+                        <div className="pt-1 flex space-x-2">
                           <Button asChild size="sm" className="flex-1" variant="outline">
                             <Link href={`/quote?deviceType=${encodeURIComponent(part.deviceType ?? part.device_type ?? selectedType ?? '')}&brand=${encodeURIComponent(selectedBrand ?? part.brand ?? '')}&model=${encodeURIComponent(selectedModel ?? part.deviceModel ?? '')}&part=${encodeURIComponent(part.name)}&quality=${encodeURIComponent(part.quality ?? '')}&sku=${encodeURIComponent(part.sku ?? '')}&supplier=${encodeURIComponent(part.supplier ?? '')}`}>
-                              {t('parts.requestQuote')}
+                              Quote
                             </Link>
                           </Button>
                           <Button
                             size="sm"
-                            className="flex-1"
+                            variant="default"
                             disabled={part.inStock <= 0}
                             onClick={() => {
                               addToCart({
@@ -1559,17 +1640,18 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                                 name: part.name,
                                 price: part.cost,
                                 image: part.imageUrl,
+                                type:"part"
                               });
                             }}
                           >
                             <ShoppingCart className="h-4 w-4" />
                             <span className="sr-only">
-                              {part.inStock > 0 ? t('parts.addToCart', { defaultValue: 'Add to Cart' }) : t('parts.outOfStock', { defaultValue: 'Out of Stock' })}
+                              {part.inStock > 0 ? 'Add to Cart' : 'Out of Stock'}
                             </span>
                           </Button>
                         </div>
                       </div>
-                    </CardContent>
+                    </Link>
                   </Card>
                 ))}
               </div>

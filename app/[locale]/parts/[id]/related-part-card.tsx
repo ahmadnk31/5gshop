@@ -88,7 +88,7 @@ export function RelatedPartCard({ part }: RelatedPartCardProps) {
   const isLowStock = part.inStock <= part.minStock;
 
   return (
-    <Card className="hover:shadow-lg relative transition-shadow group py-0">
+    <Card className="hover:shadow-lg relative transition-shadow group py-0 h-full flex flex-col">
       <CardHeader className="p-0">
         <Link href={`/parts/${part.id}`} className="block relative overflow-hidden rounded-t-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
           <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
@@ -129,25 +129,27 @@ export function RelatedPartCard({ part }: RelatedPartCardProps) {
             : t('parts.outOfStock')}
         </Badge>
       </div>
-      <CardContent className="p-4">
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2">{part.name}</h3>
-        
-        <div className="flex items-center mb-3">
-          <div className="flex items-center">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
-            ))}
+      <CardContent className="p-4 flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col">
+          <h3 className="font-semibold text-lg mb-2 line-clamp-2">{part.name}</h3>
+          
+          <div className="flex items-center mb-3">
+            <div className="flex items-center">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+              ))}
+            </div>
+            <span className="text-sm text-gray-500 ml-2">(4.5)</span>
           </div>
-          <span className="text-sm text-gray-500 ml-2">(4.5)</span>
-        </div>
 
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-sm md:text-lg xl:text-xl font-bold text-blue-600">
-            {formatCurrency(part.cost, "EUR")}
-          </span>
-          <Badge variant="secondary" className="text-xs">
-            {part.category}
-          </Badge>
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-sm md:text-lg xl:text-xl font-bold text-blue-600">
+              {formatCurrency(part.cost, "EUR")}
+            </span>
+            <Badge variant="secondary" className="text-xs">
+              {part.category}
+            </Badge>
+          </div>
         </div>
 
         <div className="mt-3 flex items-center gap-2">

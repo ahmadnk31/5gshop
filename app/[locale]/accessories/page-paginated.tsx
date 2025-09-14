@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,7 +24,8 @@ import {
   Zap,
   X,
   Grid,
-  List
+  List,
+  Filter
 } from "lucide-react";
 
 import { getAccessoriesWithFiltersPaginated } from "@/app/actions/pagination-actions";
@@ -35,16 +36,11 @@ import { addSearchHistory } from "@/lib/view-history";
 import { useCart } from "@/components/cart-context";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { Link, useRouter } from "@/i18n/navigation";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from "@/components/ui/carousel";
 import { useSearchParams } from "next/navigation";
 import { AccessoryActionButtons } from "./[id]/accessory-action-buttons";
 import { useSession } from "next-auth/react";
+import AccessoriesFilterSidebar, { AccessoryFilters } from "@/components/accessories-filter-sidebar";
+import { useAccessoryFilters } from "@/hooks/use-accessory-filters";
 
 
 const getCategoryDescriptions = (t: any) => ({
@@ -201,19 +197,51 @@ export default function AccessoriesPagePaginated() {
   );
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
+  // Filter state
+  const [sidebarFilters, setSidebarFilters] = useState<AccessoryFilters>({
+    categories: [],
+    brands: [],
+    priceRange: [0, 1000],
+    inStock: false,
+    compatibility: [],
+    searchTerm: '',
+  });
+
   // Pagination state
   const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get('page') || '1')
   );
 
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Apply sidebar filters to all accessories
+  const filteredAccessories = useAccessoryFilters(allAccessories, sidebarFilters);
+
   const pagination = usePagination({
-    totalItems,
+    totalItems: filteredAccessories.length,
     itemsPerPage,
     initialPage: currentPage,
   });
 
-  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+  // Client-side pagination for filtered accessories
+  const paginatedFilteredAccessories = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredAccessories.slice(startIndex, endIndex);
+  }, [filteredAccessories, currentPage, itemsPerPage]);
+
+  // Update total items when filters change
+  useEffect(() => {
+    setTotalItems(filteredAccessories.length);
+  }, [filteredAccessories.length]);
+
+  // Handle sidebar filter changes
+  const handleSidebarFiltersChange = (newFilters: AccessoryFilters) => {
+    setSidebarFilters(newFilters);
+    setCurrentPage(1);
+    pagination.goToFirstPage();
+  };
 
   // Load accessories with pagination
   const loadAccessories = async (page = 1) => {
@@ -425,7 +453,7 @@ export default function AccessoriesPagePaginated() {
         const result = await getAccessoriesWithFiltersPaginated({
           page: 1,
           limit: 1000, // Large number to get all accessories
-          inStockOnly: true,
+          inStockOnly: false, // Get all accessories for filter sidebar
         });
         console.log('All accessories loaded:', result.data.length);
         setAllAccessories(result.data);
@@ -448,13 +476,6 @@ export default function AccessoriesPagePaginated() {
     loadAllAccessories();
   }, []);
 
-  const categories = Object.entries(categoryConfigs).map(([key, config]) => ({
-    key: key as AccessoryCategory,
-    icon: config.icon,
-    name: config.label,
-    description: `High-quality ${config.label.toLowerCase()}`,
-    count: categoryCounts[key as AccessoryCategory] || 0,
-  }));
 
   const hasActiveFilters = selectedCategory || searchTerm;
 
@@ -481,34 +502,40 @@ export default function AccessoriesPagePaginated() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-10 sm:py-14 md:py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-4 sm:mb-6">
-            {t('accessories.title')}
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 opacity-90">
-            {t('accessories.subtitle')}
-          </p>
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm">
-            <div className="flex items-center space-x-2 mb-2 sm:mb-0">
-              <Truck className="h-5 w-5" />
-              <span>{t('accessories.features.freeShipping')}</span>
-            </div>
-            <div className="flex items-center space-x-2 mb-2 sm:mb-0">
-              <Shield className="h-5 w-5" />
-              <span>{t('accessories.features.qualityGuarantee')}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RotateCcw className="h-5 w-5" />
-              <span>{t('accessories.features.easyReturns')}</span>
-            </div>
-          </div>
-        </div>
-      </section>
+     
 
       <div className="container mx-auto px-4 py-8">
-        {/* Search and Filters */}
-        <div className="mb-8">
+        {/* Main Content Layout */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Filter Sidebar */}
+          <div className="lg:w-80 flex-shrink-0">
+            {allAccessories.length > 0 ? (
+              <AccessoriesFilterSidebar
+                accessories={allAccessories}
+                onFiltersChange={handleSidebarFiltersChange}
+              />
+            ) : (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Filter className="h-5 w-5" />
+                    Filters
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-sm text-gray-600">Loading filters...</p>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
+            {/* Search and Filters */}
+            <div className="mb-8">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between mb-6">
             {/* Search */}
             <div className="relative w-full sm:flex-1 sm:max-w-md">
@@ -676,86 +703,6 @@ export default function AccessoriesPagePaginated() {
           )}
         </div>
 
-        {/* Categories Grid as Carousel */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-center mb-8">
-            {hasActiveFilters ? 'Categories' : 'Shop by Category'}
-          </h2>
-          <div className="relative">
-            <Carousel
-              opts={{
-                align: "start",
-                slidesToScroll: 1,
-                dragFree: true,
-                containScroll: 'trimSnaps',
-                breakpoints: {
-                  640: { slidesToScroll: 2 },
-                  1024: { slidesToScroll: 3 },
-                  1280: { slidesToScroll: 4 },
-                },
-              }}
-              className="w-full"
-            >
-              <CarouselPrevious className="hidden md:flex" />
-              <CarouselContent className="py-2">
-                {categories.map((category) => {
-                  const IconComponent = category.icon;
-                  const isSelected = selectedCategory === category.key;
-                  return (
-                    <CarouselItem key={category.key} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 px-1 sm:px-2">
-                      <Card
-                        className={`hover:shadow-lg transition-shadow cursor-pointer bp-0 group h-full ${
-                          isSelected ? 'ring-2 ring-blue-500 bg-blue-50' : ''
-                        }`}
-                        onClick={() => handleCategorySelect(category.key)}
-                      >
-                        <CardHeader className="text-center pb-2">
-                          <div className={`mx-auto w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-colors ${
-                            isSelected
-                              ? 'bg-blue-200'
-                              : 'bg-blue-100 group-hover:bg-blue-200'
-                          }`}>
-                            <IconComponent className={`h-6 w-6 ${
-                              isSelected ? 'text-blue-700' : 'text-blue-600'
-                            }`} />
-                          </div>
-                          <CardTitle className={`text-sm md:text-lg ${
-                            isSelected ? 'text-blue-700' : ''
-                          }`}>
-                            {category.name}
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="text-center pt-0">
-                          <CardDescription className="mb-2">
-                            {category.description}
-                          </CardDescription>
-                          {category.count > 0 && (
-                            <Badge variant={isSelected ? 'default' : 'outline'}>
-                              {t('accessories.categories.items', { count: category.count })}
-                            </Badge>
-                          )}
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  );
-                })}
-              </CarouselContent>
-              <CarouselNext className="hidden md:flex" />
-            </Carousel>
-          </div>
-          {hasActiveFilters && (
-            <div className="text-center mt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleCategorySelect(null)}
-              >
-                <X className="h-4 w-4 mr-2" />
-                {t('accessories.categories.showAll')}
-              </Button>
-            </div>
-          )}
-        </div>
 
         {/* Results Header */}
         <div id="results-section" className="mb-6">
@@ -767,7 +714,7 @@ export default function AccessoriesPagePaginated() {
                {hasActiveFilters ? t('accessories.search.searchResults') : t('accessories.results.title')}
               </h2>
               <p className="text-gray-600">
-               {loading ? t('accessories.search.loading') : t('accessories.search.found', { count: totalItems })}
+               {loading ? t('accessories.search.loading') : t('accessories.search.found', { count: filteredAccessories.length })}
               </p>
             </div>
           </div>
@@ -805,13 +752,13 @@ export default function AccessoriesPagePaginated() {
             </div>
           )}
         {/* Accessories Grid/List */}
-        {accessories.length > 0 ? (
+        {filteredAccessories.length > 0 ? (
           <>
             <div  className={viewMode === 'grid' 
               ? "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6 mb-8"
               : "space-y-4 mb-8"
             }>
-              {accessories.map((accessory) => {
+              {paginatedFilteredAccessories.map((accessory) => {
                 const categoryConfig = categoryConfigs[accessory.category];
                 const IconComponent = categoryConfig?.icon || Box;
                 const lowStock = isLowStock(accessory);
@@ -884,10 +831,12 @@ export default function AccessoriesPagePaginated() {
             </div>
 
             {/* Pagination Controls */}
-            <PaginationControls 
-              pagination={pagination}
-              className="mt-8"
-            />
+            {filteredAccessories.length > itemsPerPage && (
+              <PaginationControls 
+                pagination={pagination}
+                className="mt-8"
+              />
+            )}
           </>
         ) : (
           <div className="text-center py-12">
@@ -912,6 +861,8 @@ export default function AccessoriesPagePaginated() {
             )}
           </div>
         )}
+          </div>
+        </div>
       </div>
     </div>
   );
