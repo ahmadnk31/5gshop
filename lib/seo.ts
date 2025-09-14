@@ -418,19 +418,19 @@ export function generateOrganizationSchema() {
     '@type': 'Organization',
     name: siteConfig.name,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/logo.png`,
+    logo: `/logo.svg`,
     description: siteConfig.description,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Your Street Address',
+      streetAddress: 'Bondgenotenlaan 84A',
       addressLocality: 'Leuven',
-      addressRegion: 'Vlaams-Brabant',
+      addressRegion: 'Vlaams-Brabant',  
       postalCode: '3000',
       addressCountry: 'BE'
     },
     contactPoint: {
       '@type': 'ContactPoint',
-      telephone: '+32-XXX-XXX-XXX',
+      telephone: '+32-467871205',
       contactType: 'customer service',
       areaServed: 'BE',
       availableLanguage: ['en', 'nl', 'fr']
