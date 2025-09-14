@@ -137,7 +137,7 @@ export const baseMetadata: Metadata = {
     siteName: siteConfig.name,
     images: [
       {
-        url: siteConfig.ogImage,
+        url: `${siteConfig.url}${siteConfig.ogImage}`,
         width: 1200,
         height: 630,
         alt: siteConfig.title,
@@ -149,7 +149,7 @@ export const baseMetadata: Metadata = {
     ...siteConfig.twitter,
     title: siteConfig.title,
     description: siteConfig.description,
-    images: [siteConfig.ogImage]
+    images: [`${siteConfig.url}${siteConfig.ogImage}`]
   },
   icons: {
     icon: [

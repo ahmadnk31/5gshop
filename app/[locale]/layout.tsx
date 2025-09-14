@@ -96,6 +96,12 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
         <link rel="dns-prefetch" href="//tire-files.s3.us-east-1.amazonaws.com" />
         
+        {/* Additional Open Graph meta tags for better Facebook compatibility */}
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:alt" content="5gphones Leuven - GSM Reparatie & Telefoon Accessoires" />
+        
         {/* Preload critical CSS */}
         <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
       </head>
