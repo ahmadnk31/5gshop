@@ -7,7 +7,7 @@ export const siteConfig = {
   title: "5gphones Leuven - GSM Reparatie & Telefoon Accessoires",
   description: "Professionele GSM reparatie, telefoon reparatie en smartphone accessoires in Leuven. iPhone reparatie, Samsung reparatie, tablet reparatie. Snelle service en garantie.",
   url: "https://5gphones.be",
-  ogImage: "https://5gphones.be/og.png",
+  ogImage: "/5g-og.png",
   keywords: [
     // Dutch/Flemish primary keywords
     "gsm reparatie leuven",
