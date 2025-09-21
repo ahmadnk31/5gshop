@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono,Lato } from "next/font/google";
+import { Inter, Roboto, Poppins } from "next/font/google";
 import "../globals.css";
 import { Analytics } from "@vercel/analytics/next"
 import { baseMetadata } from "@/lib/seo";
@@ -24,29 +24,30 @@ import Provider from "@/components/provider";
 import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema, generateLocalBusinessSchema, generateWebsiteSchema } from "@/lib/seo";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: 'swap',
-  preload: true, // Enable preload for critical font
-  fallback: ['system-ui', 'arial'], // Add fallback fonts
+  preload: true,
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
 });
 
-const lato = Lato({
-  variable: "--font-lato",
+const roboto = Roboto({
+  variable: "--font-roboto",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["300", "400", "500", "700", "900"],
   display: 'swap',
-  preload: false, // Keep secondary font as non-preload
-  fallback: ['system-ui', 'arial'],
+  preload: false,
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   display: 'swap',
-  preload: false, // Mono font not critical
-  fallback: ['monospace'],
+  preload: false,
+  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
 });
 
 export const metadata: Metadata = baseMetadata;
@@ -106,7 +107,7 @@ export default async function RootLayout({
         <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${lato.variable} antialiased`}
+        className={`${inter.variable} ${roboto.variable} ${poppins.variable} antialiased`}
       >
          <Provider>
          <NextIntlClientProvider>
