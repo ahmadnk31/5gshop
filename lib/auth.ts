@@ -6,7 +6,8 @@ import { prisma } from "@/lib/database";
 import { compare } from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  // Note: Using JWT strategy, so we don't need PrismaAdapter for sessions
+  // adapter: PrismaAdapter(prisma),
   providers: [
     // Example: Google OAuth (remove if not needed)
     GoogleProvider({
@@ -52,6 +53,10 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
     async signIn({ user, account, profile }) {
@@ -77,6 +82,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async jwt({ token, user, account }) {
+      // Set user data from credentials login
       if (user) {
         token.role = user.role;
         token.image = user.image;
@@ -85,33 +91,48 @@ export const authOptions: NextAuthOptions = {
         token.lastName = (user as any).lastName;
       }
       
-      // Always fetch role from DB if missing, even for OAuth
-      if (!token.role && token.sub) {
-        const dbUser = await prisma.user.findUnique({ where: { id: token.sub } });
-        token.role = dbUser?.role || "user";
-        // Also fetch other profile fields
-        if (dbUser) {
-          token.image = dbUser.image || undefined;
-          token.name = dbUser.name || undefined;
-          token.firstName = dbUser.firstName || undefined;
-          token.lastName = dbUser.lastName || undefined;
+      // For OAuth users, fetch data from database only once
+      if (account?.provider === "google" && !token.role && user?.email) {
+        try {
+          const dbUser = await prisma.user.findUnique({ 
+            where: { email: user.email },
+            select: { role: true, image: true, name: true, firstName: true, lastName: true }
+          });
+          if (dbUser) {
+            token.role = dbUser.role || "user";
+            token.image = dbUser.image || undefined;
+            token.name = dbUser.name || undefined;
+            token.firstName = dbUser.firstName || undefined;
+            token.lastName = dbUser.lastName || undefined;
+          } else {
+            token.role = "user"; // Default role if not found
+          }
+        } catch (error) {
+          console.error('Error fetching user data in JWT callback:', error);
+          token.role = "user"; // Fallback to default role
         }
       }
       
-      //if user has admin role allow to access admin routes
-      if (account?.provider === "google" && !token.role) {
-        const dbUser = await prisma.user.findUnique({ where: { email: user?.email || "" } });
-        if (dbUser) {
-          token.role = dbUser.role || "user";
-          // Also fetch other profile fields for OAuth users
-          token.image = dbUser.image || undefined;
-          token.name = dbUser.name || undefined;
-          token.firstName = dbUser.firstName || undefined;
-          token.lastName = dbUser.lastName || undefined;
-        } else {
-          token.role = "user"; // Default role if not found
+      // Fallback: fetch role from DB if missing (for existing sessions)
+      if (!token.role && token.sub) {
+        try {
+          const dbUser = await prisma.user.findUnique({ 
+            where: { id: token.sub },
+            select: { role: true, image: true, name: true, firstName: true, lastName: true }
+          });
+          if (dbUser) {
+            token.role = dbUser.role || "user";
+            token.image = dbUser.image || undefined;
+            token.name = dbUser.name || undefined;
+            token.firstName = dbUser.firstName || undefined;
+            token.lastName = dbUser.lastName || undefined;
+          }
+        } catch (error) {
+          console.error('Error fetching user data in JWT fallback:', error);
+          token.role = "user"; // Fallback to default role
         }
-      } 
+      }
+      
       return token;
     },
     
@@ -120,7 +141,13 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/login",
     error: "/auth/error",
   },
-  // events, debug, etc. can be added here
+  events: {
+    async signOut({ token }) {
+      // Clear any custom data when signing out
+      console.log('User signed out:', token?.email);
+    },
+  },
+  debug: process.env.NODE_ENV === 'development',
 };
 
 export default NextAuth(authOptions);

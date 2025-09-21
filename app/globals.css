@@ -1,6 +1,33 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Custom utilities for responsive design */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+/* Smooth scrolling for navbar */
+.navbar-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* iOS smooth scrolling */
+}
+
+/* Ensure navbar items don't shrink */
+.navbar-item {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+
+/* Custom breakpoint for extra small screens */
+@screen xs {
+  /* xs breakpoint styles */
+}
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -45,7 +72,7 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.75rem;
   --background: #F3F4F6;
   --foreground: #1F2937;
   --card: #FFFFFF;
@@ -119,5 +146,117 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* MediaMarkt-inspired enhancements that work with Tailwind */
+@layer utilities {
+  /* Bigger text sizes */
+  .text-display {
+    @apply text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold;
+  }
+  
+  .text-hero {
+    @apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold;
+  }
+  
+  .text-section-title {
+    @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold;
+  }
+  
+  .text-card-title {
+    @apply text-lg sm:text-xl lg:text-2xl font-semibold;
+  }
+  
+  .text-price-large {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-bold text-primary;
+  }
+  
+  /* Bigger buttons */
+  .btn-hero {
+    @apply px-8 py-4 sm:px-10 sm:py-5 lg:px-12 lg:py-6 text-lg sm:text-xl lg:text-2xl font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+  }
+  
+  .btn-primary-large {
+    @apply px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-5 text-base sm:text-lg lg:text-xl font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300;
+  }
+  
+  /* Bigger cards */
+  .card-hero {
+    @apply bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-100;
+  }
+  
+  .card-large {
+    @apply bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100;
+  }
+  
+  .card-product {
+    @apply bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 p-4 sm:p-6 lg:p-8;
+  }
+  
+  /* Bigger spacing */
+  .section-padding {
+    @apply py-12 sm:py-16 lg:py-20 xl:py-24;
+  }
+  
+  .container-padding {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+  
+  .grid-gap-large {
+    @apply gap-6 sm:gap-8 lg:gap-10 xl:gap-12;
+  }
+  
+  /* Bigger images */
+  .image-container-hero {
+    @apply w-full h-64 sm:h-80 lg:h-96 xl:h-[28rem] relative overflow-hidden rounded-xl;
+  }
+  
+  .image-container-large {
+    @apply w-full h-48 sm:h-56 lg:h-64 xl:h-72 relative overflow-hidden rounded-lg;
+  }
+  
+  .image-container-product {
+    @apply w-full h-40 sm:h-48 lg:h-56 xl:h-64 relative overflow-hidden rounded-lg;
+  }
+  
+  /* Bigger icons */
+  .icon-hero {
+    @apply w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24;
+  }
+  
+  .icon-large {
+    @apply w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12;
+  }
+  
+  /* Enhanced hover effects */
+  .hover-lift {
+    @apply transition-all duration-300 transform hover:scale-105 hover:-translate-y-2;
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/25;
+  }
+  
+  /* Enhanced shadows */
+  .shadow-hero {
+    @apply shadow-2xl hover:shadow-3xl;
+  }
+  
+  .shadow-large {
+    @apply shadow-xl hover:shadow-2xl;
+  }
+  
+  /* Enhanced grids */
+  .grid-hero {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 xl:gap-12;
+  }
+  
+  .grid-products {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8;
+  }
+  
+  .grid-features {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10;
   }
 }

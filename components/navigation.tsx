@@ -30,6 +30,7 @@ import {
   X
 } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -48,6 +49,7 @@ import { DeviceTypeNavbar } from "./device-type-navbar";
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const [searchbarOpen, setSearchbarOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -55,9 +57,35 @@ export function Navigation() {
   
   const { data: session } = useSession();
 
-
   const { items } = useCart();
   const totalCartItems = items.reduce((sum, item) => sum + item.quantity, 0);
+
+  const handleLogout = async () => {
+    try {
+      console.log('Logging out user...');
+      
+      // Call logout API for server-side cleanup
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+      } catch (apiError) {
+        console.warn('Logout API call failed:', apiError);
+        // Continue with client-side logout even if API fails
+      }
+      
+      // Perform client-side logout
+      await signOut({ 
+        callbackUrl: "/",
+        redirect: true 
+      });
+      
+      // Force a page refresh to ensure session is cleared
+      router.refresh();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Fallback: redirect to home page
+      router.push('/');
+    }
+  };
 
   useEffect(() => { setIsMounted(true); }, []);
 
@@ -215,7 +243,7 @@ export function Navigation() {
                       </DropdownMenuItem>
                     </>
                   )}
-                  <DropdownMenuItem className="bg-destructive text-white" onClick={() => signOut({ callbackUrl: "/" })}>
+                  <DropdownMenuItem className="bg-destructive text-white" onClick={handleLogout}>
                     {t('logout')}
                   </DropdownMenuItem>
                 
@@ -359,7 +387,7 @@ export function Navigation() {
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="bg-destructive text-white" onClick={() => signOut({ callbackUrl: "/" })}>
+                  <DropdownMenuItem className="bg-destructive text-white" onClick={handleLogout}>
                     {t('logout')}
                   </DropdownMenuItem>
                  
@@ -466,7 +494,7 @@ export function Navigation() {
                   )}
                   <DropdownMenuItem 
                     className="bg-destructive text-white text-sm" 
-                    onClick={() => signOut({ callbackUrl: "/" })}
+                    onClick={handleLogout}
                   >
                     {t('logout')}
                   </DropdownMenuItem>

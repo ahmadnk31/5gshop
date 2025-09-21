@@ -44,7 +44,8 @@ import {
   PieChart,
   LineChart,
   MessageSquare,
-  Shield
+  Shield,
+  Loader2
 } from "lucide-react";
 
 function AdminDashboardContent() {
@@ -64,13 +65,15 @@ function AdminDashboardContent() {
   const [customerSearchTerm, setCustomerSearchTerm] = useState('');
   const [showTodayFilter, setShowTodayFilter] = useState(false);
   const [showReportsModal, setShowReportsModal] = useState(false);
-
   // Helper function to check if a date is today
   const isToday = (dateString: string) => {
     const date = new Date(dateString);
     const today = new Date();
     return date.toDateString() === today.toDateString();
   };
+
+  // Helper function for loading states
+  const isLoading = (key: string) => state.operationLoading[key] || false;
 
   // Filter data based on today filter
   const getFilteredData = () => {
@@ -194,7 +197,11 @@ function AdminDashboardContent() {
 
   const handleDeleteRepair = async (repairId: string) => {
     if (confirm('Are you sure you want to delete this repair?')) {
-      await actions.deleteRepair(repairId);
+      try {
+        await actions.deleteRepair(repairId);
+      } catch (error) {
+        console.error('Failed to delete repair:', error);
+      }
     }
   };
 
@@ -203,26 +210,32 @@ function AdminDashboardContent() {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-4 pt-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Dashboard</h1>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
               <Button 
                 variant={showTodayFilter ? "default" : "outline"}
                 onClick={() => setShowTodayFilter(!showTodayFilter)}
+                className="w-full sm:w-auto"
               >
                 <Calendar className="h-4 w-4 mr-2" />
-                {showTodayFilter ? "Show All" : "Today"}
+                <span className="hidden sm:inline">{showTodayFilter ? "Show All" : "Today"}</span>
+                <span className="sm:hidden">{showTodayFilter ? "All" : "Today"}</span>
               </Button>
-              <Button onClick={() => setShowReportsModal(true)}>
+              <Button 
+                onClick={() => setShowReportsModal(true)}
+                className="w-full sm:w-auto bg-purple-600 hover:bg-purple-700 text-white"
+              >
                 <BarChart3 className="h-4 w-4 mr-2" />
-                Reports
+                <span className="hidden sm:inline">Reports</span>
+                <span className="sm:hidden">Reports</span>
               </Button>
             </div>
           </div>
           
           {/* Tab Navigation */}
           <div className="border-b mt-4">
-            <nav className="flex space-x-8">
+            <nav className="flex overflow-x-auto scrollbar-hide space-x-2 sm:space-x-8 pb-2">
               {[
                 { id: 'overview', label: 'Overview', icon: BarChart3 },
                 { id: 'repairs', label: 'Repairs', icon: Wrench },
@@ -237,14 +250,14 @@ function AdminDashboardContent() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-sm ${
+                  className={`flex items-center space-x-1 sm:space-x-2 py-2 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                     activeTab === tab.id
                       ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   }`}
                 >
-                  <tab.icon className="h-4 w-4" />
-                  <span>{tab.label}</span>
+                  <tab.icon className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="hidden sm:inline">{tab.label}</span>
                 </button>
               ))}
             </nav>
@@ -252,49 +265,51 @@ function AdminDashboardContent() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <>
             {/* Stats Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
               {stats.map((stat, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow">
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-                    <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                    <CardTitle className="text-xs sm:text-sm font-medium truncate">{stat.title}</CardTitle>
+                    <stat.icon className={`h-3 w-3 sm:h-4 sm:w-4 ${stat.color} flex-shrink-0`} />
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{stat.value}</div>
-                    <p className="text-xs text-muted-foreground">{stat.change}</p>
+                    <div className="text-xl sm:text-2xl font-bold">{stat.value}</div>
+                    <p className="text-xs text-muted-foreground truncate">{stat.change}</p>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
               {/* Recent Activity */}
               <div className="lg:col-span-2">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Recent Activity</CardTitle>
-                    <CardDescription>Latest updates across all operations</CardDescription>
+                    <CardTitle className="text-lg sm:text-xl">Recent Activity</CardTitle>
+                    <CardDescription className="text-sm">Latest updates across all operations</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {state.repairs.slice(0, 5).map((repair: Repair) => (
-                        <div key={repair.id} className="flex items-center space-x-4 p-3 border rounded-lg">
-                          <div className={`w-3 h-3 rounded-full ${getStatusColor(repair.status)}`}></div>
-                          <div className="flex-1">
-                            <p className="text-sm font-medium">
-                              {repair.device.brand} {repair.device.model} - {repair.issue}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              Customer: {repair.customer.firstName} {repair.customer.lastName}
-                            </p>
+                        <div key={repair.id} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3 border rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-3 h-3 rounded-full ${getStatusColor(repair.status)} flex-shrink-0`}></div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium truncate">
+                                {repair.device.brand} {repair.device.model} - {repair.issue}
+                              </p>
+                              <p className="text-xs text-gray-500 truncate">
+                                Customer: {repair.customer.firstName} {repair.customer.lastName}
+                              </p>
+                            </div>
                           </div>
-                          <div className="text-right">
-                            <Badge variant={repair.status === 'COMPLETED' ? 'default' : 'secondary'}>
+                          <div className="flex justify-end sm:justify-start">
+                            <Badge variant={repair.status === 'COMPLETED' ? 'default' : 'secondary'} className="text-xs">
                               {repair.status.replace('_', ' ')}
                             </Badge>
                           </div>
@@ -309,40 +324,44 @@ function AdminDashboardContent() {
               <div>
                 <Card>
                   <CardHeader>
-                    <CardTitle>Quick Actions</CardTitle>
+                    <CardTitle className="text-lg sm:text-xl">Quick Actions</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent className="space-y-2 sm:space-y-3">
                     <Button 
-                      className="w-full justify-start" 
+                      className="w-full justify-start text-sm bg-green-50 hover:bg-green-100 border-green-200 text-green-700 hover:text-green-800" 
                       variant="outline"
                       onClick={() => setShowNewRepairModal(true)}
                     >
                       <Plus className="h-4 w-4 mr-2" />
-                      New Repair Order
+                      <span className="hidden sm:inline">New Repair Order</span>
+                      <span className="sm:hidden">New Repair</span>
                     </Button>
                     <Button 
-                      className="w-full justify-start" 
+                      className="w-full justify-start text-sm bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800" 
                       variant="outline"
                       onClick={() => setShowInventoryModal(true)}
                     >
                       <Package className="h-4 w-4 mr-2" />
-                      Manage Inventory
+                      <span className="hidden sm:inline">Manage Inventory</span>
+                      <span className="sm:hidden">Inventory</span>
                     </Button>
                     <Button 
-                      className="w-full justify-start" 
+                      className="w-full justify-start text-sm bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700 hover:text-purple-800" 
                       variant="outline"
                       onClick={() => setShowDeviceCatalogModal(true)}
                     >
                       <Box className="h-4 w-4 mr-2" />
-                      Device Catalog
+                      <span className="hidden sm:inline">Device Catalog</span>
+                      <span className="sm:hidden">Devices</span>
                     </Button>
                     <Button 
-                      className="w-full justify-start" 
+                      className="w-full justify-start text-sm bg-orange-50 hover:bg-orange-100 border-orange-200 text-orange-700 hover:text-orange-800" 
                       variant="outline"
                       onClick={() => setShowAccessoryModal(true)}
                     >
                       <Package className="h-4 w-4 mr-2" />
-                      Accessories
+                      <span className="hidden sm:inline">Accessories</span>
+                      <span className="sm:hidden">Accessories</span>
                     </Button>
                   </CardContent>
                 </Card>
@@ -353,32 +372,36 @@ function AdminDashboardContent() {
 
         {/* Customers Tab */}
         {activeTab === 'customers' && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Customer Management Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Customer Management</h2>
-                <p className="text-gray-600">Manage customer information and view repair history</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Customer Management</h2>
+                <p className="text-sm sm:text-base text-gray-600">Manage customer information and view repair history</p>
               </div>
-              <Button onClick={() => setShowNewRepairModal(true)}>
+              <Button 
+                onClick={() => setShowNewRepairModal(true)} 
+                className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white"
+              >
                 <UserPlus className="h-4 w-4 mr-2" />
-                Add Customer
+                <span className="hidden sm:inline">Add Customer</span>
+                <span className="sm:hidden">Add Customer</span>
               </Button>
             </div>
 
             {/* Customer Search */}
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Customer List</CardTitle>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <CardTitle className="text-lg sm:text-xl">Customer List</CardTitle>
                   <div className="flex items-center space-x-4">
-                    <div className="relative">
+                    <div className="relative w-full sm:w-64">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                       <Input
                         placeholder="Search customers..."
                         value={customerSearchTerm}
                         onChange={(e) => setCustomerSearchTerm(e.target.value)}
-                        className="pl-10 w-64"
+                        className="pl-10 w-full"
                       />
                     </div>
                   </div>
@@ -393,25 +416,25 @@ function AdminDashboardContent() {
                       customer.phone.includes(customerSearchTerm)
                     )
                     .map((customer: Customer) => (
-                      <div key={customer.id} className="border rounded-lg p-4 hover:bg-gray-50">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-3 mb-2">
-                              <h3 className="font-semibold text-lg">
+                      <div key={customer.id} className="border rounded-lg p-3 sm:p-4 hover:bg-gray-50">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                              <h3 className="font-semibold text-base sm:text-lg truncate">
                                 {customer.firstName} {customer.lastName}
                               </h3>
-                              <Badge variant="secondary">
+                              <Badge variant="secondary" className="w-fit">
                                 {customer.totalRepairs} repairs
                               </Badge>
                             </div>
-                            <div className="grid md:grid-cols-3 gap-2 text-sm text-gray-600">
-                              <div className="flex items-center">
-                                <Mail className="h-4 w-4 mr-1" />
-                                {customer.email}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-xs sm:text-sm text-gray-600">
+                              <div className="flex items-center min-w-0">
+                                <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
+                                <span className="truncate">{customer.email}</span>
                               </div>
-                              <div className="flex items-center">
-                                <Phone className="h-4 w-4 mr-1" />
-                                {customer.phone}
+                              <div className="flex items-center min-w-0">
+                                <Phone className="h-3 w-3 sm:h-4 sm:w-4 mr-1 flex-shrink-0" />
+                                <span className="truncate">{customer.phone}</span>
                               </div>
                               {customer.address && (
                                 <div className="flex items-center">
@@ -425,10 +448,20 @@ function AdminDashboardContent() {
                             </p>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <Button size="sm" variant="outline" onClick={() => handleViewCustomer(customer)}>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              onClick={() => handleViewCustomer(customer)}
+                              className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800"
+                            >
                               <Eye className="h-4 w-4" />
                             </Button>
-                            <Button size="sm" variant="outline" onClick={() => handleEditCustomer(customer)}>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              onClick={() => handleEditCustomer(customer)}
+                              className="bg-green-50 hover:bg-green-100 border-green-200 text-green-700 hover:text-green-800"
+                            >
                               <Edit className="h-4 w-4" />
                             </Button>
                           </div>
@@ -869,6 +902,7 @@ function AdminDashboardContent() {
                             size="sm" 
                             variant="outline"
                             onClick={() => handleViewRepair(repair)}
+                            className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800"
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
@@ -876,8 +910,14 @@ function AdminDashboardContent() {
                             size="sm" 
                             variant="outline"
                             onClick={() => handleDeleteRepair(repair.id)}
+                            disabled={isLoading(`delete-repair-${repair.id}`)}
+                            className="bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
-                            <Trash2 className="h-4 w-4" />
+                            {isLoading(`delete-repair-${repair.id}`) ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="h-4 w-4" />
+                            )}
                           </Button>
                         </div>
                       </div>

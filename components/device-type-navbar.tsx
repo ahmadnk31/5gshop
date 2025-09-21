@@ -87,6 +87,7 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
     };
   }, [mouseLeaveTimeout, hoverTimeout]);
 
+
   // Handle device type selection
   const selectDeviceType = async (type: DeviceType) => {
     setLoading(true);
@@ -243,9 +244,9 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
   };
 
   return (
-    <nav className={`relative bg-white border-b border-gray-200 shadow-sm overflow-visible ${className}`}>
-      <div className="w-full mx-auto px-2 sm:px-4 lg:px-8 relative overflow-visible">
-        <div className="flex justify-start sm:justify-center space-x-1 sm:space-x-2 md:space-x-4 lg:space-x-8 overflow-x-auto overflow-y-visible pl-2 sm:pl-0">
+    <nav className={`relative bg-white border-b border-gray-200 shadow-sm ${className}`}>
+      <div className="w-full relative">
+        <div className="flex space-x-1 sm:space-x-2 md:space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide navbar-scroll px-2 sm:px-4 lg:px-8 min-h-[60px] items-center">
           {deviceTypes.map((deviceType) => {
             const Icon = deviceIcons[deviceType];
             const displayName = deviceDisplayNames[deviceType];
@@ -254,7 +255,7 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
             return (
               <div
                 key={deviceType}
-                className="relative"
+                className="relative flex-shrink-0 navbar-item "
                 onMouseEnter={(e) => handleTypeMouseEnter(deviceType, e)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -357,7 +358,7 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
                           {currentLevel === 'models' && (
                             <>
                               {models.length > 0 ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 max-h-[400px] overflow-y-auto">
                                   {models.map((model) => (
                                     <div
                                       key={model}

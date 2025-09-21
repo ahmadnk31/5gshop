@@ -20,6 +20,7 @@ import {
   Search,
   AlertTriangle,
   DollarSign,
+  Loader2,
   Box,
   Tag,
   Smartphone,
@@ -79,6 +80,18 @@ export function AccessoryModal({ isOpen, onClose }: AccessoryModalProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [editingAccessory, setEditingAccessory] = useState<Accessory | null>(null);
+  
+  // Loading states for CRUD operations
+  const [loadingStates, setLoadingStates] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  // Helper functions for loading states
+  const setOperationLoading = (key: string, loading: boolean) => {
+    setLoadingStates(prev => ({ ...prev, [key]: loading }));
+  };
+
+  const isOperationLoading = (key: string) => loadingStates[key] || false;
   
   const [newAccessory, setNewAccessory] = useState<{
     name: string;
@@ -189,8 +202,9 @@ export function AccessoryModal({ isOpen, onClose }: AccessoryModalProps) {
   const handleDeleteAccessory = async (id: string) => {
     if (!confirm('Are you sure you want to delete this accessory?')) return;
 
+    const operationKey = `delete-accessory-${id}`;
     try {
-      setLoading(true);
+      setOperationLoading(operationKey, true);
       await deleteAccessory(id);
       await loadAccessories();
       await loadLowStockAccessories();
@@ -199,7 +213,7 @@ export function AccessoryModal({ isOpen, onClose }: AccessoryModalProps) {
       console.error('Failed to delete accessory:', error);
       alert('Failed to delete accessory');
     } finally {
-      setLoading(false);
+      setOperationLoading(operationKey, false);
     }
   };
 
@@ -317,7 +331,7 @@ export function AccessoryModal({ isOpen, onClose }: AccessoryModalProps) {
                               size="sm"
                               variant="outline"
                               onClick={() => setEditingAccessory(accessory)}
-                              className="flex-1"
+                              className="flex-1 bg-green-50 hover:bg-green-100 border-green-200 text-green-700 hover:text-green-800"
                             >
                               <Edit className="h-3 w-3 mr-1" />
                               Edit
@@ -326,9 +340,14 @@ export function AccessoryModal({ isOpen, onClose }: AccessoryModalProps) {
                               size="sm"
                               variant="outline"
                               onClick={() => handleDeleteAccessory(accessory.id)}
-                              className="text-red-600 hover:text-red-700"
+                              disabled={isOperationLoading(`delete-accessory-${accessory.id}`)}
+                              className="bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                              <Trash2 className="h-3 w-3" />
+                              {isOperationLoading(`delete-accessory-${accessory.id}`) ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <Trash2 className="h-3 w-3" />
+                              )}
                             </Button>
                           </div>
 

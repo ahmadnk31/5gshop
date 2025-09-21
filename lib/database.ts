@@ -231,7 +231,7 @@ export class DatabaseService {
         supplier: data.supplier,
         inStock: data.inStock,
         minStock: data.minStock,
-        imageUrl: data.imageUrl,
+        imageUrl: data.imageUrl === undefined ? null : data.imageUrl,
         description: data.description,
         deviceModel: data.deviceModel,
         deviceType: data.deviceType,
@@ -459,7 +459,7 @@ export class DatabaseService {
         series: data.series ?? null,
         serialNumber: data.serialNumber,
         purchaseDate: data.purchaseDate ? new Date(data.purchaseDate) : undefined,
-        imageUrl: data.imageUrl,
+        imageUrl: data.imageUrl === undefined ? null : data.imageUrl,
         description: data.description,
       },
     })
@@ -693,7 +693,7 @@ export class DatabaseService {
         inStock: data.inStock,
         minStock: data.minStock,
         description: data.description,
-        imageUrl: data.imageUrl,
+        imageUrl: data.imageUrl === undefined ? null : data.imageUrl,
         compatibility: data.compatibility,
       },
     })

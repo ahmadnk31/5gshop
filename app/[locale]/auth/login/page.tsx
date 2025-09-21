@@ -22,47 +22,35 @@ export default function LoginPage() {
     
     console.log('Login attempt for email:', email);
     
-    // First check if user is banned
     try {
-      console.log('Checking user status...');
-      const checkUserResponse = await fetch('/api/auth/check-user-status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
       
-      console.log('User status response:', checkUserResponse.status);
+      console.log('NextAuth response:', res);
       
-      if (checkUserResponse.ok) {
-        const userData = await checkUserResponse.json();
-        console.log('User data:', userData);
-        if (userData.role === 'BANNED') {
-          console.log('User is banned, showing error');
+      if (res?.error) {
+        // Handle specific error cases
+        if (res.error === 'CredentialsSignin') {
+          setError("Invalid email or password");
+        } else if (res.error === 'AccessDenied') {
           setError("Your account has been suspended. Please contact support for assistance.");
-          setLoading(false);
-          return;
+        } else {
+          setError("Login failed. Please try again.");
         }
+      } else if (res?.url?.includes("/auth/error")) {
+        setError("Invalid email or password");
+      } else if (res?.ok) {
+        console.log("Login successful, redirecting...");
+        router.push("/");
       }
     } catch (error) {
-      // Continue with normal login if check fails
-      console.log('User status check failed, proceeding with login:', error);
-    }
-    
-    console.log('Proceeding with NextAuth login...');
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
-    setLoading(false);
-    console.log('NextAuth response:', res);
-    if (res?.error) {
-      setError(res.error);
-    } else if (res?.url?.includes("/auth/error")) {
-      setError("Invalid email or password");
-    } else if (res?.ok) {
-      console.log("res", res);
-      router.push("/");
+      console.error('Login error:', error);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 

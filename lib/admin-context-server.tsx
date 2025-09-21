@@ -16,6 +16,7 @@ interface AdminState {
   stats: DashboardStats;
   loading: boolean;
   selectedRepair: Repair | null;
+  operationLoading: { [key: string]: boolean };
 }
 
 interface AdminContextType {
@@ -57,12 +58,24 @@ const initialState: AdminState = {
   },
   loading: true,
   selectedRepair: null,
+  operationLoading: {},
 };
 
 const AdminContext = createContext<AdminContextType | null>(null);
 
 export function AdminProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AdminState>(initialState);
+
+  // Helper functions for operation loading states
+  const setOperationLoading = (operation: string, loading: boolean) => {
+    setState(prev => ({
+      ...prev,
+      operationLoading: {
+        ...prev.operationLoading,
+        [operation]: loading
+      }
+    }));
+  };
 
   // Load all dashboard data
   const loadData = async () => {
@@ -107,31 +120,42 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   const createRepair = async (repair: CreateRepairData) => {
     try {
+      setOperationLoading('create-repair', true);
       await repairActions.createRepair(repair);
       await loadData(); // Reload data
     } catch (error) {
       console.error('Failed to create repair:', error);
       throw error;
+    } finally {
+      setOperationLoading('create-repair', false);
     }
   };
 
   const updateRepair = async (repairId: string, repair: Partial<Repair>) => {
+    const operationKey = `update-repair-${repairId}`;
     try {
+      setOperationLoading(operationKey, true);
       await repairActions.updateRepair(repairId, repair);
       await loadData(); // Reload data
     } catch (error) {
       console.error('Failed to update repair:', error);
       throw error;
+    } finally {
+      setOperationLoading(operationKey, false);
     }
   };
 
   const deleteRepair = async (repairId: string) => {
+    const operationKey = `delete-repair-${repairId}`;
     try {
+      setOperationLoading(operationKey, true);
       await repairActions.deleteRepair(repairId);
       await loadData(); // Reload data
     } catch (error) {
       console.error('Failed to delete repair:', error);
       throw error;
+    } finally {
+      setOperationLoading(operationKey, false);
     }
   };
 
@@ -148,53 +172,71 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
   const createPart = async (part: Omit<Part, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
+      setOperationLoading('create-part', true);
       await partActions.createPart(part);
       await loadData(); // Reload data
     } catch (error) {
       console.error('Failed to create part:', error);
       throw error;
+    } finally {
+      setOperationLoading('create-part', false);
     }
   };
 
   const updatePart = async (partId: string, part: Partial<Part>) => {
+    const operationKey = `update-part-${partId}`;
     try {
+      setOperationLoading(operationKey, true);
       await partActions.updatePart(partId, part);
       await loadData(); // Reload data
     } catch (error) {
       console.error('Failed to update part:', error);
       throw error;
+    } finally {
+      setOperationLoading(operationKey, false);
     }
   };
 
   const deletePart = async (partId: string) => {
+    const operationKey = `delete-part-${partId}`;
     try {
+      setOperationLoading(operationKey, true);
       await partActions.deletePart(partId);
       await loadData(); // Reload data
     } catch (error) {
       console.error('Failed to delete part:', error);
       throw error;
+    } finally {
+      setOperationLoading(operationKey, false);
     }
   };
 
   // Customer actions
   const addCustomer = async (customer: CreateCustomerData): Promise<Customer> => {
     try {
+      setOperationLoading('create-customer', true);
       const newCustomer = await customerActions.createCustomer(customer);
       await loadData(); // Reload data
       return newCustomer;
     } catch (error) {
       console.error('Failed to add customer:', error);
       throw error;
+    } finally {
+      setOperationLoading('create-customer', false);
     }
   };
 
   const updateCustomer = async (customer: Customer) => {
+    const operationKey = `update-customer-${customer.id}`;
     try {
+      setOperationLoading(operationKey, true);
       await customerActions.updateCustomer(customer.id, customer);
       await loadData(); // Reload data
     } catch (error) {
       console.error('Failed to update customer:', error);
       throw error;
+    } finally {
+      setOperationLoading(operationKey, false);
     }
   };
 

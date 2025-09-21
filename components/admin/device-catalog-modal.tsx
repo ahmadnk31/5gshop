@@ -23,7 +23,8 @@ import {
   Upload,
   Image as ImageIcon,
   Camera,
-  Wrench
+  Wrench,
+  Loader2
 } from "lucide-react"
 import { DeviceType, RepairService } from '@/lib/types'
 
@@ -144,6 +145,18 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   // Image upload states
   const [uploadingDeviceImage, setUploadingDeviceImage] = useState(false)
   const [uploadingPartImage, setUploadingPartImage] = useState(false)
+  
+  // Loading states for CRUD operations
+  const [loadingStates, setLoadingStates] = useState<{
+    [key: string]: boolean;
+  }>({})
+
+  // Helper functions for loading states
+  const setLoading = (key: string, loading: boolean) => {
+    setLoadingStates(prev => ({ ...prev, [key]: loading }));
+  };
+
+  const isLoading = (key: string) => loadingStates[key] || false;
 
   // Service management states
   const [selectedServiceDeviceType, setSelectedServiceDeviceType] = useState<DeviceType | null>(null)
@@ -405,20 +418,28 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   }
 
   const handleDeleteDevice = async (deviceId: string) => {
+    const operationKey = `delete-device-${deviceId}`;
     try {
+      setLoading(operationKey, true);
       await deleteDevice(deviceId)
       setDevices(devices.filter(d => d.id !== deviceId))
     } catch (error) {
       console.error('Error deleting device:', error)
+    } finally {
+      setLoading(operationKey, false);
     }
   }
 
   const handleDeletePart = async (partId: string) => {
+    const operationKey = `delete-part-${partId}`;
     try {
+      setLoading(operationKey, true);
       await deletePart(partId)
       setParts(parts.filter(p => p.id !== partId))
     } catch (error) {
       console.error('Error deleting part:', error)
+    } finally {
+      setLoading(operationKey, false);
     }
   }
 
@@ -459,8 +480,10 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
 
   const handleUpdateService = async () => {
     if (!editingService) return
+    const operationKey = `update-service-${editingService.id}`;
     
     try {
+      setLoading(operationKey, true);
       const updatedService = await updateRepairService(editingService.id, {
         name: editingService.name,
         description: editingService.description,
@@ -478,15 +501,21 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       setEditingService(null)
     } catch (error) {
       console.error('Error updating service:', error)
+    } finally {
+      setLoading(operationKey, false);
     }
   }
 
   const handleDeleteService = async (serviceId: string) => {
+    const operationKey = `delete-service-${serviceId}`;
     try {
+      setLoading(operationKey, true);
       await deleteRepairService(serviceId)
       setServices(services.filter(s => s.id !== serviceId))
     } catch (error) {
       console.error('Error deleting service:', error)
+    } finally {
+      setLoading(operationKey, false);
     }
   }
 
@@ -540,8 +569,10 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   // Update handlers
   const handleUpdateDevice = async () => {
     if (!editingDevice) return
+    const operationKey = `update-device-${editingDevice.id}`;
     try {
-      const updatedDevice = await updateDevice(editingDevice.id, {
+      setLoading(operationKey, true);
+      const updateData = {
         type: editingDevice.type,
         brand: editingDevice.brand,
         model: editingDevice.model,
@@ -549,16 +580,21 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
         series: editingDevice.series || null,
         imageUrl: editingDevice.imageUrl,
         description: editingDevice.description
-      })
+      };
+      console.log('Updating device with data:', updateData);
+      const updatedDevice = await updateDevice(editingDevice.id, updateData)
       setDevices(devices.map(d => d.id === editingDevice.id ? updatedDevice : d))
       setEditingDevice(null)
     } catch (error) {
       console.error('Error updating device:', error)
+    } finally {
+      setLoading(operationKey, false);
     }
   }
 
   const handleUpdatePart = async () => {
     if (!editingPart) return;
+    const operationKey = `update-part-${editingPart.id}`;
     let deviceModelValue = editingPart.deviceModel;
     if (deviceModelValue && deviceModelValue !== 'all') {
       const found = allDevices.find((d) => d.id === deviceModelValue);
@@ -567,7 +603,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       deviceModelValue = undefined;
     }
     try {
-      const updatedPart = await updatePart(editingPart.id, {
+      setLoading(operationKey, true);
+      const updateData = {
         name: editingPart.name,
         sku: editingPart.sku,
         cost: editingPart.cost,
@@ -578,7 +615,10 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
         deviceModel: deviceModelValue ? deviceModelValue : undefined,
         deviceType: editingPart.deviceType ? editingPart.deviceType : undefined,
         quality: editingPart.quality || undefined,
-      });
+        imageUrl: editingPart.imageUrl,
+      };
+      console.log('Updating part with data:', updateData);
+      const updatedPart = await updatePart(editingPart.id, updateData);
       setParts(
         parts.map((p) =>
           p.id === editingPart.id
@@ -594,6 +634,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       setEditingPart(null);
     } catch (error) {
       console.error('Error updating part:', error);
+    } finally {
+      setLoading(operationKey, false);
     }
   }
 
@@ -783,6 +825,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                           size="sm" 
                           variant="outline"
                           onClick={() => setEditingDevice(device)}
+                          className="bg-green-50 hover:bg-green-100 border-green-200 text-green-700 hover:text-green-800"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -790,8 +833,14 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                           size="sm" 
                           variant="outline"
                           onClick={() => handleDeleteDevice(device.id)}
+                          disabled={isLoading(`delete-device-${device.id}`)}
+                          className="bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          {isLoading(`delete-device-${device.id}`) ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
                         </Button>
                       </div>
                     </div>
@@ -1117,6 +1166,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                           size="sm" 
                           variant="outline"
                           onClick={() => setEditingPart(part)}
+                          className="bg-green-50 hover:bg-green-100 border-green-200 text-green-700 hover:text-green-800"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -1124,8 +1174,14 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                           size="sm" 
                           variant="outline"
                           onClick={() => handleDeletePart(part.id)}
+                          disabled={isLoading(`delete-part-${part.id}`)}
+                          className="bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          {isLoading(`delete-part-${part.id}`) ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="h-4 w-4" />
+                          )}
                         </Button>
                       </div>
                     </div>
@@ -1430,18 +1486,25 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                             </div>
                             <div className="flex items-center space-x-2">
                               <Button 
-                                variant="ghost" 
+                                variant="outline" 
                                 size="sm"
                                 onClick={() => setEditingService(service)}
+                                className="bg-green-50 hover:bg-green-100 border-green-200 text-green-700 hover:text-green-800"
                               >
                                 <Edit className="h-4 w-4" />
                               </Button>
                               <Button 
-                                variant="ghost" 
+                                variant="outline" 
                                 size="sm"
                                 onClick={() => handleDeleteService(service.id)}
+                                disabled={isLoading(`delete-service-${service.id}`)}
+                                className="bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
                               >
-                                <Trash2 className="h-4 w-4" />
+                                {isLoading(`delete-service-${service.id}`) ? (
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                ) : (
+                                  <Trash2 className="h-4 w-4" />
+                                )}
                               </Button>
                             </div>
                           </div>
@@ -1566,12 +1629,24 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                 <Label>Device Image</Label>
                 <div className="flex items-center space-x-4">
                   {editingDevice.imageUrl && (
-                    <div className="w-20 h-20 border rounded-lg overflow-hidden">
+                    <div className="relative w-20 h-20 border rounded-lg overflow-hidden">
                       <img 
                         src={editingDevice.imageUrl} 
                         alt="Device preview" 
                         className="w-full h-full object-cover"
                       />
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute top-1 right-1 h-6 w-6 p-0 text-xs"
+                        onClick={() => {
+                          console.log('Removing device image, current imageUrl:', editingDevice.imageUrl);
+                          setEditingDevice({ ...editingDevice, imageUrl: undefined });
+                          console.log('Device imageUrl set to undefined');
+                        }}
+                      >
+                        ×
+                      </Button>
                     </div>
                   )}
                   <div className="flex-1">
@@ -1753,12 +1828,24 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                 <Label>Part Image</Label>
                 <div className="flex items-center space-x-4">
                   {editingPart.imageUrl && (
-                    <div className="w-20 h-20 border rounded-lg overflow-hidden">
+                    <div className="relative w-20 h-20 border rounded-lg overflow-hidden">
                       <img 
                         src={editingPart.imageUrl} 
                         alt="Part preview" 
                         className="w-full h-full object-cover"
                       />
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="absolute top-1 right-1 h-6 w-6 p-0 text-xs"
+                        onClick={() => {
+                          console.log('Removing part image, current imageUrl:', editingPart.imageUrl);
+                          setEditingPart({ ...editingPart, imageUrl: undefined });
+                          console.log('Part imageUrl set to undefined');
+                        }}
+                      >
+                        ×
+                      </Button>
                     </div>
                   )}
                   <div className="flex-1">
