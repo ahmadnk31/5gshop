@@ -23,6 +23,7 @@ import {routing} from '@/i18n/routing';
 import Provider from "@/components/provider";
 import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema, generateLocalBusinessSchema, generateWebsiteSchema } from "@/lib/seo";
+import { TawkToChat } from "@/components/tawk-to-chat";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -49,8 +50,6 @@ const poppins = Poppins({
   preload: false,
   fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
 });
-
-import { TawkToChat } from "@/components/tawk-to-chat";
 
 export const metadata: Metadata = baseMetadata;
 
@@ -138,7 +137,7 @@ export default async function RootLayout({
           {/* Structured Data */}
           <StructuredData data={[structuredData.organization, structuredData.localBusiness, structuredData.website]} />
           
-          {/* Tawk.to Chat Widget - Loaded after hydration */}
+          {/* Tawk.to Chat Widget */}
           <TawkToChat />
         </CookieConsentProvider>
         </NextIntlClientProvider>
