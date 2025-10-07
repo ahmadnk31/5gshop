@@ -2,73 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   --radius: 0.75rem;
-  --background: #F3F4F6;
-  --foreground: #1F2937;
+  --background: #F0FDF4;
+  --foreground: #14532D;
   --card: #FFFFFF;
-  --card-foreground: #1F2937;
+  --card-foreground: #14532D;
   --popover: #FFFFFF;
-  --popover-foreground: #1F2937;
+  --popover-foreground: #14532D;
   --primary: #16A34A;
   --primary-foreground: #FFFFFF;
-  --secondary: #2563EB;
+  --secondary: #22C55E;
   --secondary-foreground: #FFFFFF;
-  --muted: #E5E7EB;
-  --muted-foreground: #6B7280;
-  --accent: #14B8A6;
+  --muted: #DCFCE7;
+  --muted-foreground: #365314;
+  --accent: #10B981;
   --accent-foreground: #FFFFFF;
-  --destructive: #DC2626;
-  --border: #E5E7EB;
-  --input: #E5E7EB;
+  --destructive: #EF4444;
+  --border: #BBF7D0;
+  --input: #DCFCE7;
   --ring: #16A34A;
   --chart-1: #16A34A;
-  --chart-2: #2563EB;
-  --chart-3: #14B8A6;
-  --chart-4: #F59E42;
-  --chart-5: #F87171;
+  --chart-2: #22C55E;
+  --chart-3: #10B981;
+  --chart-4: #84CC16;
+  --chart-5: #F59E0B;
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #1F2937;
+  --sidebar-foreground: #14532D;
   --sidebar-primary: #16A34A;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #2563EB;
+  --sidebar-accent: #22C55E;
   --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #E5E7EB;
+  --sidebar-border: #BBF7D0;
   --sidebar-ring: #16A34A;
 }
 
 .dark {
-  --background: #1F2937;
-  --foreground: #F3F4F6;
-  --card: #111827;
-  --card-foreground: #F3F4F6;
-  --popover: #111827;
-  --popover-foreground: #F3F4F6;
-  --primary: #16A34A;
+  --background: #0F172A;
+  --foreground: #F0FDF4;
+  --card: #1E293B;
+  --card-foreground: #F0FDF4;
+  --popover: #1E293B;
+  --popover-foreground: #F0FDF4;
+  --primary: #22C55E;
   --primary-foreground: #FFFFFF;
-  --secondary: #2563EB;
+  --secondary: #16A34A;
   --secondary-foreground: #FFFFFF;
-  --muted: #374151;
-  --muted-foreground: #D1D5DB;
-  --accent: #14B8A6;
+  --muted: #334155;
+  --muted-foreground: #94A3B8;
+  --accent: #10B981;
   --accent-foreground: #FFFFFF;
   --destructive: #F87171;
-  --border: #374151;
-  --input: #374151;
-  --ring: #16A34A;
-  --chart-1: #16A34A;
-  --chart-2: #2563EB;
-  --chart-3: #14B8A6;
-  --chart-4: #F59E42;
-  --chart-5: #F87171;
-  --sidebar: #111827;
-  --sidebar-foreground: #F3F4F6;
-  --sidebar-primary: #16A34A;
+  --border: #334155;
+  --input: #334155;
+  --ring: #22C55E;
+  --chart-1: #22C55E;
+  --chart-2: #16A34A;
+  --chart-3: #10B981;
+  --chart-4: #84CC16;
+  --chart-5: #F59E0B;
+  --sidebar: #1E293B;
+  --sidebar-foreground: #F0FDF4;
+  --sidebar-primary: #22C55E;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #2563EB;
+  --sidebar-accent: #16A34A;
   --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: #374151;
-  --sidebar-ring: #16A34A;
+  --sidebar-border: #334155;
+  --sidebar-ring: #22C55E;
 }
 
 @layer base {
@@ -81,6 +82,8 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: 1.125rem; /* Make base font size larger */
+    line-height: 1.7;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -92,30 +95,96 @@
   p, span, div {
     @apply font-inter;
     font-weight: 400;
+    font-size: 1.125rem; /* Make paragraphs larger */
+    line-height: 1.7;
   }
   
   button, input, select, textarea {
     @apply font-roboto;
     font-weight: 500;
+    font-size: 1.125rem; /* Make form elements larger */
+    padding: 1rem 1.5rem; /* Add default larger padding */
+    border-radius: 0.75rem;
   }
   
-  /* Make headings more distinctive */
+  /* Make ALL headings much larger by default */
   h1 {
-    @apply font-poppins font-bold;
-    letter-spacing: -0.04em;
-    font-weight: 700;
+    @apply font-poppins font-black text-slate-900;
+    letter-spacing: -0.05em;
+    font-weight: 900;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 3.5rem !important; /* Force large size */
+    line-height: 1.1;
   }
   
   h2 {
-    @apply font-poppins font-semibold;
-    letter-spacing: -0.03em;
-    font-weight: 600;
+    @apply font-poppins font-bold text-slate-800;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 2.75rem !important; /* Force large size */
+    line-height: 1.2;
   }
   
   h3 {
-    @apply font-poppins font-medium;
-    letter-spacing: -0.025em;
+    @apply font-poppins font-bold text-slate-700;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-size: 2.25rem !important; /* Force large size */
+    line-height: 1.2;
+  }
+  
+  h4 {
+    font-size: 1.875rem !important;
+    line-height: 1.3;
+    font-weight: 700;
+  }
+  
+  h5 {
+    font-size: 1.5rem !important;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+  
+  h6 {
+    font-size: 1.25rem !important;
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  
+  /* Make all buttons larger by default */
+  button {
+    min-height: 3rem !important;
+    font-size: 1.125rem !important;
+    padding: 1rem 2rem !important;
+    font-weight: 600 !important;
+  }
+  
+  /* Make all input fields larger */
+  input, select, textarea {
+    min-height: 3rem !important;
+    font-size: 1.125rem !important;
+    padding: 1rem 1.5rem !important;
+  }
+  
+  /* Make all links more prominent */
+  a {
+    font-size: 1.125rem;
     font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  
+  /* Make all lists larger */
+  ul, ol {
+    font-size: 1.125rem;
+    line-height: 1.7;
+  }
+  
+  li {
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0;
   }
 }
 
@@ -142,98 +211,123 @@
 
 /* MediaMarkt-inspired enhancements that work with Tailwind */
 @layer utilities {
-  /* Bigger text sizes */
+  /* Much bigger text sizes - dramatically increased */
   .text-display {
-    @apply text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-poppins font-bold;
+    @apply text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-poppins font-bold;
     letter-spacing: -0.04em;
   }
   
   .text-hero {
-    @apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-poppins font-bold;
+    @apply text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-poppins font-bold;
     letter-spacing: -0.03em;
   }
   
   .text-section-title {
-    @apply text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-poppins font-semibold;
+    @apply text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-poppins font-semibold;
     letter-spacing: -0.025em;
   }
   
   .text-card-title {
-    @apply text-lg sm:text-xl lg:text-2xl font-poppins font-semibold;
+    @apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-poppins font-semibold;
     letter-spacing: -0.02em;
   }
   
   .text-price-large {
-    @apply text-2xl sm:text-3xl lg:text-4xl font-roboto font-bold text-primary;
+    @apply text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-roboto font-bold text-primary;
     letter-spacing: -0.02em;
   }
   
-  /* Bigger buttons */
+  /* Much bigger buttons with enhanced visual impact */
   .btn-hero {
-    @apply px-8 py-4 sm:px-10 sm:py-5 lg:px-12 lg:py-6 text-lg sm:text-xl lg:text-2xl font-roboto font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
+    @apply px-12 py-6 sm:px-16 sm:py-8 lg:px-20 lg:py-10 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-roboto font-bold rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 hover:-translate-y-2;
     letter-spacing: -0.01em;
+    font-weight: 700;
+    box-shadow: 0 15px 35px rgba(22, 163, 74, 0.4), 0 8px 12px rgba(0, 0, 0, 0.15);
+    min-height: 4rem;
   }
   
   .btn-primary-large {
-    @apply px-6 py-3 sm:px-8 sm:py-4 lg:px-10 lg:py-5 text-base sm:text-lg lg:text-xl font-roboto font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300;
+    @apply px-10 py-5 sm:px-12 sm:py-6 lg:px-16 lg:py-8 text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-roboto font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-1;
     letter-spacing: -0.01em;
+    font-weight: 700;
+    box-shadow: 0 12px 30px rgba(22, 163, 74, 0.3), 0 6px 10px rgba(0, 0, 0, 0.1);
+    min-height: 3.5rem;
   }
   
-  /* Bigger cards */
+  /* Much bigger cards with enhanced visual impact */
   .card-hero {
-    @apply bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-gray-100;
+    @apply bg-white rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-110 hover:-translate-y-2 border-2 border-gray-50;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 10px 20px rgba(22, 163, 74, 0.1);
+    padding: 3rem;
+    min-height: 24rem;
   }
   
   .card-large {
-    @apply bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100;
+    @apply bg-white rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-400 transform hover:scale-105 hover:-translate-y-1 border border-gray-100;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(22, 163, 74, 0.08);
+    padding: 2.5rem;
+    min-height: 20rem;
   }
   
   .card-product {
-    @apply bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 p-4 sm:p-6 lg:p-8;
+    @apply bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-102 hover:-translate-y-1 border border-gray-100 p-6 sm:p-8 lg:p-12;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08), 0 5px 10px rgba(22, 163, 74, 0.05);
+    min-height: 18rem;
   }
   
-  /* Bigger spacing */
+  /* Much bigger spacing */
   .section-padding {
-    @apply py-12 sm:py-16 lg:py-20 xl:py-24;
+    @apply py-20 sm:py-24 lg:py-32 xl:py-40;
   }
   
   .container-padding {
-    @apply px-4 sm:px-6 lg:px-8 xl:px-12;
+    @apply px-6 sm:px-8 lg:px-12 xl:px-16;
   }
   
   .grid-gap-large {
-    @apply gap-6 sm:gap-8 lg:gap-10 xl:gap-12;
+    @apply gap-8 sm:gap-12 lg:gap-16 xl:gap-20;
   }
   
-  /* Bigger images */
+  /* Much bigger images */
   .image-container-hero {
-    @apply w-full h-64 sm:h-80 lg:h-96 xl:h-[28rem] relative overflow-hidden rounded-xl;
+    @apply w-full h-80 sm:h-96 lg:h-[36rem] xl:h-[40rem] relative overflow-hidden rounded-2xl;
   }
   
   .image-container-large {
-    @apply w-full h-48 sm:h-56 lg:h-64 xl:h-72 relative overflow-hidden rounded-lg;
+    @apply w-full h-64 sm:h-80 lg:h-96 xl:h-[30rem] relative overflow-hidden rounded-xl;
   }
   
   .image-container-product {
-    @apply w-full h-40 sm:h-48 lg:h-56 xl:h-64 relative overflow-hidden rounded-lg;
+    @apply w-full h-56 sm:h-64 lg:h-80 xl:h-96 relative overflow-hidden rounded-xl;
   }
   
-  /* Bigger icons */
+  /* Much bigger icons */
   .icon-hero {
-    @apply w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24;
+    @apply w-16 h-16 sm:w-20 sm:h-20 lg:w-28 lg:h-28 xl:w-32 xl:h-32;
   }
   
   .icon-large {
-    @apply w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12;
+    @apply w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24;
   }
   
-  /* Enhanced hover effects */
+  /* Enhanced hover effects with more dramatic impact */
   .hover-lift {
-    @apply transition-all duration-300 transform hover:scale-105 hover:-translate-y-2;
+    @apply transition-all duration-500 transform hover:scale-110 hover:-translate-y-4;
+  }
+  
+  .hover-lift:hover {
+    filter: brightness(1.05);
   }
   
   .hover-glow {
-    @apply transition-all duration-300 hover:shadow-lg hover:shadow-primary/25;
+    @apply transition-all duration-400 hover:shadow-2xl;
+    box-shadow: 0 0 0 rgba(22, 163, 74, 0);
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+  }
+  
+  .hover-glow:hover {
+    box-shadow: 0 0 30px rgba(22, 163, 74, 0.4), 0 15px 35px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
   }
   
   /* Enhanced shadows */
@@ -313,5 +407,60 @@
   
   .force-roboto {
     font-family: "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  }
+  
+  /* Green color utilities */
+  .bg-green-50 {
+    background-color: #F0FDF4;
+  }
+  
+  .bg-green-100 {
+    background-color: #DCFCE7;
+  }
+  
+  .bg-green-200 {
+    background-color: #BBF7D0;
+  }
+  
+  .text-green-600 {
+    color: #16A34A;
+  }
+  
+  .text-green-700 {
+    color: #15803D;
+  }
+  
+  .text-green-800 {
+    color: #166534;
+  }
+  
+  .text-green-900 {
+    color: #14532D;
+  }
+  
+  .border-green-200 {
+    border-color: #BBF7D0;
+  }
+  
+  .border-green-300 {
+    border-color: #86EFAC;
+  }
+  
+  /* Green gradient backgrounds */
+  .bg-gradient-green {
+    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+  }
+  
+  .bg-gradient-green-dark {
+    background: linear-gradient(135deg, #16A34A 0%, #15803D 100%);
+  }
+  
+  /* Green shadow utilities */
+  .shadow-green {
+    box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.1), 0 2px 4px -1px rgba(34, 197, 94, 0.06);
+  }
+  
+  .shadow-green-lg {
+    box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.1), 0 4px 6px -2px rgba(34, 197, 94, 0.05);
   }
 }

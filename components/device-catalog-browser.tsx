@@ -485,6 +485,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
   const [services, setServices] = useState<RepairService[]>([])
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [devices, setDevices] = useState<any[]>([]) // Add devices state for image display
+  const [modelToDeviceMap, setModelToDeviceMap] = useState<Record<string, any>>({}) // Map models to devices for images
   
   const [loading, setLoading] = useState(false)
   const [isSearchMode, setIsSearchMode] = useState(false)
@@ -695,8 +696,10 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
         device.type === deviceType && device.brand === brand
       );
       setDevices(filteredDevices);
+      return filteredDevices; // Return the devices so they can be used immediately
     } catch (error) {
       console.error('Error loading devices:', error);
+      return [];
     }
   }
 
@@ -727,10 +730,21 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
     try {
       setSelectedBrand(brand)
       modelsPagination.goToFirstPage();
-      await loadDevicesForBrand(selectedType as DeviceType, brand, order);
+      
+      // Load devices first and wait for them to be set
+      const loadedDevices = await loadDevicesForBrand(selectedType as DeviceType, brand, order);
+      
+      // Create a map of model names to devices for quick lookup
+      const deviceMap: Record<string, any> = {};
+      loadedDevices.forEach(device => {
+        deviceMap[device.model] = device;
+      });
+      setModelToDeviceMap(deviceMap);
+      
       const modelsData = await getModelsByBrand(selectedType as DeviceType, brand)
       const sortedModels = sortModelsArray(modelsData, order)
       setModels(sortedModels)
+      
       const servicesData = await getRepairServicesForDevice(selectedType as DeviceType, brand)
       setServices(servicesData)
       setCurrentLevel('models')
@@ -890,12 +904,23 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
     }
   }
 
-  const handleToggleOrder = () => {
+  const handleToggleOrder = async () => {
     const newOrder = order === 'asc' ? 'desc' : 'asc';
     setOrder(newOrder);
     if (currentLevel === 'models' && selectedType && selectedBrand) {
-      // Reload devices for brand with new order
-      loadDevicesForBrand(selectedType as DeviceType, selectedBrand, newOrder);
+      // Reload devices for brand with new order and update models
+      const loadedDevices = await loadDevicesForBrand(selectedType as DeviceType, selectedBrand, newOrder);
+      
+      // Update the device map
+      const deviceMap: Record<string, any> = {};
+      loadedDevices.forEach(device => {
+        deviceMap[device.model] = device;
+      });
+      setModelToDeviceMap(deviceMap);
+      
+      const modelsData = await getModelsByBrand(selectedType as DeviceType, selectedBrand);
+      const sortedModels = sortModelsArray(modelsData, newOrder);
+      setModels(sortedModels);
     }
   };
 
@@ -1407,7 +1432,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           {/* Order Toggle Button */}
           <div className="flex items-center justify-end mb-2">
             <Button size="sm" variant="outline" onClick={handleToggleOrder}>
-              {order === 'asc' ? t('models.sortAsc', { defaultValue: 'Sort: Ascending' }) : t('models.sortDesc', { defaultValue: 'Sort: Descending' })}
+              {order === 'desc' ? t('models.sortAsc', { defaultValue: 'Sort: Ascending' }) : t('models.sortDesc', { defaultValue: 'Sort: Descending' })}
             </Button>
           </div>
           {isAdmin ? (
@@ -1427,7 +1452,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                   {models
                     .filter(model => model.toLowerCase().includes(modelSearch.toLowerCase()))
                     .map((model) => {
-                      const deviceWithImage = devices.find(device => device.model === model);
+                      const deviceWithImage = modelToDeviceMap[model];
                       return (
                         <ModelSortableItem
                           key={model}
@@ -1468,7 +1493,7 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
               {models
                 .filter(model => model.toLowerCase().includes(modelSearch.toLowerCase()))
                 .map((model) => {
-                  const deviceWithImage = devices.find(device => device.model === model);
+                  const deviceWithImage = modelToDeviceMap[model];
                   return (
                     <Card 
                       key={model}

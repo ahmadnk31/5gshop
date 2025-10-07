@@ -166,23 +166,7 @@ function RepairsPageContent() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-green-600 via-blue-700 to-blue-900 text-white py-12 sm:py-16 lg:py-20 overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-transparent to-black/20"></div>
-        
-        <div className="relative container mx-auto px-4 text-center">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6 lg:mb-8 leading-tight">
-            {t('hero.title')}
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 lg:mb-10 max-w-4xl mx-auto leading-relaxed opacity-95">
-            {t('hero.description')}
-          </p>
-          <Button asChild size="lg" variant="secondary" className="text-sm sm:text-base md:text-lg px-6 sm:px-8 py-3 sm:py-4 shadow-lg hover:shadow-xl transition-all duration-300">
-            <Link href="/quote">{t('hero.cta')}</Link>
-          </Button>
-        </div>
-      </section>
+     
 
       {/* Search Results Indicator */}
       {searchTerm && (

@@ -50,6 +50,8 @@ const poppins = Poppins({
   fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
 });
 
+import { TawkToChat } from "@/components/tawk-to-chat";
+
 export const metadata: Metadata = baseMetadata;
 
 export default async function RootLayout({
@@ -135,6 +137,9 @@ export default async function RootLayout({
           
           {/* Structured Data */}
           <StructuredData data={[structuredData.organization, structuredData.localBusiness, structuredData.website]} />
+          
+          {/* Tawk.to Chat Widget - Loaded after hydration */}
+          <TawkToChat />
         </CookieConsentProvider>
         </NextIntlClientProvider>
         </Provider>
