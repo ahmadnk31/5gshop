@@ -202,6 +202,14 @@ export class DatabaseService {
     }
   }
 
+  static async getPart(id: string): Promise<Part | null> {
+    const part = await prisma.part.findUnique({
+      where: { id },
+    })
+
+    return part ? DatabaseService.mapPart(part) : null
+  }
+
   static async createPart(data: Omit<Part, 'id' | 'createdAt' | 'updatedAt'>): Promise<Part> {
     const part = await prisma.part.create({
       data: {

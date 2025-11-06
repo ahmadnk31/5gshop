@@ -8,7 +8,7 @@ export default function PartsNotFound() {
   const t = useTranslations('parts');
 
   return (
-    <div className="min-h-[60vh] flex items-center justify-center py-12">
+    <div className="min-h-[60vh] flex items-center justify-center py-12 shadow-none border-none">
       <div className="container mx-auto px-4">
         <Card className="max-w-2xl mx-auto text-center">
           <CardContent className="p-8 sm:p-12">

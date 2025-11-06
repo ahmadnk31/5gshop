@@ -4,7 +4,13 @@ import Stripe from "stripe";
 import { SESService } from "@/lib/ses-service";
 import { prisma } from "@/lib/database";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-05-28.basil",typescript: true });
+// Initialize Stripe only if the secret key is available
+const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { 
+      apiVersion: "2025-05-28.basil",
+      typescript: true 
+    })
+  : null;
 
 export const config = {
   api: {
@@ -14,6 +20,13 @@ export const config = {
 
 export async function POST(req: NextRequest) {
   console.log('--- Stripe webhook endpoint hit ---');
+  
+  // Check if Stripe is initialized
+  if (!stripe) {
+    console.error('Stripe is not configured');
+    return new NextResponse('Stripe is not configured', { status: 500 });
+  }
+  
   const sig = req.headers.get("stripe-signature");
   // Add basic logging for webhook receipt
   console.log("Stripe webhook received");

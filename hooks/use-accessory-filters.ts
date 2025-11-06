@@ -4,7 +4,12 @@ import { AccessoryFilters } from '@/components/accessories-filter-sidebar';
 
 export function useAccessoryFilters(accessories: Accessory[], filters: AccessoryFilters) {
   const filteredAccessories = useMemo(() => {
-    return accessories.filter(accessory => {
+    console.log('🔍 Filtering accessories:', {
+      totalAccessories: accessories.length,
+      filters: filters,
+    });
+    
+    const filtered = accessories.filter(accessory => {
       // Category filter
       if (filters.categories.length > 0 && !filters.categories.includes(accessory.category)) {
         return false;
@@ -57,6 +62,9 @@ export function useAccessoryFilters(accessories: Accessory[], filters: Accessory
 
       return true;
     });
+    
+    console.log('✅ Filtered result:', filtered.length, 'accessories');
+    return filtered;
   }, [accessories, filters]);
 
   return filteredAccessories;

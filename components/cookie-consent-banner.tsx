@@ -28,7 +28,7 @@ export function CookieConsentBanner() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           <div className="flex items-start space-x-3 flex-1">
-            <Cookie className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
+            <Cookie className="h-6 w-6 text-green-600 mt-1 flex-shrink-0" />
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900 mb-2">
                 🍪 We use cookies to enhance your experience
@@ -38,7 +38,7 @@ export function CookieConsentBanner() {
                 and personalization. You can choose which cookies to accept.
                 <a 
                   href="/privacy#cookies" 
-                  className="text-blue-600 hover:underline ml-1"
+                  className="text-green-600 hover:underline ml-1"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -69,7 +69,7 @@ export function CookieConsentBanner() {
             <Button
               size="sm"
               onClick={acceptAll}
-              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
+              className="w-full sm:w-auto bg-green-600 hover:bg-green-700"
             >
               Accept All
             </Button>
@@ -156,7 +156,7 @@ export function CookieSettingsModal() {
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <div>
             <CardTitle className="flex items-center space-x-2">
-              <Cookie className="h-6 w-6 text-blue-600" />
+              <Cookie className="h-6 w-6 text-green-600" />
               <span>Cookie Preferences</span>
             </CardTitle>
             <p className="text-sm text-gray-600 mt-2">
@@ -233,10 +233,10 @@ export function CookieSettingsModal() {
               </div>
             );
           })}
-          
-          <div className="flex items-start space-x-2 p-4 bg-blue-50 rounded-lg">
-            <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-            <div className="text-sm text-blue-800">
+
+          <div className="flex items-start space-x-2 p-4 bg-green-50 rounded-lg">
+            <Info className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-green-800">
               <p className="font-medium mb-1">Your Privacy Rights</p>
               <p>
                 You can change these settings at any time by clicking the cookie icon in our footer. 
@@ -251,7 +251,8 @@ export function CookieSettingsModal() {
           <div className="flex flex-col sm:flex-row gap-2 pt-4">
             <Button
               variant="outline"
-              className="flex-1"
+              className="flex-1 bg-red-600 hover:bg-red-700"
+              
               onClick={() => {
                 setLocalConsent({
                   necessary: true,
@@ -278,7 +279,7 @@ export function CookieSettingsModal() {
               Accept All
             </Button>
             <Button
-              className="flex-1 bg-blue-600 hover:bg-blue-700"
+              className="flex-1 bg-green-600 hover:bg-green-700"
               onClick={handleSave}
             >
               Save Preferences

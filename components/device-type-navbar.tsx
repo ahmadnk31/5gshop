@@ -45,6 +45,20 @@ const deviceDisplayNames: Record<DeviceType, string> = {
   OTHER: 'Other Devices'
 };
 
+// Helper function to convert device type to URL slug
+const deviceTypeToSlug = (deviceType: DeviceType): string => {
+  return deviceType.toLowerCase().replace('_', '-');
+};
+
+// Helper function to create slug from part name and ID
+const createPartSlug = (name: string, id: string): string => {
+  const nameSlug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return `${nameSlug}-${id}`;
+};
+
 interface DeviceTypeNavbarProps {
   className?: string;
 }
@@ -245,8 +259,8 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
 
   return (
     <nav className={`relative bg-white border-b border-gray-200 shadow-sm ${className}`}>
-      <div className="w-full relative">
-        <div className="flex space-x-1 sm:space-x-2 md:space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide navbar-scroll px-2 sm:px-4 lg:px-8 min-h-[60px] items-center">
+      <div className="container mx-auto px-4 py-2">
+        <div className="flex space-x-1 sm:space-x-2 md:space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide navbar-scroll min-h-[60px] items-center">
           {deviceTypes.map((deviceType) => {
             const Icon = deviceIcons[deviceType];
             const displayName = deviceDisplayNames[deviceType];
@@ -261,12 +275,12 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
               >
                 {/* Main Nav Item */}
                 <Link
-                  href={`/parts?type=${deviceType.toLowerCase()}`}
+                  href={`/repairs/${deviceTypeToSlug(deviceType)}`}
                   className={`
                     flex items-center space-x-1 sm:space-x-2 px-3 sm:px-3 lg:px-4 py-3 sm:py-4 text-xs sm:text-sm font-medium transition-colors duration-200 whitespace-nowrap flex-shrink-0
                     ${isHovered 
-                      ? 'text-blue-600 border-b-2 border-blue-600' 
-                      : 'text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-300'
+                      ? 'text-green-600 border-b-2 border-green-600' 
+                      : 'text-gray-700 hover:text-green-600 hover:border-b-2 hover:border-green-300'
                     }
                   `}
                 >
@@ -310,8 +324,8 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
                           </h3>
                         </div>
                         <Link
-                          href={`/parts?type=${deviceType.toLowerCase()}`}
-                          className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
+                          href={`/repairs/${deviceTypeToSlug(deviceType)}`}
+                          className="text-xs sm:text-sm text-green-600 hover:text-green-800 font-medium whitespace-nowrap"
                         >
                           <span className="hidden sm:inline">View All →</span>
                           <span className="sm:hidden">All →</span>
@@ -321,7 +335,7 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
                       {/* Content based on current level */}
                       {loading ? (
                         <div className="flex justify-center py-8">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
                         </div>
                       ) : (
                         <>
@@ -388,41 +402,44 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
                             <>
                               {parts.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                                  {parts.slice(0, 8).map((part) => (
-                                    <Link
-                                      key={part.id}
-                                      href={`/parts/${part.id}`}
-                                      className="group flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-                                    >
-                                      <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded flex items-center justify-center overflow-hidden">
-                                        {part.imageUrl ? (
-                                          <FallbackImage
-                                            src={part.imageUrl}
-                                            alt={part.name}
-                                            width={64}
-                                            height={64}
-                                            className="object-contain group-hover:scale-105 transition-transform duration-200"
-                                            fallbackContent={<Package className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />}
-                                          />
-                                        ) : (
-                                          <Package className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
-                                        )}
-                                      </div>
-                                      <div className="min-w-0 flex-1">
-                                        <h4 className="font-medium text-xs sm:text-sm text-gray-900 line-clamp-2 group-hover:text-blue-600">
-                                          {part.name}
-                                        </h4>
-                                        <p className="text-xs sm:text-sm text-blue-600 font-semibold">
-                                          {formatCurrency(part.cost, 'EUR')}
-                                        </p>
-                                        {part.quality && (
-                                          <p className="text-xs text-gray-500 hidden sm:block">
-                                            Quality: {part.quality}
+                                  {parts.slice(0, 8).map((part) => {
+                                    const partSlug = createPartSlug(part.name, part.id);
+                                    return (
+                                      <Link
+                                        key={part.id}
+                                        href={`/parts/${partSlug}`}
+                                        className="group flex items-center space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+                                      >
+                                        <div className="flex-shrink-0 w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded flex items-center justify-center overflow-hidden">
+                                          {part.imageUrl ? (
+                                            <FallbackImage
+                                              src={part.imageUrl}
+                                              alt={part.name}
+                                              width={64}
+                                              height={64}
+                                              className="object-contain group-hover:scale-105 transition-transform duration-200"
+                                              fallbackContent={<Package className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />}
+                                            />
+                                          ) : (
+                                            <Package className="h-6 w-6 sm:h-8 sm:w-8 text-gray-400" />
+                                          )}
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                          <h4 className="font-medium text-xs sm:text-sm text-gray-900 line-clamp-2 group-hover:text-green-600">
+                                            {part.name}
+                                          </h4>
+                                          <p className="text-xs sm:text-sm text-green-600 font-semibold">
+                                            {formatCurrency(part.cost, 'EUR')}
                                           </p>
-                                        )}
-                                      </div>
-                                    </Link>
-                                  ))}
+                                          {part.quality && (
+                                            <p className="text-xs text-gray-500 hidden sm:block">
+                                              Quality: {part.quality}
+                                            </p>
+                                          )}
+                                        </div>
+                                      </Link>
+                                    );
+                                  })}
                                 </div>
                               ) : (
                                 <DeviceTypeNavbarNotFound 

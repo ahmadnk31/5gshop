@@ -76,10 +76,11 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className="light" style={{ colorScheme: 'light' }}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#16A34A" />
+        <meta name="color-scheme" content="light" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
@@ -108,7 +109,8 @@ export default async function RootLayout({
         <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
       </head>
       <body
-        className={`${inter.variable} ${roboto.variable} ${poppins.variable} antialiased`}
+        className={`${inter.variable} ${roboto.variable} ${poppins.variable} antialiased !bg-white !text-gray-900`}
+        style={{ backgroundColor: '#FFFFFF', color: '#111827' }}
       >
          <Provider>
          <NextIntlClientProvider>

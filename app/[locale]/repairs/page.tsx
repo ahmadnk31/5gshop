@@ -1,491 +1,171 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  Clock, 
-  DollarSign,
-  Wrench,
-  Zap,
-  Droplet,
-  Settings,
+  Clock,
   Shield,
   Star,
-  Award
+  Award,
+  Smartphone,
+  Tablet,
+  Laptop,
+  Watch,
+  Monitor,
+  Gamepad2
 } from "lucide-react";
-import { Skeleton } from '@/components/ui/skeleton';
 
-import { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
-import DeviceCatalogBrowser from "@/components/device-catalog-browser";
-import { RepairService, DeviceType } from "@/lib/types";
-import { getRepairServicesForDevice } from "@/app/actions/device-catalog-actions";
-import { formatCurrency } from "@/lib/utils";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 
-function RepairsPageContent() {
-  const t = useTranslations('repairs');
-  const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<DeviceType>("SMARTPHONE");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [services, setServices] = useState<RepairService[]>([]);
-  const [loading, setLoading] = useState(true);
+type DeviceIcon = typeof Smartphone | typeof Tablet | typeof Laptop | typeof Watch | typeof Monitor | typeof Gamepad2;
 
-  // Device type mapping for tabs
-  const deviceTypes: { value: DeviceType; label: string }[] = [
-    { value: "SMARTPHONE", label: t('deviceTypes.smartphone') },
-    { value: "TABLET", label: t('deviceTypes.tablet') },
-    { value: "LAPTOP", label: t('deviceTypes.laptop') },
-    { value: "SMARTWATCH", label: t('deviceTypes.smartwatch') },
-  ];
+const deviceTypeInfo: Array<{
+  slug: string;
+  icon: DeviceIcon;
+  labelKey: string;
+}> = [
+  { slug: 'smartphone', icon: Smartphone, labelKey: 'smartphone' },
+  { slug: 'tablet', icon: Tablet, labelKey: 'tablet' },
+  { slug: 'laptop', icon: Laptop, labelKey: 'laptop' },
+  { slug: 'smartwatch', icon: Watch, labelKey: 'smartwatch' },
+  { slug: 'desktop', icon: Monitor, labelKey: 'desktop' },
+  { slug: 'gaming-console', icon: Gamepad2, labelKey: 'gamingConsole' },
+];
 
-  // Get device type and search term from URL parameters
-  useEffect(() => {
-    const type = searchParams.get('type');
-    const search = searchParams.get('search');
-    const brand = searchParams.get('brand');
-    const model = searchParams.get('model');
-    
-    if (search) {
-      setSearchTerm(search);
-    }
-    
-    if (type) {
-      // Map URL parameter to DeviceType
-      const deviceTypeMap: Record<string, DeviceType> = {
-        'smartphone': 'SMARTPHONE',
-        'tablet': 'TABLET', 
-        'laptop': 'LAPTOP',
-        'smartwatch': 'SMARTWATCH',
-        'desktop': 'LAPTOP', // Map desktop to laptop for now
-        'gaming_console': 'SMARTPHONE', // Map to smartphone for now
-        'other': 'SMARTPHONE' // Map to smartphone for now
-      };
-      
-      const mappedType = deviceTypeMap[type] || 'SMARTPHONE';
-      setActiveTab(mappedType);
-    }
-    
-    // Load initial services for the active tab, brand, and model
-    loadServicesForDevice(activeTab, brand, model);
-  }, [searchParams]);
-
-  // Load services when tab changes
-  useEffect(() => {
-    loadServicesForDevice(activeTab);
-  }, [activeTab]);
-
-  const loadServicesForDevice = async (deviceType: DeviceType, brand?: string | null, model?: string | null) => {
-    setLoading(true);
-    try {
-      const servicesData = await getRepairServicesForDevice(deviceType, brand || undefined, model || undefined);
-      setServices(servicesData);
-    } catch (error) {
-      console.error('Error loading services:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const whyChooseUs = [
-    {
-      icon: Award,
-      title: t('whyChooseUs.features.expertTechnicians.title'),
-      description: t('whyChooseUs.features.expertTechnicians.description')
-    },
-    {
-      icon: Shield,
-      title: t('whyChooseUs.features.qualityGuarantee.title'),
-      description: t('whyChooseUs.features.qualityGuarantee.description')
-    },
-    {
-      icon: Clock,
-      title: t('whyChooseUs.features.fastTurnaround.title'),
-      description: t('whyChooseUs.features.fastTurnaround.description')
-    },
-    {
-      icon: Star,
-      title: t('whyChooseUs.features.qualityParts.title'),
-      description: t('whyChooseUs.features.qualityParts.description')
-    }
-  ];
-
-  // Get popular services from the loaded services
-  const getPopularServices = () => {
-    return services
-      .filter(service => service.popularity && typeof service.popularity === 'number' && service.popularity > 80)
-      .slice(0, 4)
-      .map(service => ({
-        icon: getServiceIcon(service.name),
-        title: service.name,
-        description: service.description,
-        timeframe: t('popularServices.timeframe', { time: service.estimatedTime }),
-        warranty: t('popularServices.warranty', { days: 90 }),
-        price: `${formatCurrency(service.basePrice,"EUR")}`
-      }));
-  };
-
-  const getServiceIcon = (serviceName: string) => {
-    if (serviceName.toLowerCase().includes('screen')) return Zap;
-    if (serviceName.toLowerCase().includes('battery')) return Zap;
-    if (serviceName.toLowerCase().includes('water')) return Droplet;
-    return Settings;
-  };
-
-  const getDeviceTypeLabel = (deviceType: DeviceType) => {
-    const deviceTypeMap: Record<DeviceType, string> = {
-      'SMARTPHONE': t('deviceTypes.smartphone'),
-      'TABLET': t('deviceTypes.tablet'),
-      'LAPTOP': t('deviceTypes.laptop'),
-      'SMARTWATCH': t('deviceTypes.smartwatch'),
-      'DESKTOP': t('deviceTypes.desktop'),
-      'GAMING_CONSOLE': t('deviceTypes.gamingConsole'),
-      'OTHER': t('deviceTypes.other')
-    };
-    return deviceTypeMap[deviceType];
-  };
-
-  if (loading) return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className="p-2">
-            <Skeleton className="w-full aspect-square mb-3" />
-            <Skeleton className="w-2/3 h-5 mb-2" />
-            <Skeleton className="w-1/2 h-4" />
-            <Skeleton className="w-full h-8 mt-2" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+export default async function RepairsPage() {
+  const t = await getTranslations('repairs');
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-     
-
-      {/* Search Results Indicator */}
-      {searchTerm && (
-        <section className="py-8 bg-blue-50 border-b">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-xl font-semibold text-blue-900">
-                  {t('searchResults.title', { searchTerm })}
-                </h2>
-                <p className="text-blue-700">
-                  {t('searchResults.description')}
-                </p>
-              </div>
-              <div className="mt-2 sm:mt-0 w-full sm:w-auto flex-shrink-0">
-                <Button
-                  variant="outline"
-                  className="w-full sm:w-auto"
-                  onClick={() => {
-                    setSearchTerm("");
-                    // Remove search param from URL
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete('search');
-                    window.history.replaceState({}, '', url.toString());
-                  }}
-                >
-                  {t('searchResults.clearSearch')}
-                </Button>
-              </div>
+      <section className="relative bg-gradient-to-br from-green-600 to-green-700 text-white py-16 overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              {t('hero.title', { defaultValue: 'Professional Device Repair Services' })}
+            </h1>
+            <p className="text-xl text-green-50 mb-8">
+              {t('hero.subtitle', { defaultValue: 'Fast, reliable, and affordable repairs for all your devices' })}
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button asChild size="lg" variant="secondary" className="shadow-lg">
+                <Link href="/quote">{t('hero.getQuote', { defaultValue: 'Get Free Quote' })}</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="bg-white/10 border-white hover:bg-white hover:text-green-700">
+                <Link href="/contact">{t('hero.contact', { defaultValue: 'Contact Us' })}</Link>
+              </Button>
             </div>
           </div>
-        </section>
-      )}
-
-      {/* Device Catalog Browser */}
-      <section id="device-browser" className="py-12 sm:py-16 lg:py-20 scroll-mt-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
-              {t('deviceBrowser.title')}
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              {t('deviceBrowser.description')}
-            </p>
-          </div>
-          
-          <DeviceCatalogBrowser searchTerm={searchTerm} />
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Trust Indicators */}
+      <section className="py-8 bg-white border-b">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
-              {t('whyChooseUs.title')}
-            </h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <Award className="h-8 w-8 mx-auto mb-2 text-green-600" />
+              <p className="font-semibold text-gray-900">{t('trust.certified', { defaultValue: 'Certified Technicians' })}</p>
+            </div>
+            <div>
+              <Shield className="h-8 w-8 mx-auto mb-2 text-green-600" />
+              <p className="font-semibold text-gray-900">{t('trust.warranty', { defaultValue: '90-Day Warranty' })}</p>
+            </div>
+            <div>
+              <Clock className="h-8 w-8 mx-auto mb-2 text-green-600" />
+              <p className="font-semibold text-gray-900">{t('trust.fast', { defaultValue: 'Same-Day Service' })}</p>
+            </div>
+            <div>
+              <Star className="h-8 w-8 mx-auto mb-2 text-green-600" />
+              <p className="font-semibold text-gray-900">{t('trust.quality', { defaultValue: 'Quality Parts' })}</p>
+            </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {whyChooseUs.map((feature, index) => {
-              const Icon = feature.icon;
+        </div>
+      </section>
+
+      {/* Device Selection */}
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
+            {t('selectDevice.title', { defaultValue: 'Select Your Device Type' })}
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {deviceTypeInfo.map((device) => {
+              const Icon = device.icon;
               return (
-                <Card key={index} className="text-center hover:shadow-xl transition-all duration-300 border-0 shadow-md bg-white">
-                  <CardHeader className="pb-4">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                      <Icon className="h-8 w-8 sm:h-10 sm:w-10 text-blue-600" />
-                    </div>
-                    <CardTitle className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                      {feature.title}
-                    </CardTitle>
-                    <CardDescription className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                      {feature.description}
-                    </CardDescription>
-                  </CardHeader>
-                </Card>
+                <Link
+                  key={device.slug}
+                  href={`/repairs/${device.slug}`}
+                  className="p-8 rounded-xl border-2 border-gray-200 bg-white hover:border-green-300 hover:shadow-lg transition-all group"
+                >
+                  <Icon className="h-16 w-16 mx-auto mb-4 text-gray-400 group-hover:text-green-600 transition-colors" />
+                  <p className="font-semibold text-gray-700 group-hover:text-green-700 text-center text-lg transition-colors">
+                    {t(`deviceTypes.${device.labelKey}`)}
+                  </p>
+                </Link>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Popular Repair Services */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
+      {/* Why Choose Us */}
+      <section className="py-12 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
-              {t('popularServices.title')}
-            </h2>
-          </div>
-          {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-              {getPopularServices().map((repair, index) => (
-                <Card key={index} className="text-center hover:shadow-xl transition-all duration-300 border-0 shadow-md bg-white group">
-                  <CardHeader className="pb-4">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 group-hover:bg-green-200 transition-colors duration-300">
-                      <repair.icon className="h-8 w-8 sm:h-10 sm:w-10 text-green-600" />
-                    </div>
-                    <CardTitle className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                      {repair.title}
-                    </CardTitle>
-                    <CardDescription className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                      {repair.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3 pt-0">
-                    <div className="flex items-center justify-center space-x-2">
-                      <Clock className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm text-gray-600">{repair.timeframe}</span>
-                    </div>
-                    <div className="flex items-center justify-center space-x-2">
-                      <DollarSign className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm font-semibold text-green-600">{repair.price}</span>
-                    </div>
-                    <Badge variant="outline" className="text-xs border-green-200 text-green-700 bg-green-50">
-                      {repair.warranty}
-                    </Badge>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Process */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
-              {t('process.title')}
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
-            <div className="text-center relative">
-              <div className="bg-blue-600 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white shadow-lg">
-                1
-              </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900">
-                {t('process.steps.diagnosis.title')}
-              </h3>
-              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                {t('process.steps.diagnosis.description')}
-              </p>
-            </div>
-            <div className="text-center relative">
-              <div className="bg-blue-600 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white shadow-lg">
-                2
-              </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900">
-                {t('process.steps.quote.title')}
-              </h3>
-              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                {t('process.steps.quote.description')}
-              </p>
-            </div>
-            <div className="text-center relative">
-              <div className="bg-blue-600 w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-white shadow-lg">
-                3
-              </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900">
-                {t('process.steps.repair.title')}
-              </h3>
-              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                {t('process.steps.repair.description')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Dynamic Pricing */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-gray-900">
-              {t('pricing.title')}
-            </h2>
-          </div>
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as DeviceType)} className="max-w-6xl mx-auto">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8 bg-gray-100 p-1 rounded-lg">
-              {deviceTypes.map((deviceType) => (
-                <TabsTrigger 
-                  key={deviceType.value} 
-                  value={deviceType.value}
-                  className="text-sm sm:text-base font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm"
-                >
-                  {deviceType.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            
-            {deviceTypes.map((deviceType) => (
-              <TabsContent key={deviceType.value} value={deviceType.value} className="mt-8">
-                {loading ? (
-                  <div className="flex items-center justify-center py-16">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                  </div>
-                ) : (
-                  <div className="grid lg:grid-cols-2 gap-8">
-                    {services.length > 0 ? (
-                      <>
-                        <Card className="border-0 shadow-lg">
-                          <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50">
-                            <CardTitle className="text-xl font-semibold text-gray-900">
-                              {t('pricing.commonRepairs', { deviceType: getDeviceTypeLabel(deviceType.value) })}
-                            </CardTitle>
-                            <CardDescription className="text-gray-600">
-                              {t('pricing.commonRepairsDescription', { 
-                                deviceType: getDeviceTypeLabel(deviceType.value).toLowerCase() 
-                              })}
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-4 p-6">
-                            {services.slice(0, Math.ceil(services.length / 2)).map((service) => (
-                              <div key={service.id} className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
-                                <span className="flex-1 text-gray-700 font-medium">{service.name}</span>
-                                <span className="font-bold text-blue-600 text-lg">
-                                  {formatCurrency(service.basePrice, "EUR")}
-                                  {service.priceVariations && Object.keys(service.priceVariations).length > 0 && '+'}
-                                </span>
-                              </div>
-                            ))}
-                          </CardContent>
-                        </Card>
-                        
-                        {services.length > 1 && (
-                          <Card className="border-0 shadow-lg">
-                            <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50">
-                              <CardTitle className="text-xl font-semibold text-gray-900">
-                                {t('pricing.additionalServices')}
-                              </CardTitle>
-                              <CardDescription className="text-gray-600">
-                                {t('pricing.additionalServicesDescription')}
-                              </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-4 p-6">
-                              {services.slice(Math.ceil(services.length / 2)).map((service) => (
-                                <div key={service.id} className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
-                                  <span className="flex-1 text-gray-700 font-medium">{service.name}</span>
-                                  <span className="font-bold text-green-600 text-lg">
-                                    {formatCurrency(service.basePrice, "EUR")}
-                                    {service.priceVariations && Object.keys(service.priceVariations).length > 0 && '+'}
-                                  </span>
-                                </div>
-                              ))}
-                            </CardContent>
-                          </Card>
-                        )}
-                      </>
-                    ) : (
-                      <Card className="lg:col-span-2 border-0 shadow-lg">
-                        <CardContent className="text-center py-16">
-                          <Wrench className="h-20 w-20 mx-auto mb-6 text-gray-300" />
-                          <h3 className="text-xl font-semibold mb-4 text-gray-900">{t('pricing.noServicesFound.title')}</h3>
-                          <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                            {t('pricing.noServicesFound.description', { 
-                              deviceType: getDeviceTypeLabel(deviceType.value).toLowerCase() 
-                            })}
-                          </p>
-                          <Button asChild size="lg" className="px-8">
-                            <Link href="/contact">{t('pricing.noServicesFound.cta')}</Link>
-                          </Button>
-                        </CardContent>
-                      </Card>
-                    )}
-                  </div>
-                )}
-              </TabsContent>
-            ))}
-          </Tabs>
-          
-          <div className="text-center mt-12">
-            <p className="text-sm sm:text-base text-gray-600 mb-6 max-w-2xl mx-auto">
-              {t('pricing.disclaimer')}
-            </p>
-            <Button asChild size="lg" className="px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
-              <Link href="/quote">{t('pricing.cta')}</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-16 sm:py-20 lg:py-24 overflow-hidden">
-        {/* Background decoration */}
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-transparent to-black/20"></div>
-        
-        <div className="relative container mx-auto px-4 text-center">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6">
-            {t('finalCta.title')}
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
+            {t('whyChoose.title', { defaultValue: 'Why Choose Our Repair Services?' })}
           </h2>
-          <p className="text-lg sm:text-xl lg:text-2xl mb-8 sm:mb-10 max-w-3xl mx-auto opacity-95">
-            {t('finalCta.description')}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
-            <Button asChild size="lg" variant="secondary" className="px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300">
-              <Link href="/quote">{t('finalCta.primaryCta')}</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="px-8 py-4 text-lg text-white bg-transparent border-2 border-white hover:bg-white hover:text-blue-600 transition-all duration-300">
-              <Link href="/contact">{t('finalCta.secondaryCta')}</Link>
-            </Button>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                {t('whyChoose.expertise.title', { defaultValue: 'Expert Technicians' })}
+              </h3>
+              <p className="text-gray-600">
+                {t('whyChoose.expertise.desc', { defaultValue: 'Certified professionals with years of experience' })}
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                {t('whyChoose.warranty.title', { defaultValue: 'Quality Guarantee' })}
+              </h3>
+              <p className="text-gray-600">
+                {t('whyChoose.warranty.desc', { defaultValue: '90-day warranty on all repairs and parts' })}
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                {t('whyChoose.speed.title', { defaultValue: 'Fast Turnaround' })}
+              </h3>
+              <p className="text-gray-600">
+                {t('whyChoose.speed.desc', { defaultValue: 'Most repairs completed same day' })}
+              </p>
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-br from-green-600 to-green-700 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            {t('cta.title', { defaultValue: 'Ready to Fix Your Device?' })}
+          </h2>
+          <p className="text-xl text-green-50 mb-8 max-w-2xl mx-auto">
+            {t('cta.description', { defaultValue: 'Get a free quote today and have your device repaired by certified technicians' })}
+          </p>
+          <Button asChild size="lg" variant="secondary" className="shadow-lg">
+            <Link href="/quote">{t('cta.button', { defaultValue: 'Get Free Quote' })}</Link>
+          </Button>
         </div>
       </section>
     </div>
-  );
-}
-
-export default function RepairsPage() {
-  const t = useTranslations('repairs');
-  
-  return (
-    <Suspense fallback={<div className="flex justify-center items-center min-h-screen">{t('loading')}</div>}>
-      <RepairsPageContent />
-    </Suspense>
   );
 }

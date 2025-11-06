@@ -68,11 +68,11 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4">{t('contactInfo.title')}</h3>
             <ul className="space-y-2">
               <li className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4 text-blue-400" />
+                <MapPin className="h-4 w-4 text-green-400" />
                 <span className="text-gray-400 text-sm">{t('contactInfo.address')}</span>
               </li>
               <li className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-blue-400" />
+                <Phone className="h-4 w-4 text-green-400" />
                 <TrackablePhoneLink 
                   phoneNumber="+32467871205"
                   className="text-gray-400 hover:text-white transition-colors text-sm"
@@ -81,7 +81,7 @@ export function Footer() {
                 </TrackablePhoneLink>
               </li>
               <li className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-blue-400" />
+                <Mail className="h-4 w-4 text-green-400" />
                 <span className="text-gray-400 text-sm">{t('contactInfo.email')}</span>
               </li>
             </ul>
@@ -117,69 +117,69 @@ export function Footer() {
           {/* Payment Methods */}
           <div className="flex flex-col items-center mb-6">
             <h4 className="text-sm font-medium text-gray-300 mb-3">{t('paymentMethods.title') || 'Accepted Payment Methods'}</h4>
-            <div className="flex flex-wrap justify-center items-center gap-3">
+            <div className="flex flex-wrap justify-center items-center gap-4">
               <Image
                 src="/visa-pay-logo-svgrepo-com.svg"
                 alt="Visa"
-                width={40}
-                height={25}
-                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity [&_rect]:fill-transparent [&_path]:fill-current"
+                width={120}
+                height={110}
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity [&_rect]:fill-transparent [&_path]:fill-current"
               />
               <Image
                 src="/mastercard-svgrepo-com.svg"
                 alt="Mastercard"
-                width={40}
-                height={25}
-                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                width={60}
+                height={40}
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
               />
               <Image
                 src="/amex-svgrepo-com.svg"
                 alt="American Express"
-                width={40}
-                height={25}
-                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                width={60}
+                height={40}
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
               />
               <Image
                 src="/apple-pay-svgrepo-com.svg"
                 alt="Apple Pay"
-                width={40}
-                height={25}
-                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                width={60}
+                height={40}
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
               />
               <Image
                 src="/stripe-svgrepo-com.svg"
                 alt="Stripe"
-                width={40}
-                height={25}
-                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                width={60}
+                height={40}
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
               />
               <Image
                 src="/klarna-svgrepo-com.svg"
                 alt="Klarna"
-                width={40}
-                height={25}
-                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                width={60}
+                height={40}
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
               />
               <Image
                 src="/bancontact-svgrepo-com.svg"
                 alt="Bancontact"
-                width={40}
-                height={25}
-                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                width={60}
+                height={40}
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
               />
               <Image
                 src="/belfius-svgrepo-com.svg"
                 alt="Belfius"
-                width={40}
-                height={25}
-                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                width={60}
+                height={40}
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
               />
               <Image
                 src="/bancontact-payconiq-svgrepo-com.svg"
                 alt="Payconiq"
-                width={40}
-                height={25}
-                className="h-6 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                width={60}
+                height={40}
+                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
               />
             </div>
           </div>
@@ -189,18 +189,12 @@ export function Footer() {
               ©
               {new Date().getFullYear()} 5gphones. {t('copyright')}
               <span className="ml-1">{t('poweredBy')}
-              <span className="text-blue-400">.</span>
+              <span className="text-green-400">.</span>
               </span>
             </p>
             <div className="flex space-x-4 mt-4 md:mt-0">
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors">
+              <Link target="_blank" href="https://www.facebook.com/people/5G-Phones/61574724281619/?mibextid=wwXIfr&rdid=ejJd9qfqIlAcJifz&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BRtxJDHSV%2F%3Fmibextid%3DwwXIfr" className="text-gray-400 hover:text-white transition-colors">
                 <Facebook className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Twitter className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Instagram className="h-5 w-5" />
               </Link>
             </div>
           </div>

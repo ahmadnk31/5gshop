@@ -254,7 +254,7 @@ export default async function Home() {
       <section className="py-16 bg-[var(--background)]" data-section="services_overview" aria-labelledby="services-title">
         <div className="container mx-auto px-4">
           <h2 id="services-title" className="text-3xl font-bold text-center mb-12">{t('services.title')}</h2>
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 my-8">
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-center space-x-2">

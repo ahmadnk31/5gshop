@@ -168,11 +168,11 @@ export default function HomepageHeroCarouselClient({ items }: { items: any[] }) 
             <PlayPauseButton playing={playing} onClick={() => setPlaying(p => !p)} />
             
             {/* Carousel indicators for better navigation */}
-            <div className="absolute bottom-4 right-4 z-30 flex space-x-2" role="tablist" aria-label="Carousel navigation">
+            <div className="absolute bottom-4 right-4 z-30 flex space-x-1.5 p-2" role="tablist" aria-label="Carousel navigation">
               {items.map((_, idx) => (
                 <button
                   key={idx}
-                  className={`w-3 h-3 rounded-full transition-colors focus:ring-2 focus:ring-white/50 focus:outline-none ${
+                  className={`w-2 h-2 rounded-full transition-colors focus:ring-2  focus:ring-white/50 focus:outline-none ${
                     selectedIndex === idx ? 'bg-white' : 'bg-white/50'
                   }`}
                   onClick={() => api?.scrollTo(idx)}

@@ -175,8 +175,12 @@
       "cablesAdapters": "Kabels & Adapters",
       "audioHeadphones": "Audio & Hoofdtelefoons",
       "screenProtection": "Schermbescherming",
-      "speakers": "Luidsprekers",
-      "cameraPhoto": "Camera & Foto"
+      "keyboards": "Toetsenborden",
+      "miceTrackpads": "Muizen & Trackpads",
+      "stylusPens": "Stylus & Pennen",
+      "standsHolders": "Standaarden & Houders",
+      "mountsBrackets": "Bevestigingen & Beugels",
+      "otherAccessories": "Andere Accessoires"
     }
   },
   "footer": {
@@ -363,8 +367,35 @@
     },
     "hero": {
       "title": "Professionele apparaat reparatieservices",
+      "subtitle": "Snelle, betrouwbare en betaalbare reparaties voor al uw apparaten",
       "description": "Expert technici, kwaliteitsonderdelen en snelle doorlooptijden voor al uw reparatiebehoeften",
-      "cta": "Gratis offerte aanvragen"
+      "cta": "Gratis offerte aanvragen",
+      "getQuote": "Gratis offerte aanvragen",
+      "contact": "Neem contact op"
+    },
+    "trust": {
+      "certified": "Gecertificeerde technici",
+      "warranty": "90 dagen garantie",
+      "fast": "Service op dezelfde dag",
+      "quality": "Kwaliteitsonderdelen"
+    },
+    "selectDevice": {
+      "title": "Selecteer uw apparaattype"
+    },
+    "whyChoose": {
+      "title": "Waarom kiezen voor onze reparatieservices?",
+      "expertise": {
+        "title": "Expert technici",
+        "desc": "Gecertificeerde professionals met jarenlange ervaring"
+      },
+      "warranty": {
+        "title": "Kwaliteitsgarantie",
+        "desc": "90 dagen garantie op alle reparaties en onderdelen"
+      },
+      "speed": {
+        "title": "Snelle doorlooptijd",
+        "desc": "De meeste reparaties worden op dezelfde dag voltooid"
+      }
     },
     "searchResults": {
       "title": "Zoekresultaten voor \"{searchTerm}\"",
@@ -448,6 +479,41 @@
       "desktop": "Desktop",
       "gamingConsole": "Gameconsole",
       "other": "Ander apparaat"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "repairs": "Reparaties"
+    },
+    "devicePage": {
+      "title": "{device} reparatieservices",
+      "subtitle": "Professionele reparaties met gecertificeerde technici en kwaliteitsonderdelen"
+    },
+    "brandPage": {
+      "subtitle": "Selecteer uw model om reparatieopties te zien"
+    },
+    "services": {
+      "selectModel": "Selecteer uw model",
+      "selectBrand": "Selecteer uw merk",
+      "noModels": "Nog geen modellen beschikbaar voor dit merk.",
+      "noBrands": "Nog geen merken beschikbaar voor dit apparaattype.",
+      "contactUs": "Neem contact op"
+    },
+    "parts": {
+      "availableParts": "Beschikbare onderdelen & accessoires",
+      "noParts": "Nog geen onderdelen beschikbaar voor dit apparaat.",
+      "requestPart": "Vraag een onderdeel aan",
+      "addToCart": "In winkelwagen",
+      "outOfStock": "Niet op voorraad",
+      "viewDetails": "Bekijk details"
+    },
+    "cta": {
+      "title": "Klaar om uw apparaat te laten repareren?",
+      "description": "Vraag een gratis offerte aan en laat uw apparaat repareren door gecertificeerde technici",
+      "button": "Gratis offerte aanvragen",
+      "contact": "Neem contact op",
+      "needHelp": "Hulp nodig bij het vinden van uw model?",
+      "contactDescription": "Neem contact met ons op en we helpen u uw apparaat te identificeren",
+      "contactButton": "Neem contact op"
     },
     "loading": "Laden..."
   },
@@ -1156,6 +1222,40 @@
   
   "parts": {
     "loading": "Laden...",
+    "breadcrumb": {
+      "home": "Home",
+      "parts": "Onderdelen"
+    },
+    "badges": {
+      "warranty": "Garantie",
+      "90days": "90 Dagen",
+      "shipping": "Snelle verzending",
+      "24h": "24-48u",
+      "quality": "Kwaliteit",
+      "guaranteed": "Gegarandeerd"
+    },
+    "price": "Prijs",
+    "inStock": "Op voorraad",
+    "available": "beschikbaar",
+    "lowStock": "Beperkte voorraad",
+    "outOfStock": "Niet op voorraad",
+    "addToCart": "In winkelwagen",
+    "adding": "Toevoegen...",
+    "requestQuote": "Offerte aanvragen",
+    "description": "Beschrijving",
+    "specifications": "Specificaties",
+    "supplier": "Leverancier",
+    "qualityGrade": "Kwaliteitsniveau",
+    "compatibility": "Compatibel met",
+    "warranty": "Garantie",
+    "warrantyPeriod": "90 Dagen",
+    "relatedParts": "Gerelateerde onderdelen",
+    "cta": {
+      "title": "Hulp nodig?",
+      "description": "Onze experts helpen u graag het juiste onderdeel voor uw apparaat te vinden",
+      "contact": "Neem contact op",
+      "quote": "Offerte aanvragen"
+    },
     "notFound": {
       "title": "Geen Onderdelen Gevonden",
       "description": "We konden geen onderdelen vinden die overeenkomen met uw zoekcriteria. Probeer uw filters aan te passen of blader door onze beschikbare onderdelen.",
@@ -1165,17 +1265,10 @@
       "contactUs": "Neem Contact Op"
     },
     "save": "Opslaan",
-    "warranty": "Garantie",
-    "outOfStock": "Niet op voorraad",
-    "lowStock": "Beperkte voorraad",
     "sku": "Artikelnummer",
     "back": "Terug",
-    "supplier": "Leverancier",
     "quality": "Kwaliteit",
-    "inStock": "op voorraad",
     "currentlyUnavailable": "Momenteel niet beschikbaar",
-    "description": "Beschrijving",
-    "addToCart": "Toevoegen aan winkelwagen",
     "getQuote": "Offerte aanvragen",
     "buyNow": "Nu kopen",
     "allParts": "Alle onderdelen",
@@ -1228,7 +1321,40 @@
     "featuredParts": {
       "title": "Uitgelichte onderdelen",
       "description": "Onze meest populaire en hoogwaardige onderdelen"
-    }
+    },
+    "pageTitle": "Winkel Onderdelen & Accessoires",
+    "pageDescription": "Vind hoogwaardige vervangingsonderdelen voor al uw apparaten",
+    "filterParts": "Filter Onderdelen",
+    "clearFilters": "Filters Wissen",
+    "searchPlaceholder": "Zoeken op naam, SKU of model...",
+    "deviceType": "Apparaattype",
+    "allDeviceTypes": "Alle Apparaattypen",
+    "smartphones": "Smartphones",
+    "tablets": "Tablets",
+    "laptops": "Laptops",
+    "smartwatches": "Smartwatches",
+    "desktops": "Desktops",
+    "gamingConsoles": "Gameconsoles",
+    "otherDevices": "Andere Apparaten",
+    "brand": "Merk",
+    "selectBrand": "Selecteer Merk",
+    "selectTypeFirst": "Selecteer Eerst Type",
+    "allBrands": "Alle Merken",
+    "model": "Model",
+    "selectModel": "Selecteer Model",
+    "selectBrandFirst": "Selecteer Eerst Merk",
+    "allModels": "Alle Modellen",
+    "sortBy": "Sorteer Op",
+    "nameAZ": "Naam (A-Z)",
+    "nameZA": "Naam (Z-A)",
+    "priceLowHigh": "Prijs (Laag-Hoog)",
+    "priceHighLow": "Prijs (Hoog-Laag)",
+    "availability": "Beschikbaarheid",
+    "activeFilters": "Actieve Filters",
+    "showingResults": "{count} van {total} onderdelen worden getoond",
+    "browseAllParts": "Blader door onze volledige catalogus van hoogwaardige onderdelen",
+    "noBrandsAvailable": "Geen merken beschikbaar voor dit apparaattype",
+    "noModelsAvailable": "Geen modellen beschikbaar voor dit merk"
   },
   "profile":{
   "title": "Instellingen",

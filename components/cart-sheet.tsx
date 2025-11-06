@@ -9,8 +9,8 @@ import { Link } from "@/i18n/navigation";
 export function CartSheet({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const { items, removeFromCart, clearCart, updateQuantity } = useCart();
   const t = useTranslations('accessories');
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const total = Array.isArray(items) ? items.reduce((sum, item) => sum + item.price * item.quantity, 0) : 0;
+  const totalItems = Array.isArray(items) ? items.reduce((sum, item) => sum + item.quantity, 0) : 0;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -21,7 +21,7 @@ export function CartSheet({ open, onOpenChange }: { open: boolean; onOpenChange:
           </SheetTitle>
         </SheetHeader>
         <div className="mt-6 flex flex-col gap-6 h-full">
-          {items.length === 0 ? (
+          {!Array.isArray(items) || items.length === 0 ? (
             <div className="text-center text-gray-500">{t('cart.empty', { defaultValue: 'Your cart is empty.' })}</div>
           ) : (
             <>

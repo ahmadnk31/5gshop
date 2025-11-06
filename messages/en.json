@@ -175,8 +175,12 @@
       "cablesAdapters": "Cables & Adapters",
       "audioHeadphones": "Audio & Headphones",
       "screenProtection": "Screen Protection",
-      "speakers": "Speakers",
-      "cameraPhoto": "Camera & Photo"
+      "keyboards": "Keyboards",
+      "miceTrackpads": "Mice & Trackpads",
+      "stylusPens": "Stylus & Pens",
+      "standsHolders": "Stands & Holders",
+      "mountsBrackets": "Mounts & Brackets",
+      "otherAccessories": "Other Accessories"
     }
   },
   "footer": {
@@ -276,8 +280,35 @@
     },
     "hero": {
       "title": "Professional Device Repair Services",
+      "subtitle": "Fast, reliable, and affordable repairs for all your devices",
       "description": "Expert technicians, quality parts, and fast turnaround times for all your device repair needs",
-      "cta": "Get Free Quote"
+      "cta": "Get Free Quote",
+      "getQuote": "Get Free Quote",
+      "contact": "Contact Us"
+    },
+    "trust": {
+      "certified": "Certified Technicians",
+      "warranty": "90-Day Warranty",
+      "fast": "Same-Day Service",
+      "quality": "Quality Parts"
+    },
+    "selectDevice": {
+      "title": "Select Your Device Type"
+    },
+    "whyChoose": {
+      "title": "Why Choose Our Repair Services?",
+      "expertise": {
+        "title": "Expert Technicians",
+        "desc": "Certified professionals with years of experience"
+      },
+      "warranty": {
+        "title": "Quality Guarantee",
+        "desc": "90-day warranty on all repairs and parts"
+      },
+      "speed": {
+        "title": "Fast Turnaround",
+        "desc": "Most repairs completed same day"
+      }
     },
     "searchResults": {
       "title": "Search Results for \"{searchTerm}\"",
@@ -361,6 +392,41 @@
       "desktop": "Desktop",
       "gamingConsole": "Gaming Console",
       "other": "Other Device"
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "repairs": "Repairs"
+    },
+    "devicePage": {
+      "title": "{device} Repair Services",
+      "subtitle": "Professional repairs with certified technicians and quality parts"
+    },
+    "brandPage": {
+      "subtitle": "Select your model to see repair options"
+    },
+    "services": {
+      "selectModel": "Select Your Model",
+      "selectBrand": "Select Your Brand",
+      "noModels": "No models available for this brand yet.",
+      "noBrands": "No brands available for this device type yet.",
+      "contactUs": "Contact Us"
+    },
+    "parts": {
+      "availableParts": "Available Parts & Accessories",
+      "noParts": "No parts available for this device yet.",
+      "requestPart": "Request a Part",
+      "addToCart": "Add to Cart",
+      "outOfStock": "Out of Stock",
+      "viewDetails": "View Details"
+    },
+    "cta": {
+      "title": "Ready to Fix Your Device?",
+      "description": "Get a free quote and have your device repaired by certified technicians",
+      "button": "Get Free Quote",
+      "contact": "Contact Us",
+      "needHelp": "Need Help Finding Your Model?",
+      "contactDescription": "Contact us and we'll help you identify your device",
+      "contactButton": "Contact Us"
     },
     "loading": "Loading..."
   },
@@ -1170,6 +1236,40 @@
   },
   "parts": {
     "loading": "Loading...",
+    "breadcrumb": {
+      "home": "Home",
+      "parts": "Parts"
+    },
+    "badges": {
+      "warranty": "Warranty",
+      "90days": "90 Days",
+      "shipping": "Fast Shipping",
+      "24h": "24-48h",
+      "quality": "Quality",
+      "guaranteed": "Guaranteed"
+    },
+    "price": "Price",
+    "inStock": "In Stock",
+    "available": "available",
+    "lowStock": "Low Stock",
+    "outOfStock": "Out of Stock",
+    "addToCart": "Add to Cart",
+    "adding": "Adding...",
+    "requestQuote": "Request Quote",
+    "description": "Description",
+    "specifications": "Specifications",
+    "supplier": "Supplier",
+    "qualityGrade": "Quality Grade",
+    "compatibility": "Compatible With",
+    "warranty": "Warranty",
+    "warrantyPeriod": "90 Days",
+    "relatedParts": "Related Parts",
+    "cta": {
+      "title": "Need Help?",
+      "description": "Our experts are ready to help you find the right part for your device",
+      "contact": "Contact Us",
+      "quote": "Request Quote"
+    },
     "notFound": {
       "title": "No Parts Found",
       "description": "We couldn't find any parts matching your search criteria. Try adjusting your filters or browse our available parts.",
@@ -1179,21 +1279,14 @@
       "contactUs": "Contact Us"
     },
     "save": "Save",
-    "warranty": "Warranty",
-    "outOfStock": "Out of Stock",
-    "lowStock": "Low Stock",
     "sku": "SKU",
-    "supplier": "Supplier",
     "quality": "Quality",
     "allPartsList": "All Parts",
     "back": "Back",
     "share":"Share",
-    "inStock": "in stock",
     "currentlyUnavailable": "Currently unavailable",
     "addToWishlist":"Add to wishlist",
     "removeFromWishlist":"Remove from wishlist",
-    "description": "Description",
-    "addToCart": "Add to Cart",
     "getQuote": "Get Quote",
     "buyNow": "Buy Now",
     "allParts": "All Parts",
@@ -1240,7 +1333,40 @@
     "featuredParts": {
       "title": "Featured Parts",
       "description": "Our most popular and high-quality parts"
-    }
+    },
+    "pageTitle": "Shop Parts & Accessories",
+    "pageDescription": "Find high-quality replacement parts for all your devices",
+    "filterParts": "Filter Parts",
+    "clearFilters": "Clear Filters",
+    "searchPlaceholder": "Search by name, SKU, or model...",
+    "deviceType": "Device Type",
+    "allDeviceTypes": "All Device Types",
+    "smartphones": "Smartphones",
+    "tablets": "Tablets",
+    "laptops": "Laptops",
+    "smartwatches": "Smartwatches",
+    "desktops": "Desktops",
+    "gamingConsoles": "Gaming Consoles",
+    "otherDevices": "Other Devices",
+    "brand": "Brand",
+    "selectBrand": "Select Brand",
+    "selectTypeFirst": "Select Type First",
+    "allBrands": "All Brands",
+    "model": "Model",
+    "selectModel": "Select Model",
+    "selectBrandFirst": "Select Brand First",
+    "allModels": "All Models",
+    "sortBy": "Sort By",
+    "nameAZ": "Name (A-Z)",
+    "nameZA": "Name (Z-A)",
+    "priceLowHigh": "Price (Low-High)",
+    "priceHighLow": "Price (High-Low)",
+    "availability": "Availability",
+    "activeFilters": "Active Filters",
+    "showingResults": "Showing {count} of {total} parts",
+    "browseAllParts": "Browse our complete catalog of high-quality parts",
+    "noBrandsAvailable": "No brands available for this device type",
+    "noModelsAvailable": "No models available for this brand"
 },
 "profile":{
   "title": "My Profile",

@@ -36,8 +36,18 @@ export const useCart = () => {
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("cart");
-      return stored ? JSON.parse(stored) : [];
+      try {
+        const stored = localStorage.getItem("cart");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          // Ensure parsed data is an array
+          return Array.isArray(parsed) ? parsed : [];
+        }
+      } catch (error) {
+        console.error("Error parsing cart from localStorage:", error);
+        // Clear corrupted data
+        localStorage.removeItem("cart");
+      }
     }
     return [];
   });
@@ -45,7 +55,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [buyNowCart, setBuyNowCart] = useState<CartItem[] | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(items));
+    // Only save if items is a valid array
+    if (Array.isArray(items)) {
+      try {
+        localStorage.setItem("cart", JSON.stringify(items));
+      } catch (error) {
+        console.error("Error saving cart to localStorage:", error);
+      }
+    }
   }, [items]);
 
   // Clear buyNowCart when items change (user adds/removes from main cart)
@@ -57,35 +74,43 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setItems((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
+      // Ensure prev is always an array
+      const prevItems = Array.isArray(prev) ? prev : [];
+      const existing = prevItems.find((i) => i.id === item.id);
       if (existing) {
-        return prev.map((i) =>
+        return prevItems.map((i) =>
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      return [...prev, { ...item, quantity: 1 }];
+      return [...prevItems, { ...item, quantity: 1 }];
     });
   };
 
   const removeFromCart = (id: string) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
+    setItems((prev) => {
+      // Ensure prev is always an array
+      const prevItems = Array.isArray(prev) ? prev : [];
+      return prevItems.filter((i) => i.id !== id);
+    });
   };
 
   const clearCart = () => setItems([]);
 
   const updateQuantity = (id: string, quantity: number) => {
-    setItems((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, quantity } : i))
-    );
+    setItems((prev) => {
+      // Ensure prev is always an array
+      const prevItems = Array.isArray(prev) ? prev : [];
+      return prevItems.map((i) => (i.id === id ? { ...i, quantity } : i));
+    });
   };
 
   const setCart = (newItems: CartItem[]) => {
     setItems(newItems);
   };
 
-  const getTotal = () => items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const getTotal = () => Array.isArray(items) ? items.reduce((sum, item) => sum + item.price * item.quantity, 0) : 0;
 
-  const getBuyNowTotal = () => buyNowCart ? buyNowCart.reduce((sum, item) => sum + item.price * item.quantity, 0) : 0;
+  const getBuyNowTotal = () => buyNowCart && Array.isArray(buyNowCart) ? buyNowCart.reduce((sum, item) => sum + item.price * item.quantity, 0) : 0;
 
   return (
     <CartContext.Provider value={{ 

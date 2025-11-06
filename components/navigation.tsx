@@ -12,8 +12,8 @@ import {
 import {
   Battery,
   Cable,
-  Camera,
   ChevronDown,
+  Edit,
   Gamepad2,
   Headphones,
   Laptop,
@@ -23,7 +23,6 @@ import {
   Search,
   Shield,
   Smartphone,
-  Speaker,
   Tablet,
   Watch,
   Wrench,
@@ -58,7 +57,7 @@ export function Navigation() {
   const { data: session } = useSession();
 
   const { items } = useCart();
-  const totalCartItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalCartItems = Array.isArray(items) ? items.reduce((sum, item) => sum + item.quantity, 0) : 0;
 
   const handleLogout = async () => {
     try {
@@ -74,16 +73,15 @@ export function Navigation() {
       
       // Perform client-side logout
       await signOut({ 
-        callbackUrl: "/",
-        redirect: true 
+        redirect: false  // Don't use NextAuth's redirect
       });
       
-      // Force a page refresh to ensure session is cleared
-      router.refresh();
+      // Force a hard redirect to ensure session is fully cleared
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
-      // Fallback: redirect to home page
-      router.push('/');
+      // Fallback: force redirect to home page
+      window.location.href = '/';
     }
   };
 
@@ -91,29 +89,32 @@ export function Navigation() {
 
   // Device types for repairs dropdown
   const deviceTypes = [
-    { type: 'SMARTPHONE', label: t('devices.smartphones'), icon: Smartphone },
-    { type: 'TABLET', label: t('devices.tablets'), icon: Tablet },
-    { type: 'LAPTOP', label: t('devices.laptops'), icon: Laptop },
-    { type: 'SMARTWATCH', label: t('devices.smartwatches'), icon: Watch },
-    { type: 'DESKTOP', label: t('devices.desktops'), icon: Monitor },
-    { type: 'GAMING_CONSOLE', label: t('devices.gamingConsoles'), icon: Gamepad2 },
-    { type: 'OTHER', label: t('devices.otherDevices'), icon: Package },
+    { type: 'smartphone', label: t('devices.smartphones'), icon: Smartphone },
+    { type: 'tablet', label: t('devices.tablets'), icon: Tablet },
+    { type: 'laptop', label: t('devices.laptops'), icon: Laptop },
+    { type: 'smartwatch', label: t('devices.smartwatches'), icon: Watch },
+    { type: 'desktop', label: t('devices.desktops'), icon: Monitor },
+    { type: 'gaming-console', label: t('devices.gamingConsoles'), icon: Gamepad2 },
   ];
 
-  // Accessory categories for accessories dropdown
+  // Accessory categories for accessories dropdown - matching the accessories page
   const accessoryCategories = [
     { category: 'CASE', label: t('accessoryCategories.casesCovers'), icon: Shield },
     { category: 'CHARGER', label: t('accessoryCategories.chargersPower'), icon: Battery },
     { category: 'CABLE', label: t('accessoryCategories.cablesAdapters'), icon: Cable },
     { category: 'HEADPHONES', label: t('accessoryCategories.audioHeadphones'), icon: Headphones },
     { category: 'SCREEN_PROTECTOR', label: t('accessoryCategories.screenProtection'), icon: Shield },
-    { category: 'SPEAKER', label: t('accessoryCategories.speakers'), icon: Speaker },
-    { category: 'CAMERA', label: t('accessoryCategories.cameraPhoto'), icon: Camera },
+    { category: 'KEYBOARD', label: t('accessoryCategories.keyboards'), icon: Monitor },
+    { category: 'MOUSE', label: t('accessoryCategories.miceTrackpads'), icon: Monitor },
+    { category: 'STYLUS', label: t('accessoryCategories.stylusPens'), icon: Edit },
+    { category: 'STAND', label: t('accessoryCategories.standsHolders'), icon: Monitor },
+    { category: 'MOUNT', label: t('accessoryCategories.mountsBrackets'), icon: Monitor },
+    { category: 'OTHER', label: t('accessoryCategories.otherAccessories'), icon: Package },
   ];
 
   return (
     <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 py-2">
         <div className="flex justify-between items-center h-16">
           {/* Logo - Responsive sizing */}
           <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
@@ -126,12 +127,12 @@ export function Navigation() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-6">
+          <div className="hidden lg:flex items-center space-x-8 mx-4">
             {/* Search Component */}
-            <div className="flex-1 max-w-lg mx-4">
+            <div className="flex-1 max-w-lg mx-6">
               <SearchComponent />
             </div>
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-8">
               {/* Repairs Dropdown */}
               <DropdownMenu>
               <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700  transition-colors">
@@ -144,7 +145,7 @@ export function Navigation() {
                 <DropdownMenuSeparator />
                 {deviceTypes.map((device) => (
                   <DropdownMenuItem key={device.type} asChild>
-                    <Link href={`/repairs?type=${device.type.toLowerCase()}`} className="flex items-center space-x-2">
+                    <Link href={`/repairs/${device.type}`} className="flex items-center space-x-2">
                       <device.icon className="h-4 w-4" />
                       <span>{device.label}</span>
                     </Link>
@@ -276,7 +277,7 @@ export function Navigation() {
           </div>
 
           {/* Tablet Navigation */}
-          <div className="hidden md:flex lg:hidden items-center space-x-6">
+          <div className="hidden md:flex lg:hidden items-center space-x-8 mx-4">
             {/* Tablet Search Icon */}
             <button
               className="p-2 text-gray-700 transition-colors"
@@ -305,7 +306,7 @@ export function Navigation() {
                 <DropdownMenuSeparator />
                 {deviceTypes.slice(0, 4).map((device) => (
                   <DropdownMenuItem key={device.type} asChild>
-                    <Link href={`/repairs?type=${device.type.toLowerCase()}`} className="flex items-center space-x-2 text-sm">
+                    <Link href={`/repairs/${device.type}`} className="flex items-center space-x-2 text-sm">
                       <device.icon className="h-3 w-3" />
                       <span>{device.label}</span>
                     </Link>
@@ -331,7 +332,7 @@ export function Navigation() {
               <DropdownMenuContent align="start" className="w-48">
                 <DropdownMenuLabel className="text-xs">{t('categories')}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {accessoryCategories.slice(0, 4).map((accessory) => (
+                {accessoryCategories.map((accessory) => (
                   <DropdownMenuItem key={accessory.category} asChild>
                     <Link href={`/accessories?category=${accessory.category}`} className="flex items-center space-x-2 text-sm">
                       <accessory.icon className="h-3 w-3" />
@@ -431,7 +432,7 @@ export function Navigation() {
           </div>
 
           {/* Mobile/Small Screen Navigation */}
-          <div className="flex md:hidden items-center space-x-3">
+          <div className="flex md:hidden items-center space-x-4">
             {/* Cart Icon - Mobile */}
             <button
               className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -558,7 +559,7 @@ export function Navigation() {
                   {deviceTypes.map((device) => (
                     <Link 
                       key={device.type}
-                      href={`/repairs?type=${device.type.toLowerCase()}`} 
+                      href={`/repairs/${device.type}`} 
                       className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors text-sm"
                       onClick={() => setIsOpen(false)}
                     >

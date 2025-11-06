@@ -7,6 +7,40 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        // Increase base text sizes
+        'xs': ['0.8125rem', { lineHeight: '1.5' }],     // 13px (was 12px)
+        'sm': ['0.9375rem', { lineHeight: '1.6' }],     // 15px (was 14px)
+        'base': ['1.125rem', { lineHeight: '1.7' }],    // 18px (was 16px)
+        'lg': ['1.25rem', { lineHeight: '1.7' }],       // 20px (was 18px)
+        'xl': ['1.5rem', { lineHeight: '1.6' }],        // 24px (was 20px)
+        '2xl': ['1.75rem', { lineHeight: '1.5' }],      // 28px (was 24px)
+        '3xl': ['2.125rem', { lineHeight: '1.4' }],     // 34px (was 30px)
+        '4xl': ['2.625rem', { lineHeight: '1.3' }],     // 42px (was 36px)
+        '5xl': ['3.25rem', { lineHeight: '1.2' }],      // 52px (was 48px)
+        '6xl': ['4rem', { lineHeight: '1.1' }],         // 64px (was 60px)
+        '7xl': ['5rem', { lineHeight: '1' }],           // 80px (was 72px)
+        '8xl': ['6.25rem', { lineHeight: '1' }],        // 100px (was 96px)
+        '9xl': ['8rem', { lineHeight: '1' }],           // 128px (was 128px)
+      },
+      spacing: {
+        // Add larger spacing options
+        '18': '4.5rem',   // 72px
+        '22': '5.5rem',   // 88px
+        '26': '6.5rem',   // 104px
+        '30': '7.5rem',   // 120px
+        '34': '8.5rem',   // 136px
+        '38': '9.5rem',   // 152px
+        '42': '10.5rem',  // 168px
+        '46': '11.5rem',  // 184px
+        '50': '12.5rem',  // 200px
+      },
+      minHeight: {
+        // Better touch targets
+        'button': '48px',
+        'input': '48px',
+        'touch': '44px',
+      },
       colors: {
         background: '#F0FDF4',
         foreground: '#14532D',

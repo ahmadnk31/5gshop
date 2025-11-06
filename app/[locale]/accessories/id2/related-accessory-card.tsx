@@ -8,7 +8,8 @@ import { useTranslations } from "next-intl";
 import { useCart } from "@/components/cart-context";
 import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/utils";
-import { AccessoryActionButtons } from "./accessory-action-buttons";
+import { AccessoryActionButtons } from "../components/accessory-action-buttons";
+
 
 interface RelatedAccessoryCardProps {
   accessory: any;
@@ -23,6 +24,17 @@ export function RelatedAccessoryCard({ accessory, categoryConfig }: RelatedAcces
   const getCategoryLabel = (category: string) => {
     return t(`categories.${category}`) || category;
   };
+
+  // Create slug from accessory name and ID
+  const createSlug = (name: string, id: string): string => {
+    const nameSlug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    return `${nameSlug}-${id}`;
+  };
+
+  const accessorySlug = createSlug(accessory.name, accessory.id);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation if this is inside a link
@@ -49,10 +61,10 @@ export function RelatedAccessoryCard({ accessory, categoryConfig }: RelatedAcces
   };
 
   return (
-    <Card className="hover:shadow-lg relative transition-shadow group py-0">
+    <Card className="hover:shadow-lg relative transition-shadow group h-full flex flex-col">
       <CardHeader className="p-0">
-        <Link href={`/accessories/${accessory.id}`} className="block relative overflow-hidden rounded-t-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <div className="w-full h-48 bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
+        <Link href={`/accessories/${accessorySlug}`} className="block relative overflow-hidden rounded-t-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+          <div className="w-full aspect-square bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
             {accessory.imageUrl ? (
               <FallbackImage
                 src={accessory.imageUrl}
@@ -88,7 +100,7 @@ export function RelatedAccessoryCard({ accessory, categoryConfig }: RelatedAcces
           variant={accessory.inStock > 0 ? "default" : "destructive"}
           className={
             accessory.inStock > 0
-              ? "bg-blue-100 text-blue-800 border-blue-200"
+              ? "bg-green-100 text-green-800 border-green-200"
               : "bg-red-100 text-red-800 border-red-200"
           }
         >
@@ -97,20 +109,20 @@ export function RelatedAccessoryCard({ accessory, categoryConfig }: RelatedAcces
             : t('parts.outOfStock')}
         </Badge>
       </div>
-      <CardContent className="p-4">
-        <h3 className="font-semibold text-lg mb-2 line-clamp-2">{accessory.name}</h3>
+      <CardContent className="p-3 sm:p-4 flex flex-col flex-1">
+        <h3 className="font-semibold text-sm sm:text-base md:text-lg mb-2 line-clamp-2">{accessory.name}</h3>
         
-        <div className="flex items-center mb-3">
+        <div className="flex items-center mb-2 sm:mb-3">
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+              <Star key={i} className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 fill-current" />
             ))}
           </div>
-          <span className="text-sm text-gray-500 ml-2">(4.5)</span>
+          <span className="text-xs sm:text-sm text-gray-500 ml-2">(4.5)</span>
         </div>
 
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-sm md:text-lg xl:text-xl font-bold text-blue-600">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <span className="text-sm sm:text-base md:text-lg font-bold text-green-600">
             {formatCurrency(accessory.price, "EUR")}
           </span>
           <Badge variant="secondary" className="text-xs">
@@ -119,7 +131,7 @@ export function RelatedAccessoryCard({ accessory, categoryConfig }: RelatedAcces
         </div>
 
         
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-auto flex items-center gap-2">
       <Button 
           size="sm" 
           disabled={accessory.inStock === 0}

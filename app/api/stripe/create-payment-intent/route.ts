@@ -2,12 +2,26 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { PrismaClient } from "@prisma/client";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: "2025-05-28.basil",
-  typescript: true});
+// Initialize Stripe only if the secret key is available
+const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { 
+      apiVersion: "2025-05-28.basil",
+      typescript: true
+    })
+  : null;
 
 const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
+  // Check if Stripe is initialized
+  if (!stripe) {
+    console.error('Stripe is not configured');
+    return NextResponse.json(
+      { error: 'Payment service is not configured' },
+      { status: 500 }
+    );
+  }
+
   const { amount, currency, cart, repairType, shippingOption, email, address, userId } = await req.json();
   
   // Create a simplified cart summary for metadata (essential info only)

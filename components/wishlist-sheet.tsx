@@ -40,6 +40,7 @@ export function WishlistSheet() {
   const { addToCart } = useCart();
   const t = useTranslations('wishlist');
   const [open, setOpen] = useState(false);
+  const [removingId, setRemovingId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const { data: wishlistItems = [], isLoading: loading, refetch } = useQuery({
@@ -56,11 +57,32 @@ export function WishlistSheet() {
   });
 
   const removeFromWishlist = async (itemType: 'part' | 'accessory', itemId: string) => {
+    const uniqueId = `${itemType}-${itemId}`;
+    setRemovingId(uniqueId);
+    
     try {
-      await fetch(`/api/wishlist/${itemType}/${itemId}`, { method: 'DELETE' });
+      const response = await fetch(`/api/wishlist/${itemType}/${itemId}`, { 
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to remove from wishlist');
+      }
+      
+      // Invalidate and refetch the wishlist
       await queryClient.invalidateQueries({ queryKey: ['wishlist', session?.user?.id] });
+      await refetch();
+      
+      console.log('Successfully removed from wishlist');
     } catch (error) {
       console.error('Error removing from wishlist:', error);
+      alert(t('removeError') || 'Failed to remove item from wishlist');
+    } finally {
+      setRemovingId(null);
     }
   };
 
@@ -196,9 +218,15 @@ export function WishlistSheet() {
                         <Button
                           variant="ghost"
                           size="sm"
+                          disabled={removingId === `${itemType}-${product.id}`}
                           onClick={() => removeFromWishlist(itemType, product.id)}
+                          className="hover:bg-red-50"
                         >
-                          <Trash2 className="h-3 w-3 text-red-500" />
+                          {removingId === `${itemType}-${product.id}` ? (
+                            <div className="animate-spin h-3 w-3 border-2 border-red-500 border-t-transparent rounded-full" />
+                          ) : (
+                            <Trash2 className="h-3 w-3 text-red-500" />
+                          )}
                         </Button>
                       </div>
                     </div>

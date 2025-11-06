@@ -1362,8 +1362,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                             </SelectTrigger>
                             <SelectContent>
                               <SelectItem value="all">All models</SelectItem>
-                              {availableModels.map((model) => (
-                                <SelectItem key={model} value={model}>
+                              {availableModels.map((model, index) => (
+                                <SelectItem key={`new-service-model-${index}`} value={model}>
                                   {model}
                                 </SelectItem>
                               ))}
@@ -2026,8 +2026,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All models</SelectItem>
-                      {availableModels.map((model) => (
-                        <SelectItem key={model} value={model}>
+                      {availableModels.map((model, index) => (
+                        <SelectItem key={`edit-service-model-${index}`} value={model}>
                           {model}
                         </SelectItem>
                       ))}

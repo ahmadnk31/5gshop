@@ -37,7 +37,7 @@ import { useCart } from "@/components/cart-context";
 import { FallbackImage } from "@/components/ui/fallback-image";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
-import { AccessoryActionButtons } from "./[id]/accessory-action-buttons";
+import { AccessoryActionButtons } from "./components/accessory-action-buttons";
 import { useSession } from "next-auth/react";
 import AccessoriesFilterSidebar, { AccessoryFilters } from "@/components/accessories-filter-sidebar";
 import { useAccessoryFilters } from "@/hooks/use-accessory-filters";
@@ -174,14 +174,19 @@ export default function AccessoriesPagePaginated() {
   const t = useTranslations();
   const { addToCart } = useCart();
   const user=useSession().data
+  
+  // Initialize URL parameters
+  const initialCategory = searchParams.get('category') as AccessoryCategory;
+  const initialSearch = searchParams.get('search') || '';
+  
   // State
   const [accessories, setAccessories] = useState<Accessory[]>([]);
   const [allAccessories, setAllAccessories] = useState<Accessory[]>([]);
   const [categoryCounts, setCategoryCounts] = useState<Record<AccessoryCategory, number>>({} as Record<AccessoryCategory, number>);
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
-  const [searchInput, setSearchInput] = useState(searchParams.get('search') || ''); // Separate input state
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [searchInput, setSearchInput] = useState(initialSearch); // Separate input state
   const [searchSuggestions, setSearchSuggestions] = useState<Accessory[]>([]);
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
@@ -197,14 +202,14 @@ export default function AccessoriesPagePaginated() {
   );
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  // Filter state
+  // Filter state - initialized with URL parameters
   const [sidebarFilters, setSidebarFilters] = useState<AccessoryFilters>({
-    categories: [],
+    categories: initialCategory ? [initialCategory] : [],
     brands: [],
     priceRange: [0, 1000],
     inStock: false,
     compatibility: [],
-    searchTerm: '',
+    searchTerm: initialSearch,
   });
 
   // Pagination state
@@ -241,6 +246,72 @@ export default function AccessoriesPagePaginated() {
     setSidebarFilters(newFilters);
     setCurrentPage(1);
     pagination.goToFirstPage();
+  };
+
+  // Handle search input changes - update sidebar filters
+  const handleSearchInputChange = (value: string) => {
+    setSearchInput(value);
+    setSidebarFilters(prev => ({
+      ...prev,
+      searchTerm: value,
+    }));
+    setSelectedSuggestionIndex(-1);
+  };
+
+  // Handle clearing individual filters
+  const clearCategoryFilter = (category: AccessoryCategory) => {
+    setSidebarFilters(prev => ({
+      ...prev,
+      categories: prev.categories.filter(c => c !== category),
+    }));
+  };
+
+  const clearBrandFilter = (brand: string) => {
+    setSidebarFilters(prev => ({
+      ...prev,
+      brands: prev.brands.filter(b => b !== brand),
+    }));
+  };
+
+  const clearCompatibilityFilter = (compatibility: string) => {
+    setSidebarFilters(prev => ({
+      ...prev,
+      compatibility: prev.compatibility.filter(c => c !== compatibility),
+    }));
+  };
+
+  const clearSearchFilter = () => {
+    setSearchInput('');
+    setSidebarFilters(prev => ({
+      ...prev,
+      searchTerm: '',
+    }));
+  };
+
+  const clearAllActiveFilters = () => {
+    // Calculate actual price range from all accessories
+    const priceRange = allAccessories.length > 0 
+      ? allAccessories.reduce(
+          (acc, accessory) => ({
+            min: Math.min(acc.min, accessory.price),
+            max: Math.max(acc.max, accessory.price),
+          }),
+          { min: Infinity, max: -Infinity }
+        )
+      : { min: 0, max: 1000 };
+    
+    setSearchInput('');
+    setSidebarFilters({
+      categories: [],
+      brands: [],
+      priceRange: [
+        priceRange.min !== Infinity ? priceRange.min : 0,
+        priceRange.max !== -Infinity ? priceRange.max : 1000
+      ],
+      inStock: false,
+      compatibility: [],
+      searchTerm: '',
+    });
   };
 
   // Load accessories with pagination
@@ -305,28 +376,15 @@ export default function AccessoriesPagePaginated() {
     setCurrentPage(pagination.currentPage);
   }, [pagination.currentPage]);
 
-  // Handle filters
-  const handleCategorySelect = (category: AccessoryCategory | null) => {
-    setSelectedCategory(category);
-    setCurrentPage(1);
-    pagination.goToFirstPage();
-    // Clear search when selecting category
-    if (category && searchTerm) {
-      setSearchTerm('');
-      setSearchInput('');
-    }
-    // Scroll to results section
-    setTimeout(() => {
-      const resultsSection = document.getElementById('results-section');
-      if (resultsSection) {
-        resultsSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  };
-
   const handleSearch = (search: string) => {
     setSearchInput(search); // Update input immediately for responsive UI
     setSelectedSuggestionIndex(-1); // Reset selection when typing
+    
+    // Update sidebar filters with search term
+    setSidebarFilters(prev => ({
+      ...prev,
+      searchTerm: search,
+    }));
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
 
@@ -437,14 +495,6 @@ export default function AccessoriesPagePaginated() {
     pagination.goToFirstPage();
   };
 
-  const clearFilters = () => {
-    setSelectedCategory(null);
-    setSearchTerm('');
-    setSearchInput(''); // Clear both search states
-    setCurrentPage(1);
-    pagination.goToFirstPage();
-  };
-
   // Load all accessories for category counts (only on initial load)
   useEffect(() => {
     const loadAllAccessories = async () => {
@@ -468,8 +518,17 @@ export default function AccessoriesPagePaginated() {
         
         console.log('Category counts calculated:', counts);
         setCategoryCounts(counts);
+        
+        // Log initial filters to verify URL params were captured
+        console.log('Initial filters applied:', {
+          categories: initialCategory ? [initialCategory] : [],
+          searchTerm: initialSearch
+        });
+        
+        setLoading(false);
       } catch (error) {
         console.error('Failed to load category counts:', error);
+        setLoading(false);
       }
     };
 
@@ -477,7 +536,11 @@ export default function AccessoriesPagePaginated() {
   }, []);
 
 
-  const hasActiveFilters = selectedCategory || searchTerm;
+  const hasActiveFilters = 
+    sidebarFilters.categories.length > 0 || 
+    sidebarFilters.brands.length > 0 || 
+    sidebarFilters.compatibility.length > 0 || 
+    sidebarFilters.searchTerm.length > 0;
 
   const relatedSearches = getRelatedSearches(searchTerm, allAccessories);
 
@@ -485,9 +548,45 @@ export default function AccessoriesPagePaginated() {
     return (
       <div className="flex flex-col min-h-screen">
         <div className="container mx-auto px-4 py-8">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">{t('accessories.loading.message')}</p>
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Skeleton Sidebar */}
+            <div className="lg:w-80 flex-shrink-0">
+              <Card>
+                <CardHeader>
+                  <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="space-y-2">
+                      <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-8 w-full bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Skeleton Grid */}
+            <div className="flex-1">
+              <div className="mb-6">
+                <div className="h-10 w-full max-w-md bg-gray-200 rounded animate-pulse mb-4"></div>
+                <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+              
+              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
+                {[...Array(12)].map((_, i) => (
+                  <Card key={i} className="overflow-hidden">
+                    <div className="aspect-square bg-gray-200 animate-pulse"></div>
+                    <CardContent className="p-4 space-y-3">
+                      <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-6 w-24 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="h-9 w-full bg-gray-200 rounded animate-pulse"></div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -669,7 +768,7 @@ export default function AccessoriesPagePaginated() {
                   type="button" 
                   variant="outline" 
                   size="sm" 
-                  onClick={clearFilters}
+                  onClick={clearAllActiveFilters}
                 >
                   <X className="h-4 w-4 mr-1" />
                   {t('accessories.filters.clear')}
@@ -679,26 +778,100 @@ export default function AccessoriesPagePaginated() {
           </div>
 
           {/* Active Filters */}
-          {hasActiveFilters && (
+          {(sidebarFilters.categories.length > 0 || 
+            sidebarFilters.brands.length > 0 || 
+            sidebarFilters.compatibility.length > 0 || 
+            sidebarFilters.searchTerm) && (
             <div className="flex flex-wrap gap-2 mb-4">
-              {selectedCategory && (
-                <Badge variant="secondary" className="px-3 py-1">
-                  {t('accessories.filters.category', { category: categoryConfigs[selectedCategory]?.label || selectedCategory })}
-                  <X 
-                    className="h-3 w-3 ml-2 cursor-pointer" 
-                    onClick={() => handleCategorySelect(null)}
-                  />
+              {/* Category filters */}
+              {sidebarFilters.categories.map((category) => (
+                <Badge key={category} variant="secondary" className="px-3 py-1 flex items-center gap-2">
+                  <span>{categoryConfigs[category]?.label || category}</span>
+                  <button
+                    type="button"
+                    className="ml-1 hover:text-red-600 focus:outline-none"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      clearCategoryFilter(category);
+                    }}
+                    aria-label={`Remove ${category} filter`}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+              
+              {/* Brand filters */}
+              {sidebarFilters.brands.map((brand) => (
+                <Badge key={brand} variant="secondary" className="px-3 py-1 flex items-center gap-2">
+                  <span>Brand: {brand}</span>
+                  <button
+                    type="button"
+                    className="ml-1 hover:text-red-600 focus:outline-none"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      clearBrandFilter(brand);
+                    }}
+                    aria-label={`Remove ${brand} filter`}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+              
+              {/* Compatibility filters */}
+              {sidebarFilters.compatibility.map((compatibility) => (
+                <Badge key={compatibility} variant="secondary" className="px-3 py-1 flex items-center gap-2">
+                  <span>Compatible: {compatibility}</span>
+                  <button
+                    type="button"
+                    className="ml-1 hover:text-red-600 focus:outline-none"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      clearCompatibilityFilter(compatibility);
+                    }}
+                    aria-label={`Remove ${compatibility} filter`}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+              
+              {/* Search filter */}
+              {sidebarFilters.searchTerm && (
+                <Badge variant="secondary" className="px-3 py-1 flex items-center gap-2">
+                  <span>Search: "{sidebarFilters.searchTerm}"</span>
+                  <button
+                    type="button"
+                    className="ml-1 hover:text-red-600 focus:outline-none"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      clearSearchFilter();
+                    }}
+                    aria-label="Remove search filter"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
                 </Badge>
               )}
-              {searchTerm && (
-                <Badge variant="secondary" className="px-3 py-1">
-                  {t('accessories.filters.searchFilter', { query: searchTerm })}
-                  <X 
-                    className="h-3 w-3 ml-2 cursor-pointer" 
-                    onClick={() => handleSearch('')}
-                  />
-                </Badge>
-              )}
+              
+              {/* Clear all button */}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  clearAllActiveFilters();
+                }}
+                className="h-7"
+              >
+                Clear All
+              </Button>
             </div>
           )}
         </div>
@@ -723,15 +896,15 @@ export default function AccessoriesPagePaginated() {
           
         </div>
         {searchTerm && relatedSearches.length > 0 && (
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded">
-              <div className="text-base font-semibold text-blue-800 mb-2">Related searches for "{searchTerm}"</div>
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded">
+              <div className="text-base font-semibold text-green-800 mb-2">Related searches for "{searchTerm}"</div>
               <div className="flex flex-wrap gap-2">
                 {relatedSearches.map((term) => (
                   <Button
                     key={term}
                     variant="outline"
                     size="sm"
-                    className="px-3 py-1 border border-blue-300 text-blue-700 hover:bg-blue-100"
+                    className="px-3 py-1 border border-green-300 text-green-700 hover:bg-green-100"
                     onClick={() => {
                       setSearchInput(term);
                       setSearchTerm(term);
@@ -762,10 +935,21 @@ export default function AccessoriesPagePaginated() {
                 const categoryConfig = categoryConfigs[accessory.category];
                 const IconComponent = categoryConfig?.icon || Box;
                 const lowStock = isLowStock(accessory);
+                
+                // Create slug for SEO-friendly URL
+                const createSlug = (name: string, id: string): string => {
+                  const nameSlug = name
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                  return `${nameSlug}-${id}`;
+                };
+                const accessorySlug = createSlug(accessory.name, accessory.id);
+                
                 return (
-                  <Card key={accessory.id} className="hover:shadow-lg transition-shadow group py-0">
+                  <Card key={accessory.id} className="hover:shadow-lg py-0 transition-shadow group h-full flex flex-col">
                     <CardHeader className="p-0">
-                      <Link href={`/accessories/${accessory.id}`} className="block">
+                      <Link href={`/accessories/${accessorySlug}`} className="block">
                         <div className="relative overflow-hidden rounded-t-lg">
                           <div className="w-full h-full bg-gray-200 flex items-center justify-center group-hover:scale-105 transition-transform relative overflow-hidden">
                             <FallbackImage
@@ -788,15 +972,15 @@ export default function AccessoriesPagePaginated() {
                         </div>
                       </Link>
                     </CardHeader>
-                    <CardContent className="p-4">
+                    <CardContent className="p-4 flex flex-col flex-1">
                       <h3 className="font-semibold text-sm md:text-lg mb-2 line-clamp-2">
-                        <Link href={`/accessories/${accessory.id}`} className="hover:underline">
+                        <Link href={`/accessories/${accessorySlug}`} className="hover:underline">
                           {accessory.name}
                         </Link>
                       </h3>
-                      <Link href={`/accessories/${accessory.id}`} className="hover:underline">
+                      <Link href={`/accessories/${accessorySlug}`} className="hover:underline">
                       <div className="flex flex-wrap gap-2 items-center justify-between mb-4">
-                        <span className="text-sm md:text-lg font-bold text-blue-600">
+                        <span className="text-sm md:text-lg font-bold text-green-600">
                           {formatCurrency(accessory.price, "EUR")}
                         </span>
                         <Badge variant="secondary" className="text-xs">
@@ -805,7 +989,7 @@ export default function AccessoriesPagePaginated() {
                       </div>
                       </Link>
 
-                        <div className="mt-3 flex items-center gap-2">
+                        <div className="mt-auto flex items-center gap-2">
                           <Button
                             variant="default"
                             size="sm"
@@ -852,7 +1036,7 @@ export default function AccessoriesPagePaginated() {
             {hasActiveFilters && (
               <Button 
                 type="button" 
-                onClick={clearFilters} 
+                onClick={clearAllActiveFilters} 
                 variant="outline"
               >
                 {t('accessories.filters.clearAll')}
