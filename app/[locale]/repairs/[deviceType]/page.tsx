@@ -4,10 +4,15 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { DeviceType } from "@/lib/types";
-import { DatabaseService } from "@/lib/database";
+import { getBrandsByType } from "@/app/actions/device-catalog-actions";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { prisma } from "@/lib/database";
+
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 type PageProps = {
   params: Promise<{ locale: string; deviceType: string }>;
@@ -44,54 +49,77 @@ export default async function DeviceRepairsPage({ params }: PageProps) {
     notFound();
   }
 
-  // Fetch devices and extract unique brands for this device type
+  // Fetch brands with model counts for this device type
   let brands: { brand: string; count: number; imageUrl?: string }[] = [];
   try {
-    // Fetch ALL devices without pagination
-    const result = await DatabaseService.getDevices({ limit: 10000 }); // Get all devices
-    console.log(`[DEBUG] Total devices from DB: ${result.data.length}`);
-    console.log(`[DEBUG] Looking for type: ${mappedDeviceType}`);
+    console.log(`[Repairs Page] Fetching brands for device type: ${mappedDeviceType}`);
     
-    // Filter devices by type
-    const filteredDevices = result.data.filter((device: any) => {
-      return device.type.toUpperCase() === mappedDeviceType;
-    });
-    
-    console.log(`[DEBUG] Filtered devices count: ${filteredDevices.length}`);
-    console.log(`[DEBUG] Sample devices:`, filteredDevices.slice(0, 5).map((d: any) => ({ brand: d.brand, model: d.model })));
-    
-    // Group by brand - extract brand from full product name if needed
-    const brandMap = new Map<string, { count: number; imageUrl?: string; models: Set<string> }>();
-    
-    filteredDevices.forEach((device: any) => {
-      // Extract the actual brand name from the model string
-      // Examples: "iPhone 8" -> brand should be "Apple", "Samsung Galaxy S21" -> brand should be "Samsung"
-      let brandName = device.brand;
-      
-      // If brand and model are the same or model contains brand, use just the brand
-      if (device.model.startsWith(device.brand)) {
-        brandName = device.brand;
-      }
-      
-      const existing = brandMap.get(brandName) || { count: 0, imageUrl: undefined, models: new Set() };
-      existing.models.add(device.model); // Track unique models
-      
-      brandMap.set(brandName, {
-        count: existing.models.size, // Count unique models
-        imageUrl: existing.imageUrl || device.imageUrl,
-        models: existing.models
-      });
-    });
-    
-    brands = Array.from(brandMap.entries()).map(([brand, data]) => ({
-      brand,
-      count: data.count,
-      imageUrl: data.imageUrl
-    })).sort((a, b) => a.brand.localeCompare(b.brand));
-    
-    console.log(`[Repairs Page] Device Type: ${mappedDeviceType}, Brands found:`, brands.map(b => `${b.brand} (${b.count} models)`));
+    // Get distinct brands with their device count with timeout
+    const devicesWithBrands = await Promise.race([
+      prisma.device.groupBy({
+        by: ['brand'],
+        where: {
+          type: mappedDeviceType,
+        },
+        _count: {
+          id: true,
+        },
+        orderBy: {
+          brand: 'asc',
+        },
+      }),
+      new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Database query timeout')), 10000)
+      )
+    ]);
+
+    console.log(`[Repairs Page] Device Type: ${mappedDeviceType}, Brands found:`, devicesWithBrands.length);
+
+    // Get image URL for each brand (first device image) with timeout
+    const brandsWithImages = await Promise.race([
+      Promise.all(
+        devicesWithBrands.map(async (brandGroup) => {
+          try {
+            const firstDevice = await prisma.device.findFirst({
+              where: {
+                type: mappedDeviceType,
+                brand: brandGroup.brand,
+              },
+              select: {
+                imageUrl: true,
+              },
+            });
+
+            return {
+              brand: brandGroup.brand,
+              count: brandGroup._count.id,
+              imageUrl: firstDevice?.imageUrl || undefined,
+            };
+          } catch (err) {
+            console.error(`[Repairs Page] Error fetching image for brand ${brandGroup.brand}:`, err);
+            return {
+              brand: brandGroup.brand,
+              count: brandGroup._count.id,
+              imageUrl: undefined,
+            };
+          }
+        })
+      ),
+      new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Image fetch timeout')), 15000)
+      )
+    ]);
+
+    brands = brandsWithImages;
+    console.log(`[Repairs Page] Successfully loaded ${brands.length} brands with images`);
   } catch (error) {
-    console.error('Error loading devices:', error);
+    console.error('[Repairs Page] Error loading brands:', error);
+    console.error('[Repairs Page] Error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      deviceType: mappedDeviceType,
+    });
+    // Return empty array instead of throwing to show "No brands" message
     brands = [];
   }
 

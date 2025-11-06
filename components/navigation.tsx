@@ -288,7 +288,7 @@ export function Navigation() {
             </button>
             {/* Tablet Search Bar - Toggleable */}
             {searchbarOpen && (
-              <div className="absolute left-0 right-0 top-16 z-40 bg-white border-b border-gray-200 shadow-md px-4 py-3">
+              <div className="absolute left-0 right-0 top-16 z-[10000] bg-white border-b border-gray-200 shadow-md px-4 py-3">
                 <SearchComponent />
               </div>
             )}
@@ -530,7 +530,7 @@ export function Navigation() {
 
         {/* Mobile Search Bar - Toggleable */}
         {searchbarOpen && (
-          <div className="md:hidden py-3 border-t bg-gray-50">
+          <div className="md:hidden py-3 border-t bg-gray-50 relative z-[10000]">
             <div className="px-2">
               <SearchComponent />
             </div>
@@ -539,7 +539,7 @@ export function Navigation() {
 
         {/* Mobile Navigation Menu */}
         {isOpen && (
-          <div className="md:hidden py-4 border-t overflow-y-auto max-h-[calc(100vh-64px)]">            
+          <div className="md:hidden py-4 border-t overflow-y-auto max-h-[calc(100vh-64px)] relative z-40">{' '}            
             <div className="flex flex-col space-y-4">
               <Link 
                 href="/" 

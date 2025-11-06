@@ -4,11 +4,16 @@ import { Badge } from "@/components/ui/badge";
 import { Package, ShoppingCart, ChevronRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { DeviceType } from "@/lib/types";
-import { DatabaseService } from "@/lib/database";
+import { getPartsByDeviceModel } from "@/app/actions/device-catalog-actions";
 import { formatCurrency } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { prisma } from "@/lib/database";
+
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 type PageProps = {
   params: Promise<{ locale: string; deviceType: string; brand: string; model: string }>;
@@ -57,34 +62,70 @@ export default async function ModelRepairPage({ params }: PageProps) {
   let parts: any[] = [];
   
   try {
-    // Fetch ALL devices without pagination
-    const result = await DatabaseService.getDevices({ limit: 10000 }); // Get all devices
-    // Find the exact device
-    device = result.data.find((d: any) => 
-      d.type.toUpperCase() === mappedDeviceType && 
-      d.brand.toLowerCase() === brandName.toLowerCase() &&
-      d.model.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-') === model.toLowerCase()
-    );
+    console.log(`[Model Page] Searching for device: ${mappedDeviceType} ${brandName} ${modelName}`);
+    
+    // Find device by type, brand, and model with timeout
+    device = await Promise.race([
+      prisma.device.findFirst({
+        where: {
+          type: mappedDeviceType,
+          brand: {
+            equals: brandName,
+            mode: 'insensitive',
+          },
+          OR: [
+            {
+              model: {
+                equals: modelName,
+                mode: 'insensitive',
+              },
+            },
+            {
+              model: {
+                contains: model.replace(/-/g, ' '),
+                mode: 'insensitive',
+              },
+            },
+          ],
+        },
+      }),
+      new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Device query timeout')), 10000)
+      )
+    ]);
     
     if (device) {
-      // Fetch parts for this specific device model only
-      const allParts = await DatabaseService.getParts({ limit: 10000 });
-      parts = allParts.data.filter((part: any) => {
-        if (!part.deviceModel) return false;
-        
-        const partModel = part.deviceModel.toLowerCase().trim();
-        const deviceModel = device.model.toLowerCase().trim();
-        
-        // Exact match for model name
-        return partModel === deviceModel || 
-               partModel.includes(deviceModel) || 
-               deviceModel.includes(partModel);
-      });
+      console.log(`[Model Page] Found device: ${device.model}`);
       
-      console.log(`[Model Page] Device: ${device.model}, Parts found: ${parts.length}`);
+      // Fetch parts for this specific device model with timeout
+      try {
+        parts = await Promise.race([
+          getPartsByDeviceModel(mappedDeviceType, brandName, device.model),
+          new Promise<never>((_, reject) => 
+            setTimeout(() => reject(new Error('Parts query timeout')), 15000)
+          )
+        ]);
+        console.log(`[Model Page] Device: ${device.model}, Parts found: ${parts.length}`);
+      } catch (error) {
+        console.error('[Model Page] Error loading parts:', error);
+        console.error('[Model Page] Parts error details:', {
+          message: error instanceof Error ? error.message : String(error),
+          deviceModel: device.model,
+        });
+        parts = [];
+      }
+    } else {
+      console.log(`[Model Page] Device not found for: ${mappedDeviceType} ${brandName} ${modelName}`);
     }
   } catch (error) {
-    console.error('Error loading device and parts:', error);
+    console.error('[Model Page] Error loading device:', error);
+    console.error('[Model Page] Device error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      deviceType: mappedDeviceType,
+      brand: brandName,
+      model: modelName,
+    });
   }
 
   if (!device) {
@@ -186,7 +227,7 @@ export default async function ModelRepairPage({ params }: PageProps) {
                 const partSlug = createSlug(part.name, part.id);
                 return (
                 <Link key={part.id} href={`/parts/${partSlug}`} className="group">
-                  <Card className="hover:shadow-lg py-0 transition-shadow border-gray-200 flex flex-col h-full">
+                  <Card className="hover:shadow-lg transition-shadow border-gray-200 flex flex-col h-full">
                     <CardHeader className="flex-shrink-0">
                       {part.imageUrl && (
                         <div className="relative h-48 bg-gray-100 rounded-lg mb-3 overflow-hidden">

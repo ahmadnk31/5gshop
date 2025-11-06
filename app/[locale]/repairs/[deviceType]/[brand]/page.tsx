@@ -3,10 +3,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { getTranslations } from "next-intl/server";
 import { DeviceType } from "@/lib/types";
-import { DatabaseService } from "@/lib/database";
+import { getModelsByBrand } from "@/app/actions/device-catalog-actions";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import Image from "next/image";
+import { prisma } from "@/lib/database";
+
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 type PageProps = {
   params: Promise<{ locale: string; deviceType: string; brand: string }>;
@@ -40,24 +45,40 @@ export default async function BrandModelsPage({ params }: PageProps) {
   // Fetch models for this brand and device type
   let models: any[] = [];
   try {
-    // Fetch ALL devices without pagination
-    const result = await DatabaseService.getDevices({ limit: 10000 }); // Get all devices
-    console.log(`[Brand Page DEBUG] Total devices: ${result.data.length}`);
-    console.log(`[Brand Page DEBUG] Looking for type: ${mappedDeviceType}, brand: ${brandName}`);
+    console.log(`[Brand Page] Fetching models for: ${mappedDeviceType} ${brandName}`);
     
-    // Filter devices by type and brand
-    models = result.data.filter((device: any) => {
-      const typeMatch = device.type.toUpperCase() === mappedDeviceType;
-      const brandMatch = device.brand.toLowerCase() === brandName.toLowerCase();
-      return typeMatch && brandMatch;
-    }).sort((a: any, b: any) => a.model.localeCompare(b.model));
+    models = await Promise.race([
+      prisma.device.findMany({
+        where: {
+          type: mappedDeviceType,
+          brand: {
+            equals: brandName,
+            mode: 'insensitive', // Case-insensitive comparison
+          },
+        },
+        orderBy: [
+          { order: 'desc' },
+          { model: 'asc' },
+        ],
+      }),
+      new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Database query timeout')), 10000)
+      )
+    ]);
     
-    console.log(`[Brand Page] Brand: ${brandName}, Models found: ${models.length}`);
+    console.log(`[Brand Page] Brand: ${brandName}, Device Type: ${mappedDeviceType}, Models found: ${models.length}`);
     if (models.length > 0) {
       console.log(`[Brand Page] First 5 models:`, models.slice(0, 5).map((m: any) => m.model));
     }
   } catch (error) {
-    console.error('Error loading models:', error);
+    console.error('[Brand Page] Error loading models:', error);
+    console.error('[Brand Page] Error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      deviceType: mappedDeviceType,
+      brand: brandName,
+    });
+    // Return empty array instead of throwing to show "No models" message
     models = [];
   }
 
@@ -130,7 +151,7 @@ export default async function BrandModelsPage({ params }: PageProps) {
                     href={`/repairs/${deviceType}/${brand}/${modelSlug}`}
                     className="group"
                   >
-                    <Card className="hover:shadow-lg pb-4 transition-shadow border-gray-200 overflow-hidden h-full">
+                    <Card className="hover:shadow-lg transition-shadow border-gray-200 overflow-hidden h-full">
                       {device.imageUrl && (
                         <div className="relative h-48 bg-gray-100">
                           <Image

@@ -331,7 +331,7 @@ export function SearchComponent() {
       {/* Shadow Overlay - Rendered via Portal */}
       {isMounted && isFocused && createPortal(
         <div 
-          className="fixed inset-0 bg-black/50 z-[999] transition-opacity duration-200"
+          className="fixed inset-0 bg-black/50 z-[9] transition-opacity duration-200"
           onClick={() => {
             setIsOpen(false);
             setIsFocused(false);
@@ -341,7 +341,7 @@ export function SearchComponent() {
         document.body
       )}
       
-      <div ref={searchRef} className="relative w-full max-w-2xl z-[100000]">
+      <div ref={searchRef} className="relative w-full max-w-2xl z-[10000]">
       <div className="relative flex items-center">
         {/* Search Filter Dropdown */}
         <DropdownMenu>
@@ -357,7 +357,7 @@ export function SearchComponent() {
               <ChevronDown aria-label='Toggle search filter' className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="min-w-[180px]">
+          <DropdownMenuContent align="start" className="min-w-[180px] z-[10001]">
             <DropdownMenuItem onClick={() => setFilter('all')} className="text-base py-3 cursor-pointer">
               <Package aria-label='All filters' className="h-5 w-5 mr-3" />
               {t('filters.all')}
@@ -448,7 +448,7 @@ export function SearchComponent() {
 
       {/* Search Results Dropdown */}
       {isOpen && (searchTerm.length >= 2 || results.length > 0) && (
-        <div role="listbox" className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-2xl z-[9999] max-h-[32rem] overflow-y-auto w-[calc(100vw-2rem)] sm:w-[600px] md:w-[700px] lg:w-[800px]">
+        <div role="listbox" className="absolute top-full left-0 right-0 sm:left-1/2 sm:-translate-x-1/2 mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-2xl z-[9999] max-h-[32rem] overflow-y-auto w-full sm:w-[600px] md:w-[700px] lg:w-[800px]">
           {isLoading ? (
             <div aria-label='Loading results' className="p-6 text-center text-gray-500">
               <div className="animate-spin h-8 w-8 border-3 border-green-600 border-t-transparent rounded-full mx-auto mb-3"></div>
