@@ -598,8 +598,83 @@ export default function AccessoriesPagePaginated() {
     return accessory.inStock > 0 && accessory.inStock <= (accessory.minStock || 1);
   }
 
+  // Structured Data for SEO
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.5gshop.nl';
+  const siteName = '5G Shop';
+  
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Phone & Device Accessories",
+    "description": "Shop high-quality mobile accessories including phone cases, chargers, cables, screen protectors, and more at 5G Shop Netherlands.",
+    "url": `${siteUrl}/accessories`,
+    "publisher": {
+      "@type": "Organization",
+      "name": siteName,
+      "url": siteUrl
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": filteredAccessories.length,
+      "itemListElement": filteredAccessories.slice(0, 12).map((accessory, index) => {
+        const accessorySlug = `${accessory.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}-${accessory.id}`;
+        return {
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "Product",
+            "name": accessory.name,
+            "description": accessory.description || `${accessory.name} by ${accessory.brand}`,
+            "image": accessory.imageUrl,
+            "brand": {
+              "@type": "Brand",
+              "name": accessory.brand
+            },
+            "offers": {
+              "@type": "Offer",
+              "url": `${siteUrl}/accessories/${accessorySlug}`,
+              "priceCurrency": "EUR",
+              "price": accessory.price,
+              "availability": accessory.inStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+              "itemCondition": "https://schema.org/NewCondition"
+            }
+          }
+        };
+      })
+    }
+  };
+
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": siteUrl
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Accessories",
+        "item": `${siteUrl}/accessories`
+      }
+    ]
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+      />
+      
       {/* Hero Section */}
      
 

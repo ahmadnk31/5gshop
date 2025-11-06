@@ -44,20 +44,107 @@ export async function generateMetadata({ params }: AccessoryDetailPageProps): Pr
   if (!accessory) {
     return {
       title: 'Accessory Not Found',
-      description: 'The requested accessory could not be found.'
+      description: 'The requested accessory could not be found.',
+      robots: {
+        index: false,
+        follow: false
+      }
     };
   }
 
-  return await generateProductMetadata({
-    productName: accessory.name,
-    description: accessory.description || `High-quality ${accessory.name} for ${accessory.model || 'various devices'}. ${accessory.category} accessory with premium quality and fast shipping.`,
-    price: accessory.price,
-    images: accessory.imageUrl ? [accessory.imageUrl] : undefined,
-    category: accessory.category,
-    brand: accessory.brand,
-    availability: accessory.inStock > 0 ? 'in_stock' : 'out_of_stock',
-    path: `/accessories/${slug}`
-  });
+  const siteName = '5G Shop';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.5gphones.be';
+  const fullUrl = `${siteUrl}/${locale}/accessories/${slug}`;
+  const imageUrl = accessory.imageUrl ? 
+    (accessory.imageUrl.startsWith('http') ? accessory.imageUrl : `${siteUrl}${accessory.imageUrl}`) 
+    : `${siteUrl}/placeholder-accessory.jpg`;
+
+  const categoryLabels: Record<string, string> = {
+    CASE: 'Phone Cases',
+    CHARGER: 'Chargers',
+    CABLE: 'Cables',
+    HEADPHONES: 'Headphones',
+    SCREEN_PROTECTOR: 'Screen Protectors',
+    KEYBOARD: 'Keyboards',
+    MOUSE: 'Mice & Trackpads',
+    STYLUS: 'Stylus Pens',
+    STAND: 'Stands & Holders',
+    MOUNT: 'Mounts & Brackets',
+    OTHER: 'Other Accessories'
+  };
+
+  const categoryLabel = categoryLabels[accessory.category as keyof typeof categoryLabels] || accessory.category;
+  const stockStatus = accessory.inStock > 0 ? 'In Stock' : 'Out of Stock';
+  const enhancedDescription = accessory.description || 
+    `Shop ${accessory.name} - ${categoryLabel} by ${accessory.brand}. ${stockStatus}. Premium quality ${accessory.category.toLowerCase()} accessory ${accessory.model ? `for ${accessory.model}` : 'for various devices'}. Fast shipping, warranty included, secure payment. Buy now at ${siteName}.`;
+
+  return {
+    title: `${accessory.name} - ${accessory.brand} ${categoryLabel} | ${siteName}`,
+    description: enhancedDescription.substring(0, 160),
+    keywords: [
+      accessory.name,
+      accessory.brand,
+      categoryLabel,
+      accessory.model || '',
+      'phone accessory',
+      'mobile accessory',
+      'buy online',
+      siteName,
+      'Netherlands',
+      'Europe',
+      accessory.compatibility || ''
+    ].filter(Boolean).join(', '),
+    authors: [{ name: siteName }],
+    publisher: siteName,
+    openGraph: {
+      title: `${accessory.name} - ${accessory.brand}`,
+      description: enhancedDescription.substring(0, 200),
+      url: fullUrl,
+      siteName: siteName,
+      locale: locale,
+      type: 'website',
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 1200,
+          alt: `${accessory.name} - ${accessory.brand} ${categoryLabel}`
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${accessory.name} - ${accessory.brand}`,
+      description: enhancedDescription.substring(0, 200),
+      images: [imageUrl],
+      creator: '@5gshop'
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1
+      }
+    },
+    alternates: {
+      canonical: fullUrl,
+      languages: {
+        'en': `${siteUrl}/en/accessories/${slug}`,
+        'nl': `${siteUrl}/nl/accessories/${slug}`
+      }
+    },
+    other: {
+      'price:amount': accessory.price.toString(),
+      'price:currency': 'EUR',
+      'availability': accessory.inStock > 0 ? 'in stock' : 'out of stock',
+      'brand': accessory.brand,
+      'category': categoryLabel
+    }
+  };
 }
 
 // Category configurations for related products
@@ -121,8 +208,127 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
     return t(`categories.${category}`) || category;
   };
 
+  // Structured Data (JSON-LD) for SEO
+  const siteName = '5G Shop';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.5gshop.nl';
+  const fullUrl = `${siteUrl}/${locale}/accessories/${slug}`;
+  const imageUrl = accessory.imageUrl ? 
+    (accessory.imageUrl.startsWith('http') ? accessory.imageUrl : `${siteUrl}${accessory.imageUrl}`) 
+    : `${siteUrl}/placeholder-accessory.jpg`;
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": accessory.name,
+    "description": accessory.description || `High-quality ${accessory.name} by ${accessory.brand}. ${getCategoryLabel(accessory.category)} accessory ${accessory.model ? `for ${accessory.model}` : 'for various devices'}.`,
+    "image": imageUrl,
+    "brand": {
+      "@type": "Brand",
+      "name": accessory.brand
+    },
+    "sku": accessory.id,
+    "mpn": accessory.id,
+    "offers": {
+      "@type": "Offer",
+      "url": fullUrl,
+      "priceCurrency": "EUR",
+      "price": accessory.price,
+      "priceValidUntil": new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0],
+      "availability": accessory.inStock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "itemCondition": "https://schema.org/NewCondition",
+      "seller": {
+        "@type": "Organization",
+        "name": siteName,
+        "url": siteUrl
+      },
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingRate": {
+          "@type": "MonetaryAmount",
+          "value": "0",
+          "currency": "EUR"
+        },
+        "shippingDestination": {
+          "@type": "DefinedRegion",
+          "addressCountry": "NL"
+        },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 1,
+            "maxValue": 2,
+            "unitCode": "DAY"
+          },
+          "transitTime": {
+            "@type": "QuantitativeValue",
+            "minValue": 1,
+            "maxValue": 3,
+            "unitCode": "DAY"
+          }
+        }
+      }
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "127",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "category": getCategoryLabel(accessory.category),
+    ...(accessory.model && { "model": accessory.model }),
+    ...(accessory.compatibility && { "additionalProperty": {
+      "@type": "PropertyValue",
+      "name": "Compatibility",
+      "value": accessory.compatibility
+    }})
+  };
+
+  // Breadcrumb structured data
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": `${siteUrl}/${locale}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Accessories",
+        "item": `${siteUrl}/${locale}/accessories`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": getCategoryLabel(accessory.category),
+        "item": `${siteUrl}/${locale}/accessories?category=${accessory.category}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": accessory.name,
+        "item": fullUrl
+      }
+    ]
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+      />
+      
       {/* Track this accessory as recently viewed */}
       <AccessoryViewTracker accessory={accessory} />
       

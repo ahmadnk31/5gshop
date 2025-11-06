@@ -130,7 +130,7 @@ export default async function BrandModelsPage({ params }: PageProps) {
                     href={`/repairs/${deviceType}/${brand}/${modelSlug}`}
                     className="group"
                   >
-                    <Card className="hover:shadow-lg py-0 transition-shadow border-gray-200 overflow-hidden h-full">
+                    <Card className="hover:shadow-lg pb-4 transition-shadow border-gray-200 overflow-hidden h-full">
                       {device.imageUrl && (
                         <div className="relative h-48 bg-gray-100">
                           <Image

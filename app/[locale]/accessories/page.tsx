@@ -1,27 +1,74 @@
 import { Suspense } from "react";
 import AccessoriesPagePaginated from "./page-paginated";
 import { Skeleton } from '@/components/ui/skeleton';
-import { generatePageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return await generatePageMetadata({
-    title: "Premium Phone & Device Accessories",
-    description: "Shop high-quality accessories for smartphones, tablets, laptops & more. Cases, chargers, cables, screen protectors & more. Fast shipping in Belgium.",
-    path: "/accessories",
+  const siteName = '5G Shop';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.5gshop.nl';
+  const title = "Premium Phone & Device Accessories - Cases, Chargers & More";
+  const description = "Shop high-quality mobile accessories at 5G Shop Netherlands. Wide selection of phone cases, chargers, cables, screen protectors, headphones & more. Fast shipping, warranty included, secure payment. Buy online now!";
+
+  return {
+    title: `${title} | ${siteName}`,
+    description: description,
     keywords: [
-      "phone accessories",
-      "smartphone cases",
-      "phone chargers", 
-      "cables",
+      "phone accessories Netherlands",
+      "smartphone accessories",
+      "phone cases",
+      "phone chargers",
+      "USB cables",
       "screen protectors",
+      "wireless chargers",
+      "headphones",
       "tablet accessories",
       "laptop accessories",
-      "wireless chargers",
-      "Belgium accessories",
-      "Leuven phone shop"
-    ]
-  });
+      "mobile accessories online",
+      "5G Shop",
+      "buy accessories online",
+      "phone accessories Europe"
+    ].join(', '),
+    openGraph: {
+      title: title,
+      description: description,
+      url: `${siteUrl}/accessories`,
+      siteName: siteName,
+      type: 'website',
+      images: [
+        {
+          url: `${siteUrl}/og-accessories.jpg`,
+          width: 1200,
+          height: 630,
+          alt: 'Phone and Device Accessories at 5G Shop'
+        }
+      ]
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: title,
+      description: description,
+      images: [`${siteUrl}/og-accessories.jpg`],
+      creator: '@5gshop'
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+        'max-video-preview': -1
+      }
+    },
+    alternates: {
+      canonical: `${siteUrl}/accessories`,
+      languages: {
+        'en': `${siteUrl}/en/accessories`,
+        'nl': `${siteUrl}/nl/accessories`
+      }
+    }
+  };
 }
 
 function AccessoriesPageWithSuspense() {
