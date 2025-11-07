@@ -1,10 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ChevronRight } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { DeviceType } from "@/lib/types";
-import { getBrandsByType } from "@/app/actions/device-catalog-actions";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import Image from "next/image";

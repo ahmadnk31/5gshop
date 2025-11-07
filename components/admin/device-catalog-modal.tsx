@@ -212,61 +212,34 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   }
   // --- PARTS FILTER STATE ---
   const [filterDeviceType, setFilterDeviceType] = useState<string>('');
-  const [filterBrand, setFilterBrand] = useState<string>('');
   const [filterModel, setFilterModel] = useState<string>('');
+  const [partSearchTerm, setPartSearchTerm] = useState<string>('');
 
-  // Memoized unique device types, brands, and models from parts
+  // Memoized unique device types from parts
   const partDeviceTypes = Array.from(new Set(parts.map((p: Part) => p.deviceType).filter(Boolean) as string[])).sort();
-  // Brand extraction: prefer explicit brand field, fallback to deviceModel/description regex
-  const partBrands = Array.from(new Set(parts.map((p: Part) => {
-    // Prefer explicit brand if present
-    if ((p as any).brand && typeof (p as any).brand === 'string' && (p as any).brand.trim() !== '') {
-      return (p as any).brand.trim();
-    }
-    // Fallback: extract from deviceModel
-    if (p.deviceModel) {
-      const match = p.deviceModel.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
-      if (match) return match[1];
-    }
-    // Fallback: extract from description
-    if (p.description) {
-      const match = p.description.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
-      if (match) return match[1];
-    }
-    return null;
-  }).filter(Boolean) as string[])).sort();
+  
+  // Memoized models based on selected device type
   const partModels = Array.from(new Set(parts.filter((p: Part) => {
-    let matchesBrand = true;
-    if (filterBrand) {
-      if (p.deviceModel) {
-        const match = p.deviceModel.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
-        matchesBrand = !!(match && match[1] === filterBrand);
-      } else {
-        matchesBrand = false;
-      }
-    }
-    return (!filterDeviceType || p.deviceType === filterDeviceType) && matchesBrand && p.deviceModel;
+    return (!filterDeviceType || p.deviceType === filterDeviceType) && p.deviceModel;
   }).map((p: Part) => p.deviceModel as string))).sort();
 
-  // Filtered parts
+  // Filtered parts - simplified to use actual Part fields
   const filteredParts = parts.filter((p: Part) => {
-    let matchesBrand = true;
-    if (filterBrand) {
-      if (p.deviceModel) {
-        const match = p.deviceModel.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
-        matchesBrand = !!(match && match[1] === filterBrand);
-      } else if (p.description) {
-        const match = p.description.match(/^(Apple|Samsung|Huawei|Xiaomi|OnePlus|Sony|Google|Nokia|Motorola|LG|HTC|Asus|Acer|Lenovo|Microsoft|Honor|Realme|Oppo|Vivo|Nothing|Fairphone|Alcatel|BlackBerry|Meizu|ZTE|TCL|Panasonic|Sharp|Philips|Amazon|Other)[\s-]/i);
-        matchesBrand = !!(match && match[1] === filterBrand);
-      } else {
-        matchesBrand = false;
-      }
-    }
-    return (
-      (!filterDeviceType || p.deviceType === filterDeviceType) &&
-      matchesBrand &&
-      (!filterModel || p.deviceModel === filterModel)
-    );
+    // Device type filter
+    const matchesType = !filterDeviceType || p.deviceType === filterDeviceType;
+    
+    // Model filter
+    const matchesModel = !filterModel || p.deviceModel === filterModel;
+    
+    // Search term filter (searches name, SKU, description, supplier, deviceModel)
+    const matchesSearch = !partSearchTerm || 
+      p.name.toLowerCase().includes(partSearchTerm.toLowerCase()) ||
+      p.sku.toLowerCase().includes(partSearchTerm.toLowerCase()) ||
+      p.supplier.toLowerCase().includes(partSearchTerm.toLowerCase()) ||
+      (p.description && p.description.toLowerCase().includes(partSearchTerm.toLowerCase())) ||
+      (p.deviceModel && p.deviceModel.toLowerCase().includes(partSearchTerm.toLowerCase()));
+    
+    return matchesType && matchesModel && matchesSearch;
   });
   const loadDevices = async () => {
     try {
@@ -1067,13 +1040,22 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                 {/* Parts Filter UI */}
                 <div className="flex flex-wrap gap-4 items-end mb-4">
                   <div>
+                    <label className="block text-xs font-medium mb-1">Search</label>
+                    <Input
+                      type="text"
+                      placeholder="Search parts..."
+                      className="min-w-[200px]"
+                      value={partSearchTerm}
+                      onChange={e => setPartSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <div>
                     <label className="block text-xs font-medium mb-1">Device Type</label>
                     <select
                       className="border rounded px-2 py-1 min-w-[120px]"
                       value={filterDeviceType}
                       onChange={e => {
                         setFilterDeviceType(e.target.value);
-                        setFilterBrand('');
                         setFilterModel('');
                       }}
                     >
@@ -1084,27 +1066,13 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium mb-1">Brand</label>
-                    <select
-                      className="border rounded px-2 py-1 min-w-[120px]"
-                      value={filterBrand}
-                      onChange={e => {
-                        setFilterBrand(e.target.value);
-                        setFilterModel('');
-                      }}
-                    >
-                      <option value="">All</option>
-                      {partBrands.map((brand: string) => (
-                        <option key={brand} value={brand}>{brand}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
                     <label className="block text-xs font-medium mb-1">Model</label>
                     <select
                       className="border rounded px-2 py-1 min-w-[120px]"
                       value={filterModel}
                       onChange={e => setFilterModel(e.target.value)}
+                      disabled={!filterDeviceType && partModels.length > 50}
+                      title={!filterDeviceType && partModels.length > 50 ? "Select a device type first" : ""}
                     >
                       <option value="">All</option>
                       {partModels.map((model: string) => (
@@ -1112,19 +1080,22 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                       ))}
                     </select>
                   </div>
-                  {(filterDeviceType || filterBrand || filterModel) && (
+                  {(partSearchTerm || filterDeviceType || filterModel) && (
                     <button
                       type="button"
                       className="ml-2 px-2 py-1 border rounded text-xs bg-gray-100 hover:bg-gray-200"
                       onClick={() => {
+                        setPartSearchTerm('');
                         setFilterDeviceType('');
-                        setFilterBrand('');
                         setFilterModel('');
                       }}
                     >
                       Clear Filters
                     </button>
                   )}
+                  <div className="ml-auto text-sm text-gray-600">
+                    Showing {filteredParts.length} of {parts.length} parts
+                  </div>
                 </div>
                 <div className="space-y-3">
                   {filteredParts.map((part: Part) => (
