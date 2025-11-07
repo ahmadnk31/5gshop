@@ -158,24 +158,25 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="min-w-[55vw] max-h-[95vh] overflow-y-auto p-8">
+      <DialogContent className="max-w-[95vw] sm:max-w-[85vw] md:max-w-[75vw] lg:max-w-[55vw] max-h-[95vh] overflow-y-auto p-4 sm:p-6 lg:p-8">
         <DialogHeader>
-          <DialogTitle className="flex items-center text-xl">
-            <Package className="h-6 w-6 mr-3" />
-            Unified Inventory Management
+          <DialogTitle className="flex items-center text-lg sm:text-xl">
+            <Package className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
+            <span className="truncate">Unified Inventory Management</span>
           </DialogTitle>
-          <DialogDescription className="text-base">
+          <DialogDescription className="text-sm sm:text-base">
             Monitor and update both parts and accessories inventory levels
           </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue="parts" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="parts" className="flex items-center">
-              <Wrench className="h-4 w-4 mr-2" />
-              Repair Parts ({state.parts.length})
+            <TabsTrigger value="parts" className="flex items-center text-xs sm:text-sm">
+              <Wrench className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Repair Parts ({state.parts.length})</span>
+              <span className="sm:hidden">Parts ({state.parts.length})</span>
             </TabsTrigger>
-            <TabsTrigger value="accessories" className="flex items-center">
+            <TabsTrigger value="accessories" className="flex items-center text-xs sm:text-sm">
               <ShoppingBag className="h-4 w-4 mr-2" />
               Accessories ({accessories.length})
             </TabsTrigger>

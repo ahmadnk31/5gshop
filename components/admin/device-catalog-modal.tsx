@@ -621,23 +621,23 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-screen h-screen max-w-none max-h-none overflow-y-auto p-8">
+      <DialogContent className="w-screen h-screen max-w-none max-h-none overflow-y-auto p-4 sm:p-6 lg:p-8">
         <DialogHeader>
-          <DialogTitle className="flex items-center text-xl">
-            <Settings className="h-6 w-6 mr-3" />
-            Device Catalog Management
+          <DialogTitle className="flex items-center text-lg sm:text-xl">
+            <Settings className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
+            <span className="truncate">Device Catalog Management</span>
           </DialogTitle>
-          <DialogDescription className="text-base">
+          <DialogDescription className="text-sm sm:text-base">
             Manage devices, models, parts, and inventory for your repair shop
           </DialogDescription>
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 h-12 mb-8">
-            <TabsTrigger value="devices" className="text-base">Devices</TabsTrigger>
-            <TabsTrigger value="parts" className="text-base">Parts</TabsTrigger>
-            <TabsTrigger value="services" className="text-base">Services</TabsTrigger>
-            <TabsTrigger value="settings" className="text-base">Settings</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 h-10 sm:h-12 mb-4 sm:mb-8">
+            <TabsTrigger value="devices" className="text-xs sm:text-sm lg:text-base">Devices</TabsTrigger>
+            <TabsTrigger value="parts" className="text-xs sm:text-sm lg:text-base">Parts</TabsTrigger>
+            <TabsTrigger value="services" className="text-xs sm:text-sm lg:text-base">Services</TabsTrigger>
+            <TabsTrigger value="settings" className="text-xs sm:text-sm lg:text-base">Settings</TabsTrigger>
           </TabsList>
 
           {/* Devices Tab */}

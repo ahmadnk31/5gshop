@@ -126,10 +126,10 @@ export function NewRepairModal({ isOpen, onClose }: NewRepairModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[50vw] max-h-[95vh] overflow-y-auto p-8">
+      <DialogContent className="max-w-[95vw] sm:max-w-[85vw] md:max-w-[75vw] lg:max-w-[50vw] max-h-[95vh] overflow-y-auto p-4 sm:p-6 lg:p-8">
         <DialogHeader>
-          <DialogTitle className="text-xl">Create New Repair Order</DialogTitle>
-          <DialogDescription className="text-base">
+          <DialogTitle className="text-lg sm:text-xl">Create New Repair Order</DialogTitle>
+          <DialogDescription className="text-sm sm:text-base">
             Step {step} of 3: {step === 1 ? 'Customer' : step === 2 ? 'Device' : 'Repair Details'}
           </DialogDescription>
         </DialogHeader>

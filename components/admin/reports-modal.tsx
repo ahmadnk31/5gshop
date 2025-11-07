@@ -196,21 +196,27 @@ export function ReportsModal({ isOpen, onClose, data }: ReportsModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="min-w-[70vw] max-h-[95vh] overflow-y-auto p-8">
+      <DialogContent className="max-w-[95vw] sm:max-w-[85vw] md:max-w-[75vw] lg:max-w-[70vw] max-h-[95vh] overflow-y-auto p-4 sm:p-6 lg:p-8">
         <DialogHeader>
-          <DialogTitle className="flex items-center text-xl">
-            <BarChart3 className="h-6 w-6 mr-3" />
+          <DialogTitle className="flex items-center text-lg sm:text-xl">
+            <BarChart3 className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
             Reports & Analytics
           </DialogTitle>
-          <DialogDescription className="text-base">
+          <DialogDescription className="text-sm sm:text-base">
             Generate detailed reports and export business data
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="generate" className="space-y-6">
+        <Tabs defaultValue="generate" className="space-y-4 sm:space-y-6">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="generate">Generate Reports</TabsTrigger>
-            <TabsTrigger value="analytics">Quick Analytics</TabsTrigger>
+            <TabsTrigger value="generate" className="text-xs sm:text-sm">
+              <span className="hidden sm:inline">Generate Reports</span>
+              <span className="sm:hidden">Generate</span>
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="text-xs sm:text-sm">
+              <span className="hidden sm:inline">Quick Analytics</span>
+              <span className="sm:hidden">Analytics</span>
+            </TabsTrigger>
           </TabsList>
 
           {/* Generate Reports Tab */}

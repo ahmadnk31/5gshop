@@ -93,40 +93,40 @@ export function RepairDetailModal({ repair, isOpen, onClose }: RepairDetailModal
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-[95vw] sm:max-w-2xl lg:max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Settings className="h-5 w-5" />
-            Repair Details - {repair.id}
+          <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="truncate">Repair Details - {repair.id}</span>
           </DialogTitle>
         </DialogHeader>
 
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="notes">Notes</TabsTrigger>
-            <TabsTrigger value="customer">Customer</TabsTrigger>
+            <TabsTrigger value="overview" className="text-xs sm:text-sm">Overview</TabsTrigger>
+            <TabsTrigger value="notes" className="text-xs sm:text-sm">Notes</TabsTrigger>
+            <TabsTrigger value="customer" className="text-xs sm:text-sm">Customer</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TabsContent value="overview" className="space-y-3 sm:space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Device Information</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">Device Information</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2 sm:space-y-3">
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Device</Label>
-                    <p className="text-sm">{repair.device.brand} {repair.device.model}</p>
+                    <Label className="text-xs sm:text-sm font-medium text-gray-600">Device</Label>
+                    <p className="text-sm truncate">{repair.device.brand} {repair.device.model}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Type</Label>
+                    <Label className="text-xs sm:text-sm font-medium text-gray-600">Type</Label>
                     <p className="text-sm capitalize">{repair.device.type.toLowerCase()}</p>
                   </div>
                   {repair.device.serialNumber && (
                     <div>
-                      <Label className="text-sm font-medium text-gray-600">Serial Number</Label>
-                      <p className="text-sm font-mono">{repair.device.serialNumber}</p>
+                      <Label className="text-xs sm:text-sm font-medium text-gray-600">Serial Number</Label>
+                      <p className="text-xs sm:text-sm font-mono truncate">{repair.device.serialNumber}</p>
                     </div>
                   )}
                 </CardContent>
@@ -134,40 +134,40 @@ export function RepairDetailModal({ repair, isOpen, onClose }: RepairDetailModal
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Repair Information</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">Repair Information</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2 sm:space-y-3">
                   <div className="flex items-center gap-2">
-                    <Label className="text-sm font-medium text-gray-600">Status:</Label>
-                    <Badge className={getStatusColor(repair.status)}>
+                    <Label className="text-xs sm:text-sm font-medium text-gray-600">Status:</Label>
+                    <Badge className={`${getStatusColor(repair.status)} text-xs`}>
                       {repair.status.replace('_', ' ')}
                     </Badge>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Label className="text-sm font-medium text-gray-600">Priority:</Label>
-                    <Badge className={getPriorityColor(repair.priority)}>
+                    <Label className="text-xs sm:text-sm font-medium text-gray-600">Priority:</Label>
+                    <Badge className={`${getPriorityColor(repair.priority)} text-xs`}>
                       {repair.priority}
                     </Badge>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Issue</Label>
-                    <p className="text-sm">{repair.issue}</p>
+                    <Label className="text-xs sm:text-sm font-medium text-gray-600">Issue</Label>
+                    <p className="text-sm line-clamp-2">{repair.issue}</p>
                   </div>
                   <div>
-                    <Label className="text-sm font-medium text-gray-600">Description</Label>
-                    <p className="text-sm">{repair.description}</p>
+                    <Label className="text-xs sm:text-sm font-medium text-gray-600">Description</Label>
+                    <p className="text-sm line-clamp-3">{repair.description}</p>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <Card>
-                <CardContent className="flex items-center gap-3 p-4">
-                  <CalendarDays className="h-8 w-8 text-blue-500" />
-                  <div>
-                    <p className="text-sm font-medium">Created</p>
-                    <p className="text-xs text-gray-600">
+                <CardContent className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4">
+                  <CalendarDays className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium">Created</p>
+                    <p className="text-xs text-gray-600 truncate">
                       {new Date(repair.createdAt).toLocaleDateString()}
                     </p>
                   </div>
@@ -175,11 +175,11 @@ export function RepairDetailModal({ repair, isOpen, onClose }: RepairDetailModal
               </Card>
 
               <Card>
-                <CardContent className="flex items-center gap-3 p-4">
-                  <CalendarDays className="h-8 w-8 text-green-500" />
-                  <div>
-                    <p className="text-sm font-medium">Estimated Completion</p>
-                    <p className="text-xs text-gray-600">
+                <CardContent className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4">
+                  <CalendarDays className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium truncate">Est. Completion</p>
+                    <p className="text-xs text-gray-600 truncate">
                       {new Date(repair.estimatedCompletion).toLocaleDateString()}
                     </p>
                   </div>
@@ -187,11 +187,11 @@ export function RepairDetailModal({ repair, isOpen, onClose }: RepairDetailModal
               </Card>
 
               <Card>
-                <CardContent className="flex items-center gap-3 p-4">
-                  <DollarSign className="h-8 w-8 text-green-500" />
-                  <div>
-                    <p className="text-sm font-medium">Total Cost</p>
-                    <p className="text-xs text-gray-600">
+                <CardContent className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4">
+                  <DollarSign className="h-6 w-6 sm:h-8 sm:w-8 text-green-500 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-medium">Total Cost</p>
+                    <p className="text-xs text-gray-600 truncate">
                       ${repair.cost.toFixed(2)}
                     </p>
                   </div>

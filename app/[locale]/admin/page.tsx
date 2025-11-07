@@ -495,15 +495,15 @@ function AdminDashboardContent() {
 
         {/* Analytics Tab */}
         {activeTab === 'analytics' && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Analytics Header */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Analytics & Reports</h2>
-              <p className="text-gray-600">Business insights and performance metrics</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Analytics & Reports</h2>
+              <p className="text-sm sm:text-base text-gray-600">Business insights and performance metrics</p>
             </div>
 
             {/* Analytics Stats Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -562,24 +562,24 @@ function AdminDashboardContent() {
               </Card>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
               {/* Revenue Chart */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <LineChart className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-base sm:text-lg">
+                    <LineChart className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                     Monthly Revenue
                   </CardTitle>
-                  <CardDescription>Revenue breakdown by month</CardDescription>
+                  <CardDescription className="text-xs sm:text-sm">Revenue breakdown by month</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {state.stats.monthlyRevenue.length > 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {state.stats.monthlyRevenue.map((month, index) => (
-                        <div key={index} className="flex items-center justify-between">
-                          <span className="text-sm font-medium">{month.month}</span>
-                          <div className="flex items-center space-x-2">
-                            <div className="w-32 bg-gray-200 rounded-full h-2">
+                        <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                          <span className="text-xs sm:text-sm font-medium">{month.month}</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-full sm:w-32 bg-gray-200 rounded-full h-2">
                               <div 
                                 className="bg-green-600 h-2 rounded-full" 
                                 style={{ 
@@ -587,13 +587,13 @@ function AdminDashboardContent() {
                                 }}
                               ></div>
                             </div>
-                            <span className="text-sm font-bold">${month.revenue.toFixed(2)}</span>
+                            <span className="text-xs sm:text-sm font-bold whitespace-nowrap">${month.revenue.toFixed(2)}</span>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center py-8 text-gray-500 text-sm">
                       No revenue data available yet
                     </div>
                   )}
@@ -603,11 +603,11 @@ function AdminDashboardContent() {
               {/* Device Type Distribution */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <PieChart className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-base sm:text-lg">
+                    <PieChart className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                     Device Type Distribution
                   </CardTitle>
-                  <CardDescription>Repairs by device type</CardDescription>
+                  <CardDescription className="text-xs sm:text-sm">Repairs by device type</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {(() => {
@@ -625,25 +625,25 @@ function AdminDashboardContent() {
                         {deviceTypes.map(([type, count]) => {
                           const percentage = Math.round((count / totalRepairs) * 100);
                           return (
-                            <div key={type} className="flex items-center justify-between">
-                              <span className="text-sm font-medium capitalize">
+                            <div key={type} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                              <span className="text-xs sm:text-sm font-medium capitalize truncate">
                                 {type.toLowerCase().replace('_', ' ')}
                               </span>
-                              <div className="flex items-center space-x-2">
-                                <div className="w-24 bg-gray-200 rounded-full h-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-full sm:w-24 bg-gray-200 rounded-full h-2">
                                   <div 
                                     className="bg-blue-600 h-2 rounded-full" 
                                     style={{ width: `${percentage}%` }}
                                   ></div>
                                 </div>
-                                <span className="text-sm">{count} ({percentage}%)</span>
+                                <span className="text-xs sm:text-sm whitespace-nowrap">{count} ({percentage}%)</span>
                               </div>
                             </div>
                           );
                         })}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
+                      <div className="text-center py-8 text-gray-500 text-sm">
                         No repair data available yet
                       </div>
                     );
@@ -654,11 +654,11 @@ function AdminDashboardContent() {
               {/* Repair Status Overview */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <BarChart3 className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-base sm:text-lg">
+                    <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                     Repair Status Overview
                   </CardTitle>
-                  <CardDescription>Current repair statuses</CardDescription>
+                  <CardDescription className="text-xs sm:text-sm">Current repair statuses</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {(() => {
@@ -680,12 +680,12 @@ function AdminDashboardContent() {
                     return Object.entries(statusCounts).length > 0 ? (
                       <div className="space-y-3">
                         {Object.entries(statusCounts).map(([status, count]) => (
-                          <div key={status} className="flex items-center justify-between">
-                            <span className="text-sm font-medium">
+                          <div key={status} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                            <span className="text-xs sm:text-sm font-medium truncate">
                               {status.replace('_', ' ')}
                             </span>
-                            <div className="flex items-center space-x-2">
-                              <div className="w-20 bg-gray-200 rounded-full h-2">
+                            <div className="flex items-center gap-2">
+                              <div className="w-full sm:w-20 bg-gray-200 rounded-full h-2">
                                 <div 
                                   className={`h-2 rounded-full ${statusColors[status as keyof typeof statusColors] || 'bg-gray-500'}`}
                                   style={{ 
@@ -693,13 +693,13 @@ function AdminDashboardContent() {
                                   }}
                                 ></div>
                               </div>
-                              <span className="text-sm font-bold">{count}</span>
+                              <span className="text-xs sm:text-sm font-bold whitespace-nowrap">{count}</span>
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
+                      <div className="text-center py-8 text-gray-500 text-sm">
                         No repair status data available
                       </div>
                     );
@@ -710,11 +710,11 @@ function AdminDashboardContent() {
               {/* Top Performing Services */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <TrendingUp className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-base sm:text-lg">
+                    <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                     Top Services
                   </CardTitle>
-                  <CardDescription>Most requested repair services</CardDescription>
+                  <CardDescription className="text-xs sm:text-sm">Most requested repair services</CardDescription>
                 </CardHeader>
                 <CardContent>
                   {(() => {
@@ -748,19 +748,19 @@ function AdminDashboardContent() {
                     return services.some(s => s.count > 0) ? (
                       <div className="space-y-3">
                         {services.filter(s => s.count > 0).slice(0, 5).map((service, index) => (
-                          <div key={index} className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-lg">{service.icon}</span>
-                              <span className="text-sm font-medium">{service.name}</span>
+                          <div key={index} className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                              <span className="text-base sm:text-lg">{service.icon}</span>
+                              <span className="text-xs sm:text-sm font-medium truncate">{service.name}</span>
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <Badge variant="secondary">{service.count}</Badge>
+                            <div className="flex items-center gap-2">
+                              <Badge variant="secondary" className="text-xs">{service.count}</Badge>
                             </div>
                           </div>
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
+                      <div className="text-center py-8 text-gray-500 text-sm">
                         No service data available yet
                       </div>
                     );
@@ -773,56 +773,57 @@ function AdminDashboardContent() {
 
         {/* Inventory Tab */}
         {activeTab === 'inventory' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Inventory Management</h2>
-                <p className="text-gray-600">Manage parts, accessories, and stock levels</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Inventory Management</h2>
+                <p className="text-sm sm:text-base text-gray-600">Manage parts, accessories, and stock levels</p>
               </div>
-              <Button onClick={() => setShowInventoryModal(true)}>
+              <Button onClick={() => setShowInventoryModal(true)} className="w-full sm:w-auto">
                 <Package className="h-4 w-4 mr-2" />
-                Manage Inventory
+                <span className="hidden sm:inline">Manage Inventory</span>
+                <span className="sm:hidden">Manage</span>
               </Button>
             </div>
 
             {/* Quick Action Cards */}
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setShowInventoryModal(true)}>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <Package className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-base sm:text-lg">
+                    <Package className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                     Unified Inventory
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold">{state.parts.length}</p>
-                  <p className="text-sm text-gray-600">Parts & accessories in one place</p>
+                  <p className="text-xl sm:text-2xl font-bold">{state.parts.length}</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Parts & accessories in one place</p>
                 </CardContent>
               </Card>
 
               <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setShowAccessoryModal(true)}>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <Box className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-base sm:text-lg">
+                    <Box className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                     Accessories Management
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold">Advanced</p>
-                  <p className="text-sm text-gray-600">Full accessories CRUD operations</p>
+                  <p className="text-xl sm:text-2xl font-bold">Advanced</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Full accessories CRUD operations</p>
                 </CardContent>
               </Card>
 
               <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setShowDeviceCatalogModal(true)}>
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg">
-                    <Wrench className="h-5 w-5 mr-2" />
+                  <CardTitle className="flex items-center text-base sm:text-lg">
+                    <Wrench className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                     Device Catalog
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold">Services</p>
-                  <p className="text-sm text-gray-600">Manage repair services</p>
+                  <p className="text-xl sm:text-2xl font-bold">Services</p>
+                  <p className="text-xs sm:text-sm text-gray-600">Manage repair services</p>
                 </CardContent>
               </Card>
             </div>
@@ -831,37 +832,41 @@ function AdminDashboardContent() {
 
         {/* Repairs Tab */}
         {activeTab === 'repairs' && (
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {/* Repairs Management */}
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                     <div>
-                      <CardTitle>Repair Orders</CardTitle>
-                      <CardDescription>Manage all repair requests and their status</CardDescription>
+                      <CardTitle className="text-lg sm:text-xl">Repair Orders</CardTitle>
+                      <CardDescription className="text-sm">Manage all repair requests and their status</CardDescription>
                     </div>
-                    <Button onClick={() => setShowNewRepairModal(true)}>
+                    <Button 
+                      onClick={() => setShowNewRepairModal(true)}
+                      className="w-full sm:w-auto"
+                    >
                       <Plus className="h-4 w-4 mr-2" />
-                      New Repair
+                      <span className="hidden sm:inline">New Repair</span>
+                      <span className="sm:hidden">New</span>
                     </Button>
                   </div>
                   
                   {/* Search and Filter */}
-                  <div className="flex space-x-4 mt-4">
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4">
                     <div className="flex-1 relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                       <Input
                         placeholder="Search repairs..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
+                        className="pl-10 w-full"
                       />
                     </div>
                     <select
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value as RepairStatus | 'all')}
-                      className="px-3 py-2 border rounded-md"
+                      className="px-3 py-2 border rounded-md text-sm w-full sm:w-auto"
                     >
                       <option value="all">All Status</option>
                       <option value="PENDING">Pending</option>
@@ -874,56 +879,60 @@ function AdminDashboardContent() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                  <div className="space-y-3 sm:space-y-4 max-h-[70vh] sm:max-h-96 overflow-y-auto">
                     {filteredRepairs.map((repair: Repair) => (
-                      <div key={repair.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <span className="font-semibold">{repair.id}</span>
-                            <Badge className={getPriorityColor(repair.priority)}>
-                              {repair.priority.toUpperCase()}
+                      <div key={repair.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 sm:p-4 border rounded-lg hover:bg-gray-50">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span className="font-semibold text-sm sm:text-base truncate">{repair.id}</span>
+                            <Badge className={`${getPriorityColor(repair.priority)} text-xs`}>
+                              {repair.priority}
                             </Badge>
-                            <Badge className={getStatusColor(repair.status)}>
-                              {repair.status.replace('_', ' ').toUpperCase()}
+                            <Badge className={`${getStatusColor(repair.status)} text-xs`}>
+                              {repair.status.replace('_', ' ')}
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-600">
+                          <p className="text-xs sm:text-sm text-gray-600 truncate">
                             <strong>{repair.customer.firstName} {repair.customer.lastName}</strong> - {repair.device.brand} {repair.device.model}
                           </p>
-                          <p className="text-sm text-gray-500">{repair.issue}</p>
-                          <div className="flex items-center space-x-4 mt-1 text-xs text-gray-400">
-                            <span>Created: {repair.createdAt}</span>
-                            <span>Est. completion: {repair.estimatedCompletion}</span>
-                            <span>${repair.cost}</span>
+                          <p className="text-xs sm:text-sm text-gray-500 line-clamp-2">{repair.issue}</p>
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-4 mt-2 text-xs text-gray-400">
+                            <span className="truncate">Created: {repair.createdAt}</span>
+                            <span className="hidden sm:inline truncate">Est: {repair.estimatedCompletion}</span>
+                            <span className="font-semibold">${repair.cost}</span>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center gap-2 self-end sm:self-auto">
                           <Button 
                             size="sm" 
                             variant="outline"
                             onClick={() => handleViewRepair(repair)}
-                            className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800"
+                            className="bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700 hover:text-blue-800 flex-1 sm:flex-none"
                           >
                             <Eye className="h-4 w-4" />
+                            <span className="ml-1 sm:hidden">View</span>
                           </Button>
                           <Button 
                             size="sm" 
                             variant="outline"
                             onClick={() => handleDeleteRepair(repair.id)}
                             disabled={isLoading(`delete-repair-${repair.id}`)}
-                            className="bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="bg-red-50 hover:bg-red-100 border-red-200 text-red-700 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed flex-1 sm:flex-none"
                           >
                             {isLoading(`delete-repair-${repair.id}`) ? (
                               <Loader2 className="h-4 w-4 animate-spin" />
                             ) : (
-                              <Trash2 className="h-4 w-4" />
+                              <>
+                                <Trash2 className="h-4 w-4" />
+                                <span className="ml-1 sm:hidden">Delete</span>
+                              </>
                             )}
                           </Button>
                         </div>
                       </div>
                     ))}
                     {filteredRepairs.length === 0 && (
-                      <div className="text-center py-8 text-gray-500">
+                      <div className="text-center py-8 text-gray-500 text-sm">
                         No repairs found matching your criteria.
                       </div>
                     )}
@@ -933,43 +942,47 @@ function AdminDashboardContent() {
             </div>
 
             {/* Quick Actions & Alerts */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl">Quick Actions</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="grid grid-cols-2 lg:grid-cols-1 gap-2 sm:gap-3">
                   <Button 
-                    className="w-full" 
+                    className="w-full text-xs sm:text-sm" 
                     variant="outline"
                     onClick={() => setShowNewRepairModal(true)}
                   >
-                    <Wrench className="h-4 w-4 mr-2" />
-                    New Repair Order
+                    <Wrench className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">New Repair Order</span>
+                    <span className="sm:hidden">New Repair</span>
                   </Button>
                   <Button 
-                    className="w-full" 
+                    className="w-full text-xs sm:text-sm" 
                     variant="outline"
                     onClick={() => setShowInventoryModal(true)}
                   >
-                    <Package className="h-4 w-4 mr-2" />
-                    Manage Inventory
+                    <Package className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Manage Inventory</span>
+                    <span className="sm:hidden">Inventory</span>
                   </Button>
                   <Button 
-                    className="w-full" 
+                    className="w-full text-xs sm:text-sm" 
                     variant="outline"
                     onClick={() => setShowAccessoryModal(true)}
                   >
-                    <Box className="h-4 w-4 mr-2" />
-                    Manage Accessories
+                    <Box className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Manage Accessories</span>
+                    <span className="sm:hidden">Accessories</span>
                   </Button>
                   <Button 
-                    className="w-full" 
+                    className="w-full text-xs sm:text-sm" 
                     variant="outline"
                     onClick={() => setShowDeviceCatalogModal(true)}
                   >
-                    <Wrench className="h-4 w-4 mr-2" />
-                    Device Catalog
+                    <Wrench className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Device Catalog</span>
+                    <span className="sm:hidden">Devices</span>
                   </Button>
                 </CardContent>
               </Card>
@@ -977,12 +990,12 @@ function AdminDashboardContent() {
               {/* Services Overview */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Services Overview</CardTitle>
-                  <CardDescription>
+                  <CardTitle className="text-base sm:text-lg">Services Overview</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">
                     Most popular repair services
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2 sm:space-y-3">
                   <div className="grid gap-2">
                     {(() => {
                       // Calculate service statistics from actual repair data
@@ -1014,18 +1027,18 @@ function AdminDashboardContent() {
                       return services.slice(0, 4).map((service, index) => {
                         const percentage = totalRepairs > 0 ? Math.round((service.count / totalRepairs) * 100) : 0;
                         return (
-                          <div key={index} className="flex items-center justify-between py-2">
-                            <span className="text-sm">{service.name}</span>
-                            <div className="flex items-center space-x-2">
+                          <div key={index} className="flex items-center justify-between py-2 gap-2">
+                            <span className="text-xs sm:text-sm truncate flex-1">{service.name}</span>
+                            <div className="flex items-center gap-2 flex-shrink-0">
                               <span className="text-xs text-gray-500">({service.count})</span>
-                              <Badge variant="secondary">{percentage}%</Badge>
+                              <Badge variant="secondary" className="text-xs">{percentage}%</Badge>
                             </div>
                           </div>
                         );
                       });
                     })()}
                     {state.repairs.length === 0 && (
-                      <div className="text-center py-4 text-gray-500 text-sm">
+                      <div className="text-center py-4 text-gray-500 text-xs sm:text-sm">
                         No repair data available yet
                       </div>
                     )}
@@ -1033,7 +1046,7 @@ function AdminDashboardContent() {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full mt-3"
+                    className="w-full mt-3 text-xs sm:text-sm"
                     onClick={() => setShowDeviceCatalogModal(true)}
                   >
                     Manage Services
@@ -1044,35 +1057,35 @@ function AdminDashboardContent() {
               {/* Alerts */}
               <Card>
                 <CardHeader>
-                  <CardTitle>System Alerts</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">System Alerts</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2 sm:space-y-3">
                   {state.stats.lowStockParts > 0 && (
-                    <div className="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg">
-                      <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium">Low Stock Alert</p>
-                        <p className="text-xs text-gray-600">{state.stats.lowStockParts} items need restocking</p>
+                    <div className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-yellow-50 rounded-lg">
+                      <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm font-medium">Low Stock Alert</p>
+                        <p className="text-xs text-gray-600 truncate">{state.stats.lowStockParts} items need restocking</p>
                       </div>
                     </div>
                   )}
                   
                   {state.stats.activeQuotes > 0 && (
-                    <div className="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
-                      <Clock className="h-5 w-5 text-blue-600 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium">Pending Quotes</p>
-                        <p className="text-xs text-gray-600">{state.stats.activeQuotes} quotes awaiting response</p>
+                    <div className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-blue-50 rounded-lg">
+                      <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm font-medium">Pending Quotes</p>
+                        <p className="text-xs text-gray-600 truncate">{state.stats.activeQuotes} quotes awaiting response</p>
                       </div>
                     </div>
                   )}
                   
                   {state.repairs.filter((r: Repair) => r.status === 'COMPLETED').length > 0 && (
-                    <div className="flex items-start space-x-3 p-3 bg-green-50 rounded-lg">
-                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-medium">Repairs Complete</p>
-                        <p className="text-xs text-gray-600">
+                    <div className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-green-50 rounded-lg">
+                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm font-medium">Repairs Complete</p>
+                        <p className="text-xs text-gray-600 truncate">
                           {state.repairs.filter((r: Repair) => r.status === 'COMPLETED').length} repairs ready for pickup
                         </p>
                       </div>
@@ -1084,19 +1097,19 @@ function AdminDashboardContent() {
               {/* Parts Inventory */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Inventory Status</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">Inventory Status</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     {state.parts.slice(0, 5).map((part: Part) => (
-                      <div key={part.id} className="flex justify-between items-center">
-                        <div>
-                          <p className="text-sm font-medium">{part.name}</p>
-                          <p className="text-xs text-gray-500">SKU: {part.sku}</p>
+                      <div key={part.id} className="flex justify-between items-center gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs sm:text-sm font-medium truncate">{part.name}</p>
+                          <p className="text-xs text-gray-500 truncate">SKU: {part.sku}</p>
                         </div>
-                        <div className="text-right">
-                          <Badge variant={part.inStock <= part.minStock ? "destructive" : "secondary"}>
-                            {part.inStock} in stock
+                        <div className="text-right flex-shrink-0">
+                          <Badge variant={part.inStock <= part.minStock ? "destructive" : "secondary"} className="text-xs">
+                            {part.inStock}
                           </Badge>
                         </div>
                       </div>
@@ -1110,15 +1123,17 @@ function AdminDashboardContent() {
 
         {/* Orders Tab */}
         {activeTab === 'orders' && (
-          <div>
-            <h2 className="text-xl font-bold mb-4">Orders Management</h2>
+          <div className="space-y-4">
+            <h2 className="text-xl sm:text-2xl font-bold">Orders Management</h2>
             <OrdersTable />
           </div>
         )}
 
         {/* Users Tab */}
         {activeTab === 'users' && (
-          <UserManagement />
+          <div className="space-y-4">
+            <UserManagement />
+          </div>
         )}
       </div>
 

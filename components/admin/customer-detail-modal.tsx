@@ -37,13 +37,13 @@ export function CustomerDetailModal({ isOpen, onClose, customer }: CustomerDetai
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[50vw] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-[95vw] sm:max-w-[85vw] md:max-w-[75vw] lg:max-w-[50vw] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="flex items-center text-xl">
-            <User className="h-6 w-6 mr-3" />
+          <DialogTitle className="flex items-center text-lg sm:text-xl">
+            <User className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
             Customer Details
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm">
             View and manage customer information and repair history
           </DialogDescription>
         </DialogHeader>
