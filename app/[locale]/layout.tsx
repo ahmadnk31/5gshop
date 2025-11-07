@@ -103,7 +103,7 @@ export default async function RootLayout({
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:alt" content="5gphones Leuven - GSM Reparatie & Telefoon Accessoires" />
+        <meta property="og:image:alt" content="5gphones Leuven - Phone Repair & Mobile Accessories | GSM Reparatie" />
         
         {/* Preload critical CSS */}
         <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />

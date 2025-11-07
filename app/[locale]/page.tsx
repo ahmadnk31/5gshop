@@ -26,56 +26,80 @@ import HomepageHeroCarouselClient from '@/components/homepage-hero-carousel-clie
 
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata({
-    title: "GSM Reparatie Leuven | Telefoon Reparatie | 5gphones",
-    description: "Professionele GSM reparatie en telefoon reparatie in Leuven. iPhone, Samsung, Huawei reparatie ✓ Scherm vervanging ✓ Batterij reparatie ✓ Snelle service ✓ Garantie. Bondgenotenlaan 84A, Leuven.",
+    title: "Phone Repair Leuven | Mobile & Smartphone Repair | GSM Reparatie | 5gphones",
+    description: "Professional phone repair & mobile device services in Leuven. iPhone, Samsung, Huawei repair ✓ Screen replacement ✓ Battery repair ✓ Fast service ✓ Warranty ✓ Bondgenotenlaan 84A | Professionele GSM en telefoon reparatie.",
     path: "",
     keywords: [
-      // Primary Dutch keywords for local search
+      // Primary English keywords (for international students/expats)
+      "phone repair leuven",
+      "mobile repair leuven",
+      "smartphone repair leuven",
+      "device repair leuven",
+      "cell phone repair leuven",
+      "iphone repair leuven",
+      "samsung repair leuven",
+      "screen repair leuven",
+      "screen replacement leuven",
+      "battery replacement leuven",
+      "phone shop leuven",
+      "mobile shop leuven",
+      "electronics repair leuven",
+      "phone accessories leuven",
+      
+      // Primary Dutch keywords (for local residents)
       "gsm reparatie leuven",
       "telefoon reparatie leuven",
       "smartphone reparatie leuven", 
       "iphone reparatie leuven",
       "samsung reparatie leuven",
-      "huawei reparatie leuven",
-      "xiaomi reparatie leuven",
       "scherm reparatie leuven",
       "batterij vervanging leuven",
       "gsm winkel leuven",
       "telefoon winkel leuven",
-      "smartphone winkel leuven",
-      "gsm onderdelen leuven",
       "telefoon accessoires leuven",
       
-      // English keywords for international students/visitors
-      "phone repair leuven",
-      "device repair leuven",
-      "smartphone repair leuven", 
-      "mobile repair leuven",
-      "cell phone repair leuven",
-      "iphone repair leuven",
-      "samsung repair leuven",
-      "screen replacement leuven",
-      "battery replacement leuven",
-      "phone shop leuven",
-      "electronics repair leuven",
+      // Brand-specific (English & Dutch)
+      "huawei repair leuven",
+      "xiaomi repair leuven",
+      "google pixel repair leuven",
+      "oneplus repair leuven",
+      "huawei reparatie leuven",
+      "xiaomi reparatie leuven",
       
-      // Location-specific variations
-      "leuven gsm reparatie",
-      "leuven telefoon reparatie", 
-      "reparatie leuven centrum",
-      "gsm reparatie centrum leuven",
-      "telefoon reparatie bondgenotenlaan",
-      "smartphone reparatie vlaams brabant",
+      // Service-specific (English)
+      "fast phone repair leuven",
+      "same day repair leuven",
+      "quick screen fix leuven",
+      "water damage repair leuven",
+      "charging port repair leuven",
+      "camera repair leuven",
+      "affordable repair leuven",
+      "reliable repair leuven",
+      "professional repair leuven",
+      "warranty repair leuven",
       
-      // Service-specific
+      // Service-specific (Dutch)
       "snelle reparatie leuven",
       "goedkope reparatie leuven", 
       "professionele reparatie leuven",
       "reparatie met garantie leuven",
-      "same day repair leuven",
-      "fast repair leuven",
-      "reliable repair leuven",
-      "professional repair leuven"
+      "waterschade reparatie leuven",
+      
+      // Location-specific variations
+      "leuven phone repair",
+      "leuven mobile repair",
+      "leuven gsm reparatie",
+      "leuven telefoon reparatie", 
+      "repair shop leuven center",
+      "phone repair bondgenotenlaan",
+      "reparatie leuven centrum",
+      "gsm reparatie centrum leuven",
+      
+      // Student-focused
+      "student phone repair leuven",
+      "cheap phone repair leuven",
+      "budget repair leuven",
+      "affordable mobile repair"
     ]
   });
 }
