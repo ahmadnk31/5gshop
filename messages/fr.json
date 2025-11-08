@@ -477,42 +477,132 @@
     }
   },
   "about": {
-    "meta": {
-      "title": "À propos de nous - 5gphones Louvain",
-      "description": "Découvrez notre histoire, notre mission et notre engagement envers un service de qualité"
-    },
-    "hero": {
-      "title": "À propos de 5gphones",
-      "subtitle": "Votre partenaire de confiance pour les réparations d'appareils à Louvain"
-    },
-    "mission": {
-      "title": "Notre mission",
-      "description": "Fournir des services de réparation professionnels et des accessoires de qualité à des prix abordables, avec un service client exceptionnel."
-    },
-    "values": {
-      "title": "Nos valeurs",
+  "hero": {
+    "title": "À propos de 5gphones Leuven",
+    "subtitle": "Votre partenaire de confiance pour les réparations d’appareils et les accessoires premium depuis 2019",
+    "getInTouch": "Nous Contacter",
+    "getQuote": "Demander un Devis"
+  },
+  "story": {
+    "title": "Notre Histoire",
+    "paragraph1": "5gphones a été fondé en 2019 avec une mission simple : offrir des services de réparation d’appareils fiables et abordables à notre communauté. Ce qui a commencé comme un petit atelier de réparation est devenu une entreprise locale de confiance, au service de milliers de clients.",
+    "paragraph2": "Nous avons remarqué que de nombreuses personnes étaient frustrées par les devis de réparation coûteux, les longs délais et le mauvais service client d’autres prestataires. Nous avons donc décidé de créer un autre type d’atelier — un lieu où le client est au centre et où la qualité de service prime avant tout.",
+    "paragraph3": "Aujourd’hui, nous sommes fiers d’être la référence locale pour la réparation de smartphones, tablettes, ordinateurs portables et bien plus encore. Notre équipe de techniciens certifiés a l’expertise nécessaire pour tout prendre en charge, des simples remplacements d’écran aux réparations complexes de carte logique.",
+    "timeline": {
+      "2019": "Création de 5gphones avec la vision de révolutionner les services de réparation d’appareils",
+      "2021": "Déménagement vers notre emplacement actuel et ajout d’accessoires premium",
+      "2024": "Plus de 10 000 réparations réussies et une note client moyenne de 4,9/5"
+    }
+  },
+  "achievements": {
+    "title": "Nos Réalisations",
+    "items": {
+      "customers": {
+        "number": "10 000+",
+        "title": "Clients Satisfaits",
+        "description": "Appareils réparés avec succès"
+      },
+      "rating": {
+        "number": "4,9/5",
+        "title": "Évaluation Client",
+        "description": "Basée sur plus de 1 200 avis"
+      },
+      "time": {
+        "number": "24–48h",
+        "title": "Délai Moyen de Réparation",
+        "description": "Temps de traitement rapide garanti"
+      },
+      "years": {
+        "number": "5",
+        "title": "Années d’Activité",
+        "description": "Prestataire de confiance local"
+      }
+    }
+  },
+  "values": {
+    "title": "Nos Valeurs",
+    "items": {
       "quality": {
-        "title": "Qualité",
-        "description": "Nous n'utilisons que des pièces de haute qualité et des techniques de réparation éprouvées"
+        "title": "Qualité Avant Tout",
+        "description": "Nous utilisons uniquement des pièces premium et respectons les normes de réparation les plus strictes"
       },
-      "speed": {
-        "title": "Rapidité",
-        "description": "Service rapide sans compromettre la qualité"
+      "care": {
+        "title": "Service Client",
+        "description": "Votre satisfaction est notre priorité — nous traitons chaque appareil comme s’il était le nôtre"
       },
-      "trust": {
-        "title": "Confiance",
-        "description": "Prix transparents et communication honnête"
+      "transparency": {
+        "title": "Transparence",
+        "description": "Aucun coût caché, communication claire et prix équitables"
       },
       "expertise": {
         "title": "Expertise",
-        "description": "Techniciens certifiés avec des années d'expérience"
+        "description": "Techniciens certifiés avec des années d’expérience et une formation continue"
       }
-    },
-    "team": {
-      "title": "Notre équipe",
-      "description": "Rencontrez nos techniciens experts dédiés à fournir le meilleur service"
     }
   },
+  "team": {
+    "title": "Rencontrez Notre Équipe",
+    "specialties": "Spécialités :",
+    "members": {
+      "alex": {
+        "name": "Alex Johnson",
+        "role": "Fondateur & Technicien en Chef",
+        "experience": "15+ ans",
+        "specialty1": "Réparation d’iPhone",
+        "specialty2": "Réparation de Carte Logique",
+        "specialty3": "Récupération de Données"
+      },
+      "sarah": {
+        "name": "Sarah Chen",
+        "role": "Technicienne Senior",
+        "experience": "8+ ans",
+        "specialty1": "Réparation Android",
+        "specialty2": "Réparation de Tablettes",
+        "specialty3": "Problèmes Logiciels"
+      },
+      "mike": {
+        "name": "Mike Rodriguez",
+        "role": "Spécialiste Ordinateurs Portables",
+        "experience": "10+ ans",
+        "specialty1": "Réparation MacBook",
+        "specialty2": "Réparation PC",
+        "specialty3": "Optimisation des Performances"
+      },
+      "emma": {
+        "name": "Emma Wilson",
+        "role": "Responsable Service Client",
+        "experience": "5+ ans",
+        "specialty1": "Relations Clients",
+        "specialty2": "Assurance Qualité",
+        "specialty3": "Gestion des Pièces"
+      }
+    }
+  },
+  "certifications": {
+    "title": "Certifications & Formations",
+    "professional": {
+      "title": "Certifications Professionnelles",
+      "item1": "Fournisseur de Services Agréé Apple",
+      "item2": "Centre de Réparation Certifié Samsung",
+      "item3": "Techniciens Certifiés CompTIA A+",
+      "item4": "Certification en Réparation d’Appareils Mobiles"
+    },
+    "training": {
+      "title": "Formation Continue",
+      "item1": "Sessions techniques mensuelles",
+      "item2": "Ateliers sur les dernières techniques de réparation",
+      "item3": "Programmes de formation sur les nouveaux appareils",
+      "item4": "Formation à l’excellence du service client"
+    }
+  },
+  "cta": {
+    "title": "Prêt à Découvrir la Différence 5gphones Leuven ?",
+    "subtitle": "Rejoignez des milliers de clients satisfaits qui nous font confiance pour leurs appareils",
+    "bookRepair": "Planifier une Réparation",
+    "visitStore": "Visiter Notre Magasin"
+  }
+}
+,
   "accessories": {
     "meta": {
       "title": "Accessoires pour téléphones et appareils - 5gphones Louvain",

@@ -233,7 +233,8 @@ export default function ContactPage() {
           </p>
           <Button size="lg" variant="secondary" className="bg-white text-green-700 hover:bg-gray-100 text-sm sm:text-base px-4 sm:px-6">
             <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
-            <span className="whitespace-nowrap">Call Emergency Line: +32 (466) 13 41 81</span>
+            
+            <span className="whitespace-wrap">+32 (466) 13 41 81</span>
           </Button>
         </div>
       </section>
