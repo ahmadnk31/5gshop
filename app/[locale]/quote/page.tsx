@@ -269,12 +269,7 @@ useEffect(() => {
 			<QuoteRequestTracker deviceType={formData.deviceType || 'unknown'} repairType={formData.service || formData.part || 'general_repair'} />
 			{/* Hero Section */}
 			<section
-				className="relative flex items-center justify-center min-h-[220px] sm:min-h-[300px] md:min-h-[350px] lg:min-h-[400px] animate-gradient-x bg-[length:200%_200%] px-4"
-				style={{
-					background: 'linear-gradient(120deg, #16A34A 0%, #2563EB 50%, #14B8A6 100%)',
-					backgroundSize: '200% 200%',
-					animation: 'gradient-x 8s ease-in-out infinite',
-				}}
+				className="relative flex bg-green-700 items-center justify-center min-h-[220px] sm:min-h-[300px] md:min-h-[350px] lg:min-h-[400px] animate-gradient-x bg-[length:200%_200%] px-4"
 			>
 				<div className="relative z-10 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto py-8 sm:py-12">
 					<h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-white mb-3 sm:mb-4 drop-shadow-lg">
@@ -354,8 +349,8 @@ useEffect(() => {
 									</div>
 								)}
 								{status === "authenticated" && session?.user && (
-									<div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-2">
-										<div className="flex items-center text-blue-800">
+									<div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-2">
+										<div className="flex items-center text-green-800">
 											<CheckCircle className="h-4 w-4 mr-2" />
 											<span className="text-sm font-medium">
 												{t('form.autoFilled', { defaultValue: 'Contact information auto-filled from your profile' })}

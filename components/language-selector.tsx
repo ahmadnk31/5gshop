@@ -2,54 +2,56 @@
 
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useLocale } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { Globe } from 'lucide-react';
 
-const locales = ['en', 'nl'] as const;
+const locales = [
+  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'nl', label: 'Nederlands', flag: '🇳🇱' },
+  { code: 'fr', label: 'Français', flag: '🇫🇷' }
+] as const;
 
 export function LanguageSelector() {
+  const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const currentLocale = useLocale();
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newLocale = e.target.value;
-    
-    // Use the router's built-in locale switching if available
-    // This is safer than manual pathname manipulation
     try {
       router.replace(pathname, { locale: newLocale });
     } catch (error) {
-      // Fallback to manual pathname construction if needed
-      console.warn('Router locale switching failed, using fallback method:', error);
-      
-      let newPath = pathname;
       const segments = pathname.split('/').filter(Boolean);
-      
-      // Check if first segment is a locale
-      if (locales.includes(segments[0] as any)) {
-        // Replace existing locale
+      if (locales.some((l) => l.code === segments[0])) {
         segments[0] = newLocale;
       } else {
-        // Add locale at the beginning
         segments.unshift(newLocale);
       }
-      
-      newPath = '/' + segments.join('/');
-      router.replace(newPath);
+      router.replace('/' + segments.join('/'));
     }
   };
 
   return (
-    <select
-      value={currentLocale}
-      onChange={handleChange}
-      aria-label="Select language"
-      className="rounded border px-2 py-1 text-sm text-primary mt-4 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700"
-    >
-      {locales.map((locale) => (
-        <option key={locale} value={locale}>
-          {locale === 'en' ? 'English' : locale === 'nl' ? 'Nederlands' : locale}
-        </option>
-      ))}
-    </select>
+    <div className="flex items-center gap-2 mt-4">
+      <Globe className="w-4 h-4 text-primary" aria-hidden="true" />
+      <select
+        value={currentLocale}
+        onChange={handleChange}
+        aria-label="Select language"
+        className="rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-primary px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+        disabled={!isMounted}
+      >
+        {locales.map(({ code, label, flag }) => (
+          <option key={code} value={code}>
+            {flag} {label}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 }

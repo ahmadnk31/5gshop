@@ -59,8 +59,19 @@ export default function WishlistPage() {
 
   const removeFromWishlist = async (itemType: 'part' | 'accessory', itemId: string) => {
     try {
-      await fetch(`/api/wishlist/${itemType}/${itemId}`, { method: 'DELETE' });
+      const body = itemType === 'part' ? { partId: itemId } : { accessoryId: itemId };
+      const response = await fetch('/api/wishlist', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to remove from wishlist');
+      }
+      
       await queryClient.invalidateQueries({ queryKey: ['wishlist', session?.user?.id] });
+      await refetch();
     } catch (error) {
       console.error('Error removing from wishlist:', error);
     }

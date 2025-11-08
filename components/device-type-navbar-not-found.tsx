@@ -24,14 +24,14 @@ export default function DeviceTypeNavbarNotFound({ deviceType, onRetry }: Device
           </div>
 
           {/* Title */}
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2 break-words">
             {t('notFound.title', { 
               defaultValue: deviceType ? `No ${deviceType} Found` : 'No Items Found' 
             })}
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-gray-600 mb-4 break-words whitespace-normal">
             {t('notFound.description', { 
               defaultValue: deviceType 
                 ? `We couldn't find any ${deviceType.toLowerCase()} models or parts at the moment.`

@@ -137,7 +137,7 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-20">
+      <section className="bg-gradient-to-r from-green-600 to-green-700 text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             {t('hero.title')}
@@ -146,10 +146,10 @@ export default function AboutPage() {
             {t('hero.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary">
+            <Button asChild size="lg" variant="secondary" className="bg-white text-green-700 hover:bg-gray-100">
               <Link href="/contact">{t('hero.getInTouch')}</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-white bg-transparent border-white hover:bg-white hover:text-indigo-600">
+            <Button asChild size="lg" variant="outline" className="text-white bg-transparent border-white hover:bg-white hover:text-green-700">
               <Link href="/quote">{t('hero.getQuote')}</Link>
             </Button>
           </div>
@@ -174,23 +174,23 @@ export default function AboutPage() {
                 </p>
               </div>
               <div className="space-y-4">
-                <div className="bg-blue-50 p-6 rounded-lg">
+                <div className="bg-green-50 p-6 rounded-lg border-2 border-green-200">
                   <div className="flex items-center mb-4">
-                    <Calendar className="h-6 w-6 text-blue-600 mr-2" />
+                    <Calendar className="h-6 w-6 text-green-600 mr-2" />
                     <span className="font-semibold">2019</span>
                   </div>
                   <p className="text-sm text-gray-600">{t('story.timeline.2019')}</p>
                 </div>
-                <div className="bg-green-50 p-6 rounded-lg">
+                <div className="bg-green-50 p-6 rounded-lg border-2 border-green-200">
                   <div className="flex items-center mb-4">
                     <MapPin className="h-6 w-6 text-green-600 mr-2" />
                     <span className="font-semibold">2021</span>
                   </div>
                   <p className="text-sm text-gray-600">{t('story.timeline.2021')}</p>
                 </div>
-                <div className="bg-purple-50 p-6 rounded-lg">
+                <div className="bg-green-50 p-6 rounded-lg border-2 border-green-200">
                   <div className="flex items-center mb-4">
-                    <Award className="h-6 w-6 text-purple-600 mr-2" />
+                    <Award className="h-6 w-6 text-green-600 mr-2" />
                     <span className="font-semibold">2024</span>
                   </div>
                   <p className="text-sm text-gray-600">{t('story.timeline.2024')}</p>
@@ -207,10 +207,10 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold text-center mb-12">{t('achievements.title')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {achievements.map((achievement, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+              <Card key={index} className="text-center hover:shadow-lg transition-shadow border-2 border-green-100 hover:border-green-300">
                 <CardHeader>
-                  <achievement.icon className="h-16 w-16 text-blue-600 mx-auto mb-4" />
-                  <CardTitle className="text-3xl font-bold text-blue-600">{achievement.number}</CardTitle>
+                  <achievement.icon className="h-16 w-16 text-green-600 mx-auto mb-4" />
+                  <CardTitle className="text-3xl font-bold text-green-600">{achievement.number}</CardTitle>
                   <CardDescription className="text-lg font-semibold">{achievement.title}</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -229,8 +229,8 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {values.map((value, index) => (
               <div key={index} className="text-center">
-                <div className="bg-blue-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <value.icon className="h-10 w-10 text-blue-600" />
+                <div className="bg-green-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <value.icon className="h-10 w-10 text-green-600" />
                 </div>
                 <h3 className="text-xl font-semibold mb-4">{value.title}</h3>
                 <p className="text-gray-600">{value.description}</p>
@@ -246,21 +246,21 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold text-center mb-12">{t('team.title')}</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
+              <Card key={index} className="hover:shadow-lg transition-shadow border-2 border-gray-200 hover:border-green-300">
                 <CardHeader className="text-center">
-                  <div className="w-32 h-32 bg-gray-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <Users className="h-16 w-16 text-gray-400" />
+                  <div className="w-32 h-32 bg-green-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <Users className="h-16 w-16 text-green-600" />
                   </div>
                   <CardTitle className="text-xl">{member.name}</CardTitle>
-                  <CardDescription className="text-blue-600 font-semibold">{member.role}</CardDescription>
-                  <Badge variant="outline">{member.experience}</Badge>
+                  <CardDescription className="text-green-600 font-semibold">{member.role}</CardDescription>
+                  <Badge variant="outline" className="border-green-600 text-green-700">{member.experience}</Badge>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
                     <p className="text-sm font-semibold">{t('team.specialties')}</p>
                     <div className="flex flex-wrap gap-1">
                       {member.specialties.map((specialty, i) => (
-                        <Badge key={i} variant="secondary" className="text-xs">
+                        <Badge key={i} variant="secondary" className="text-xs bg-green-50 text-green-700">
                           {specialty}
                         </Badge>
                       ))}
@@ -279,55 +279,55 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold text-center mb-12">{t('certifications.title')}</h2>
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8">
-              <Card>
+              <Card className="border-2 border-green-100">
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <Award className="h-6 w-6 mr-2 text-blue-600" />
+                    <Award className="h-6 w-6 mr-2 text-green-600" />
                     {t('certifications.professional.title')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
                     <span>{t('certifications.professional.item1')}</span>
                   </div>
                   <div className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
                     <span>{t('certifications.professional.item2')}</span>
                   </div>
                   <div className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
                     <span>{t('certifications.professional.item3')}</span>
                   </div>
                   <div className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
                     <span>{t('certifications.professional.item4')}</span>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-2 border-green-100">
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <Target className="h-6 w-6 mr-2 text-purple-600" />
+                    <Target className="h-6 w-6 mr-2 text-green-600" />
                     {t('certifications.training.title')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
                     <span>{t('certifications.training.item1')}</span>
                   </div>
                   <div className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
                     <span>{t('certifications.training.item2')}</span>
                   </div>
                   <div className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
                     <span>{t('certifications.training.item3')}</span>
                   </div>
                   <div className="flex items-center">
-                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                    <CheckCircle className="h-5 w-5 text-green-600 mr-3" />
                     <span>{t('certifications.training.item4')}</span>
                   </div>
                 </CardContent>
@@ -338,15 +338,15 @@ export default function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-secondary text-white py-16">
+      <section className="bg-gradient-to-r from-green-600 to-green-700 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">{t('cta.title')}</h2>
           <p className="text-xl mb-8">{t('cta.subtitle')}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" >
+            <Button asChild size="lg" className="bg-white text-green-700 hover:bg-gray-100">
               <Link href="/repairs">{t('cta.bookRepair')}</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-white bg-transparent border-white hover:bg-white hover:text-indigo-600">
+            <Button asChild size="lg" variant="outline" className="text-white bg-transparent border-white hover:bg-white hover:text-green-700">
               <Link href="/contact">{t('cta.visitStore')}</Link>
             </Button>
           </div>

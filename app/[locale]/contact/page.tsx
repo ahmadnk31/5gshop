@@ -47,7 +47,7 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary to-secondary text-white py-16">
+      <section className="bg-gradient-to-r from-green-600 to-green-700 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
             {t('hero.title')}
@@ -62,9 +62,9 @@ export default function ContactPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-            <Card className="text-center">
+            <Card className="text-center border-2 border-green-100 hover:border-green-300 hover:shadow-lg transition-all">
               <CardHeader>
-                <MapPin className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <MapPin className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>{t('info.visitUs')}</CardTitle>
               </CardHeader>
               <CardContent>
@@ -77,23 +77,23 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center border-2 border-green-100 hover:border-green-300 hover:shadow-lg transition-all">
               <CardHeader>
                 <Phone className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>{t('info.callUs')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  <strong>{t('info.phone.main')}:</strong> <TrackablePhoneLink phoneNumber="+32466134181" className="text-blue-600 hover:underline">+32 (466) 13 41 81</TrackablePhoneLink><br />
-                  <strong>{t('info.phone.support')}:</strong> <TrackablePhoneLink phoneNumber="+32467871205" className="text-blue-600 hover:underline">+32 (467) 87 12 05</TrackablePhoneLink><br />
-                  <strong>{t('info.phone.emergency')}:</strong> <TrackablePhoneLink phoneNumber="+32466134181" className="text-blue-600 hover:underline">+32 (466) 13 41 81</TrackablePhoneLink>
+                  <strong>{t('info.phone.main')}:</strong> <TrackablePhoneLink phoneNumber="+32466134181" className="text-green-600 hover:underline">+32 (466) 13 41 81</TrackablePhoneLink><br />
+                  <strong>{t('info.phone.support')}:</strong> <TrackablePhoneLink phoneNumber="+32467871205" className="text-green-600 hover:underline">+32 (467) 87 12 05</TrackablePhoneLink><br />
+                  <strong>{t('info.phone.emergency')}:</strong> <TrackablePhoneLink phoneNumber="+32466134181" className="text-green-600 hover:underline">+32 (466) 13 41 81</TrackablePhoneLink>
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center border-2 border-green-100 hover:border-green-300 hover:shadow-lg transition-all">
               <CardHeader>
-                <Mail className="h-12 w-12 text-purple-600 mx-auto mb-4" />
+                <Mail className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>{t('info.emailUs')}</CardTitle>
               </CardHeader>
               <CardContent>
@@ -105,9 +105,9 @@ export default function ContactPage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center border-2 border-green-100 hover:border-green-300 hover:shadow-lg transition-all">
               <CardHeader>
-                <Clock className="h-12 w-12 text-orange-600 mx-auto mb-4" />
+                <Clock className="h-12 w-12 text-green-600 mx-auto mb-4" />
                 <CardTitle>{t('info.hoursLabel')}</CardTitle>
               </CardHeader>
               <CardContent>
@@ -123,10 +123,10 @@ export default function ContactPage() {
           {/* Contact Form and Map */}
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <Card>
+            <Card className="border-2 border-green-100">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <MessageSquare className="h-6 w-6 mr-2" />
+                <CardTitle className="flex items-center text-green-700">
+                  <MessageSquare className="h-6 w-6 mr-2 text-green-600" />
                   Send Us a Message
                 </CardTitle>
                 <CardDescription>
@@ -140,10 +140,10 @@ export default function ContactPage() {
 
             {/* Map and Directions */}
             <div className="space-y-6">
-              <Card>
+              <Card className="border-2 border-green-100">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Navigation className="h-6 w-6 mr-2" />
+                  <CardTitle className="flex items-center text-green-700">
+                    <Navigation className="h-6 w-6 mr-2 text-green-600" />
                     Find Our Location
                   </CardTitle>
                 </CardHeader>
@@ -152,25 +152,25 @@ export default function ContactPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-2 border-green-100">
                 <CardHeader>
-                  <CardTitle>Parking & Access</CardTitle>
+                  <CardTitle className="text-green-700">Parking & Access</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                    <div className="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
                     <p className="text-sm text-gray-600">Free parking available in front of the store</p>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                    <div className="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
                     <p className="text-sm text-gray-600">Wheelchair accessible entrance</p>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                    <div className="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
                     <p className="text-sm text-gray-600">Public transportation: Bus stop 50m away</p>
                   </div>
                   <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
+                    <div className="w-2 h-2 bg-green-600 rounded-full mt-2"></div>
                     <p className="text-sm text-gray-600">Train Station: 5-minute walk</p>
                   </div>
                 </CardContent>
@@ -185,36 +185,36 @@ export default function ContactPage() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            <Card>
+            <Card className="border-2 border-green-100 hover:border-green-300 hover:shadow-lg transition-all">
               <CardHeader>
-                <CardTitle className="text-lg">How long do repairs typically take?</CardTitle>
+                <CardTitle className="text-lg text-green-700">How long do repairs typically take?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">Most repairs are completed within 24-48 hours. Complex repairs may take 3-5 business days. We'll provide an estimated completion time when you drop off your device.</p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2 border-green-100 hover:border-green-300 hover:shadow-lg transition-all">
               <CardHeader>
-                <CardTitle className="text-lg">Do you offer warranties on repairs?</CardTitle>
+                <CardTitle className="text-lg text-green-700">Do you offer warranties on repairs?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">Yes! We provide a 90-day warranty on all repairs and replacement parts. This covers any defects in workmanship or parts failure.</p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2 border-green-100 hover:border-green-300 hover:shadow-lg transition-all">
               <CardHeader>
-                <CardTitle className="text-lg">What payment methods do you accept?</CardTitle>
+                <CardTitle className="text-lg text-green-700">What payment methods do you accept?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">We accept cash, all major credit cards (Visa, MasterCard, American Express), debit cards, and digital payments (Apple Pay, Google Pay).</p>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-2 border-green-100 hover:border-green-300 hover:shadow-lg transition-all">
               <CardHeader>
-                <CardTitle className="text-lg">Do you provide free diagnostics?</CardTitle>
+                <CardTitle className="text-lg text-green-700">Do you provide free diagnostics?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">Yes, we offer free diagnostic services to identify the issue with your device. You'll receive a detailed quote before any repair work begins.</p>
@@ -225,15 +225,15 @@ export default function ContactPage() {
       </section>
 
       {/* Emergency Service */}
-      <section className="bg-red-600 text-white py-12">
+      <section className="bg-gradient-to-r from-green-600 to-green-700 text-white py-8 sm:py-12">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl font-bold mb-4">Emergency Repair Service</h2>
-          <p className="text-lg mb-6">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4">Emergency Repair Service</h2>
+          <p className="text-base sm:text-lg mb-4 sm:mb-6 max-w-2xl text-white opacity-80 mx-auto px-2">
             Device emergency? We offer same-day repair service for critical issues.
           </p>
-          <Button size="lg" variant="secondary">
-            <Phone className="h-4 w-4 mr-2" />
-            Call Emergency Line: +32 (466) 13 41 81
+          <Button size="lg" variant="secondary" className="bg-white text-green-700 hover:bg-gray-100 text-sm sm:text-base px-4 sm:px-6">
+            <Phone className="h-4 w-4 mr-2 flex-shrink-0" />
+            <span className="whitespace-nowrap">Call Emergency Line: +32 (466) 13 41 81</span>
           </Button>
         </div>
       </section>

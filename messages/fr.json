@@ -1,0 +1,1491 @@
+{
+  "homepageHero": {
+    "brandTitle": "Tous vos besoins en appareils en un seul endroit",
+    "brandSubtitle": "Accessoires, pièces et réparations pour chaque appareil.",
+    "brandCta": "Acheter maintenant",
+    "accessoryTitle": "Accessoires",
+    "accessorySubtitle": "Trouvez l'accessoire parfait pour votre téléphone ou tablette.",
+    "accessoryCta": "Voir les accessoires",
+    "partTitle": "Pièces de rechange",
+    "partSubtitle": "Pièces de haute qualité pour toutes les grandes marques.",
+    "partCta": "Parcourir les pièces",
+    "repairTitle": "Réserver une réparation",
+    "repairSubtitle": "Réparations rapides et certifiées par des experts.",
+    "repairCta": "Réserver maintenant",
+    "uspTitle": "Pourquoi nous choisir?",
+    "uspSubtitle": "Livraison gratuite, garantie et service de qualité supérieure.",
+    "uspCta": "En savoir plus"
+  },
+  "homepage": {
+    "parts": {
+      "addToCart": "Ajouter au panier",
+      "getQuote": "Obtenir un devis",
+      "allParts": "Pièces de réparation en vedette"
+    },
+    "accessories": {
+      "product": {
+        "addToCart": "Ajouter au panier",
+        "buyNow": "Obtenir un devis",
+        "productImage": "Image du produit",
+        "inStock": "{count} en stock"
+      }
+    },
+    "hero": {
+      "title": "Bienvenue chez 5gphones Louvain",
+      "subtitle": "Votre destination unique pour les réparations d'appareils et les accessoires premium"
+    },
+    "services": {
+      "title": "Nos services",
+      "repairs": {
+        "title": "Réparations d'appareils",
+        "description": "Services de réparation professionnels pour tous vos appareils",
+        "features": {
+          "screenReplacements": "Remplacement d'écran",
+          "batteryReplacements": "Remplacement de batterie",
+          "waterDamageRepair": "Réparation de dégâts d'eau",
+          "softwareTroubleshooting": "Dépannage logiciel"
+        },
+        "learnMore": "En savoir plus"
+      },
+      "accessories": {
+        "title": "Accessoires",
+        "description": "Accessoires premium pour tous vos appareils",
+        "features": {
+          "casesProtectors": "Coques et protections d'écran",
+          "chargersCables": "Chargeurs et câbles",
+          "wirelessAccessories": "Accessoires sans fil",
+          "audioAccessories": "Accessoires audio"
+        },
+        "shopNow": "Acheter maintenant"
+      }
+    },
+    "featuredAccessories": {
+      "title": "Accessoires en vedette",
+      "viewAll": "Voir tout",
+      "inStock": "{count} en stock",
+      "viewDetails": "Voir les détails"
+    },
+    "popularServices": {
+      "title": "Services de réparation populaires",
+      "viewAllServices": "Voir tous les services",
+      "starting": "à partir de",
+      "bookNow": "Réserver maintenant"
+    },
+    "deviceCategories": {
+      "title": "Catégories d'appareils",
+      "smartphones": {
+        "name": "Smartphones",
+        "description": "iPhone, Samsung, Google et plus"
+      },
+      "laptops": {
+        "name": "Ordinateurs portables",
+        "description": "MacBook, ordinateurs Windows"
+      },
+      "tablets": {
+        "name": "Tablettes",
+        "description": "iPad, tablettes Android"
+      },
+      "smartwatches": {
+        "name": "Montres connectées",
+        "description": "Apple Watch, Samsung Galaxy Watch"
+      },
+      "modelsSupported": "{count} modèles pris en charge"
+    },
+    "whyChooseUs": {
+      "title": "Pourquoi nous choisir?",
+      "fastService": {
+        "title": "Service rapide",
+        "description": "La plupart des réparations terminées dans les 24-48 heures"
+      },
+      "qualityGuarantee": {
+        "title": "Garantie de qualité",
+        "description": "Garantie de 90 jours sur toutes les réparations et pièces"
+      },
+      "expertTechnicians": {
+        "title": "Techniciens experts",
+        "description": "Professionnels certifiés avec des années d'expérience"
+      }
+    },
+    "testimonials": {
+      "title": "Ce que disent nos clients",
+      "customers": [
+        {
+          "name": "Sarah Johnson",
+          "review": "Service incroyable! Ils ont réparé mon écran d'iPhone en seulement 2 heures et il semble neuf. Le prix était très raisonnable aussi.",
+          "service": "Réparation d'écran iPhone 13",
+          "date": "Il y a 2 semaines"
+        },
+        {
+          "name": "Mike Chen",
+          "review": "Service professionnel et rapide. Mon ordinateur portable était lent et ils l'ont optimisé parfaitement. Je recommande vivement!",
+          "service": "Optimisation des performances d'ordinateur portable",
+          "date": "Il y a 1 mois"
+        },
+        {
+          "name": "Emily Rodriguez",
+          "review": "Excellente sélection d'accessoires et excellent service client. J'ai trouvé la coque parfaite pour mon nouveau téléphone.",
+          "service": "Achat de coque de téléphone",
+          "date": "Il y a 3 semaines"
+        }
+      ]
+    },
+    "cta": {
+      "title": "Prêt à commencer?",
+      "subtitle": "Réservez une réparation ou parcourez nos accessoires aujourd'hui",
+      "contactUs": "Nous contacter",
+      "learnMore": "En savoir plus"
+    }
+  },
+  "navigation": {
+    "home": "Accueil",
+    "repairs": "Réparations",
+    "accessories": "Accessoires",
+    "about": "À propos",
+    "contact": "Contact",
+    "getQuote": "Obtenir un devis",
+    "quote": "Devis",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "account": "Compte",
+    "logout": "Déconnexion",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "cart": "Panier",
+    "myOrders": "Mes commandes",
+    "wishlist": "Liste de souhaits",
+    "search": "Rechercher",
+    "searchPlaceholder": "Rechercher des réparations ou des accessoires...",
+    "allRepairs": "Toutes les réparations",
+    "allAccessories": "Tous les accessoires",
+    "deviceTypes": "Types d'appareils",
+    "categories": "Catégories",
+    "adminDashboard": "Tableau de bord admin",
+    "devices": {
+      "smartphones": "Smartphones",
+      "tablets": "Tablettes",
+      "laptops": "Ordinateurs portables",
+      "smartwatches": "Montres connectées",
+      "desktops": "Ordinateurs de bureau",
+      "gamingConsoles": "Consoles de jeux",
+      "otherDevices": "Autres appareils"
+    },
+    "accessoryCategories": {
+      "casesCovers": "Coques et étuis",
+      "chargersPower": "Chargeurs et alimentation",
+      "cablesAdapters": "Câbles et adaptateurs",
+      "audioHeadphones": "Audio et écouteurs",
+      "screenProtection": "Protection d'écran",
+      "keyboards": "Claviers",
+      "miceTrackpads": "Souris et trackpads",
+      "stylusPens": "Stylets et stylos",
+      "standsHolders": "Supports et porte-appareils",
+      "mountsBrackets": "Supports muraux",
+      "otherAccessories": "Autres accessoires"
+    }
+  },
+  "footer": {
+    "description": "Votre partenaire de confiance pour les réparations d'appareils et les accessoires premium. Service professionnel avec une touche personnelle.",
+    "quickLinks": {
+      "title": "Liens rapides",
+      "deviceRepairs": "Réparations d'appareils",
+      "accessories": "Accessoires",
+      "getQuote": "Obtenir un devis",
+      "aboutUs": "À propos de nous"
+    },
+    "contactInfo": {
+      "title": "Coordonnées",
+      "address": "84A Bondgenotenlaan, Louvain",
+      "phone": "+32 467 87 12 05",
+      "email": "info@5gphones.be"
+    },
+    "businessHours": {
+      "title": "Heures d'ouverture",
+      "mondayFriday": "Lundi - Vendredi: 10h00 - 18h00",
+      "saturday": "Samedi: 10h00 - 18h30",
+      "sunday": "Dimanche: fermé"
+    },
+    "legal": {
+      "privacyPolicy": "Politique de confidentialité",
+      "termsOfService": "Conditions d'utilisation",
+      "contactUs": "Nous contacter"
+    },
+    "paymentMethods": {
+      "title": "Méthodes de paiement",
+      "description": "Nous acceptons les méthodes de paiement suivantes:",
+      "visa": "Visa",
+      "mastercard": "Mastercard",
+      "amex": "American Express",
+      "applePay": "Apple Pay",
+      "stripe": "Stripe",
+      "klarna": "Klarna",
+      "bancontact": "Bancontact",
+      "belfius": "Belfius",
+      "payconiq": "Payconiq"
+    },
+    "copyright": "Tous droits réservés.",
+    "poweredBy": "Propulsé par Next JS et Tailwind CSS"
+  },
+  "pricingComparison": {
+    "title": "Pourquoi payer plus ailleurs?",
+    "subtitle": "Comparez nos prix avec ifixers.be et voyez la différence. Nous offrons des prix compétitifs sans compromettre la qualité.",
+    "averageSavings": "Économisez en moyenne €{amount} par réparation",
+    "stats": {
+      "servicesCompared": "Services comparés",
+      "averageSavings": "Économies moyennes",
+      "averageDiscount": "Réduction moyenne"
+    },
+    "comparison": {
+      "title": "Comparaison de prix",
+      "subtitle": "Voyez combien vous économisez avec TechFix Pro vs ifixers.be",
+      "headers": {
+        "service": "Service et appareil",
+        "ourPrice": "Notre prix",
+        "ifixersPrice": "ifixers.be",
+        "youSave": "Vous économisez"
+      },
+      "popular": "Populaire"
+    },
+    "benefits": {
+      "title": "Pourquoi choisir TechFix Pro?",
+      "lowerPrices": {
+        "title": "Prix plus bas",
+        "description": "Économisez en moyenne €{amount} par rapport aux concurrents"
+      },
+      "sameDayService": {
+        "title": "Service le jour même",
+        "description": "La plupart des réparations terminées dans les 24-48 heures"
+      },
+      "qualityGuarantee": {
+        "title": "Garantie de qualité",
+        "description": "Garantie de 90 jours sur toutes les réparations et pièces"
+      }
+    },
+    "cta": {
+      "title": "Prêt à économiser de l'argent?",
+      "subtitle": "Obtenez votre devis gratuit aujourd'hui et voyez combien vous pouvez économiser",
+      "button": "Obtenir un devis gratuit"
+    },
+    "trustIndicators": {
+      "happyCustomers": "Clients satisfaits",
+      "averageRepairTime": "Temps de réparation moyen",
+      "warrantyPeriod": "Période de garantie",
+      "averageSavings": "Économies moyennes"
+    },
+    "disclaimer": "* Prix comparés avec ifixers.be en date du {date}. Les prix des concurrents peuvent varier. Tous nos prix incluent les pièces, la main-d'œuvre et la garantie."
+  },
+  "repairs": {
+    "deviceTypes": {
+      "smartphone": "Smartphones",
+      "tablet": "Tablettes",
+      "laptop": "Ordinateurs portables",
+      "smartwatch": "Montres connectées",
+      "desktop": "Ordinateurs de bureau",
+      "gamingConsole": "Consoles de jeux",
+      "other": "Autres appareils"
+    },
+    "parts": {
+      "screen": "Écran",
+      "battery": "Batterie",
+      "chargingPort": "Port de charge",
+      "camera": "Caméra",
+      "speaker": "Haut-parleur",
+      "microphone": "Microphone",
+      "buttons": "Boutons",
+      "motherboard": "Carte mère",
+      "software": "Logiciel",
+      "otherParts": "Autres pièces",
+      "availableParts": "pièces disponibles",
+      "viewDetails": "Voir les détails"
+    },
+    "services": {
+      "screenRepair": {
+        "title": "Réparation d'écran",
+        "description": "Remplacement d'écran pour smartphones, tablettes et ordinateurs portables."
+      },
+      "selectBrand": "Sélectionnez la marque",
+      "selectModel": "Sélectionnez le modèle",
+      "selectService": "Sélectionnez le service",
+      "batteryReplacement": {
+        "title": "Remplacement de batterie",
+        "description": "Remplacement de batterie pour tous les types d'appareils."
+      },
+      "waterDamageRepair": {
+        "title": "Réparation des dommages causés par l'eau",
+        "description": "Services de nettoyage et de réparation pour les appareils endommagés par l'eau."
+      }
+      
+    },
+    "cta":{
+        "title": "Besoin d'un service spécifique?",
+        "button": "Contactez-nous",
+        "needHelp": "Besoin d'aide?",
+        "contact":"Nous contacter",
+        "contactButton": "Contactez-nous",
+        "contactDescription": "Si vous avez besoin d'une assistance supplémentaire, n'hésitez pas à nous contacter.",
+        "description": "Si vous ne trouvez pas le service dont vous avez besoin, contactez-nous pour une assistance personnalisée."
+      },
+      
+    "devicePage": {
+      "title": "Réparation de",
+      "subtitle": "Services de réparation pour . Obtenez un devis gratuit dès aujourd'hui!",
+      "cta": "Obtenir un devis gratuit"
+    },
+    "brandPage": {
+      "title": "Réparation de",
+      "subtitle": "Services de réparation pour . Obtenez un devis gratuit dès aujourd'hui!",
+      "cta": "Obtenir un devis gratuit"
+    },
+    "meta": {
+      "title": "Services de réparation professionnels",
+      "description": "Techniciens experts, pièces de qualité et délais de livraison rapides pour tous vos besoins de réparation"
+    },
+    "hero": {
+      "title": "Services de réparation professionnels",
+      "subtitle": "Réparations rapides, fiables et abordables pour tous vos appareils",
+      "description": "Techniciens experts, pièces de qualité et délais de livraison rapides pour tous vos besoins de réparation",
+      "cta": "Obtenir un devis gratuit",
+      "getQuote": "Obtenir un devis gratuit",
+      "contact": "Nous contacter"
+    },
+    "trust": {
+      "certified": "Techniciens certifiés",
+      "warranty": "Garantie 90 jours",
+      "fast": "Service le jour même",
+      "quality": "Pièces de qualité"
+    },
+    "selectDevice": {
+      "title": "Sélectionnez le type d'appareil"
+    },
+    "whyChoose": {
+      "title": "Pourquoi choisir nos services de réparation?",
+      "expertise": {
+        "title": "Techniciens experts",
+        "desc": "Professionnels certifiés avec des années d'expérience"
+      },
+      "warranty": {
+        "title": "Garantie de qualité",
+        "desc": "Garantie de 90 jours sur toutes les réparations et pièces"
+      },
+      "speed": {
+        "title": "Rapidité d'exécution",
+        "desc": "La plupart des réparations terminées le jour même"
+      }
+    },
+    "searchResults": {
+      "title": "Résultats de recherche pour \"{searchTerm}\"",
+      "description": "Affichage des services de réparation correspondant à votre recherche",
+      "clearSearch": "Effacer la recherche"
+    },
+    "deviceBrowser": {
+      "title": "Parcourir les appareils et réparations",
+      "description": "Trouvez votre appareil, explorez les pièces disponibles et obtenez des estimations de coûts de réparation",
+      "serialAsc": "Numéro de série: Croissant",
+      "serialDesc": "Numéro de série: Décroissant"
+    },
+    "whyChooseUs": {
+      "title": "Pourquoi choisir notre service de réparation?",
+      "features": {
+        "expertTechnicians": {
+          "title": "Techniciens experts",
+          "description": "Professionnels certifiés avec des années d'expérience"
+        },
+        "qualityGuarantee": {
+          "title": "Garantie de qualité",
+          "description": "Garantie de 90 jours sur toutes les réparations et pièces"
+        },
+        "fastTurnaround": {
+          "title": "Rapidité d'exécution",
+          "description": "La plupart des réparations terminées dans les 24-48 heures"
+        },
+        "qualityParts": {
+          "title": "Pièces de qualité",
+          "description": "Pièces OEM et après-vente de haute qualité uniquement"
+        }
+      }
+    },
+    "popularServices": {
+      "title": "Services de réparation populaires",
+      "warranty": "Garantie {days} jours",
+      "timeframe": "{time} minutes"
+    },
+    "process": {
+      "title": "Notre processus de réparation",
+      "step1": {
+        "title": "Diagnostic",
+        "description": "Évaluation gratuite de votre appareil"
+      },
+      "step2": {
+        "title": "Devis",
+        "description": "Prix transparent et temps de réparation"
+      },
+      "step3": {
+        "title": "Réparation",
+        "description": "Réparation professionnelle par des experts"
+      },
+      "step4": {
+        "title": "Test de qualité",
+        "description": "Tests approfondis avant livraison"
+      }
+    },
+    "allServices": "Tous les services",
+    "selectBrand": "Sélectionnez la marque",
+    "selectModel": "Sélectionnez le modèle",
+    "booking": {
+      "title": "Réserver une réparation",
+      "selectService": "Sélectionnez le service",
+      "contactInfo": "Informations de contact",
+      "submit": "Envoyer la demande"
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "accessories": "Accessoires",
+      "productDetails": "Détails du produit",
+      "repairs": "Réparations"
+    }
+  },
+  "contact": {
+    "meta": {
+      "title": "Contactez-nous - 5gphones Louvain",
+      "description": "Contactez-nous pour les réparations, questions ou support. Nous sommes là pour vous aider!"
+    },
+    "hero": {
+      "title": "Contactez-nous",
+      "subtitle": "Des questions? Nous sommes là pour vous aider!"
+    },
+    "info": {
+      "title": "Coordonnées",
+      "address": "84A Bondgenotenlaan, 3000 Louvain",
+      "phone": "+32 467 87 12 05",
+      "email": "info@5gphones.be",
+      "hours": "Heures d'ouverture"
+    },
+    "form": {
+      "title": "Envoyez-nous un message",
+      "name": "Nom complet",
+      "email": "Adresse e-mail",
+      "phone": "Numéro de téléphone",
+      "subject": "Sujet",
+      "message": "Message",
+      "send": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé avec succès!",
+      "error": "Échec de l'envoi du message. Veuillez réessayer."
+    },
+    "location": {
+      "title": "Visitez notre magasin",
+      "directions": "Obtenir l'itinéraire"
+    }
+  },
+  "about": {
+    "meta": {
+      "title": "À propos de nous - 5gphones Louvain",
+      "description": "Découvrez notre histoire, notre mission et notre engagement envers un service de qualité"
+    },
+    "hero": {
+      "title": "À propos de 5gphones",
+      "subtitle": "Votre partenaire de confiance pour les réparations d'appareils à Louvain"
+    },
+    "mission": {
+      "title": "Notre mission",
+      "description": "Fournir des services de réparation professionnels et des accessoires de qualité à des prix abordables, avec un service client exceptionnel."
+    },
+    "values": {
+      "title": "Nos valeurs",
+      "quality": {
+        "title": "Qualité",
+        "description": "Nous n'utilisons que des pièces de haute qualité et des techniques de réparation éprouvées"
+      },
+      "speed": {
+        "title": "Rapidité",
+        "description": "Service rapide sans compromettre la qualité"
+      },
+      "trust": {
+        "title": "Confiance",
+        "description": "Prix transparents et communication honnête"
+      },
+      "expertise": {
+        "title": "Expertise",
+        "description": "Techniciens certifiés avec des années d'expérience"
+      }
+    },
+    "team": {
+      "title": "Notre équipe",
+      "description": "Rencontrez nos techniciens experts dédiés à fournir le meilleur service"
+    }
+  },
+  "accessories": {
+    "meta": {
+      "title": "Accessoires pour téléphones et appareils - 5gphones Louvain",
+      "description": "Parcourez notre large sélection d'accessoires premium pour smartphones, tablettes et ordinateurs portables"
+    },
+    "hero": {
+      "title": "Accessoires pour appareils",
+      "subtitle": "Accessoires premium pour tous vos appareils"
+    },
+    "filters": {
+      "title": "Filtres",
+      "category": "Catégorie",
+      "brand": "Marque",
+      "price": "Prix",
+      "clear": "Effacer",
+      "rating": "Évaluation",
+      "availability": "Disponibilité",
+      "inStock": "En stock",
+      "outOfStock": "Rupture de stock",
+      "clearAll": "Effacer tout",
+      "apply": "Appliquer les filtres"
+    },
+    "cart": {
+      "title": "Panier d'achat",
+      "viewCart": "Voir le panier",
+      "continueShopping": "Continuer les achats",
+      "empty": "Votre panier est vide",
+      "total": "Total",
+      "checkout": "Passer à la caisse",
+      "clear":"Effacer",
+      "buyNow":"Acheter maintenant",
+      "outOfStock":"Rupture de stock"
+    },
+    "sort": {
+      "title": "Trier par",
+      "featured": "En vedette",
+      "priceLowToHigh": "Prix: Bas à Haut",
+      "priceHighToLow": "Prix: Haut à Bas",
+      "newest": "Plus récent",
+      "rating": "Mieux noté"
+    },
+    "sorting": {
+      "name": "Tri actuel",
+      "price": "Prix",
+      "availability": "Disponibilité",
+      "stock":"Stock",
+      "dateAdded": "Date d'ajout"
+    },
+    "product": {
+      "addToCart": "Ajouter au panier",
+      "outOfStock": "Rupture de stock",
+      "viewDetails": "Voir les détails",
+      "inStock": "{count} en stock",
+      "reviews": "{count} avis",
+      "lowStock": "Stock faible",
+      "productImage": "Image du produit"
+    },
+    "search":{
+        "placeholder": "Rechercher des accessoires...",
+        "noResults": "Aucun accessoire trouvé pour ",
+        "found":"{count} résultat trouvé",
+        "searchResults":"Résultats de la recherche pour "
+    },
+    "results": {
+      "title": "Résultats de la recherche",
+      "description": "Affichage des accessoires correspondant à votre recherche",
+      "noResults" :{
+        "title": "Aucun accessoire trouvé",
+        "description": "Essayez d'ajuster vos filtres ou votre recherche",
+        "clearFilters": "Effacer les filtres",
+        "messageNoFilters": "Aucun accessoire trouvé",
+        "message":"Message"
+      }
+    },
+    "noResults": {
+      "title": "Aucun produit trouvé",
+      "description": "Essayez d'ajuster vos filtres ou votre recherche",
+      "clearFilters": "Effacer les filtres"
+    }
+  },
+  "cart": {
+    "title": "Panier d'achat",
+    "empty": "Votre panier est vide",
+    "continueShopping": "Continuer les achats",
+    
+    "item": "Article",
+    "price": "Prix",
+    "quantity": "Quantité",
+    "total": "Total",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "tax": "Taxe",
+    "checkout": "Passer à la caisse",
+    "remove": "Retirer",
+    "update": "Mettre à jour",
+    "couponCode": "Code promo",
+    "applyCoupon": "Appliquer",
+    "freeShipping": "Livraison gratuite",
+    "checkoutSuccess": "Merci pour votre commande! Votre numéro de commande est {orderNumber}.",
+    "checkoutError": "Une erreur s'est produite lors du traitement de votre commande. Veuillez réessayer."
+  },
+  "quote": {
+  "meta": {
+    "title": "Demander un devis",
+    "description": "Demandez facilement un devis pour la réparation ou le service de votre appareil. Remplissez le formulaire et recevez rapidement une estimation de prix."
+  },
+  "hero": {
+    "title": "Demandez un devis",
+    "benefits": {
+      "freeDiagnostic": "Diagnostic gratuit",
+      "transparentPricing": "Tarifs transparents",
+      "noObligation": "Sans engagement",
+      "fastResponse": "Réponse rapide",
+      "personalizedService": "Service personnalisé"
+    },
+    "subtitle": "Recevez une estimation transparente pour votre réparation ou service",
+    "description": "Remplissez le formulaire ci-dessous et notre équipe vous contactera dès que possible avec un devis personnalisé."
+  },
+  "form": {
+    "title": "Formulaire de demande de devis",
+    "description": "Remplissez le formulaire ci-dessous pour recevoir un devis personnalisé pour la réparation ou le service de votre appareil.",
+    "autoFilled": "Les informations de contact sont automatiquement remplies depuis votre profil",
+    "prepopulate": {
+      "success": "Les détails de l’appareil/service ont été préremplis en fonction de votre sélection précédente."
+    },
+    "contactInformation": {
+      "title": "Informations de contact",
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Entrez votre prénom",
+      "lastName": "Nom",
+      "lastNamePlaceholder": "Entrez votre nom",
+      "email": "E-mail",
+      "emailPlaceholder": "Entrez votre adresse e-mail",
+      "phone": "Numéro de téléphone",
+      "phonePlaceholder": "Entrez votre numéro de téléphone"
+    },
+    "deviceInformation": {
+      "title": "Informations sur l’appareil",
+      "deviceType": "Type d’appareil",
+      "deviceTypeOptions": {
+        "smartphone": "Smartphone",
+        "tablet": "Tablette",
+        "laptop": "Ordinateur portable",
+        "smartwatch": "Montre connectée",
+        "other": "Autre"
+      }
+    },
+    "brand": "Marque",
+    "brandPlaceholder": "ex. Apple, Samsung",
+    "quality": "Qualité (optionnel)",
+    "qualityPlaceholder": "ex. OEM, Original, Premium",
+    "model": "Modèle",
+    "modelPlaceholder": "ex. iPhone 13, Galaxy S22",
+    "service": "Service (optionnel)",
+    "servicePlaceholder": "ex. Remplacement d’écran",
+    "part": "Pièce (optionnel)",
+    "partPlaceholder": "ex. Batterie, Appareil photo",
+    "deviceType": "Type d’appareil",
+    "deviceTypePlaceholder": "Sélectionnez un appareil",
+    "issueDetails": {
+      "title": "Détails du problème",
+      "issuesDescription": "Sélectionnez les problèmes que vous rencontrez :",
+      "detailedDescription": "Décrivez le problème en détail",
+      "detailedDescriptionPlaceholder": "Donnez autant de détails que possible sur le problème."
+    },
+    "photoUpload": {
+      "label": "Télécharger des photos (optionnel)",
+      "dropZoneLabel": "Glissez ou cliquez pour télécharger des photos",
+      "dropZoneDescription": "Téléchargez des photos claires de l’appareil et du problème, si possible."
+    },
+    "preferences": {
+      "title": "Préférences",
+      "urgency": "Urgence",
+      "urgencyPlaceholder": "Sélectionnez l’urgence",
+      "urgencyOptions": {
+        "urgent": "Urgent (dès que possible)",
+        "normal": "Normal (1 à 2 jours)",
+        "flexible": "Flexible (pas pressé)"
+      },
+      "contactMethod": "Méthode de contact préférée",
+      "contactMethodPlaceholder": "Sélectionnez une méthode de contact",
+      "contactMethodOptions": {
+        "email": "E-mail",
+        "phone": "Téléphone",
+        "text": "SMS/Message",
+        "any": "Peu importe"
+      }
+    },
+    "submitButton": {
+      "label": "Demander un devis",
+      "submitting": "Envoi..."
+    },
+    "clearButton": "Effacer le formulaire",
+    "nextSteps": {
+      "title": "Et après ?",
+      "step1": "Notre équipe examine votre demande et vous contactera dans les 2 heures ouvrables.",
+      "step2": "Vous recevrez un devis personnalisé et d’éventuelles questions complémentaires.",
+      "step3": "Si vous acceptez le devis, nous planifions votre réparation ou service.",
+      "step4": "Aucun engagement – c’est vous qui décidez de poursuivre ou non."
+    }
+  },
+  "faq": {
+    "title": "Questions fréquentes sur les devis",
+    "q1": "Sous combien de temps recevrai-je un devis ?",
+    "a1": "Vous recevez généralement un devis en quelques heures, au plus tard sous un jour ouvrable.",
+    "q2": "Le devis est-il gratuit et sans engagement ?",
+    "a2": "Oui, la demande de devis est toujours gratuite et totalement sans engagement.",
+    "q3": "Que se passe-t-il si je ne suis pas d’accord avec le devis ?",
+    "a3": "Vous n’êtes lié à rien. C’est à vous de décider si vous acceptez l’estimation."
+  },
+  "cta": {
+    "title": "Prêt à demander un devis ?",
+    "subtitle": "Remplissez le formulaire et recevez rapidement une estimation pour votre réparation ou service."
+  }
+},
+"profile":{
+  "title": "Paramètres",
+  "firstName": "Prénom",
+  "lastName": "Nom de famille",
+  "address1": "Adresse ligne 1",
+  "address2": "Adresse ligne 2 (optionnel)",
+  "city": "Ville",
+  "state": "Province",
+  "postalCode": "Code postal",
+  "country": "Pays",
+  "save": "Enregistrer l'adresse",
+  "saving": "Enregistrement...",
+  "success": "Adresse mise à jour!",
+  "uploadPhoto": "Télécharger une photo",
+  "uploading": "Téléchargement...",
+  "name": "Nom complet",
+  "email": "E-mail",
+  "orders": "Mes commandes"
+},
+"orders": {
+  "title": "Mes Commandes",
+  "empty": "Vous n’avez pas encore passé de commande.",
+  "orderNumber": "Numéro de commande",
+  "date": "Date",
+  "status": "Statut",
+  "total": "Total",
+  "shippingAddress": "Adresse de livraison",
+  "postalCode": "Code postal",
+  "viewDetails": "Voir les détails",
+  "loading": "Chargement...",
+  "error": "Échec du chargement des commandes",
+  "tryAgain": "Réessayer",
+  "accessDenied": "Accès refusé",
+  "loginRequired": "Vous devez être connecté pour consulter vos commandes.",
+  "login": "Se connecter",
+  "noOrdersFound": {
+    "title": "Aucune commande trouvée",
+    "description": "Il semble que vous n’ayez pas encore passé de commande. Commencez vos achats pour voir vos commandes ici."
+  }
+},
+"contact": {
+  "hero": {
+    "title": "Contactez-nous",
+    "subtitle": "Des questions sur nos services ? Besoin d’un devis ? Nous sommes là pour vous aider !"
+  },
+  "info": {
+    "visitUs": "Venez nous rendre visite",
+    "address": {
+      "line1": "Bondgenotenlaan 84A",
+      "line2": "Louvain",
+      "line3": "Belgique",
+      "postalLabel": "Code postal :",
+      "postalCode": "3000"
+    },
+    "callUs": "Appelez-nous",
+    "phone": {
+      "main": "Général",
+      "support": "Assistance",
+      "emergency": "Urgence"
+    },
+    "emailUs": "Envoyez-nous un e-mail",
+    "email": {
+      "general": "Général",
+      "support": "Assistance",
+      "sales": "Ventes"
+    },
+    "hoursLabel": "Heures d’ouverture",
+    "hours": {
+      "mondayFriday": "Lun–Ven",
+      "saturday": "Samedi",
+      "sunday": "Dimanche",
+      "closed": "fermé"
+    }
+  },
+  "form": {
+    "title": "Envoyez-nous un message",
+    "description": "Remplissez le formulaire ci-dessous et nous vous contacterons dans les 24 heures.",
+    "autoFilled": "Les informations de contact sont automatiquement remplies depuis votre profil",
+    "firstNameLabel": "Prénom *",
+    "firstNamePlaceholder": "Jean",
+    "lastNameLabel": "Nom *",
+    "lastNamePlaceholder": "Dupont",
+    "emailLabel": "E-mail *",
+    "emailPlaceholder": "jean@example.com",
+    "phoneLabel": "Numéro de téléphone",
+    "phonePlaceholder": "+32 466 13 41 81",
+    "serviceLabel": "Type de service *",
+    "servicePlaceholder": "Sélectionnez un service",
+    "serviceRepair": "Réparation d’appareil",
+    "serviceAccessories": "Accessoires",
+    "serviceQuote": "Demande de devis",
+    "serviceSupport": "Assistance technique",
+    "serviceOther": "Autre",
+    "deviceLabel": "Appareil (si applicable)",
+    "devicePlaceholder": "ex. iPhone 14 Pro, Samsung Galaxy S23",
+    "messageLabel": "Message *",
+    "messagePlaceholder": "Décrivez votre question ou votre problème aussi précisément que possible...",
+    "sendMessage": "Envoyer le message",
+    "sending": "Envoi...",
+    "successMessage": "Merci pour votre message ! Nous vous contacterons dans les 24 heures.",
+    "errorMessage": "Échec de l’envoi. Veuillez réessayer ou nous contacter directement."
+  }
+},
+"checkout": {
+  "stepper": {
+    "address": "Adresse",
+    "payment": "Paiement",
+    "result": "Résultat"
+  },
+  "title": "Paiement",
+  "cartSummary": "Résumé du panier",
+  "shippingAddress": "Adresse de livraison",
+  "edit": "Modifier",
+  "continue": "Continuer",
+  "back": "Retour",
+  "pay": "Payer maintenant",
+  "processing": "Paiement en cours...",
+  "paying": "Paiement en cours...",
+  "orderSummary": "Résumé de la commande",
+  "total": "Total",
+  "next": "Suivant",
+  "confirm": "Confirmer",
+  "orderDetails": "Détails de la commande",
+  "orderNumber": "Numéro de commande",
+  "emptyCart": "Votre panier est vide.",
+  "success": {
+    "title": "Merci pour votre commande !",
+    "message": "Votre paiement a été effectué avec succès et votre commande a été reçue. Un e-mail de confirmation vous a été envoyé."
+  },
+  "error": {
+    "title": "Une erreur est survenue",
+    "message": "Votre paiement a échoué ou a été annulé. Veuillez réessayer ou nous contacter si le problème persiste."
+  },
+  "addressForm": {
+    "title": "Adresse de livraison",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "E-mail",
+    "phone": "Numéro de téléphone",
+    "address1": "Adresse – ligne 1",
+    "address2": "Adresse – ligne 2 (optionnel)",
+    "city": "Ville",
+    "postalCode": "Code postal",
+    "country": "Pays",
+    "save": "Enregistrer l’adresse et continuer",
+    "autoFilled": "Adresse automatiquement remplie depuis votre profil"
+  },
+  "paymentForm": {
+    "title": "Paiement",
+    "cardDetails": "Détails de la carte",
+    "pay": "Payer maintenant"
+  },
+  "validation": {
+    "required": "Ce champ est obligatoire",
+    "invalidEmail": "Adresse e-mail invalide",
+    "invalidPhone": "Numéro de téléphone invalide"
+  },
+  "loading": "Chargement...",
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide.",
+    "total": "Total",
+    "checkout": "Passer au paiement"
+  },
+  "repair": {
+    "whoWillPerform": "Qui effectuera la réparation ?",
+    "self": "Je fais la réparation moi-même",
+    "byUs": "Réparation effectuée par nous",
+    "howToGetDevice": "Comment l’appareil arrive-t-il chez nous ?",
+    "atShop": "En boutique",
+    "send": "Envoyer",
+    "receive": "Recevoir",
+    "drop": "Déposer",
+    "errorSelectRepairType": "Veuillez sélectionner qui effectuera la réparation.",
+    "errorSelectShippingOption": "Veuillez sélectionner une option d’expédition.",
+    "dropDesc": "Apportez votre appareil dans notre boutique pendant les heures d’ouverture.",
+    "sendDesc": "Envoyez-nous votre appareil. Nous vous fournirons une étiquette d’expédition.",
+    "receiveDesc": "Nous vous renverrons l’appareil réparé.",
+    "atShopDesc": "Apportez votre appareil en boutique et nous effectuerons la réparation sur place.",
+    "sendDesc2": "Nous vous enverrons une étiquette d’expédition afin que vous puissiez nous envoyer l’appareil gratuitement.",
+    "selfDesc": "Vous recevrez les pièces nécessaires et les instructions pour effectuer la réparation vous-même.",
+    "byUsDesc": "Nous effectuons la réparation avec des pièces de haute qualité et une garantie.",
+    "selfRepair": "Réparation par soi-même",
+    "byUsRepair": "Réparation par nos soins",
+    "selfRepairDesc": "Choisissez cette option si vous souhaitez effectuer la réparation vous-même. Nous fournissons les pièces et les instructions nécessaires.",
+    "byUsRepairDesc": "Choisissez cette option si vous préférez que nous réalisions la réparation. Nous nous occupons de tout, y compris de la garantie et du contrôle qualité.",
+    "shippingOptions": "Options d’expédition"
+  }
+}
+,
+
+"settings": {
+      "title": "Paramètres",
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "address1": "Adresse ligne 1",
+      "address2": "Adresse ligne 2 (optionnel)",
+      "city": "Ville",
+      "state": "Province",
+      "postalCode": "Code postal",
+      "country": "Pays",
+      "save": "Enregistrer l'adresse",
+      "saving": "Enregistrement...",
+      "success": "Adresse mise à jour!"
+    },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "email": "Adresse e-mail",
+      "password": "Mot de passe",
+      "forgotPassword": "Mot de passe oublié?",
+      "submit": "Se connecter",
+      "noAccount": "Pas de compte?",
+      "signUp": "S'inscrire"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "email": "Adresse e-mail",
+      "phone": "Numéro de téléphone",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "submit": "S'inscrire",
+      "haveAccount": "Vous avez déjà un compte?",
+      "login": "Se connecter"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "yes": "Oui",
+    "no": "Non",
+    "all": "Tous",
+    "none": "Aucun",
+    "select": "Sélectionner",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "clear": "Effacer",
+    "apply": "Appliquer",
+    "reset": "Réinitialiser",
+    "submit": "Soumettre",
+    "send": "Envoyer",
+    "download": "Télécharger",
+    "upload": "Téléverser",
+    "print": "Imprimer",
+    "share": "Partager",
+    "copy": "Copier",
+    "copied": "Copié!",
+    "more": "Plus",
+    "less": "Moins",
+    "showMore": "Afficher plus",
+    "showLess": "Afficher moins",
+    "readMore": "Lire la suite",
+    "learnMore": "En savoir plus",
+    "seeAll": "Voir tout",
+    "viewAll": "Voir tout",
+    "new": "Nouveau",
+    "popular": "Populaire",
+    "featured": "En vedette",
+    "recommended": "Recommandé",
+    "sale": "Solde",
+    "soldOut": "Épuisé",
+    "comingSoon": "Bientôt disponible",
+    "free": "Gratuit",
+    "from": "À partir de",
+    "to": "À",
+    "and": "et",
+    "or": "ou",
+    "per": "par",
+    "total": "Total",
+    "subtotal": "Sous-total",
+    "required": "Obligatoire",
+    "optional": "Facultatif",
+    "notFound": "Non trouvé",
+    "pageNotFound": "Page non trouvée",
+    "backToHome": "Retour à l'accueil"
+  },
+  "cookieConsent": {
+    "title": "Nous utilisons des cookies",
+    "description": "Nous utilisons des cookies pour améliorer votre expérience sur notre site. En continuant à naviguer, vous acceptez notre utilisation des cookies.",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "learnMore": "En savoir plus"
+  },
+  "search": {
+    "placeholder": "Rechercher des pièces de rechange...",
+    "filters": {
+      "all": "Tous",
+      "parts": "Pièces",
+      "accessories": "Accessoires"
+    },
+    "results": {
+      "searching": "Recherche en cours...",
+      "minCharacters": "Tapez au moins 2 caractères pour rechercher",
+      "found": "{count} résultat trouvé",
+      "found_plural": "{count} résultats trouvés",
+      "noResults": "Aucun résultat trouvé pour \"{query}\"",
+      "noResultsHint": "Essayez des mots-clés différents ou parcourez nos catégories",
+      "viewAll": "Voir tous les résultats pour \"{query}\"",
+      "viewParts": "Voir {count} pièce pour \"{query}\"",
+      "viewParts_plural": "Voir {count} pièces pour \"{query}\"",
+      "viewAccessories": "Voir {count} accessoire pour \"{query}\"",
+      "viewAccessories_plural": "Voir {count} accessoires pour \"{query}\""
+    },
+    "badges": {
+      "part": "Pièce",
+      "accessory": "Accessoire"
+    },
+    "categories": {
+      "replacementPart": "Pièce de rechange",
+      "accessory": "Accessoire",
+      "case": "Coque",
+      "cover": "Étui",
+      "screenProtector": "Protection d'écran",
+      "charger": "Chargeur",
+      "power": "Alimentation",
+      "battery": "Batterie",
+      "cable": "Câble",
+      "adapter": "Adaptateur",
+      "headphones": "Écouteurs",
+      "earbuds": "Écouteurs sans fil",
+      "speaker": "Haut-parleur",
+      "camera": "Caméra"
+    }
+  },
+  "wishlist": {
+    "title": "Ma liste de souhaits",
+    "description": "Enregistrez vos articles préférés pour plus tard",
+    "loading": "Chargement de la liste de souhaits...",
+    "loginRequired": "Connexion requise",
+    "loginRequiredMessage": "Veuillez vous connecter pour voir votre liste de souhaits",
+    "login": "Se connecter",
+    "emptyTitle": "Votre liste de souhaits est vide",
+    "emptyDescription": "Commencez à ajouter des articles à votre liste de souhaits pour les voir ici",
+    "browseParts": "Parcourir les pièces",
+    "browseAccessories": "Parcourir les accessoires",
+    "addToCart": "Ajouter au panier",
+    "removeFromWishlist": "Retirer de la liste de souhaits",
+    "outOfStock": "Rupture de stock",
+    "lowStock": "Stock faible",
+    "qualityOptions": {
+      "oem": "OEM",
+      "original": "Original",
+      "aftermarket": "Aftermarket",
+      "premium": "Premium",
+      "compatible": "Compatible",
+      "incell": "Incell",
+      "generic": "Générique",
+      "refurbished": "Reconditionné",
+      "high": "Haute qualité",
+      "standard": "Qualité standard",
+      "unknown": "Inconnu",
+      "used": "Usagé"
+    }
+  },
+  "device-catalog-browser": {
+    "breadcrumbs": {
+      "deviceTypes": "Types d'appareils",
+      "brands": "Marques",
+      "models": "Modèles",
+      "parts": "Pièces",
+      "services": "Services de réparation"
+    },
+    "filter": {
+      "filteredBy": "Filtré par: {type}",
+      "showing": "Affichage des appareils {type} uniquement",
+      "showAllDevices": "Afficher tous les appareils"
+    },
+    "search": {
+      "resultsTitle": "Résultats de recherche {type}",
+      "resultsFound": "Trouvé {count} service(s) de réparation {type, select, undefined {} other {pour {type}}} correspondant à \"{search}\"",
+      "filteredBy": "Filtré par: {type}",
+      "searchAll": "Rechercher dans tous les types d'appareils",
+      "browseAll": "Parcourir tous les types d'appareils",
+      "noResults": "Aucun résultat trouvé",
+      "noResultsDesc": "Aucun service de réparation trouvé correspondant à \"{search}\".",
+      "browseAllCta": "Parcourir tous les services"
+    },
+    "types": {
+      "browse": "Parcourir les réparations et pièces {type}",
+      "selected": "{type} sélectionné",
+      "selectedDesc": "Vous avez navigué vers {type}. Choisissez une marque pour continuer ou voir tous les types d'appareils.",
+      "continue": "Continuer avec {type}",
+      "showAll": "Afficher tous les types"
+    },
+    "brands": {
+      "viewModels": "Voir les modèles {type} {brand}"
+    },
+    "models": {
+      "series": "Série {brand} {series}",
+      "model": "Modèle {count}",
+      "count": "({count} modèle{count, plural, one {} other {s}})",
+      "viewParts": "Voir les pièces et réparations disponibles pour {brand} {model}",
+      "filterPlaceholder": "Filtrer les modèles...",
+      "selectModel": "Sélectionnez un modèle pour voir les pièces et services",
+      "sortDesc": "Trier par nom (A-Z)",
+      "sortAsc": "Trier par nom (Z-A)",
+      "sortBy": "Trier par",
+      "noModelsFound": "Aucun modèle trouvé pour cette marque. Veuillez sélectionner une autre marque ou revenir plus tard.",
+      "noModelsAvailable": "Aucun modèle disponible pour cette marque pour le moment. Veuillez revenir plus tard ou nous contacter pour obtenir de l'aide."
+    },
+    "parts": {
+      "stock": "Stock",
+      "units": "pcs",
+      "price": "Prix",
+      "supplier": "Fournisseur",
+      "quality": "Qualité",
+      "addToCart": "Ajouter au panier",
+      "buyNow": "Acheter maintenant",
+      "unknownQuality": "Inconnu",
+      "qualityOptions": {
+        "oem": "OEM",
+        "original": "Original",
+        "premium": "Premium",
+        "aftermarket": "Aftermarket",
+        "refurbished": "Reconditionné",
+        "incell": "Incell"
+      },
+      "inStock": "En stock",
+      "outOfStock": "Rupture de stock",
+      "requestQuote": "Demander un devis",
+      "noParts": "Aucune pièce disponible pour ce modèle.",
+      "contactForParts": "Contactez-nous si vous avez besoin d'une pièce non répertoriée.",
+      "contactUs": "Nous contacter",
+      "relatedProducts": {
+        "title": "Produits connexes",
+        "description": "Découvrez d'autres pièces qui pourraient vous intéresser",
+        "productImage": "Image du produit",
+        "viewDetails": "Voir les détails",
+        "viewAllParts": "Voir toutes les pièces"
+      },
+      "featuredParts": {
+        "title": "Pièces en vedette",
+        "description": "Nos pièces les plus populaires et de haute qualité"
+      }
+    },
+    "services": {
+      "available": "Services de réparation",
+      "estimatedCost": "Coût estimé:",
+      "startingAt": "À partir de {price}",
+      "estimatedTime": "Temps estimé:",
+      "minutes": "{minutes} minutes",
+      "getQuote": "Obtenir un devis détaillé",
+      "getQuoteShort": "Obtenir un devis",
+      "forModel": "pour {brand} {model}",
+      "noServicesFound": "Aucun service de réparation trouvé pour ce modèle. Veuillez revenir plus tard ou nous contacter pour obtenir de l'aide.",
+      "noServicesAvailable": "Aucun service disponible pour ce modèle pour le moment. Veuillez revenir plus tard ou nous contacter pour obtenir de l'aide.",
+      "getDetailedQuote": "Obtenir un devis détaillé pour"
+    },
+    "navigation": {
+      "back": "Retour"
+    },
+    "tabs": {
+      "brands": "Marques",
+      "repairServices": "Services de réparation",
+      "availableParts": "Pièces disponibles",
+      "availableServices": "Services disponibles"
+    },
+    "badges": {
+      "part": "Pièce",
+      "accessory": "Accessoire"
+    },
+    "navigationAccessory": {
+      "home": "Accueil",
+      "accessories": "Accessoires",
+      "backToAccessories": "Retour aux accessoires"
+    },
+    "recentlyViewed": {
+      "title": "Récemment consultés",
+      "viewDetails": "Voir les détails"
+    },
+    "searchBased": {
+      "title": "Basé sur votre recherche",
+      "basedOn": "Basé sur",
+      "viewMore": "Voir plus"
+    },
+    "searchResults": {
+      "browseAllDeviceTypes": "Parcourir tous les types d'appareils",
+      "searchAllDeviceTypes": "Rechercher dans tous les types d'appareils",
+      "browseAllServices": "Parcourir tous les services"
+    }
+  },
+  "deviceTypeNavbar": {
+    "notFound":{
+      "retry": "Réessayer",
+        "contactUs": "Contacter le support",
+        "title": "Type d'appareil non trouvé",
+        "browseAll": "Parcourir tous les types d'appareils",
+        "needHelp": "Besoin d'aide?",
+        "description": "Le type d'appareil que vous recherchez n'a pas été trouvé. Veuillez réessayer ou contacter notre support pour obtenir de l'aide."
+    }
+  },
+   "recentlyViewed": {
+      "title": "Récemment consultés",
+      "viewDetails": "Voir les détails"
+    },
+    "searchBased": {
+      "title": "Basé sur votre recherche",
+      "basedOn": "Basé sur",
+      "viewMore": "Voir plus"
+    },
+    "badges": {
+      "part": "Pièce",
+      "accessory": "Accessoire"
+    },
+    "categories": {
+      "REPLACEMENT_PART": "Pièce de rechange",
+      "ACCESSORY": "Accessoire",
+      "CASE": "Coque",
+      "COVER": "Étui",
+      "SCREEN_PROTECTOR": "Protection d'écran",
+      "CHARGER": "Chargeur",
+      "POWER": "Alimentation",
+      "BATTERY": "Batterie",
+      "CABLE": "Câble",
+      "ADAPTER": "Adaptateur",
+      "HEADPHONES": "Écouteurs",
+      "EARBUDS": "Écouteurs sans fil",
+      "SPEAKER": "Haut-parleur",
+      "CAMERA": "Caméra"
+    },
+    "product":{
+        "freeShipping": "Livraison gratuite",
+        "inStock": "en stock",
+        "description": "Description du produit",
+        "compatibility": "Compatibilité",
+        "outOfStock": "Rupture de stock",
+        "addToCart": "Ajouter au panier",
+        "buyNow": "Acheter maintenant",
+        "share":"Partager",
+        "imageNotAvailable": "Image non disponible",
+        "viewDetails": "Voir les détails",
+        "quality": "Qualité: {quality}",
+        "supplier": "Fournisseur: {supplier}",
+        "lowStock": "Stock faible",
+        "productImage": "Image du produit",
+        "category": "Catégorie: {category}",
+        "model": "Modèle:",
+        "brand": "Marque",
+        "price": "Prix: {price}",
+        "clickToZoom": "Cliquez pour zoomer",
+        "rating":{
+            "reviews": "avis",
+            "average": "Moyenne des avis: {average} sur 5"
+        }
+    },
+    "navigationAccessory": {
+      "home": "Accueil",
+      "accessories": "Accessoires",
+      "backToAccessories": "Retour aux accessoires"
+    },
+    "specifications": {
+      "title": "Spécifications du produit",
+      "description": "Détails et caractéristiques du produit",
+        "specification": "Spécification",
+        "productName": "Nom du produit",
+        "brand": "Marque",
+        "model": "Modèle",
+        "category": "Catégorie",
+        "price": "Prix",
+        "quality": "Qualité",
+        "supplier": "Fournisseur",
+        "availability": "Disponibilité",
+        "inStock": "En stock",
+        "outOfStock": "Rupture de stock",
+        "compatibility": "Compatibilité",
+        "warranty": "Garantie",
+        "dimensions": "Dimensions",
+        "weight": "Poids",
+        "color": "Couleur",
+        "material": "Matériau",
+        "features": "Caractéristiques",
+        "productId": "ID du produit"
+    },
+    "relatedProducts": {
+      "title": "Produits connexes",
+      "description": "Découvrez d'autres accessoires qui pourraient vous intéresser",
+      "productImage": "Image du produit",
+      "viewDetails": "Voir les détails",
+      "viewAllAccessories": "Voir tous les accessoires"
+    },
+    "parts": {
+      "noParts": "Aucune pièce disponible pour ce modèle.",
+      "contactForParts": "Contactez-nous si vous avez besoin d'une pièce non répertoriée.",
+      "contactUs": "Nous contacter",
+      "inStock": "En stock",
+      "outOfStock": "Rupture de stock",
+      "price": "Prix",
+      "quality": "Qualité",
+      "addToCart": "Ajouter au panier",
+      "buyNow": "Acheter maintenant",
+      "available": "Disponible",
+      "supplier": "Fournisseur",
+      "unknownQuality": "Inconnu",
+      "requestQuote": "Demander un devis",
+      "qualityGrade":" Qualité",
+      "compatibility":"Compatibilité",
+      "warranty":"Garantie",
+      "warrantyPeriod":"Période de garantie",
+      "relatedParts": "Pièces connexes",
+      "breadcrumb": {
+        "home": "Accueil",
+        "accessories": "Accessoires",
+        "productDetails": "Détails du produit",
+        "repairs":"Réparations",
+        "deviceCatalog":"Catalogue d'appareils",
+        "parts":"Pièces"
+      },
+      "cta":{
+          "title": "Besoin d'aide pour choisir la bonne pièce?",
+          "subtitle": "Contactez notre équipe d'experts pour des recommandations personnalisées",
+          "contact": "Nous contacter",
+          "button":"Obtenir un devis gratuit",
+          "quote":"Devis",
+          "contactButton":"Contactez-nous",
+          "description": "Si vous avez besoin d'une assistance supplémentaire pour choisir la bonne pièce, n'hésitez pas à nous contacter."
+      },
+      "badges": {
+        "part": "Pièce",
+        "accessory": "Accessoire",
+        "shipping": "Livraison gratuite",
+        "warranty": "Garantie",
+        "quality": "Qualité",
+        "90days": "90 jours",
+        "24h": "24 heures",
+        "guaranteed": "Garanti"
+      },
+      "qualityOptions": {
+        "oem": "OEM",
+        "original": "Original",
+        "premium": "Premium",
+        "aftermarket": "Aftermarket",
+        "refurbished": "Reconditionné",
+        "incell": "Incell"
+        },
+        "notFound":{
+      "title": "Pièce non trouvée",
+      "description": "La pièce que vous recherchez n'a pas été trouvée pour ce modèle. Veuillez revenir plus tard ou nous contacter pour obtenir de l'aide.",
+      "contactUs": "Nous contacter",
+      "browseAll": "Parcourir tous les types d'appareils",
+      "backToRepairs": "Retour aux réparations",
+        "needHelp": "Besoin d'aide?"
+    },
+    "specifications":"spécifications",
+    "filterParts":"Filtrer les pièces",
+    "searchPlaceholder":"Rechercher des pièces...",
+    "deviceType":"Type d'appareil",
+    "brand":"Marque",
+    "allDeviceTypes":"Tous les types d'appareils",
+    "smartphones":"Smartphones",
+    "tablets":"Tablettes",
+    "laptops":"Ordinateurs portables",
+    "desktopComputers":"Ordinateurs de bureau",
+    "wearables":"Appareils portables",
+    "gamingConsoles":"Consoles de jeux",
+    "otherDevices":"Autres appareils",
+    "smartwatches":"Montres intelligentes",
+    "desktops":"Ordinateurs de bureau",
+    "sortBy":"Trier par",
+    "sortAsc":"Nom (A-Z)",
+    "sortDesc":"Nom (Z-A)",
+    "nameAZ":"Nom (A-Z)",
+    "nameZA":"Nom (Z-A)",
+    "priceLowHigh":"Prix (Bas à Haut)",
+    "priceHighLow":"Prix (Haut à Bas)",
+    "estimatedRepairTime":"Temps de réparation estimé",
+    "minutes":"{minutes} minutes",
+    "estimatedCost":"Coût estimé",
+    "startingAt":"À partir de {price}",
+    "getQuote":"Obtenir un devis détaillé",
+    "availability":"Disponibilité",
+    "model":"Modèle",
+    "selectModelFirst":"Veuillez d'abord sélectionner un modèle",
+    "selectBrandFirst":"Veuillez d'abord sélectionner une marque",
+    "selectDeviceTypeFirst":"Veuillez d'abord sélectionner un type d'appareil",
+    "allModels":"Tous les modèles",
+    "noModelsAvailable":"Aucun modèle disponible pour cette marque pour le moment. Veuillez revenir plus tard ou nous contacter pour obtenir de l'aide.",
+    "selectTypeFirst":"Veuillez d'abord sélectionner un type d'appareil",
+    "allBrands":"Toutes les marques",
+    "noPartsAvailable":"Aucune pièce disponible pour ce modèle pour le moment. Veuillez revenir plus tard ou nous contacter pour obtenir de l'aide.",
+    "noBrandsAvailable":"Aucune marque disponible pour ce type d'appareil pour le moment. Veuillez revenir plus tard ou nous contacter pour obtenir de l'aide.",
+    "showingResults": "Affichage des résultats pour",
+    "removeFromWishlist": "Retirer de la liste de souhaits",
+    "addToWishlist": "Ajouter à la liste de souhaits",
+    "allPartsList": "Liste de toutes les pièces",
+    "browseAllParts": "Parcourir toutes les pièces",
+    "clearFilters": "Effacer les filtres",
+    "activeFilters": "Filtres actifs",
+    "selectBrand":"Sélectionner une marque",
+    "selectDeviceType":"Sélectionner un type d'appareil",
+    "selectModel":"Sélectionner un modèle",
+    "featuredParts": {
+      "title": "Pièces en vedette",
+      "description": "Nos pièces les plus populaires et de haute qualité"
+    },
+    "pageTitle": "Détails du produit",
+    "pageDescription": "Découvrez les spécifications, caractéristiques et informations sur la garantie de ce produit"
+    },
+    "features": {
+      "title": "Caractéristiques du produit",
+      "description": "Découvrez les fonctionnalités et avantages de ce produit",
+        "feature": "Caractéristique",
+        "highQuality": "Haute qualité",
+        "durable": "Durable",
+        "easyToUse": "Facile à utiliser",
+        "compatible": "Compatible avec plusieurs appareils",
+        "warrantyIncluded": "Garantie incluse",
+        "returns":{
+            "title": "Retours",
+            "description": "Politique de retour facile sous 30 jours"
+            },
+            "warranty":{
+            "title": "Garantie",
+            "description": "Garantie limitée d'un an"
+            },
+            "parts": {
+              "title": "Pièces",
+              "description": "Informations sur les pièces de rechange et leur disponibilité"
+            },
+            "freeShipping": {
+              "title": "Livraison gratuite",
+              "description": "Profitez de la livraison gratuite sur les commandes éligibles"
+            }
+    },
+    "breadcrumb": {
+      "home": "Accueil",
+      "accessories": "Accessoires",
+      "productDetails": "Détails du produit",
+      "repairs":"Réparations",
+        "deviceCatalog":"Catalogue d'appareils",
+        "parts":"Pièces"
+    },
+    "cta": {
+      "title": "Besoin d'aide pour choisir?",
+      "subtitle": "Contactez notre équipe d'experts pour des recommandations personnalisées",
+      "contactUs": "Nous contacter",
+      "button":"Obtenir un devis gratuit",
+      "quote":"Devis",
+      "contactButton":"Contactez-nous"
+
+    },
+    "notFound":{
+      "title": "Pièce non trouvée",
+      "description": "La pièce que vous recherchez n'a pas été trouvée pour ce modèle. Veuillez revenir plus tard ou nous contacter pour obtenir de l'aide.",
+      "contactUs": "Nous contacter",
+      "browseParts": "Parcourir les pièces"
+    }
+}

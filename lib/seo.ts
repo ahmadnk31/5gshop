@@ -4,8 +4,8 @@ import { getTranslations } from 'next-intl/server'
 // Base SEO configuration
 export const siteConfig = {
   name: "5gphones Leuven",
-  title: "5gphones Leuven - Phone Repair & Mobile Accessories | GSM Reparatie",
-  description: "Professional phone repair & mobile device services in Leuven. iPhone, Samsung, Huawei repair ✓ Screen replacement ✓ Battery repair ✓ Fast service ✓ Warranty | Professionele GSM reparatie en telefoon accessoires.",
+  title: "5gphones Leuven - Phone, Tablet, iPad, MacBook & Desktop Repair + Accessories | GSM Reparatie | Réparation",
+  description: "Professional device repair & accessories in Leuven ✓ Phone, Tablet, iPad, MacBook, Desktop repair ✓ Cases, Chargers, Screen Protectors ✓ iPhone, Samsung, Huawei ✓ Fast service ✓ Warranty | Professionele reparatie en accessoires voor telefoons, tablets, laptops en computers ✓ Réparation professionnelle et accessoires téléphones, tablettes, ordinateurs",
   url: "https://5gphones.be",
   ogImage: "/5g-og.png",
   keywords: [
@@ -13,6 +13,14 @@ export const siteConfig = {
     "phone repair leuven",
     "mobile repair leuven",
     "smartphone repair leuven",
+    "tablet repair leuven",
+    "ipad repair leuven",
+    "macbook repair leuven",
+    "laptop repair leuven",
+    "desktop repair leuven",
+    "computer repair leuven",
+    "mac repair leuven",
+    "imac repair leuven",
     "device repair leuven",
     "cell phone repair leuven",
     "iphone repair leuven",
@@ -23,23 +31,47 @@ export const siteConfig = {
     "phone shop leuven",
     "mobile shop leuven",
     "electronics repair leuven",
-    "tablet repair leuven",
-    "laptop repair leuven",
+    
+    // French keywords (French-speaking community)
+    "réparation téléphone louvain",
+    "réparation mobile louvain",
+    "réparation smartphone louvain",
+    "réparation tablette louvain",
+    "réparation ipad louvain",
+    "réparation macbook louvain",
+    "réparation ordinateur louvain",
+    "réparation laptop louvain",
+    "réparation mac louvain",
+    "réparation imac louvain",
+    "réparation iphone louvain",
+    "réparation samsung louvain",
+    "réparation écran louvain",
+    "remplacement écran louvain",
+    "remplacement batterie louvain",
+    "magasin téléphone louvain",
+    "accessoires téléphone louvain",
     
     // Dutch/Flemish keywords (local audience)
     "gsm reparatie leuven",
     "telefoon reparatie leuven", 
     "smartphone reparatie leuven",
+    "tablet reparatie leuven",
+    "ipad reparatie leuven",
+    "macbook reparatie leuven",
+    "laptop reparatie leuven",
+    "computer reparatie leuven",
+    "desktop reparatie leuven",
+    "mac reparatie leuven",
+    "imac reparatie leuven",
     "iphone reparatie leuven",
     "samsung reparatie leuven",
-    "tablet reparatie leuven",
     "scherm reparatie leuven",
     "batterij vervanging leuven",
     "gsm winkel leuven",
     "telefoon winkel leuven",
     "smartphone winkel leuven",
     
-    // Accessory keywords (English + Dutch)
+    // Accessory keywords (English + French + Dutch)
     "phone accessories leuven",
     "mobile accessories leuven",
     "smartphone accessories leuven",
@@ -48,6 +80,10 @@ export const siteConfig = {
     "screen protectors leuven",
     "wireless earbuds leuven",
     "power banks leuven",
+    "accessoires téléphone louvain",
+    "coques téléphone louvain",
+    "chargeurs téléphone louvain",
+    "protecteurs écran louvain",
     "telefoon accessoires leuven",
     "gsm accessoires leuven",
     "smartphone hoesjes leuven",
@@ -76,6 +112,16 @@ export const siteConfig = {
     "camera repair",
     "software repair",
     
+    // Service-specific (French)
+    "réparation rapide téléphone",
+    "réparation le jour même",
+    "réparation écran rapide",
+    "service batterie",
+    "réparation dégâts eau",
+    "réparation port charge",
+    "réparation caméra",
+    "réparation logiciel",
+    
     // Service-specific (Dutch)
     "snelle reparatie",
     "goedkope reparatie",
@@ -92,6 +138,15 @@ export const siteConfig = {
     "electronics store leuven",
     "phone store leuven center",
     "bondgenotenlaan phone repair",
+    
+    // Location variations (French)
+    "louvain réparation téléphone",
+    "louvain réparation mobile",
+    "réparation téléphone près de moi louvain",
+    "atelier réparation louvain",
+    "magasin électronique louvain",
+    "magasin téléphone centre louvain",
+    "bondgenotenlaan réparation téléphone",
     
     // Location variations (Dutch)
     "leuven gsm reparatie",
@@ -524,10 +579,12 @@ export function generateLocalBusinessSchema() {
       'Mobile Repair Leuven',
       'GSM Reparatie Leuven',
       'Telefoon Reparatie Leuven',
-      'Smartphone Repair Shop Leuven'
+      'Réparation Téléphone Louvain',
+      'Smartphone Repair Shop Leuven',
+      'Atelier Réparation Mobile Louvain'
     ],
     url: siteConfig.url,
-    description: 'Professional phone repair, mobile device services and smartphone accessories in Leuven. iPhone, Samsung, Huawei repair specialist with warranty. | Professionele GSM reparatie en smartphone accessoires in Leuven met garantie.',
+    description: 'Professional device repair services in Leuven. Phones, Tablets, iPads, MacBooks, Laptops, Desktops - iPhone, Samsung, Huawei repair specialist with warranty. | Professionele reparatie voor telefoons, tablets, laptops en computers in Leuven met garantie. | Réparation professionnelle téléphones, tablettes, ordinateurs portables et ordinateurs de bureau à Louvain avec garantie.',
     image: [`${siteConfig.url}/logo.png`, `${siteConfig.url}/storefront.jpg`],
     telephone: '+32 466 13 41 81',
     email: 'info@5gphones.be',
@@ -627,9 +684,41 @@ export function generateLocalBusinessSchema() {
         {
           '@type': 'Offer',
           itemOffered: {
+            '@type': 'Service',
+            name: 'iPad & Tablet Repair | iPad & Tablet Reparatie',
+            description: 'Professional iPad and tablet repair service. Screen replacement, battery replacement. All brands. | Professionele iPad en tablet reparatie voor alle merken.'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'MacBook Repair | MacBook Reparatie',
+            description: 'MacBook and MacBook Pro repair services. Screen, keyboard, battery replacement. | MacBook reparatie - scherm, toetsenbord, batterij.'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Laptop Repair | Laptop Reparatie',
+            description: 'Laptop and notebook repair services. All brands supported. Hardware and software repair. | Laptop reparatie voor alle merken. Hardware en software.'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: 'Desktop & iMac Repair | Desktop & iMac Reparatie',
+            description: 'Desktop computer and iMac repair services. Hardware upgrades and repairs. | Desktop en iMac reparatie en upgrades.'
+          }
+        },
+        {
+          '@type': 'Offer',
+          itemOffered: {
             '@type': 'Service', 
             name: 'Screen Repair | Scherm Reparatie',
-            description: 'Fast screen repair and replacement for all smartphones. Same day service available. | Snelle scherm reparatie voor alle smartphones.'
+            description: 'Fast screen repair and replacement for smartphones, tablets, laptops. Same day service available. | Snelle scherm reparatie voor alle toestellen.'
           }
         },
         {
@@ -637,7 +726,7 @@ export function generateLocalBusinessSchema() {
           itemOffered: {
             '@type': 'Service',
             name: 'Battery Replacement | Batterij Vervanging', 
-            description: 'Battery replacement service for smartphones and tablets. Quality batteries with warranty. | Batterij vervanging met garantie.'
+            description: 'Battery replacement service for smartphones, tablets, laptops. Quality batteries with warranty. | Batterij vervanging voor alle toestellen met garantie.'
           }
         },
         {
@@ -718,6 +807,18 @@ export function generateLocalBusinessSchema() {
           ratingValue: 5
         },
         reviewBody: 'Best phone repair shop in Leuven! Fixed my Samsung Galaxy same day. Very professional and affordable.'
+      },
+      {
+        '@type': 'Review',
+        author: {
+          '@type': 'Person',
+          name: 'Sophie Laurent'
+        },
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: 5
+        },
+        reviewBody: 'Excellent service! Mon iPhone a été réparé rapidement et professionnellement. Prix très raisonnables. Je recommande vivement!'
       }
     ]
   }
