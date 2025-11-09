@@ -10,6 +10,8 @@ import { FallbackImage } from "@/components/ui/fallback-image";
 
 import { Accessory } from "@/lib/types";
 
+type AccessoryWithSlug = Accessory & { slug: string };
+
 type Translations = {
   title: string;
   viewAll: string;
@@ -21,7 +23,7 @@ type Translations = {
 };
 
 type Props = {
-  accessories: Accessory[];
+  accessories: AccessoryWithSlug[];
   translations: Translations;
 };
 
@@ -42,8 +44,8 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
           {accessories.map((accessory) => (
-            <Card key={accessory.id} className="hover:shadow-lg transition-shadow gap-0 cursor-pointer pt-0 relative">
-              <Link href={`/accessories/${accessory.id}`} className="block group">
+            <Card key={accessory.id} className="hover:shadow-lg transition-shadow gap-0 cursor-pointer pt-0 relative flex flex-col h-full">
+              <Link href={`/accessories/${accessory.slug}`} className="block group">
                 <CardHeader className="p-0">
                   <div className="relative w-full  bg-gray-200 flex items-center justify-center rounded-t-lg overflow-hidden transition">
                     <FallbackImage
@@ -56,7 +58,7 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
                  
                 </CardHeader>
               </Link>
-              <CardContent>
+              <CardContent className="flex-1 flex flex-col">
                 <div className="flex flex-col gap-1 absolute top-2 left-2 z-10">
                   <Badge variant="secondary">
                       {translations.inStock.replace("{count}", String(accessory.inStock))}
@@ -71,7 +73,7 @@ export function FeaturedAccessoriesSection({ accessories, translations }: Props)
                     {formatCurrency(accessory.price, "EUR")}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 mt-auto">
                   <Button
                     variant="default"
                     size="sm"

@@ -204,7 +204,7 @@ export default async function ModelRepairPage({ params }: PageProps) {
               )}
               <div className="flex gap-4">
                 <Button asChild size="lg" variant="secondary" className="shadow-lg">
-                  <Link href={`/quote?device=${device.id}`}>
+                  <Link href={`/quote?deviceType=${encodeURIComponent(device.type)}&brand=${encodeURIComponent(device.brand)}&model=${encodeURIComponent(device.model)}`}>
                     {t('hero.getQuote', { defaultValue: 'Get Free Quote' })}
                   </Link>
                 </Button>
@@ -292,7 +292,7 @@ export default async function ModelRepairPage({ params }: PageProps) {
                 {t('parts.noParts', { defaultValue: 'No parts available for this device yet.' })}
               </p>
               <Button asChild>
-                <Link href={`/quote?device=${device.id}`}>
+                <Link href={`/quote?deviceType=${encodeURIComponent(device.type)}&brand=${encodeURIComponent(device.brand)}&model=${encodeURIComponent(device.model)}`}>
                   {t('parts.requestPart', { defaultValue: 'Request a Part' })}
                 </Link>
               </Button>
@@ -312,7 +312,7 @@ export default async function ModelRepairPage({ params }: PageProps) {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Button asChild size="lg" variant="secondary" className="shadow-lg">
-              <Link href={`/quote?device=${device.id}`}>{t('cta.button', { defaultValue: 'Get Free Quote' })}</Link>
+              <Link href={`/quote?deviceType=${encodeURIComponent(device.type)}&brand=${encodeURIComponent(device.brand)}&model=${encodeURIComponent(device.model)}`}>{t('cta.button', { defaultValue: 'Get Free Quote' })}</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="bg-white/10 border-white hover:bg-white hover:text-green-700">
               <Link href="/contact">{t('cta.contact', { defaultValue: 'Contact Us' })}</Link>

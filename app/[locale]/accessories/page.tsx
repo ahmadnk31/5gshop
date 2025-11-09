@@ -4,29 +4,80 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const siteName = '5G Shop';
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.5gshop.nl';
-  const title = "Premium Phone & Device Accessories - Cases, Chargers & More";
-  const description = "Shop high-quality mobile accessories at 5G Shop Netherlands. Wide selection of phone cases, chargers, cables, screen protectors, headphones & more. Fast shipping, warranty included, secure payment. Buy online now!";
+  const siteName = '5G Phones';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.5gphones.be';
+  const title = "GSM Accessoires Leuven | iPhone, MacBook, iPad, Laptop Cases & Chargers ⭐";
+  const description = "⭐ GSM accessoires Leuven - iPhone hoesjes, MacBook sleeves, iPad cases, Laptop tassen, Samsung covers ✓ Screen protectors ✓ Opladers & kabels ✓ Powerbanks ✓ Draadloze oordopjes ✓ Direct op voorraad ✓ Bondgenotenlaan 84A ✓ Quality accessories for all devices!";
 
   return {
     title: `${title} | ${siteName}`,
     description: description,
     keywords: [
-      "phone accessories Netherlands",
-      "smartphone accessories",
-      "phone cases",
-      "phone chargers",
-      "USB cables",
-      "screen protectors",
-      "wireless chargers",
-      "headphones",
-      "tablet accessories",
-      "laptop accessories",
-      "mobile accessories online",
-      "5G Shop",
-      "buy accessories online",
-      "phone accessories Europe"
+      // Primary Accessory Keywords
+      "gsm accessoires leuven",
+      "telefoon accessoires leuven",
+      "smartphone accessoires leuven",
+      "mobiel accessoires leuven",
+      "phone accessories leuven",
+      
+      // iPhone Accessories
+      "iphone hoesjes leuven",
+      "iphone cases leuven",
+      "iphone accessoires leuven",
+      "iphone screen protector leuven",
+      "iphone charger leuven",
+      
+      // MacBook Accessories
+      "macbook accessoires leuven",
+      "macbook sleeve leuven",
+      "macbook case leuven",
+      "macbook charger leuven",
+      "macbook cover leuven",
+      
+      // iPad Accessories
+      "ipad accessoires leuven",
+      "ipad hoesjes leuven",
+      "ipad cases leuven",
+      "ipad cover leuven",
+      "ipad keyboard leuven",
+      
+      // Laptop Accessories
+      "laptop accessoires leuven",
+      "laptop tas leuven",
+      "laptop bag leuven",
+      "laptop sleeve leuven",
+      "laptop charger leuven",
+      
+      // Samsung & Android
+      "samsung hoesjes leuven",
+      "samsung accessoires leuven",
+      "samsung cases leuven",
+      "galaxy hoesjes leuven",
+      "android accessoires leuven",
+      
+      // Tablet Accessories
+      "tablet accessoires leuven",
+      "tablet hoesjes leuven",
+      "tablet cases leuven",
+      
+      // Product Types
+      "telefoon hoesjes leuven",
+      "smartphone hoesjes leuven",
+      "screen protectors leuven",
+      "scherm beschermers leuven",
+      "telefoon opladers leuven",
+      "phone chargers leuven",
+      "usb c kabels leuven",
+      "lightning kabels leuven",
+      "powerbanks leuven",
+      "draadloze oordopjes leuven",
+      "wireless earbuds leuven",
+      
+      // Location-specific
+      "accessoires leuven centrum",
+      "gsm winkel leuven accessoires",
+      "phone cases bondgenotenlaan",
+      "mobile accessories leuven"
     ].join(', '),
     openGraph: {
       title: title,

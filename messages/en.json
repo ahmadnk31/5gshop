@@ -134,6 +134,67 @@
       "subtitle": "Book a repair or browse our accessories today",
       "contactUs": "Contact Us",
       "learnMore": "Learn More"
+    },
+    "intro": {
+      "title": "Hardware & Software Repair Leuven - All Technical Problems Solved",
+      "welcome": "Welcome to <strong>5G Phones</strong>, your specialist for <strong>hardware and software repair in Leuven</strong>. From <strong>iPhone screen replacement, MacBook battery</strong> to <strong>Windows installation, password reset, virus removal</strong> - we solve all technical problems at <strong>Bondgenotenlaan 84A in Leuven</strong>.",
+      "hardware": "<strong>Hardware:</strong> ✓ iPhone, Samsung, Huawei, Xiaomi, OnePlus, Nokia & Google Pixel repair • ✓ MacBook & iMac service • ✓ Laptop & Desktop repair • ✓ iPad & Tablet service",
+      "accessories": "<strong>Accessories:</strong> ✓ iPhone/Samsung/iPad/Huawei/Xiaomi/OnePlus/Nokia/Google Pixel cases & covers • ✓ Screen protectors • ✓ Chargers & adapters • ✓ Headphones • ✓ Computer chargers • ✓ USB-C, Lightning & Micro-USB cables",
+      "software": "<strong>Software:</strong> ✓ Windows installation • ✓ Password reset • ✓ Virus removal • ✓ Data recovery • ✓ Software troubleshooting",
+      "guarantee": "6 months warranty • Free diagnosis • Same-day service • Also serving customers from Wespelaar, Haacht, and surrounding areas",
+      "bookRepair": "Book Phone Repair",
+      "contact": "Contact Us"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions - Phone Repair Leuven",
+      "subtitle": "Have more questions about our repair services?",
+      "contactCta": "Contact Us",
+      "questions": {
+        "q1": {
+          "question": "Where can I get my phone repaired in Leuven?",
+          "answer": "5G Phones is your trusted <strong>phone repair shop in Leuven</strong>, located at Bondgenotenlaan 84A. We offer professional smartphone repair for all brands: iPhone, Samsung, Huawei, Xiaomi and more. Customers from Wespelaar, Haacht, Rotselaar and surrounding areas are welcome!"
+        },
+        "q2": {
+          "question": "How much does an iPhone screen repair cost in Leuven?",
+          "answer": "The price for <strong>iPhone repair in Leuven</strong> varies by model. An iPhone screen replacement costs on average between €79 and €199, depending on the model. We offer transparent pricing, free diagnosis and 6 months warranty on all repairs. Request a free quote!"
+        },
+        "q3": {
+          "question": "How long does a smartphone repair take?",
+          "answer": "Most <strong>phone repairs in Leuven</strong> are completed within 1-2 hours. For screen replacements and battery changes, you can often pick up your device the same day. More complex repairs may take 24-48 hours. We always inform you in advance about the expected turnaround time."
+        },
+        "q4": {
+          "question": "Which brands and devices do you repair in Leuven?",
+          "answer": "We repair all popular brands and devices: <strong>Apple</strong> (iPhone, iPad, MacBook, iMac), <strong>Samsung</strong> (Galaxy smartphones & tablets), <strong>Huawei, Xiaomi, OnePlus, Google Pixel</strong>, and all <strong>Windows laptops & desktops</strong> (HP, Dell, Lenovo, Asus, Acer). Also <strong>MacBook Pro/Air repair, iMac service, laptop screen replacement and computer troubleshooting</strong> are among our specialties in Leuven."
+        },
+        "q5": {
+          "question": "Do you also do MacBook and laptop repair in Leuven?",
+          "answer": "Yes! <strong>MacBook repair and laptop service</strong> are a big part of our services. We replace <strong>MacBook screens, batteries, keyboards</strong>, solve software problems, and repair all <strong>Windows laptops</strong>. Also for <strong>desktop PC repair, iMac service and computer upgrades</strong> you've come to the right place. Fast diagnosis and fair prices guaranteed!"
+        },
+        "q6": {
+          "question": "Do you also repair iPads and tablets?",
+          "answer": "Absolutely! We specialize in <strong>iPad repair and tablet service in Leuven</strong>. From <strong>iPad screen replacement, battery change, charging port repair</strong> to software updates - we help you with all iPad models (Pro, Air, Mini). Also <strong>Samsung Galaxy Tabs, Huawei tablets and other Android tablets</strong> we repair professionally with 6 months warranty."
+        },
+        "q7": {
+          "question": "Do you also sell accessories for all devices?",
+          "answer": "Yes! In addition to repairs, we offer a wide range of accessories for all devices: <strong>iPhone & Samsung cases, iPad cases, MacBook sleeves, laptop bags</strong>, screen protectors, chargers, USB-C cables, power banks, wireless earbuds, mouse & keyboards, and more. Also <strong>parts for DIY repair</strong> are available. Everything in stock in Leuven!"
+        },
+        "q8": {
+          "question": "Can you install Windows on my laptop?",
+          "answer": "Yes! We offer complete <strong>Windows installation service in Leuven</strong> for all laptops and desktops. From <strong>Windows 10/11 reinstallation, OS upgrade, driver installation</strong> to full system configuration - we make sure your computer works optimally again. Also <strong>macOS installation on MacBooks</strong> and <strong>software updates for all systems</strong> are among our services. Includes data backup!"
+        },
+        "q9": {
+          "question": "I forgot my password, can you help?",
+          "answer": "Absolutely! We offer <strong>password reset service for all devices</strong>: <strong>iPhone password reset, Samsung unlock, Windows password recovery, MacBook password reset</strong> and more. Also for <strong>forgotten iCloud accounts, Google account problems and BitLocker recovery</strong> we can help you. Our technicians have specialized tools to keep your data safe while we restore access."
+        },
+        "q10": {
+          "question": "My computer is slow or has viruses, what can you do?",
+          "answer": "We specialize in <strong>virus removal, malware removal and computer troubleshooting</strong> for all systems. Symptoms like <strong>slow laptop, crashes, pop-ups, stolen data</strong> we solve quickly. Our service includes: <strong>full virus scan, malware removal, system optimization, data recovery</strong> and preventive protection installation. Also for <strong>iPhone software problems, Samsung glitches and MacBook issues</strong> we're ready. Same-day service available!"
+        },
+        "q11": {
+          "question": "Do you give warranty on repairs?",
+          "answer": "Absolutely! All <strong>phone repairs</strong> at 5G Phones come with <strong>6 months warranty</strong>. We only use high-quality parts and our experienced technicians ensure professional service. If a problem occurs with the repair within the warranty period, we fix it free of charge."
+        }
+      }
     }
   },
    "navigation": {

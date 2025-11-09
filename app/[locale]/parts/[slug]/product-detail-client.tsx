@@ -7,6 +7,7 @@ import { Package, ShoppingCart, Truck, Shield, CheckCircle, XCircle } from "luci
 import { formatCurrency } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
 import Image from "next/image";
+import { ImageZoom } from "@/components/ui/image-zoom";
 import { useCart } from "@/components/cart-context";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -25,6 +26,85 @@ function createSlug(name: string, id: string): string {
   return `${nameSlug}-${id}`;
 }
 
+// Helper function to extract brand from part name or device model
+function extractBrand(part: any): string {
+  // Try to extract from deviceModel first
+  if (part.deviceModel) {
+    const model = part.deviceModel.toLowerCase();
+    if (model.includes('iphone') || model.includes('ipad') || model.includes('macbook') || model.includes('apple')) {
+      return 'Apple';
+    }
+    if (model.includes('samsung') || model.includes('galaxy')) {
+      return 'Samsung';
+    }
+    if (model.includes('huawei')) {
+      return 'Huawei';
+    }
+    if (model.includes('xiaomi')) {
+      return 'Xiaomi';
+    }
+    if (model.includes('oppo')) {
+      return 'Oppo';
+    }
+    if (model.includes('oneplus')) {
+      return 'OnePlus';
+    }
+    if (model.includes('google') || model.includes('pixel')) {
+      return 'Google';
+    }
+    if (model.includes('nokia')) {
+      return 'Nokia';
+    }
+    if (model.includes('motorola')) {
+      return 'Motorola';
+    }
+    if (model.includes('sony')) {
+      return 'Sony';
+    }
+    if (model.includes('lg')) {
+      return 'LG';
+    }
+  }
+  
+  // Try to extract from part name
+  const name = part.name.toLowerCase();
+  if (name.includes('iphone') || name.includes('ipad') || name.includes('macbook') || name.includes('apple')) {
+    return 'Apple';
+  }
+  if (name.includes('samsung') || name.includes('galaxy')) {
+    return 'Samsung';
+  }
+  if (name.includes('huawei')) {
+    return 'Huawei';
+  }
+  if (name.includes('xiaomi')) {
+    return 'Xiaomi';
+  }
+  if (name.includes('oppo')) {
+    return 'Oppo';
+  }
+  if (name.includes('oneplus')) {
+    return 'OnePlus';
+  }
+  if (name.includes('google') || name.includes('pixel')) {
+    return 'Google';
+  }
+  if (name.includes('nokia')) {
+    return 'Nokia';
+  }
+  if (name.includes('motorola')) {
+    return 'Motorola';
+  }
+  if (name.includes('sony')) {
+    return 'Sony';
+  }
+  if (name.includes('lg')) {
+    return 'LG';
+  }
+  
+  return '';
+}
+
 export default function ProductDetailClient({ part, relatedParts }: ProductDetailClientProps) {
   const t = useTranslations('parts');
   const { addToCart } = useCart();
@@ -32,6 +112,9 @@ export default function ProductDetailClient({ part, relatedParts }: ProductDetai
 
   const isInStock = part.inStock > 0;
   const isLowStock = part.inStock > 0 && part.inStock <= part.minStock;
+  
+  // Extract brand for quote link
+  const brand = extractBrand(part);
 
   const handleAddToCart = () => {
     setIsAdding(true);
@@ -56,12 +139,15 @@ export default function ProductDetailClient({ part, relatedParts }: ProductDetai
               <div className="space-y-4">
                 <div className="relative bg-white rounded-lg border-2 border-gray-200 overflow-hidden aspect-square">
                   {part.imageUrl ? (
-                    <Image
+                    <ImageZoom
                       src={part.imageUrl}
                       alt={part.name}
-                      fill
                       className="object-contain p-8"
-                      priority
+                      fallbackContent={
+                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                          <Package className="h-32 w-32 text-gray-300" />
+                        </div>
+                      }
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gray-100">
@@ -200,7 +286,7 @@ export default function ProductDetailClient({ part, relatedParts }: ProductDetai
                         className="w-full" 
                         size="lg"
                       >
-                        <Link href="/quote">
+                        <Link href={`/quote?part=${encodeURIComponent(part.name)}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(part.deviceModel || '')}&quality=${encodeURIComponent(part.quality || '')}&sku=${encodeURIComponent(part.sku || '')}&supplier=${encodeURIComponent(part.supplier || '')}`}>
                           {t('requestQuote', { defaultValue: 'Request Quote' })}
                         </Link>
                       </Button>
@@ -329,7 +415,7 @@ export default function ProductDetailClient({ part, relatedParts }: ProductDetai
               <Link href="/contact">{t('cta.contact', { defaultValue: 'Contact Us' })}</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="bg-white/10 border-white hover:bg-white hover:text-green-700">
-              <Link href="/quote">{t('cta.quote', { defaultValue: 'Request Quote' })}</Link>
+              <Link href={`/quote?part=${encodeURIComponent(part.name)}&brand=${encodeURIComponent(brand)}&model=${encodeURIComponent(part.deviceModel || '')}&quality=${encodeURIComponent(part.quality || '')}&sku=${encodeURIComponent(part.sku || '')}&supplier=${encodeURIComponent(part.supplier || '')}`}>{t('cta.quote', { defaultValue: 'Request Quote' })}</Link>
             </Button>
           </div>
         </div>

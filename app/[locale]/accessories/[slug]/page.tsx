@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FallbackImage } from "@/components/ui/fallback-image";
+import { ImageZoom } from "@/components/ui/image-zoom";
 import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/utils";
@@ -334,7 +335,7 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
       
       {/* Breadcrumb Navigation */}
       <div className="bg-gray-50 border-b">
-        <div className="container mx-auto px-4 py-3">
+        <div className="container mx-auto px-4">
           <Breadcrumb>
             <BreadcrumbList className="flex-wrap text-xs sm:text-sm">
               <BreadcrumbItem>
@@ -358,7 +359,7 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
       </div>
 
       {/* Back Navigation */}
-      <div className="container mx-auto px-4 py-2 sm:py-3">
+      <div className="container mx-auto px-4 py-2">
         <Link 
           href="/accessories" 
           className="inline-flex items-center text-sm text-green-600 hover:text-green-800 transition-colors"
@@ -375,12 +376,9 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
           <div className="space-y-4">
             <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200 shadow-lg relative">
               {accessory.imageUrl ? (
-                <FallbackImage
+                <ImageZoom
                   src={accessory.imageUrl}
                   alt={accessory.name}
-                  fill
-                  className="object-cover hover:scale-105 transition-transform duration-300"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   fallbackContent={
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
                       <div className="text-center text-gray-500">

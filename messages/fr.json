@@ -134,6 +134,67 @@
       "subtitle": "Réservez une réparation ou parcourez nos accessoires aujourd'hui",
       "contactUs": "Nous contacter",
       "learnMore": "En savoir plus"
+    },
+    "intro": {
+      "title": "Réparation Matériel & Logiciel Louvain - Tous Problèmes Techniques Résolus",
+      "welcome": "Bienvenue chez <strong>5G Phones</strong>, votre spécialiste en <strong>réparation matériel et logiciel à Louvain</strong>. Du <strong>remplacement d'écran iPhone, batterie MacBook</strong> à <strong>l'installation Windows, réinitialisation mot de passe, suppression de virus</strong> - nous résolvons tous les problèmes techniques au <strong>Bondgenotenlaan 84A à Louvain</strong>.",
+      "hardware": "<strong>Matériel:</strong> ✓ Réparation iPhone, Samsung, Huawei, Xiaomi, OnePlus, Nokia & Google Pixel • ✓ Service MacBook & iMac • ✓ Réparation Ordinateur portable & Bureau • ✓ Service iPad & Tablette",
+      "accessories": "<strong>Accessoires:</strong> ✓ Coques & étuis iPhone/Samsung/iPad/Huawei/Xiaomi/OnePlus/Nokia/Google Pixel • ✓ Protecteurs d'écran • ✓ Chargeurs & adaptateurs • ✓ Écouteurs • ✓ Chargeurs ordinateur • ✓ Câbles USB-C, Lightning & Micro-USB",
+      "software": "<strong>Logiciel:</strong> ✓ Installation Windows • ✓ Réinitialisation mot de passe • ✓ Suppression de virus • ✓ Récupération de données • ✓ Dépannage logiciel",
+      "guarantee": "6 mois de garantie • Diagnostic gratuit • Service le jour même • Également pour les clients de Wespelaar, Haacht et environs",
+      "bookRepair": "Réserver Réparation GSM",
+      "contact": "Nous Contacter"
+    },
+    "faq": {
+      "title": "Questions Fréquemment Posées - Réparation GSM Louvain",
+      "subtitle": "Vous avez d'autres questions sur nos services de réparation?",
+      "contactCta": "Nous Contacter",
+      "questions": {
+        "q1": {
+          "question": "Où puis-je faire réparer mon GSM à Louvain?",
+          "answer": "5G Phones est votre <strong>magasin GSM de confiance à Louvain</strong>, situé à Bondgenotenlaan 84A. Nous offrons des réparations professionnelles de smartphones pour toutes les marques: iPhone, Samsung, Huawei, Xiaomi et plus. Les clients de Wespelaar, Haacht, Rotselaar et des environs sont les bienvenus!"
+        },
+        "q2": {
+          "question": "Combien coûte une réparation d'écran iPhone à Louvain?",
+          "answer": "Le prix pour une <strong>réparation iPhone à Louvain</strong> varie selon le modèle. Un remplacement d'écran iPhone coûte en moyenne entre €79 et €199, selon le modèle. Nous offrons des prix transparents, un diagnostic gratuit et 6 mois de garantie sur toutes les réparations. Demandez un devis gratuit!"
+        },
+        "q3": {
+          "question": "Combien de temps prend une réparation de smartphone?",
+          "answer": "La plupart des <strong>réparations GSM à Louvain</strong> sont terminées en 1-2 heures. Pour les remplacements d'écran et les changements de batterie, vous pouvez souvent récupérer votre appareil le jour même. Les réparations plus complexes peuvent prendre 24-48 heures. Nous vous informons toujours à l'avance du délai prévu."
+        },
+        "q4": {
+          "question": "Quelles marques et appareils réparez-vous à Louvain?",
+          "answer": "Nous réparons toutes les marques et appareils populaires: <strong>Apple</strong> (iPhone, iPad, MacBook, iMac), <strong>Samsung</strong> (smartphones & tablettes Galaxy), <strong>Huawei, Xiaomi, OnePlus, Google Pixel</strong>, et tous les <strong>ordinateurs portables & de bureau Windows</strong> (HP, Dell, Lenovo, Asus, Acer). Également <strong>réparation MacBook Pro/Air, service iMac, remplacement d'écran d'ordinateur portable et dépannage informatique</strong> font partie de nos spécialités à Louvain."
+        },
+        "q5": {
+          "question": "Faites-vous aussi la réparation de MacBook et d'ordinateur portable à Louvain?",
+          "answer": "Oui! La <strong>réparation MacBook et le service d'ordinateur portable</strong> constituent une grande partie de nos services. Nous remplaçons les <strong>écrans MacBook, batteries, claviers</strong>, résolvons les problèmes logiciels, et réparons tous les <strong>ordinateurs portables Windows</strong>. Également pour <strong>réparation PC de bureau, service iMac et mises à niveau informatiques</strong> vous êtes au bon endroit. Diagnostic rapide et prix justes garantis!"
+        },
+        "q6": {
+          "question": "Réparez-vous aussi les iPads et les tablettes?",
+          "answer": "Absolument! Nous sommes spécialisés dans la <strong>réparation iPad et le service tablette à Louvain</strong>. Du <strong>remplacement d'écran iPad, changement de batterie, réparation de port de charge</strong> aux mises à jour logicielles - nous vous aidons avec tous les modèles iPad (Pro, Air, Mini). Également les <strong>Samsung Galaxy Tabs, tablettes Huawei et autres tablettes Android</strong> nous les réparons professionnellement avec 6 mois de garantie."
+        },
+        "q7": {
+          "question": "Vendez-vous aussi des accessoires pour tous les appareils?",
+          "answer": "Oui! En plus des réparations, nous offrons une large gamme d'accessoires pour tous les appareils: <strong>coques iPhone & Samsung, étuis iPad, housses MacBook, sacs pour ordinateur portable</strong>, protections d'écran, chargeurs, câbles USB-C, batteries externes, écouteurs sans fil, souris & claviers, et plus. Également des <strong>pièces pour réparation DIY</strong> sont disponibles. Tout en stock à Louvain!"
+        },
+        "q8": {
+          "question": "Pouvez-vous installer Windows sur mon ordinateur portable?",
+          "answer": "Oui! Nous offrons un <strong>service complet d'installation Windows à Louvain</strong> pour tous les ordinateurs portables et de bureau. De la <strong>réinstallation Windows 10/11, mise à niveau OS, installation de pilotes</strong> à la configuration complète du système - nous nous assurons que votre ordinateur fonctionne de manière optimale à nouveau. Également <strong>installation macOS sur MacBooks</strong> et <strong>mises à jour logicielles pour tous les systèmes</strong> font partie de nos services. Sauvegarde des données incluse!"
+        },
+        "q9": {
+          "question": "J'ai oublié mon mot de passe, pouvez-vous m'aider?",
+          "answer": "Absolument! Nous offrons un <strong>service de réinitialisation de mot de passe pour tous les appareils</strong>: <strong>réinitialisation mot de passe iPhone, déverrouillage Samsung, récupération mot de passe Windows, réinitialisation mot de passe MacBook</strong> et plus. Également pour les <strong>comptes iCloud oubliés, problèmes de compte Google et récupération BitLocker</strong> nous pouvons vous aider. Nos techniciens disposent d'outils spécialisés pour garder vos données en sécurité pendant que nous rétablissons l'accès."
+        },
+        "q10": {
+          "question": "Mon ordinateur est lent ou a des virus, que pouvez-vous faire?",
+          "answer": "Nous sommes spécialisés dans la <strong>suppression de virus, suppression de malware et dépannage informatique</strong> pour tous les systèmes. Des symptômes comme <strong>ordinateur portable lent, crashes, pop-ups, données volées</strong> nous les résolvons rapidement. Notre service comprend: <strong>scan antivirus complet, suppression de malware, optimisation du système, récupération de données</strong> et installation de protection préventive. Également pour les <strong>problèmes logiciels iPhone, bugs Samsung et problèmes MacBook</strong> nous sommes prêts. Service le jour même disponible!"
+        },
+        "q11": {
+          "question": "Donnez-vous une garantie sur les réparations?",
+          "answer": "Absolument! Toutes les <strong>réparations GSM</strong> chez 5G Phones sont accompagnées d'une <strong>garantie de 6 mois</strong>. Nous n'utilisons que des pièces de haute qualité et nos techniciens expérimentés assurent un service professionnel. Si un problème survient avec la réparation pendant la période de garantie, nous le réparons gratuitement."
+        }
+      }
     }
   },
   "navigation": {

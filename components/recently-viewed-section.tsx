@@ -11,6 +11,15 @@ import { Link } from '@/i18n/navigation';
 import { formatCurrency } from '@/lib/utils';
 import { Package, Clock, Search, Eye, ShoppingCart } from 'lucide-react';
 
+// Helper function to create slugs
+function createSlug(name: string, id: string): string {
+  const nameSlug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return `${nameSlug}-${id}`;
+}
+
 interface RecentlyViewedItem {
   id: string;
   name: string;
@@ -86,6 +95,7 @@ export function RecentlyViewedSection() {
               if (partsResponse.ok) {
                 const partsData = await partsResponse.json();
                 partsData.forEach((part: any) => {
+                  const partSlug = createSlug(part.name || part.title, part.id);
                   searchResults.push({
                     id: `part-${part.id}`,
                     name: part.name || part.title,
@@ -93,7 +103,7 @@ export function RecentlyViewedSection() {
                     type: 'part' as const,
                     category: part.category || 'Replacement Part',
                     imageUrl: part.imageUrl,
-                    url: `/parts/${part.id}`,
+                    url: `/parts/${partSlug}`,
                     searchTerm
                   });
                 });
@@ -104,6 +114,7 @@ export function RecentlyViewedSection() {
               if (accessoriesResponse.ok) {
                 const accessoriesData = await accessoriesResponse.json();
                 accessoriesData.forEach((accessory: any) => {
+                  const accessorySlug = createSlug(accessory.name || accessory.title, accessory.id);
                   searchResults.push({
                     id: `accessory-${accessory.id}`,
                     name: accessory.name || accessory.title,
@@ -111,7 +122,7 @@ export function RecentlyViewedSection() {
                     type: 'accessory' as const,
                     category: accessory.category || 'Accessory',
                     imageUrl: accessory.imageUrl,
-                    url: `/accessories/${accessory.id}`,
+                    url: `/accessories/${accessorySlug}`,
                     searchTerm
                   });
                 });
@@ -164,19 +175,19 @@ export function RecentlyViewedSection() {
           {recentlyViewed.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-6">
-                <Clock className="h-6 w-6 text-blue-600" />
-                <h2 className="text-2xl font-bold">{t('recentlyViewed.title', { defaultValue: 'Recently Viewed' })}</h2>
+                <Clock className="h-6 w-6 text-green-600" />
+                <h2 className="text-2xl font-bold text-green-700">{t('recentlyViewed.title', { defaultValue: 'Recently Viewed' })}</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {recentlyViewed.map((item) => (
-                  <Card key={item.id} className="hover:shadow-lg transition-shadow">
+                  <Card key={item.id} className="hover:shadow-lg transition-shadow border-green-100 hover:border-green-300">
                     <CardHeader className="pb-2">
                       <div className="flex flex-col gap-1">
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
                           {item.type === 'part' ? t('badges.part', { defaultValue: 'Part' }) : t('badges.accessory', { defaultValue: 'Accessory' })}
                         </Badge>
                       </div>
-                      <Eye className="h-4 w-4 text-gray-400" />
+                      <Eye className="h-4 w-4 text-green-400" />
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="aspect-square mb-3">
@@ -195,13 +206,13 @@ export function RecentlyViewedSection() {
                         <Button
                           size="sm"
                           onClick={() => handleAddToCart(item)}
-                          className="h-8 w-8 p-0"
+                          className="h-8 w-8 p-0 bg-green-600 hover:bg-green-700 text-white"
                         >
                           <ShoppingCart className="h-4 w-4" />
                         </Button>
                       </div>
                       <Link href={item.url} className="block mt-2">
-                        <Button variant="outline" size="sm" className="w-full">
+                        <Button variant="outline" size="sm" className="w-full border-green-600 text-green-700 hover:bg-green-50">
                           {t('recentlyViewed.viewDetails', { defaultValue: 'View Details' })}
                         </Button>
                       </Link>
@@ -217,18 +228,18 @@ export function RecentlyViewedSection() {
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <Search className="h-6 w-6 text-green-600" />
-                <h2 className="text-2xl font-bold">{t('searchBased.title', { defaultValue: 'Based on Your Search' })}</h2>
+                <h2 className="text-2xl font-bold text-green-700">{t('searchBased.title', { defaultValue: 'Based on Your Search' })}</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {searchBasedItems.map((item) => (
-                  <Card key={item.id} className="hover:shadow-lg transition-shadow">
+                  <Card key={item.id} className="hover:shadow-lg transition-shadow border-green-100 hover:border-green-300">
                     <CardHeader className="pb-2">
                       <div className="flex flex-col gap-1">
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
                           {item.type === 'part' ? t('badges.part', { defaultValue: 'Part' }) : t('badges.accessory', { defaultValue: 'Accessory' })}
                         </Badge>
                       </div>
-                      <Search className="h-4 w-4 text-gray-400" />
+                      <Search className="h-4 w-4 text-green-400" />
                     </CardHeader>
                     <CardContent className="pt-0">
                       <div className="aspect-square mb-3">
@@ -250,13 +261,13 @@ export function RecentlyViewedSection() {
                         <Button
                           size="sm"
                           onClick={() => handleAddToCart(item)}
-                          className="h-8 w-8 p-0"
+                          className="h-8 w-8 p-0 bg-green-600 hover:bg-green-700 text-white"
                         >
                           <ShoppingCart className="h-4 w-4" />
                         </Button>
                       </div>
                       <Link href={item.url} className="block mt-2">
-                        <Button variant="outline" size="sm" className="w-full">
+                        <Button variant="outline" size="sm" className="w-full border-green-600 text-green-700 hover:bg-green-50">
                           {t('searchBased.viewMore', { defaultValue: 'View More' })}
                         </Button>
                       </Link>

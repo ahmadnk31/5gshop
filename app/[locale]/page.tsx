@@ -4,6 +4,7 @@ import { FeaturedAccessoriesSection } from "@/components/FeaturedAccessoriesSect
 import { RecentlyViewedSection } from "@/components/recently-viewed-section";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Smartphone, Wrench, ShoppingBag, Star, Clock, Shield, CheckCircle, ArrowRight, Zap, Cable, Headphones, Monitor, ShoppingCart } from "lucide-react";
 import { Testimonials } from "@/components/testimonials";
 import { PricingComparison } from "@/components/pricing-comparison";
@@ -26,150 +27,187 @@ import HomepageHeroCarouselClient from '@/components/homepage-hero-carousel-clie
 
 export async function generateMetadata(): Promise<Metadata> {
   return await generatePageMetadata({
-    title: "Device Repair & Accessories Leuven | Phone, Tablet, iPad, MacBook, Desktop | GSM Reparatie | 5gphones",
-    description: "Professional device repair & accessories in Leuven ✓ Phone, Tablet, iPad, MacBook, Laptop, Desktop repair ✓ Cases, Chargers, Screen Protectors ✓ iPhone, Samsung, Huawei ✓ Fast service ✓ Warranty ✓ Bondgenotenlaan 84A | Professionele reparatie en accessoires voor alle toestellen.",
+    title: "GSM Reparatie Leuven | iPhone, MacBook, Software & Windows Installatie ⭐ 5G Phones",
+    description: "⭐ Professionele reparatie & software service Leuven - iPhone, MacBook, iPad, Laptop herstel ✓ Windows installatie ✓ Password reset ✓ Software troubleshooting ✓ Virus verwijdering ✓ Data recovery ✓ 6 maanden garantie ✓ Bondgenotenlaan 84A. Hardware & Software solutions!",
     path: "",
     keywords: [
-      // Primary English keywords (for international students/expats)
+      // TIER 1: High Priority GSC Keywords (300+ impressions)
+      "gsm leuven", // 300 impressions - BIGGEST OPPORTUNITY
+      "gsm winkel leuven", // 198 impressions
+      "smartphone reparatie wespelaar", // 134 impressions
+      "iphone reparatie leuven", // 119 impressions
+      "gsm herstellen leuven", // 108 impressions
+      
+      // TIER 2: Proven Performers (clicks + good position)
+      "gsm reparatie leuven", // 6 clicks, position 4.48 - TOP PERFORMER
+      "gsm repair leuven", // 4 clicks, position 4.83
+      "telefoon reparatie leuven", // 3 clicks
+      "smartphone reparatie leuven",
+      "gsm reparatie", // 1 click, position 7.69
+      
+      // Apple Devices - High Priority
+      "macbook reparatie leuven",
+      "macbook herstel leuven",
+      "macbook repair leuven",
+      "ipad reparatie leuven",
+      "ipad herstel leuven",
+      "ipad repair leuven",
+      "imac reparatie leuven",
+      "mac reparatie leuven",
+      "apple reparatie leuven",
+      "macbook scherm vervangen leuven",
+      "macbook battery replacement leuven",
+      "ipad screen repair leuven",
+      
+      // Laptop & Computer Keywords
+      "laptop reparatie leuven",
+      "laptop herstel leuven",
+      "laptop repair leuven",
+      "computer reparatie leuven",
+      "computer herstel leuven",
+      "computer repair leuven",
+      "desktop reparatie leuven",
+      "desktop repair leuven",
+      "pc reparatie leuven",
+      "windows laptop repair leuven",
+      "laptop scherm vervangen leuven",
+      "laptop battery replacement leuven",
+      
+      // Tablet Keywords
+      "tablet reparatie leuven",
+      "tablet herstel leuven",
+      "tablet repair leuven",
+      "samsung tablet repair leuven",
+      "android tablet reparatie leuven",
+      "tablet scherm vervangen leuven",
+      
+      // Software Services - HIGH PRIORITY
+      "windows installatie leuven",
+      "windows installation leuven",
+      "windows herinstalleren leuven",
+      "os installation leuven",
+      "software reparatie leuven",
+      "software repair leuven",
+      "iphone software repair leuven",
+      "iphone software probleem leuven",
+      "samsung software repair leuven",
+      "android software repair leuven",
+      "macbook software repair leuven",
+      "laptop software repair leuven",
+      
+      // Password & Security Services
+      "password reset leuven",
+      "wachtwoord vergeten leuven",
+      "iphone password reset leuven",
+      "samsung password reset leuven",
+      "windows password reset leuven",
+      "laptop password reset leuven",
+      "forgot password leuven",
+      "unlock iphone leuven",
+      "unlock samsung leuven",
+      
+      // Technical Troubleshooting
+      "virus verwijdering leuven",
+      "virus removal leuven",
+      "malware removal leuven",
+      "computer slow leuven",
+      "laptop traag leuven",
+      "computer troubleshooting leuven",
+      "laptop troubleshooting leuven",
+      "technische problemen leuven",
+      "technical issues leuven",
+      
+      // Data Services
+      "data recovery leuven",
+      "data herstel leuven",
+      "data backup leuven",
+      "data transfer leuven",
+      "iphone data recovery leuven",
+      "laptop data recovery leuven",
+      
+      // System Services
+      "system update leuven",
+      "ios update leuven",
+      "android update leuven",
+      "windows update leuven",
+      "software update leuven",
+      "firmware update leuven",
+      
+      // TIER 3: English Keywords for Students/Expats
       "phone repair leuven",
       "mobile repair leuven",
-      "smartphone repair leuven",
-      "tablet repair leuven",
-      "ipad repair leuven",
-      "macbook repair leuven",
-      "laptop repair leuven",
-      "desktop repair leuven",
-      "computer repair leuven",
-      "imac repair leuven",
-      "mac repair leuven",
-      "device repair leuven",
-      "cell phone repair leuven",
       "iphone repair leuven",
       "samsung repair leuven",
       "screen repair leuven",
-      "screen replacement leuven",
       "battery replacement leuven",
       "phone shop leuven",
       "mobile shop leuven",
-      "electronics repair leuven",
-      "phone accessories leuven",
-      "mobile accessories leuven",
-      "smartphone accessories leuven",
-      "phone cases leuven",
-      "phone chargers leuven",
-      "screen protectors leuven",
-      "wireless earbuds leuven",
-      "power banks leuven",
-      "phone cables leuven",
-      "tablet accessories leuven",
-      "ipad accessories leuven",
-      "macbook accessories leuven",
-      "laptop accessories leuven",
       
-      // Primary Dutch keywords (for local residents)
-      "gsm reparatie leuven",
-      "telefoon reparatie leuven",
-      "smartphone reparatie leuven",
+      // Device-Specific Dutch
+      "iphone reparatie leuven",
+      "samsung reparatie leuven",
+      "huawei reparatie leuven",
+      "xiaomi reparatie leuven",
       "tablet reparatie leuven",
       "ipad reparatie leuven",
       "macbook reparatie leuven",
       "laptop reparatie leuven",
-      "computer reparatie leuven",
-      "desktop reparatie leuven",
-      "mac reparatie leuven",
-      "imac reparatie leuven",
-      "iphone reparatie leuven",
-      "samsung reparatie leuven",
+      
+      // Service-Specific Dutch
       "scherm reparatie leuven",
       "batterij vervanging leuven",
-      "gsm winkel leuven",
-      "telefoon winkel leuven",
-      "telefoon accessoires leuven",
-      "gsm accessoires leuven",
-      "smartphone accessoires leuven",
-      "telefoon hoesjes leuven",
-      "smartphone hoesjes leuven",
-      "telefoon opladers leuven",
-      "scherm beschermers leuven",
-      "draadloze oordopjes leuven",
-      "powerbanks leuven",
-      "telefoon kabels leuven",
-      "tablet accessoires leuven",
-      "ipad accessoires leuven",
-      "macbook accessoires leuven",
-      "laptop accessoires leuven",
-      
-      // Brand-specific (English & Dutch)
-      "huawei repair leuven",
-      "xiaomi repair leuven",
-      "google pixel repair leuven",
-      "oneplus repair leuven",
-      "huawei reparatie leuven",
-      "xiaomi reparatie leuven",
-      
-      // Service-specific (English)
-      "fast phone repair leuven",
-      "same day repair leuven",
-      "quick screen fix leuven",
-      "water damage repair leuven",
-      "charging port repair leuven",
-      "camera repair leuven",
-      "affordable repair leuven",
-      "reliable repair leuven",
-      "professional repair leuven",
-      "warranty repair leuven",
-      
-      // Service-specific (Dutch)
-      "snelle reparatie leuven",
-      "goedkope reparatie leuven", 
-      "professionele reparatie leuven",
-      "reparatie met garantie leuven",
+      "gsm herstel leuven",
+      "telefoon herstel leuven",
+      "smartphone herstel leuven",
+      "gsm scherm vervangen leuven",
       "waterschade reparatie leuven",
       
-      // Primary French keywords (for French-speaking Belgians)
-      "réparation téléphone louvain",
-      "réparation gsm louvain",
-      "réparation smartphone louvain",
-      "réparation tablette louvain",
-      "réparation ipad louvain",
-      "réparation macbook louvain",
-      "réparation ordinateur louvain",
-      "réparation laptop louvain",
-      "réparation mac louvain",
-      "réparation imac louvain",
-      "réparation iphone louvain",
-      "réparation samsung louvain",
-      "réparation écran louvain",
-      "remplacement batterie louvain",
-      "accessoires téléphone louvain",
-      "accessoires mobile louvain",
-      "accessoires smartphone louvain",
-      "coques téléphone louvain",
-      "chargeurs téléphone louvain",
-      "protecteurs écran louvain",
-      "écouteurs sans fil louvain",
-      "batteries externes louvain",
-      "câbles téléphone louvain",
-      "accessoires tablette louvain",
-      "accessoires ipad louvain",
-      "accessoires macbook louvain",
-      "accessoires ordinateur louvain",
+      // Location Variations (Nearby Cities)
+      "smartphone reparatie wespelaar",
+      "gsm reparatie haacht",
+      "telefoon reparatie rotselaar",
+      "gsm winkel haacht",
       
-      // Location-specific variations
-      "leuven phone repair",
-      "leuven mobile repair",
-      "leuven gsm reparatie",
-      "leuven telefoon reparatie", 
-      "repair shop leuven center",
+      // French Keywords (Belgian French speakers)
+      "réparation gsm louvain",
+      "réparation téléphone louvain",
+      "réparation smartphone louvain",
+      "réparation iphone louvain",
+      "réparation écran louvain",
+      
+      // Accessories Keywords
+      "gsm accessoires leuven",
+      "telefoon accessoires leuven",
+      "smartphone accessoires leuven",
+      "telefoon hoesjes leuven",
+      "gsm hoesjes leuven",
+      "telefoon opladers leuven",
+      "phone accessories leuven",
+      "phone cases leuven",
+      
+      // Service Quality Keywords
+      "snelle reparatie leuven",
+      "goedkope reparatie leuven",
+      "professionele reparatie leuven",
+      "reparatie met garantie leuven",
+      "betrouwbare gsm reparatie",
+      "fast phone repair leuven",
+      "affordable repair leuven",
+      "professional repair leuven",
+      
+      // Location-Specific Long-tail
+      "gsm reparatie centrum leuven",
+      "gsm winkel centrum leuven",
       "phone repair bondgenotenlaan",
       "reparatie leuven centrum",
-      "gsm reparatie centrum leuven",
+      "gsm shop leuven",
+      "telefoon winkel leuven",
       
-      // Student-focused
+      // Student-Focused
       "student phone repair leuven",
       "cheap phone repair leuven",
       "budget repair leuven",
-      "affordable mobile repair"
+      "studenten gsm reparatie"
     ]
   });
 }
@@ -247,11 +285,24 @@ export default async function Home() {
     getAllDevices()
   ]);
 
+  // Helper function to create slugs
+  const createSlug = (name: string, id: string): string => {
+    const nameSlug = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    return `${nameSlug}-${id}`;
+  };
+
   // Get featured accessories (top 6 by stock)
   const featuredAccessories = accessories
     .filter((acc: Accessory) => acc.inStock > 0)
     .sort((a: Accessory, b: Accessory) => b.inStock - a.inStock)
-    .slice(0, 6);
+    .slice(0, 6)
+    .map((acc: Accessory) => ({
+      ...acc,
+      slug: createSlug(acc.name, acc.id)
+    }));
 
   // Get homepage parts (top 6 in-stock)
   const featuredParts = homepageParts as Part[];
@@ -344,6 +395,48 @@ export default async function Home() {
       {/* Hero Section */}
       <HomepageHeroCarousel />
 
+      {/* SEO-Optimized Intro Section */}
+      <section className="py-12 bg-gradient-to-b from-white to-gray-50" aria-labelledby="intro-title">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h1 id="intro-title" className="text-3xl md:text-4xl font-bold text-center mb-6 text-gray-900">
+            {t('intro.title')}
+          </h1>
+          <div className="text-center text-lg text-gray-700 space-y-4">
+            <p>
+              {t.rich('intro.welcome', {
+                strong: (chunks) => <strong>{chunks}</strong>
+              })}
+            </p>
+            <p className="text-base font-medium">
+              {t.rich('intro.hardware', {
+                strong: (chunks) => <strong>{chunks}</strong>
+              })}
+            </p>
+            <p className="text-base font-medium">
+              {t.rich('intro.accessories', {
+                strong: (chunks) => <strong>{chunks}</strong>
+              })}
+            </p>
+            <p className="text-base font-medium">
+              {t.rich('intro.software', {
+                strong: (chunks) => <strong>{chunks}</strong>
+              })}
+            </p>
+            <p className="text-base">
+              {t('intro.guarantee')}
+            </p>
+            <div className="flex flex-wrap justify-center gap-3 pt-4">
+              <Button asChild size="lg" className="bg-green-600 hover:bg-green-700">
+                <Link href="/repairs">{t('intro.bookRepair')}</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/contact">{t('intro.contact')}</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Services Overview */}
       <section className="py-16 bg-[var(--background)]" data-section="services_overview" aria-labelledby="services-title">
         <div className="container mx-auto px-4">
@@ -352,7 +445,7 @@ export default async function Home() {
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex items-center space-x-2">
-                  <Wrench className="h-8 w-8 text-blue-600" />
+                  <Wrench className="h-8 w-8 text-green-600" />
                   <CardTitle className="text-2xl">{t('services.repairs.title')}</CardTitle>
                 </div>
                 <CardDescription>
@@ -535,7 +628,7 @@ export default async function Home() {
               return (
                 <Link 
                   key={category.type} 
-                  href={`/repairs?type=${repairType}`}
+                  href={`/repairs/${repairType}`}
                   className="focus:ring-4 focus:ring-blue-300 focus:outline-none rounded-lg"
                   aria-label={`Repair services for ${category.name} - ${modelCount} models supported`}
                 >
@@ -570,7 +663,7 @@ export default async function Home() {
           <div className="grid md:grid-cols-3 gap-8" role="list" aria-label="Reasons to choose our service">
             <div className="text-center" role="listitem">
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
-                <Clock className="h-8 w-8 text-blue-600" />
+                <Clock className="h-8 w-8 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold mb-2">{t('whyChooseUs.fastService.title')}</h3>
               <p className="text-gray-600">{t('whyChooseUs.fastService.description')}</p>
@@ -596,6 +689,43 @@ export default async function Home() {
       
       {/* Testimonials Component */}
       <Testimonials testimonials={testimonials} />
+
+      {/* FAQ Section - Accordion with i18n Support */}
+      <section className="py-16 bg-gray-50" aria-labelledby="faq-title">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 id="faq-title" className="text-3xl font-bold text-center mb-12">
+            {t('faq.title')}
+          </h2>
+          
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((num) => (
+              <AccordionItem 
+                key={`q${num}`} 
+                value={`item-${num}`}
+                className="bg-white rounded-lg shadow-sm border border-gray-200"
+              >
+                <AccordionTrigger className="px-6 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
+                  {t(`faq.questions.q${num}.question`)}
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4">
+                  <div className="text-gray-700 prose prose-sm max-w-none">
+                    {t.rich(`faq.questions.q${num}.answer`, {
+                      strong: (chunks) => <strong>{chunks}</strong>
+                    })}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+
+          <div className="text-center mt-10">
+            <p className="text-gray-600 mb-4">{t('faq.subtitle')}</p>
+            <Button asChild size="lg" className="bg-green-600 hover:bg-green-700">
+              <Link href="/contact">{t('faq.contactCta')}</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="bg-[var(--primary)] text-white py-16" aria-labelledby="final-cta-title">

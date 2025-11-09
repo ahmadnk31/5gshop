@@ -27,7 +27,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
             <Card key={testimonial.id} className="hover:shadow-lg transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <Quote className="h-8 w-8 text-blue-600 mr-3" />
+                  <Quote className="h-8 w-8 text-green-600 mr-3" />
                   <div className="flex items-center">
                     {[...Array(5)].map((_, i) => (
                       <Star 

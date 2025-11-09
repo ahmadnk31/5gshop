@@ -117,6 +117,67 @@
       "subtitle": "Boek een reparatie of bekijk onze accessoires vandaag nog",
       "contactUs": "Neem contact op",
       "learnMore": "Meer informatie"
+    },
+    "intro": {
+      "title": "Hardware & Software Reparatie Leuven - Alle Technische Problemen Opgelost",
+      "welcome": "Welkom bij <strong>5G Phones</strong>, uw specialist voor <strong>hardware én software reparatie in Leuven</strong>. Van <strong>iPhone scherm vervangen, MacBook batterij</strong> tot <strong>Windows installatie, password reset, virus verwijdering</strong> - wij lossen alle technische problemen op aan de <strong>Bondgenotenlaan 84A in Leuven</strong>.",
+      "hardware": "<strong>Hardware:</strong> ✓ iPhone, Samsung, Huawei, Xiaomi, OnePlus, Nokia & Google Pixel reparatie • ✓ MacBook & iMac herstel • ✓ Laptop & Desktop reparatie • ✓ iPad & Tablet service",
+      "accessories": "<strong>Accessoires:</strong> ✓ iPhone/Samsung/iPad/Huawei/Xiaomi/OnePlus/Nokia/Google Pixel hoesjes & covers • ✓ Screen protectors • ✓ Opladers & adapters • ✓ Koptelefoons • ✓ Computer chargers • ✓ USB-C, Lightning & Micro-USB kabels",
+      "software": "<strong>Software:</strong> ✓ Windows installatie • ✓ Password reset • ✓ Virus verwijdering • ✓ Data recovery • ✓ Software troubleshooting",
+      "guarantee": "6 maanden garantie • Gratis diagnose • Same-day service • Ook voor klanten uit Wespelaar, Haacht, en omgeving",
+      "bookRepair": "GSM Reparatie Boeken",
+      "contact": "Contacteer Ons"
+    },
+    "faq": {
+      "title": "Veelgestelde Vragen over GSM Reparatie Leuven",
+      "subtitle": "Heeft u nog vragen over onze GSM reparatie service?",
+      "contactCta": "Neem Contact Op",
+      "questions": {
+        "q1": {
+          "question": "Waar kan ik mijn GSM laten herstellen in Leuven?",
+          "answer": "5G Phones is uw vertrouwde <strong>GSM winkel in Leuven</strong>, gevestigd aan de Bondgenotenlaan 84A. Wij bieden professionele smartphone reparatie voor alle merken: iPhone, Samsung, Huawei, Xiaomi en meer. Ook klanten uit Wespelaar, Haacht, Rotselaar en omgeving zijn welkom!"
+        },
+        "q2": {
+          "question": "Hoeveel kost een iPhone scherm reparatie in Leuven?",
+          "answer": "De prijs voor <strong>iPhone reparatie in Leuven</strong> varieert per model. Een iPhone scherm vervanging kost gemiddeld tussen €79 en €199, afhankelijk van het model. Wij bieden transparante prijzen, gratis diagnose en 6 maanden garantie op alle reparaties. Vraag een vrijblijvende offerte aan!"
+        },
+        "q3": {
+          "question": "Hoe lang duurt een smartphone reparatie?",
+          "answer": "De meeste <strong>GSM reparaties in Leuven</strong> worden binnen 1-2 uur uitgevoerd. Voor scherm vervangingen en batterij wisselingen kunt u vaak dezelfde dag uw toestel ophalen. Complexere reparaties kunnen 24-48 uur duren. Wij informeren u altijd vooraf over de verwachte doorlooptijd."
+        },
+        "q4": {
+          "question": "Welke merken en apparaten repareren jullie in Leuven?",
+          "answer": "Wij repareren alle populaire merken en apparaten: <strong>Apple</strong> (iPhone, iPad, MacBook, iMac), <strong>Samsung</strong> (Galaxy smartphones & tablets), <strong>Huawei, Xiaomi, OnePlus, Google Pixel</strong>, en alle <strong>Windows laptops & desktops</strong> (HP, Dell, Lenovo, Asus, Acer). Ook <strong>MacBook Pro/Air reparatie, iMac herstel, laptop scherm vervangen en computer troubleshooting</strong> behoren tot onze specialiteiten in Leuven."
+        },
+        "q5": {
+          "question": "Doen jullie ook MacBook en laptop reparatie in Leuven?",
+          "answer": "Ja! <strong>MacBook reparatie en laptop herstel</strong> zijn een groot deel van onze dienstverlening. Wij vervangen <strong>MacBook schermen, batterijen, keyboards</strong>, lossen software problemen op, en repareren alle <strong>Windows laptops</strong>. Ook voor <strong>desktop PC reparatie, iMac herstel en computer upgrades</strong> bent u aan het juiste adres. Snelle diagnose en eerlijke prijzen gegarandeerd!"
+        },
+        "q6": {
+          "question": "Repareren jullie ook iPads en tablets?",
+          "answer": "Absoluut! Wij zijn specialist in <strong>iPad reparatie en tablet herstel in Leuven</strong>. Van <strong>iPad scherm vervangen, batterij wisselen, oplaadpoort reparatie</strong> tot software updates - wij helpen u met alle iPad modellen (Pro, Air, Mini). Ook <strong>Samsung Galaxy Tabs, Huawei tablets en andere Android tablets</strong> repareren wij professioneel met 6 maanden garantie."
+        },
+        "q7": {
+          "question": "Verkopen jullie ook accessoires voor alle apparaten?",
+          "answer": "Ja! Naast reparatie bieden wij een breed assortiment aan accessoires voor alle apparaten: <strong>iPhone & Samsung hoesjes, iPad cases, MacBook sleeves, laptop tassen</strong>, screen protectors, opladers, USB-C kabels, powerbanks, draadloze oordopjes, muis & keyboards, en meer. Ook <strong>onderdelen voor zelf repareren</strong> zijn beschikbaar. Alles direct op voorraad in Leuven!"
+        },
+        "q8": {
+          "question": "Kunnen jullie Windows installeren op mijn laptop?",
+          "answer": "Ja! Wij bieden complete <strong>Windows installatie service in Leuven</strong> voor alle laptops en desktops. Van <strong>Windows 10/11 herinstallatie, OS upgrade, driver installatie</strong> tot volledige systeem configuratie - wij zorgen ervoor dat uw computer weer optimaal werkt. Ook <strong>macOS installatie op MacBooks</strong> en <strong>software updates voor alle systemen</strong> behoren tot onze services. Inclusief data backup!"
+        },
+        "q9": {
+          "question": "Ik ben mijn wachtwoord vergeten, kunnen jullie helpen?",
+          "answer": "Absoluut! Wij bieden <strong>password reset service voor alle apparaten</strong>: <strong>iPhone password reset, Samsung unlock, Windows password recovery, MacBook wachtwoord herstel</strong> en meer. Ook voor <strong>vergeten iCloud accounts, Google account problemen en BitLocker recovery</strong> kunnen wij u helpen. Onze technici hebben gespecialiseerde tools om uw data veilig te behouden terwijl we toegang herstellen."
+        },
+        "q10": {
+          "question": "Mijn computer is traag of heeft virussen, wat kunnen jullie doen?",
+          "answer": "Wij specialiseren in <strong>virus verwijdering, malware removal en computer troubleshooting</strong> voor alle systemen. Symptomen zoals <strong>trage laptop, crashes, pop-ups, gestolen data</strong> lossen wij snel op. Onze service omvat: <strong>volledige virus scan, malware removal, system optimization, data recovery</strong> en preventieve bescherming installatie. Ook voor <strong>iPhone software problemen, Samsung glitches en MacBook issues</strong> staan wij klaar. Same-day service beschikbaar!"
+        },
+        "q11": {
+          "question": "Geef je garantie op reparaties?",
+          "answer": "Absoluut! Alle <strong>GSM reparaties</strong> bij 5G Phones komen met <strong>6 maanden garantie</strong>. Wij gebruiken alleen hoogwaardige onderdelen en onze ervaren technici zorgen voor een professionele service. Als er binnen de garantieperiode een probleem optreedt met de reparatie, lossen wij dit kosteloos op."
+        }
+      }
     }
   },
   "homepageHero": {

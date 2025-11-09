@@ -129,7 +129,7 @@ export function Navigation() {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8 mx-4">
             {/* Search Component */}
-            <div className="flex-1 max-w-lg mx-6">
+            <div className="flex-1 mx-6">
               <SearchComponent />
             </div>
             <div className="flex items-center space-x-8">
@@ -289,7 +289,7 @@ export function Navigation() {
             {/* Tablet Search Bar - Toggleable */}
             {searchbarOpen && (
               <div className="absolute left-0 right-0 top-16 z-[10000] bg-white border-b border-gray-200 shadow-md px-4 py-3">
-                <SearchComponent />
+                <SearchComponent onClose={() => setSearchbarOpen(false)} />
               </div>
             )}
             {/* Compact tablet menu with essential items */}
@@ -451,7 +451,7 @@ export function Navigation() {
             {/* Search Icon */}
             <button
               onClick={() => setSearchbarOpen(!searchbarOpen)}
-              className="p-2 text-gray-700 hover:text-blue-600 transition-colors"
+              className="p-2 text-gray-700 hover:text-green-600 transition-colors"
             >
               <Search className="h-5 w-5" />
             </button>
@@ -503,7 +503,7 @@ export function Navigation() {
               </DropdownMenu>
             ) : (
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center p-2 text-gray-700 hover:text-blue-600 transition-colors">
+                <DropdownMenuTrigger className="flex items-center p-2 text-gray-700 hover:text-green-600 transition-colors">
                   <UserCircle className="h-6 w-6" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
@@ -528,13 +528,31 @@ export function Navigation() {
           </div>
         </div>
 
-        {/* Mobile Search Bar - Toggleable */}
+        {/* Mobile Search Overlay - Toggleable */}
         {searchbarOpen && (
-          <div className="md:hidden py-3 border-t bg-gray-50 relative z-[10000]">
-            <div className="px-2">
-              <SearchComponent />
+          <>
+            {/* Backdrop */}
+            <div 
+              className="md:hidden fixed inset-0 bg-black/50 z-[9998]"
+              onClick={() => setSearchbarOpen(false)}
+            />
+            {/* Search Overlay */}
+            <div className="md:hidden fixed left-0 right-0 top-0 z-[9999] bg-white shadow-xl">
+              <div className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-semibold text-gray-900">{t('search')}</h3>
+                  <button
+                    onClick={() => setSearchbarOpen(false)}
+                    className="p-2 text-gray-500 hover:text-gray-700 transition-colors"
+                    aria-label="Close search"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+                <SearchComponent onClose={() => setSearchbarOpen(false)} />
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {/* Mobile Navigation Menu */}
@@ -543,7 +561,7 @@ export function Navigation() {
             <div className="flex flex-col space-y-4">
               <Link 
                 href="/" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-700 hover:text-green-600 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 {t('home')}
@@ -560,7 +578,7 @@ export function Navigation() {
                     <Link 
                       key={device.type}
                       href={`/repairs/${device.type}`} 
-                      className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors text-sm"
+                      className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors text-sm"
                       onClick={() => setIsOpen(false)}
                     >
                       <device.icon className="h-4 w-4" />
@@ -569,7 +587,7 @@ export function Navigation() {
                   ))}
                   <Link 
                     href="/repairs" 
-                    className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors text-sm"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors text-sm"
                     onClick={() => setIsOpen(false)}
                   >
                     <Package className="h-4 w-4" />
@@ -589,7 +607,7 @@ export function Navigation() {
                     <Link 
                       key={accessory.category}
                       href={`/accessories?category=${accessory.category}`} 
-                      className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors text-sm"
+                      className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors text-sm"
                       onClick={() => setIsOpen(false)}
                     >
                       <accessory.icon className="h-4 w-4" />
@@ -598,7 +616,7 @@ export function Navigation() {
                   ))}
                   <Link 
                     href="/accessories" 
-                    className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 transition-colors text-sm"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors text-sm"
                     onClick={() => setIsOpen(false)}
                   >
                     <Package className="h-4 w-4" />
@@ -609,14 +627,14 @@ export function Navigation() {
 
               <Link 
                 href="/about" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-700 hover:text-green-600 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 {t('about')}
               </Link>
               <Link 
                 href="/contact" 
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-700 hover:text-green-600 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 {t('contact')}

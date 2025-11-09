@@ -9,6 +9,14 @@ import { FallbackImage } from "@/components/ui/fallback-image";
 
 import { useCart } from "@/components/cart-context";
 
+// Helper function to create slugs
+function createSlug(name: string, id: string): string {
+  const nameSlug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return `${nameSlug}-${id}`;
+}
 
 export function FeaturedPartsSection({ parts, t }: { parts: any[]; t: any }) {
   const [isPending, startTransition] = useTransition();
@@ -38,7 +46,9 @@ export function FeaturedPartsSection({ parts, t }: { parts: any[]; t: any }) {
           </Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {parts.map((part) => (
+          {parts.map((part) => {
+            const partSlug = createSlug(part.name, part.id);
+            return (
             <Card key={part.id} className="hover:shadow-lg transition-shadow group">
               <CardHeader className="p-0">
                 <div className="relative overflow-hidden rounded-t-lg">
@@ -77,7 +87,7 @@ export function FeaturedPartsSection({ parts, t }: { parts: any[]; t: any }) {
                   </span>
                 </div>
                 <div className="flex space-x-2">
-                  <Link href={`/parts/${part.id}`} className="flex-1">
+                  <Link href={`/parts/${partSlug}`} className="flex-1">
                     <Button variant="outline" size="sm" className="w-full">
                       {t("parts.relatedProducts.viewDetails")}
                     </Button>
@@ -97,7 +107,8 @@ export function FeaturedPartsSection({ parts, t }: { parts: any[]; t: any }) {
                 </div>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

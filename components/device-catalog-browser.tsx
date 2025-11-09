@@ -25,6 +25,15 @@ import {
   GripVertical
 } from "lucide-react"
 import { DeviceType, Part, RepairService } from '@/lib/types'
+
+// Helper function to create slugs
+function createSlug(name: string, id: string): string {
+  const nameSlug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return `${nameSlug}-${id}`;
+}
 import { 
   getDeviceTypes, 
   getBrandsByType, 
@@ -43,7 +52,6 @@ import { CSS } from '@dnd-kit/utilities';
 import { FallbackImage } from './ui/fallback-image'
 import { Link } from '@/i18n/navigation'
 import { formatCurrency } from '@/lib/utils'
-import { PartActionButtons } from '@/app/[locale]/parts/[id]/part-action-buttons'
 import { Skeleton } from '@/components/ui/skeleton';
 
 // Brand logo mapping - image URLs for brand logos
@@ -1080,9 +1088,11 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
           ) : searchResults.length > 0 ? (
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {getPaginatedItems(searchResults, searchPagination).map((part) => (
+                {getPaginatedItems(searchResults, searchPagination).map((part) => {
+                  const partSlug = createSlug(part.name, part.id);
+                  return (
                   <Card key={part.id} className="relative overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
-                    <Link href={`/parts/${part.id}`} className="block">
+                    <Link href={`/parts/${partSlug}`} className="block">
                       {/* Image Section */}
                       <div className="relative h-40 bg-gray-50 flex items-center justify-center p-3">
                         {part.imageUrl ? (
@@ -1175,7 +1185,8 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                       </div>
                     </Link>
                   </Card>
-                ))}
+                  );
+                })}
               </div>
               
               {/* Search Results Pagination */}
@@ -1583,9 +1594,11 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
               </DndContext>
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
-                {parts.map((part) => (
+                {parts.map((part) => {
+                  const partSlug = createSlug(part.name, part.id);
+                  return (
                   <Card key={part.id} className="relative overflow-hidden hover:shadow-lg py-0 transition-shadow cursor-pointer group">
-                    <Link href={`/parts/${part.id}`} className="block">
+                    <Link href={`/parts/${partSlug}`} className="block">
                       {/* Image Section */}
                       <div className="relative h-40 bg-gray-50 flex items-center justify-center p-3">
                         {part.imageUrl ? (
@@ -1678,7 +1691,8 @@ function DeviceCatalogBrowserContent({ searchTerm, serialOrder = 'desc' }: Devic
                       </div>
                     </Link>
                   </Card>
-                ))}
+                  );
+                })}
               </div>
             )}
           </TabsContent>

@@ -58,12 +58,17 @@ interface SearchResult {
   imageUrl?: string; // Optional image URL for the result
 }
 
-export function SearchComponent() {
+interface SearchComponentProps {
+  onClose?: () => void;
+}
+
+export function SearchComponent({ onClose }: SearchComponentProps = {}) {
   const t = useTranslations('search');
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState<SearchFilter>('all');
   const [isFocused, setIsFocused] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -186,6 +191,7 @@ export function SearchComponent() {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setIsOpen(false);
         setIsFocused(false);
+        setIsExpanded(false);
       }
     };
 
@@ -265,14 +271,18 @@ export function SearchComponent() {
     }
     setIsOpen(false);
     setIsFocused(false);
+    setIsExpanded(false);
     setSearchTerm('');
+    onClose?.();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       setIsOpen(false);
       setIsFocused(false);
+      setIsExpanded(false);
       setSearchTerm('');
+      onClose?.();
     } else if (e.key === 'Enter' && searchTerm.trim().length >= 2) {
       // Track the search when user presses Enter
       addSearchHistory(searchTerm.trim());
@@ -284,17 +294,23 @@ export function SearchComponent() {
           router.push(`/parts/${slug}`);
           setIsOpen(false);
           setIsFocused(false);
+          setIsExpanded(false);
+          onClose?.();
           return;
         } else if (bestResult.type === 'accessory' && bestResult.id && bestResult.name) {
           const slug = createSlug(bestResult.name, bestResult.id);
           router.push(`/accessories/${slug}`);
           setIsOpen(false);
           setIsFocused(false);
+          setIsExpanded(false);
+          onClose?.();
           return;
         } else if (bestResult.url) {
           router.push(bestResult.url);
           setIsOpen(false);
           setIsFocused(false);
+          setIsExpanded(false);
+          onClose?.();
           return;
         }
       }
@@ -302,6 +318,8 @@ export function SearchComponent() {
       router.push(searchUrl);
       setIsOpen(false);
       setIsFocused(false);
+      setIsExpanded(false);
+      onClose?.();
     }
   };
 
@@ -329,20 +347,30 @@ export function SearchComponent() {
   return (
     <>
       {/* Shadow Overlay - Rendered via Portal */}
-      {isMounted && isFocused && createPortal(
+      {isMounted && isExpanded && createPortal(
         <div 
-          className="fixed inset-0 bg-black/50 z-[9] transition-opacity duration-200"
+          className="fixed inset-0 bg-black/20 z-[9] transition-opacity duration-200"
           onClick={() => {
             setIsOpen(false);
             setIsFocused(false);
+            setIsExpanded(false);
           }}
           aria-hidden="true"
         />,
         document.body
       )}
       
-      <div ref={searchRef} className="relative w-full max-w-2xl z-[10000]">
-      <div className="relative flex items-center">
+      <div 
+        ref={searchRef} 
+        className={`
+          transition-all duration-300 ease-in-out
+          ${isExpanded 
+            ? 'fixed left-4 right-4 top-[4.5rem] z-[10000] max-w-7xl mx-auto' 
+            : 'relative w-full max-w-md lg:max-w-lg z-[10000]'
+          }
+        `}
+      >
+      <div className={`relative flex items-center ${isExpanded ? 'bg-white shadow-2xl rounded-lg p-1' : ''}`}>
         {/* Search Filter Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -350,7 +378,7 @@ export function SearchComponent() {
               variant="outline" 
               size="lg"
               aria-label='Search filter'
-              className="rounded-r-none border-r-0 flex items-center space-x-2 px-4 sm:px-5 min-w-[100px] sm:min-w-[130px] border-2 border-gray-300 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-1 h-14"
+              className="hidden md:flex rounded-r-none border-r-0 items-center space-x-2 px-4 sm:px-5 min-w-[100px] sm:min-w-[130px] border-2 border-gray-300 hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-1 h-14"
             >
               {getFilterIcon()}
               <span className="hidden sm:inline text-base font-medium">{getFilterLabel()}</span>
@@ -388,6 +416,7 @@ export function SearchComponent() {
             }}
             onFocus={() => {
               setIsFocused(true);
+              setIsExpanded(true);
               if (searchTerm.length >= 2) {
                 setIsOpen(true);
               }
@@ -397,11 +426,12 @@ export function SearchComponent() {
               setTimeout(() => {
                 if (!searchRef.current?.contains(document.activeElement)) {
                   setIsFocused(false);
+                  setIsExpanded(false);
                 }
               }, 200);
             }}
             onKeyDown={handleKeyDown}
-            className="rounded-l-none rounded-r-none border-l border-r text-base h-14 px-4 py-3 border-2 border-gray-300 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-1 focus:border-green-500"
+            className="rounded-lg md:rounded-none md:border-l md:border-r text-base h-14 px-4 py-3 border-2 border-gray-300 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-1 focus:border-green-500"
           />
           {searchTerm && (
             <button
@@ -413,6 +443,7 @@ export function SearchComponent() {
                 setSearchTerm('');
                 setIsOpen(false);
                 setIsFocused(false);
+                setIsExpanded(false);
               }}
               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 flex items-center justify-center rounded-full p-2 z-10 hover:bg-gray-100"
               aria-label="Clear search"
@@ -426,7 +457,7 @@ export function SearchComponent() {
         <Button 
         aria-label='Search button'
           size="lg" 
-          className="rounded-l-none px-5 sm:px-6 border-2 border-green-600 bg-green-600 hover:bg-green-700 text-white focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-1 h-14"
+          className="hidden md:flex rounded-l-none px-5 sm:px-6 border-2 border-green-600 bg-green-600 hover:bg-green-700 text-white focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-1 h-14"
           onClick={() => {
             if (searchTerm.trim() && searchTerm.length >= 2) {
               const trimmedSearch = searchTerm.trim();
@@ -439,6 +470,7 @@ export function SearchComponent() {
                 router.push(`/accessories?search=${encodeURIComponent(trimmedSearch)}`);
               }
               setIsOpen(false);
+              onClose?.();
             }
           }}
         >
@@ -448,7 +480,7 @@ export function SearchComponent() {
 
       {/* Search Results Dropdown */}
       {isOpen && (searchTerm.length >= 2 || results.length > 0) && (
-        <div role="listbox" className="absolute top-full left-0 right-0 sm:left-1/2 sm:-translate-x-1/2 mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-2xl z-[9999] max-h-[32rem] overflow-y-auto w-full sm:w-[600px] md:w-[700px] lg:w-[800px]">
+        <div role="listbox" className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-lg shadow-2xl z-[9999] max-h-[32rem] overflow-y-auto w-full">
           {isLoading ? (
             <div aria-label='Loading results' className="p-6 text-center text-gray-500">
               <div className="animate-spin h-8 w-8 border-3 border-green-600 border-t-transparent rounded-full mx-auto mb-3"></div>
