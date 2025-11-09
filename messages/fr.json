@@ -1489,6 +1489,7 @@
       "quality": "Qualité",
       "addToCart": "Ajouter au panier",
       "buyNow": "Acheter maintenant",
+      "description": "Description du produit",
       "available": "Disponible",
       "supplier": "Fournisseur",
       "unknownQuality": "Inconnu",

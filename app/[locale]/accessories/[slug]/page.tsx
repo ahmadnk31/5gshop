@@ -469,19 +469,22 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
               </p>
             </div>
 
+            {/* Description - Always Visible with Prominent Styling */}
+            <div className="space-y-3 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200 shadow-sm">
+              <h3 className="font-bold text-gray-900 text-xl flex items-center gap-2">
+                <span className="text-2xl">📝</span>
+                {t('product.description')}
+              </h3>
+              <p className="text-gray-800 leading-relaxed text-base">
+                {accessory.description || `${accessory.name} by ${accessory.brand}. High-quality ${getCategoryLabel(accessory.category).toLowerCase()} accessory ${accessory.model ? `designed for ${accessory.model}` : 'for various devices'}. Premium build quality with excellent durability. Fast shipping and warranty included.`}
+              </p>
+            </div>
+
             {/* Compatibility */}
             {accessory.compatibility && (
               <div className="space-y-2">
                 <h3 className="font-semibold text-gray-900">{t('product.compatibility')}</h3>
                 <p className="text-gray-600">{accessory.compatibility}</p>
-              </div>
-            )}
-
-            {/* Description */}
-            {accessory.description && (
-              <div className="space-y-2">
-                <h3 className="font-semibold text-gray-900">{t('product.description')}</h3>
-                <p className="text-gray-600 leading-relaxed">{accessory.description}</p>
               </div>
             )}
 

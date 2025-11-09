@@ -294,17 +294,20 @@ export default function ProductDetailClient({ part, relatedParts }: ProductDetai
                   </CardContent>
                 </Card>
 
-                {/* Description */}
-                {part.description && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>{t('description', { defaultValue: 'Description' })}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-700 leading-relaxed">{part.description}</p>
-                    </CardContent>
-                  </Card>
-                )}
+                {/* Description - Always Visible with Prominent Styling */}
+                <Card className="border-2 border-blue-300 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-gray-900 text-xl">
+                      <span className="text-2xl">📝</span>
+                      {t('description', { defaultValue: 'Product Description' })}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-800 leading-relaxed text-base">
+                      {part.description || `High-quality ${part.name} ${part.deviceModel ? `for ${part.deviceModel}` : part.deviceType ? `for ${part.deviceType}` : ''}. ${part.quality ? `${part.quality} grade` : 'Premium quality'} replacement part with ${t('warrantyPeriod', { defaultValue: '90 days' })} warranty. Professional installation recommended. Fast shipping available.`}
+                    </p>
+                  </CardContent>
+                </Card>
 
                 {/* Additional Info */}
                 <Card>
