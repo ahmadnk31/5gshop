@@ -10,6 +10,7 @@ import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { prisma } from "@/lib/database";
+import { DescriptionModal } from "@/components/ui/description-modal";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
@@ -198,9 +199,13 @@ export default async function ModelRepairPage({ params }: PageProps) {
                 </Badge>
               )}
               {device.description && (
-                <p className="text-lg text-green-50 mb-6">
-                  {device.description}
-                </p>
+                <div className="mb-6">
+                  <DescriptionModal 
+                    description={device.description}
+                    title={`${device.brand} ${device.model}`}
+                    maxLength={150}
+                  />
+                </div>
               )}
               <div className="flex gap-4">
                 <Button asChild size="lg" variant="secondary" className="shadow-lg">

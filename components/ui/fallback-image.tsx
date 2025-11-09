@@ -12,6 +12,8 @@ interface FallbackImageProps {
   className?: string;
   sizes?: string;
   fallbackContent: React.ReactNode;
+  loading?: 'lazy' | 'eager';
+  priority?: boolean;
 }
 
 export function FallbackImage({
@@ -22,7 +24,9 @@ export function FallbackImage({
   height=200,
   className,
   sizes,
-  fallbackContent
+  fallbackContent,
+  loading = 'lazy',
+  priority = false
 }: FallbackImageProps) {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -33,6 +37,8 @@ export function FallbackImage({
     alt,
     className,
     sizes,
+    loading,
+    priority,
     onError: (e: any) => {
       console.log('Image failed to load:', src);
       setImageError(true);

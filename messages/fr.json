@@ -1,8 +1,9 @@
 {
   "metadata": {
     "homepage": {
-      "title": "5GPhones - Réparation GSM Louvain | iPhone, MacBook, iPad, Laptop & Accessoires ⭐ Rendez-vous en ligne ou Sans rendez-vous | 5G Phones",
-      "description": "⭐ Service professionnel de réparation & logiciel Louvain - Réparation iPhone, Samsung, MacBook, iPad, Laptop ✓ Accessoires & Coques ✓ Installation Windows ✓ Réinitialisation mot de passe ✓ Suppression virus ✓ Récupération données ✓ Rendez-vous en ligne ou sans rendez-vous ✓ 6 mois garantie ✓ Bondgenotenlaan 84A"
+      "title": "Réparation GSM Louvain | iPhone, Samsung, MacBook ⭐",
+      "description": "Réparation GSM Louvain ⭐ iPhone, Samsung, MacBook. Service jour même, 6 mois garantie. Aussi logiciel & installation Windows. Bondgenotenlaan 84A",
+      "keywords": "réparation gsm louvain, réparation iphone, réparation samsung, réparation macbook, service téléphone louvain, réparation smartphone"
     }
   },
   "homepageHero": {
@@ -142,8 +143,8 @@
       "learnMore": "En savoir plus"
     },
     "intro": {
-      "title": "Réparation Matériel & Logiciel Louvain - Tous Problèmes Techniques Résolus",
-      "welcome": "Bienvenue chez <strong>5G Phones</strong>, votre spécialiste en <strong>réparation matériel et logiciel à Louvain</strong>. Du <strong>remplacement d'écran iPhone, batterie MacBook</strong> à <strong>l'installation Windows, réinitialisation mot de passe, suppression de virus</strong> - nous résolvons tous les problèmes techniques au <strong>Bondgenotenlaan 84A à Louvain</strong>.",
+      "title": "Réparation GSM Louvain | Service Matériel & Logiciel pour Tous Appareils",
+      "welcome": "Bienvenue chez <strong>5G Phones</strong>, spécialiste en <strong>réparation GSM Louvain</strong>. <strong>Réparation GSM</strong> professionnelle pour <strong>iPhone, Samsung, Huawei, MacBook</strong> et toutes autres marques. Du <strong>remplacement d'écran</strong> à <strong>l'installation Windows, réinitialisation mot de passe, suppression de virus</strong> - nous résolvons tous les problèmes techniques au <strong>Bondgenotenlaan 84A à Louvain</strong>.",
       "hardware": "<strong>Matériel:</strong> ✓ Réparation iPhone, Samsung, Huawei, Xiaomi, OnePlus, Nokia & Google Pixel • ✓ Service MacBook & iMac • ✓ Réparation Ordinateur portable & Bureau • ✓ Service iPad & Tablette",
       "accessories": "<strong>Accessoires:</strong> ✓ Coques & étuis iPhone/Samsung/iPad/Huawei/Xiaomi/OnePlus/Nokia/Google Pixel • ✓ Protecteurs d'écran • ✓ Chargeurs & adaptateurs • ✓ Écouteurs • ✓ Chargeurs ordinateur • ✓ Câbles USB-C, Lightning & Micro-USB",
       "software": "<strong>Logiciel:</strong> ✓ Installation Windows • ✓ Réinitialisation mot de passe • ✓ Suppression de virus • ✓ Récupération de données • ✓ Dépannage logiciel",
@@ -362,7 +363,9 @@
       "software": "Logiciel",
       "otherParts": "Autres pièces",
       "availableParts": "pièces disponibles",
-      "viewDetails": "Voir les détails"
+      "viewDetails": "Voir les détails",
+      "noParts": "Aucune pièce disponible pour cette réparation.",
+      "requestPart": "Demander une pièce"
     },
     "services": {
       "screenRepair": {

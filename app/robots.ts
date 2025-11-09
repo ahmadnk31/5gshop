@@ -47,7 +47,10 @@ export default function robots(): MetadataRoute.Robots {
         ],
       }
     ],
-    sitemap: 'https://5gphones.be/sitemap.xml',
+    sitemap: [
+      'https://5gphones.be/sitemap.xml',
+      'https://5gphones.be/sitemap-mobile.xml'
+    ],
     host: 'https://5gphones.be'
   }
 }

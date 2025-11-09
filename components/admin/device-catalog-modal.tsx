@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
 import { FileUpload } from "@/components/ui/file-upload"
+import { DescriptionModal } from "@/components/ui/description-modal"
 import { 
   Plus, 
   Edit, 
@@ -789,7 +790,14 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                             <Badge variant="secondary">{device.type}</Badge>
                           </div>
                           {device.description && (
-                            <p className="text-sm text-gray-500 mt-1">{device.description}</p>
+                            <div className="mt-1">
+                              <DescriptionModal
+                                description={device.description}
+                                title={`${device.brand} ${device.model}`}
+                                maxLength={80}
+                                variant="admin"
+                              />
+                            </div>
                           )}
                         </div>
                       </div>
@@ -1128,7 +1136,14 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                             SKU: {part.sku} • ${part.cost} • {part.supplier}
                           </div>
                           {part.description && (
-                            <p className="text-sm text-gray-500 mt-1">{part.description}</p>
+                            <div className="mt-1">
+                              <DescriptionModal
+                                description={part.description}
+                                title={part.name}
+                                maxLength={80}
+                                variant="admin"
+                              />
+                            </div>
                           )}
                         </div>
                       </div>
@@ -1434,9 +1449,16 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                                   </Badge>
                                 )}
                               </div>
-                              <p className="text-sm text-gray-600 mb-2">
-                                {service.description}
-                              </p>
+                              {service.description && (
+                                <div className="mb-2">
+                                  <DescriptionModal
+                                    description={service.description}
+                                    title={service.name}
+                                    maxLength={80}
+                                    variant="admin"
+                                  />
+                                </div>
+                              )}
                               <div className="flex items-center space-x-4 text-sm text-gray-500">
                                 <span>Base Price: ${service.basePrice}</span>
                                 <span>Time: {service.estimatedTime}min</span>

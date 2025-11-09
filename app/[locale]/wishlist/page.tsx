@@ -44,6 +44,7 @@ export default function WishlistPage() {
   const { addToCart } = useCart();
   const t = useTranslations('wishlist');
   const queryClient = useQueryClient();
+  const [removingId, setRemovingId] = useState<string | null>(null);
   const { data: wishlistItems = [], isLoading: loading, refetch } = useQuery({
     queryKey: ['wishlist', session?.user?.id],
     queryFn: async () => {
@@ -58,6 +59,7 @@ export default function WishlistPage() {
   });
 
   const removeFromWishlist = async (itemType: 'part' | 'accessory', itemId: string) => {
+    setRemovingId(itemId);
     try {
       const body = itemType === 'part' ? { partId: itemId } : { accessoryId: itemId };
       const response = await fetch('/api/wishlist', { 
@@ -67,13 +69,21 @@ export default function WishlistPage() {
       });
       
       if (!response.ok) {
-        throw new Error('Failed to remove from wishlist');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to remove from wishlist');
       }
+
+      const result = await response.json();
+      console.log('Remove from wishlist result:', result);
       
-      await queryClient.invalidateQueries({ queryKey: ['wishlist', session?.user?.id] });
+      // Force refetch of wishlist data
+      await queryClient.invalidateQueries({ queryKey: ['wishlist'] });
       await refetch();
     } catch (error) {
       console.error('Error removing from wishlist:', error);
+      alert('Failed to remove item from wishlist. Please try again.');
+    } finally {
+      setRemovingId(null);
     }
   };
 
@@ -204,8 +214,9 @@ export default function WishlistPage() {
                         size="sm"
                         className="absolute top-2 right-2 bg-white/80 hover:bg-white"
                         onClick={() => removeFromWishlist(itemType, product.id)}
+                        disabled={removingId === product.id}
                       >
-                        <Trash2 className="h-4 w-4 text-red-500" />
+                        <Trash2 className={`h-4 w-4 ${removingId === product.id ? 'text-gray-400 animate-pulse' : 'text-red-500'}`} />
                       </Button>
                     </div>
                   </CardHeader>
@@ -213,7 +224,7 @@ export default function WishlistPage() {
                     <Link href={`/${itemType}s/${product.id}`}>
                       <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.name}</h3>
                       <div className="flex items-center mb-3">
-                        <span className="text-xl font-bold text-blue-600">
+                        <span className="text-xl font-bold text-green-600">
                           {formatCurrency(product.cost, "EUR")}
                         </span>
                         {product.category && (
@@ -288,8 +299,9 @@ export default function WishlistPage() {
                         size="sm"
                         className="absolute top-2 right-2 bg-white/80 hover:bg-white"
                         onClick={() => removeFromWishlist(itemType, product.id)}
+                        disabled={removingId === product.id}
                       >
-                        <Trash2 className="h-4 w-4 text-red-500" />
+                        <Trash2 className={`h-4 w-4 ${removingId === product.id ? 'text-gray-400 animate-pulse' : 'text-red-500'}`} />
                       </Button>
                     </div>
                   </CardHeader>
@@ -297,7 +309,7 @@ export default function WishlistPage() {
                     <Link href={`/${itemType}s/${product.id}`}>
                       <h3 className="font-semibold text-lg mb-2 line-clamp-2">{product.name}</h3>
                       <div className="flex items-center mb-3">
-                        <span className="text-xl font-bold text-blue-600">
+                        <span className="text-xl font-bold text-green-600">
                           {formatCurrency(product.price, "EUR")}
                         </span>
                         {product.category && (

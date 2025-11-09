@@ -133,7 +133,7 @@ export default async function RootLayout({
             {/* Load Analytics after main content */}
             <Analytics />
             {/* Performance monitoring in development */}
-            <PerformanceMonitor />
+            
           </AccessibilityProvider>
           
           {/* Structured Data */}

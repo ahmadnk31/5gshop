@@ -27,6 +27,7 @@ interface UploadingFile {
   url?: string;
   key?: string;
   error?: string;
+  uniqueId: string; // Add unique identifier
 }
 
 export function FileUpload({
@@ -73,10 +74,14 @@ export function FileUpload({
   const uploadFile = async (file: File) => {
     console.log('Starting upload for file:', file.name, file.type, file.size);
     
+    // Generate unique ID for this upload
+    const uniqueId = `${file.name}-${file.lastModified}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
     setUploadingFiles(prev => [...prev, {
       file,
       progress: 0,
       status: 'uploading',
+      uniqueId,
     }]);
 
     try {
@@ -87,7 +92,7 @@ export function FileUpload({
       
       // Update progress
       setUploadingFiles(prev => prev.map(f => 
-        f.file.name === file.name && f.file.lastModified === file.lastModified ? 
+        f.uniqueId === uniqueId ? 
         { ...f, progress: 25 } : f
       ));
 
@@ -111,7 +116,7 @@ export function FileUpload({
 
       // Update progress
       setUploadingFiles(prev => prev.map(f => 
-        f.file.name === file.name && f.file.lastModified === file.lastModified ? { 
+        f.uniqueId === uniqueId ? { 
           ...f, 
           progress: 100, 
           status: 'completed',
@@ -132,7 +137,7 @@ export function FileUpload({
       }
       
       setUploadingFiles(prev => prev.map(f => 
-        f.file.name === file.name && f.file.lastModified === file.lastModified ? { 
+        f.uniqueId === uniqueId ? { 
           ...f, 
           status: 'error',
           error: errorMessage,
@@ -206,9 +211,9 @@ export function FileUpload({
     useFsAccessApi: false, // Disable File System Access API for better compatibility
   });
 
-  const removeFile = (fileName: string, lastModified: number) => {
+  const removeFile = (uniqueId: string) => {
     setUploadingFiles(prev => 
-      prev.filter(f => !(f.file.name === fileName && f.file.lastModified === lastModified))
+      prev.filter(f => f.uniqueId !== uniqueId)
     );
   };
 
@@ -225,10 +230,10 @@ export function FileUpload({
     }
     
     if (isDragAccept || isDragActive) {
-      return `${baseClasses} border-blue-500 bg-blue-50 shadow-lg transform scale-[1.02] ring-2 ring-blue-200`;
+      return `${baseClasses} border-green-500 bg-green-50 shadow-lg transform scale-[1.02] ring-2 ring-green-200`;
     }
     
-    return `${baseClasses} border-gray-300 hover:border-blue-400 hover:bg-blue-50 hover:shadow-md`;
+    return `${baseClasses} border-gray-300 hover:border-green-400 hover:bg-green-50 hover:shadow-md`;
   };
 
   const isImageFile = (file: File) => file.type.startsWith('image/');
@@ -245,7 +250,7 @@ export function FileUpload({
                 isDragReject ? (
                   <AlertCircle className="h-12 w-12 text-red-500 flex-shrink-0" />
                 ) : (
-                  <Upload className="h-12 w-12 text-blue-500 animate-bounce flex-shrink-0" />
+                  <Upload className="h-12 w-12 text-green-500 animate-bounce flex-shrink-0" />
                 )
               ) : (
                 <div className="relative flex-shrink-0">
@@ -261,7 +266,7 @@ export function FileUpload({
                   isDragActive 
                     ? isDragReject 
                       ? 'text-red-700' 
-                      : 'text-blue-700'
+                      : 'text-green-700'
                     : 'text-gray-700'
                 }`}>
                   {isDragActive
@@ -314,11 +319,11 @@ export function FileUpload({
           </div>
           
           {uploadingFiles.map((uploadingFile, index) => (
-            <Card key={`${uploadingFile.file.name}-${uploadingFile.file.lastModified}`} className="p-3 max-w-full overflow-hidden">
+            <Card key={uploadingFile.uniqueId} className="p-3 max-w-full overflow-hidden">
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div className="flex items-center space-x-3 flex-1 min-w-0">
                   {isImageFile(uploadingFile.file) ? (
-                    <ImageIcon className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                    <ImageIcon className="h-4 w-4 text-green-500 flex-shrink-0" />
                   ) : (
                     <File className="h-4 w-4 text-gray-500 flex-shrink-0" />
                   )}
@@ -332,7 +337,7 @@ export function FileUpload({
                       <span className={`font-medium ${
                         uploadingFile.status === 'completed' ? 'text-green-600' :
                         uploadingFile.status === 'error' ? 'text-red-600' :
-                        'text-blue-600'
+                        'text-green-600'
                       }`}>
                         {uploadingFile.status === 'uploading' ? 'Uploading...' :
                          uploadingFile.status === 'completed' ? 'Completed' :
@@ -352,7 +357,7 @@ export function FileUpload({
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => removeFile(uploadingFile.file.name, uploadingFile.file.lastModified)}
+                    onClick={() => removeFile(uploadingFile.uniqueId)}
                     className="h-6 w-6 p-0"
                   >
                     <X className="h-3 w-3" />

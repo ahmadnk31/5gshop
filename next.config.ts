@@ -23,9 +23,15 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
   
-  // Image optimization
+  // Image optimization - Enhanced for faster loading
   images: {
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "dl8rlqtc6lw1l.cloudfront.net",
+        port: "",
+        pathname: "/**",
+      },
       {
         protocol: "https",
         hostname: "tire-files.s3.us-east-1.amazonaws.com",
@@ -53,7 +59,9 @@ const nextConfig: NextConfig = {
     ],
     // Performance optimizations for images
     formats: ['image/webp', 'image/avif'],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 31536000, // 1 year cache
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
@@ -140,7 +148,7 @@ const nextConfig: NextConfig = {
   
   // Remove deprecated swcMinify (it's enabled by default in Next.js 13+)
   
-  // Headers for performance
+  // Headers for performance - Enhanced caching
   async headers() {
     return [
       {
@@ -160,21 +168,53 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // API routes - short cache
       {
         source: '/api/(.*)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=60, s-maxage=300',
+            value: 'public, max-age=60, s-maxage=300, stale-while-revalidate=600',
           },
         ],
       },
+      // Static assets - long cache
       {
         source: '/_next/static/(.*)',
         headers: [
           {
             key: 'Cache-Control',
             value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Images - long cache
+      {
+        source: '/_next/image(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Fonts - long cache
+      {
+        source: '/fonts/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Public assets - medium cache
+      {
+        source: '/:path*.(jpg|jpeg|png|gif|webp|avif|svg|ico)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
           },
         ],
       },

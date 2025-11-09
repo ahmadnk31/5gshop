@@ -261,14 +261,14 @@ function shuffleArray(array: any[]) {
 
 async function HomepageHeroCarousel() {
   const t = await getTranslations('homepageHero');
-  // Use fixed slides for best practice
+  // Use fixed slides for best practice - Using WebP for better performance
   const slides = [
     {
       type: 'brand',
       id: 'brand',
       name: t('brandTitle'),
       subtitle: t('brandSubtitle'),
-      imageUrl: '/hero-lifestyle.jpg',
+      imageUrl: '/hero-lifestyle.webp',
       link: '/accessories',
       cta: t('brandCta'),
     },
@@ -277,7 +277,7 @@ async function HomepageHeroCarousel() {
       id: 'accessory',
       name: t('accessoryTitle'),
       subtitle: t('accessorySubtitle'),
-      imageUrl: '/hero-accessories.jpg',
+      imageUrl: '/hero-accessories.webp',
       link: '/accessories',
       cta: t('accessoryCta'),
     },
@@ -286,7 +286,7 @@ async function HomepageHeroCarousel() {
       id: 'part',
       name: t('partTitle'),
       subtitle: t('partSubtitle'),
-      imageUrl: '/hero-parts.jpg',
+      imageUrl: '/hero-parts.webp',
       link: '/parts',
       cta: t('partCta'),
     },
@@ -295,7 +295,7 @@ async function HomepageHeroCarousel() {
       id: 'repair',
       name: t('repairTitle'),
       subtitle: t('repairSubtitle'),
-      imageUrl: '/hero-repairs.jpg',
+      imageUrl: '/hero-repairs.webp',
       link: '/repairs',
       cta: t('repairCta'),
     },
@@ -304,7 +304,7 @@ async function HomepageHeroCarousel() {
       id: 'usp',
       name: t('uspTitle'),
       subtitle: t('uspSubtitle'),
-      imageUrl: '/hero-usp.png',
+      imageUrl: '/hero-usp.webp',
       link: '/about',
       cta: t('uspCta'),
     },

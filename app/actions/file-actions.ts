@@ -19,13 +19,16 @@ export async function getPresignedUploadUrl(filename: string, contentType: strin
     const url = await S3Service.getPresignedUploadUrl(key, contentType);
     console.log('Generated presigned URL successfully');
     
+    // Use CloudFront URL if configured, otherwise S3 URL
+    const fileUrl = S3Service.getCloudFrontUrl(key);
+    
     const response = {
       uploadUrl: url,
       key,
-      fileUrl: `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${key}`,
+      fileUrl,
     };
     
-    console.log('Returning response:', { ...response, uploadUrl: '[HIDDEN]' });
+    console.log('Returning response:', { ...response, uploadUrl: '[HIDDEN]', fileUrl });
     return response;
   } catch (error) {
     console.error("Failed to generate presigned URL:", error);
@@ -42,6 +45,19 @@ export async function uploadFileServer(formData: FormData) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const key = S3Service.generateFileKey('repair-images', file.name);
+    
+    // Use optimized upload for images
+    if (file.type.startsWith('image/') && !file.type.includes('svg')) {
+      const result = await S3Service.uploadImageOptimized(key, buffer, true);
+      return {
+        fileUrl: result.url,
+        key: result.key,
+        thumbnailUrl: result.thumbnailUrl,
+        thumbnailKey: result.thumbnailKey,
+      };
+    }
+    
+    // Regular upload for non-images
     const fileUrl = await S3Service.uploadFile(key, buffer, file.type);
 
     return {
