@@ -25,10 +25,17 @@ import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/utils";
 import HomepageHeroCarouselClient from '@/components/homepage-hero-carousel-client';
 
-export async function generateMetadata(): Promise<Metadata> {
+type Props = {
+  params: Promise<{ locale: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'metadata' });
+  
   return await generatePageMetadata({
-    title: "GSM Reparatie Leuven | iPhone, MacBook, Software & Windows Installatie ⭐ 5G Phones",
-    description: "⭐ Professionele reparatie & software service Leuven - iPhone, MacBook, iPad, Laptop herstel ✓ Windows installatie ✓ Password reset ✓ Software troubleshooting ✓ Virus verwijdering ✓ Data recovery ✓ 6 maanden garantie ✓ Bondgenotenlaan 84A. Hardware & Software solutions!",
+    title: t('homepage.title'),
+    description: t('homepage.description'),
     path: "",
     keywords: [
       // TIER 1: High Priority GSC Keywords (300+ impressions)
@@ -45,11 +52,27 @@ export async function generateMetadata(): Promise<Metadata> {
       "smartphone reparatie leuven",
       "gsm reparatie", // 1 click, position 7.69
       
-      // Apple Devices - High Priority
+      // Apple Devices - High Priority + MacBook Extended
       "macbook reparatie leuven",
       "macbook herstel leuven",
       "macbook repair leuven",
+      "macbook pro reparatie leuven",
+      "macbook air reparatie leuven",
+      "macbook scherm reparatie leuven",
+      "macbook keyboard reparatie leuven",
+      "macbook trackpad repair leuven",
+      "macbook water damage leuven",
+      "macbook logic board repair leuven",
+      "macbook charging port repair leuven",
+      "macbook screen replacement leuven",
       "ipad reparatie leuven",
+      "macbook battery replacement leuven",
+      "macbook batterij vervangen leuven",
+      "macbook scherm vervangen leuven",
+      "imac reparatie leuven",
+      "mac reparatie leuven",
+      "apple reparatie leuven",
+      "macbook repair leuven",
       "ipad herstel leuven",
       "ipad repair leuven",
       "imac reparatie leuven",
@@ -57,6 +80,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "apple reparatie leuven",
       "macbook scherm vervangen leuven",
       "macbook battery replacement leuven",
+      "macbook batterij vervangen leuven",
       "ipad screen repair leuven",
       
       // Laptop & Computer Keywords
@@ -195,6 +219,21 @@ export async function generateMetadata(): Promise<Metadata> {
       "affordable repair leuven",
       "professional repair leuven",
       
+      // Appointment Keywords (Dutch, English, French)
+      "afspraak gsm reparatie leuven",
+      "online afspraak reparatie leuven",
+      "zonder afspraak reparatie leuven",
+      "walk-in reparatie leuven",
+      "appointment phone repair leuven",
+      "online appointment repair leuven",
+      "no appointment needed leuven",
+      "same day appointment leuven",
+      "rendez-vous réparation louvain",
+      "sans rendez-vous louvain",
+      "réparation immédiate louvain",
+      "macbook afspraak leuven",
+      "laptop appointment leuven",
+      
       // Location-Specific Long-tail
       "gsm reparatie centrum leuven",
       "gsm winkel centrum leuven",
@@ -273,7 +312,8 @@ async function HomepageHeroCarousel() {
   return <HomepageHeroCarouselClient items={slides} />;
 }
 
-export default async function Home() {
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
   const t = await getTranslations('homepage');
 
   // Fetch featured data
