@@ -470,7 +470,7 @@ export default async function AccessoryDetailPage({ params }: AccessoryDetailPag
             </div>
 
             {/* Description - Always Visible with Prominent Styling */}
-            <div className="space-y-3 bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200 shadow-sm">
+            <div className="space-y-3 bg-gradient-to-r from-green-50 to-indigo-50 p-6 rounded-xl border-2 border-green-200 shadow-sm">
               <h3 className="font-bold text-gray-900 text-xl flex items-center gap-2">
                 <span className="text-2xl">📝</span>
                 {t('product.description')}

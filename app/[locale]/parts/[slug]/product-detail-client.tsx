@@ -295,7 +295,7 @@ export default function ProductDetailClient({ part, relatedParts }: ProductDetai
                 </Card>
 
                 {/* Description - Always Visible with Prominent Styling */}
-                <Card className="border-2 border-blue-300 bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md">
+                <Card className="border-2 border-green-300 bg-gradient-to-r from-green-50 to-indigo-50 shadow-md">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-gray-900 text-xl">
                       <span className="text-2xl">📝</span>

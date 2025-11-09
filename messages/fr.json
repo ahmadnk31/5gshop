@@ -1,9 +1,9 @@
 {
   "metadata": {
     "homepage": {
-      "title": "Réparation GSM Louvain | iPhone, Samsung, MacBook ⭐",
+      "title": "Réparation GSM Louvain | iPhone, Samsung, MacBook ⭐, Réparation iPad, Réparation MacBook Air, Remplacement écran iPad, Réparation Smartphones",
       "description": "Réparation GSM Louvain ⭐ iPhone, Samsung, MacBook. Service jour même, 6 mois garantie. Aussi logiciel & installation Windows. Bondgenotenlaan 84A",
-      "keywords": "réparation gsm louvain, réparation iphone, réparation samsung, réparation macbook, service téléphone louvain, réparation smartphone"
+      "keywords": "réparation gsm louvain, réparation iphone, réparation samsung, réparation macbook, service téléphone louvain, réparation smartphone, réparation ipad, réparation macbook air, remplacement écran ipad, réparation smartphones, réparation tablette, réparation ordinateur portable, réparation ordinateur, installation windows, réinitialisation mot de passe, suppression virus, réparation gsm à proximité, magasin gsm à proximité, réparation iphone à proximité, réparation samsung à proximité, réparation macbook à proximité, accessoires gsm, pièces gsm, réparation huawei, réparation xiaomi, réparation oneplus, réparation google pixel, réparation ordinateur portable windows, réparation pc de bureau, récupération de données louvain, réparation nokia"
     }
   },
   "homepageHero": {
@@ -1425,7 +1425,8 @@
       "HEADPHONES": "Écouteurs",
       "EARBUDS": "Écouteurs sans fil",
       "SPEAKER": "Haut-parleur",
-      "CAMERA": "Caméra"
+      "CAMERA": "Caméra",
+      "OTHER": "Autre"
     },
     "product":{
         "freeShipping": "Livraison gratuite",

@@ -103,10 +103,9 @@ export default async function RootLayout({
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:alt" content="5gphones Leuven - Phone Repair & Mobile Accessories | GSM Reparatie" />
-        
-        {/* Preload critical CSS */}
-        <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
+        <meta property="og:image:alt" content="5gphones Leuven - Phone Repair & Mobile Accessories | GSM Reparatie | iPad Reparatie | MacBook Air Herstel | iPad Scherm Vervangen | Smartphone Herstellingen | Phone Repair Leuven | Laptop Repair | iPad Repair | MacBook Reparatie" />
+
+
       </head>
       <body
         className={`${inter.variable} ${roboto.variable} ${poppins.variable} antialiased !bg-white !text-gray-900`}
@@ -125,6 +124,7 @@ export default async function RootLayout({
             </a>
             
             <GoogleAnalytics />
+            <PerformanceMonitor />
             <Navigation />
             <main id="main-content" role="main">{children}</main>
             <Footer />

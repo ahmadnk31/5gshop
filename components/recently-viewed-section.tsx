@@ -62,7 +62,16 @@ export function RecentlyViewedSection() {
           // Sort by most recent and limit
           const sorted = items
             .sort((a, b) => b.viewedAt - a.viewedAt)
-            .slice(0, MAX_RECENT_ITEMS);
+            .slice(0, MAX_RECENT_ITEMS)
+            .map(item => {
+              // Regenerate URL with slug-based routing
+              const slug = createSlug(item.name, item.id);
+              const baseUrl = item.type === 'part' ? '/parts' : '/accessories';
+              return {
+                ...item,
+                url: `${baseUrl}/${slug}`
+              };
+            });
           setRecentlyViewed(sorted);
         }
       } catch (error) {
