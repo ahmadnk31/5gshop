@@ -438,31 +438,31 @@ export default async function Home({ params }: Props) {
       {/* SEO-Optimized Intro Section */}
       <section className="py-12 bg-gradient-to-b from-white to-gray-50" aria-labelledby="intro-title">
         <div className="container mx-auto px-4 max-w-4xl">
-          <h1 id="intro-title" className="text-3xl md:text-4xl font-bold text-center mb-6 text-gray-900">
+          <h1 id="intro-title" className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 text-gray-900 break-words">
             {t('intro.title')}
           </h1>
-          <div className="text-center text-lg text-gray-700 space-y-4">
-            <p>
+          <div className="text-center text-lg text-gray-700 space-y-4 overflow-hidden">
+            <p className="break-words">
               {t.rich('intro.welcome', {
                 strong: (chunks) => <strong>{chunks}</strong>
               })}
             </p>
-            <p className="text-base font-medium">
+            <p className="text-base font-medium break-words">
               {t.rich('intro.hardware', {
                 strong: (chunks) => <strong>{chunks}</strong>
               })}
             </p>
-            <p className="text-base font-medium">
+            <p className="text-base font-medium break-words">
               {t.rich('intro.accessories', {
                 strong: (chunks) => <strong>{chunks}</strong>
               })}
             </p>
-            <p className="text-base font-medium">
+            <p className="text-base font-medium break-words">
               {t.rich('intro.software', {
                 strong: (chunks) => <strong>{chunks}</strong>
               })}
             </p>
-            <p className="text-base">
+            <p className="text-base break-words">
               {t('intro.guarantee')}
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-4">
@@ -579,13 +579,14 @@ export default async function Home({ params }: Props) {
       {/* Popular Repair Services */}
       <section className="py-16 bg-[var(--background)]" aria-labelledby="popular-services-title">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-12">
-            <h2 id="popular-services-title" className="text-lg md:text-3xl text-truncate font-bold">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-12">
+            <h2 id="popular-services-title" className="text-xl sm:text-2xl md:text-3xl font-bold break-words flex-1">
               {t('popularServices.title')}
             </h2>
-            <Button asChild variant="outline" className="focus:ring-4 focus:ring-blue-300 focus:outline-none">
+            <Button asChild variant="outline" className="focus:ring-4 focus:ring-blue-300 focus:outline-none flex-shrink-0 whitespace-nowrap">
               <Link href="/repairs" aria-label="View all repair services">
-                {t('popularServices.viewAllServices')}
+                <span className="hidden sm:inline">{t('popularServices.viewAllServices')}</span>
+                <span className="sm:hidden">{t('popularServices.viewAll', { defaultValue: 'View All' })}</span>
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
               </Link>
             </Button>

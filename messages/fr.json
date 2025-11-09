@@ -76,7 +76,8 @@
       "title": "Services de réparation populaires",
       "viewAllServices": "Voir tous les services",
       "starting": "à partir de",
-      "bookNow": "Réserver maintenant"
+      "bookNow": "Réserver maintenant",
+      "viewAll": "Voir tout"
     },
     "deviceCategories": {
       "title": "Catégories d'appareils",
