@@ -511,6 +511,10 @@
       "accessories": "Accessoires",
       "productDetails": "Détails du produit",
       "repairs": "Réparations"
+    },
+    "services": {
+      "availableServices": "Services de Réparation Disponibles",
+      "bookService": "Réserver Ce Service"
     }
   },
   "contact": {

@@ -477,7 +477,9 @@
       "selectBrand": "Select Your Brand",
       "noModels": "No models available for this brand yet.",
       "noBrands": "No brands available for this device type yet.",
-      "contactUs": "Contact Us"
+      "contactUs": "Contact Us",
+      "availableServices": "Available Repair Services",
+      "bookService": "Book This Service"
     },
     "parts": {
       "availableParts": "Available Parts & Accessories",

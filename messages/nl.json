@@ -377,7 +377,9 @@
       "forModel": "voor {brand} {model}",
       "noServicesFound": "Geen reparatieservices gevonden voor dit model. Kom later terug of neem contact met ons op.",
       "noServicesAvailable": "Geen services beschikbaar voor dit model op dit moment. Kom later terug of neem contact met ons op.",
-      "getDetailedQuote": "Gedetailleerde offerte aanvragen voor"
+      "getDetailedQuote": "Gedetailleerde offerte aanvragen voor",
+      "availableServices": "Beschikbare Reparatieservices",
+      "bookService": "Boek Deze Service"
     },
     "navigation": {
       "back": "Terug"
@@ -564,7 +566,11 @@
       "selectBrand": "Selecteer uw merk",
       "noModels": "Nog geen modellen beschikbaar voor dit merk.",
       "noBrands": "Nog geen merken beschikbaar voor dit apparaattype.",
-      "contactUs": "Neem contact op"
+      "contactUs": "Neem contact op",
+      "availableServices": "Beschikbare reparatieservices",
+      "bookNow": "Nu boeken",
+      "getQuote": "Offerte aanvragen",
+      "bookService": "Boek deze service"
     },
     "parts": {
       "availableParts": "Beschikbare onderdelen & accessoires",

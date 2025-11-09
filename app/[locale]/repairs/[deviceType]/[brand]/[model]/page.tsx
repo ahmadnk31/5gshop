@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Package, ShoppingCart, ChevronRight } from "lucide-react";
+import { Package, ShoppingCart, ChevronRight, Wrench, Clock, DollarSign } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { DeviceType } from "@/lib/types";
 import { getPartsByDeviceModel } from "@/app/actions/device-catalog-actions";
+import { getRepairServicesForDevice } from "@/app/actions/repair-services-actions";
 import { formatCurrency } from "@/lib/utils";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
@@ -61,6 +62,7 @@ export default async function ModelRepairPage({ params }: PageProps) {
   // Find the specific device
   let device: any = null;
   let parts: any[] = [];
+  let services: any[] = [];
   
   try {
     console.log(`[Model Page] Searching for device: ${mappedDeviceType} ${brandName} ${modelName}`);
@@ -114,6 +116,20 @@ export default async function ModelRepairPage({ params }: PageProps) {
           deviceModel: device.model,
         });
         parts = [];
+      }
+
+      // Fetch services for this device
+      try {
+        services = await Promise.race([
+          getRepairServicesForDevice(mappedDeviceType, brandName, device.model),
+          new Promise<never>((_, reject) => 
+            setTimeout(() => reject(new Error('Services query timeout')), 15000)
+          )
+        ]);
+        console.log(`[Model Page] Device: ${device.model}, Services found: ${services.length}`);
+      } catch (error) {
+        console.error('[Model Page] Error loading services:', error);
+        services = [];
       }
     } else {
       console.log(`[Model Page] Device not found for: ${mappedDeviceType} ${brandName} ${modelName}`);
@@ -305,6 +321,86 @@ export default async function ModelRepairPage({ params }: PageProps) {
           )}
         </div>
       </section>
+
+      {/* Services Section */}
+      {services.length > 0 && (
+        <section className="py-12 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">
+              {t('services.availableServices', { defaultValue: 'Available Repair Services' })}
+            </h2>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              {services.map((service: any) => (
+                <Card key={service.id} className="hover:shadow-lg transition-shadow border-gray-200 flex flex-col h-full">
+                  <CardHeader className="flex-shrink-0">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        {service.icon && (
+                          <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Wrench className="h-5 w-5 text-green-600" />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <CardTitle className="text-lg font-semibold text-gray-900">
+                            {service.name}
+                          </CardTitle>
+                          {service.popularity && (
+                            <Badge variant="secondary" className="text-xs mt-1">
+                              {service.popularity}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    {service.description && (
+                      <div className="mb-3">
+                        <DescriptionModal
+                          description={service.description}
+                          title={service.name}
+                          maxLength={100}
+                          variant="admin"
+                        />
+                      </div>
+                    )}
+                  </CardHeader>
+                  <CardContent className="flex-grow flex flex-col justify-end">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between text-sm text-gray-600">
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4 text-gray-400" />
+                          <span>{service.estimatedTime} min</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <DollarSign className="h-4 w-4 text-gray-400" />
+                          <span className="text-2xl font-bold text-green-600">
+                            {formatCurrency(service.basePrice, 'EUR')}
+                          </span>
+                        </div>
+                      </div>
+                      {service.specificModel && (
+                        <Badge variant="outline" className="text-xs">
+                          {service.specificBrand} {service.specificModel} only
+                        </Badge>
+                      )}
+                      {service.specificBrand && !service.specificModel && (
+                        <Badge variant="outline" className="text-xs">
+                          All {service.specificBrand} devices
+                        </Badge>
+                      )}
+                      <Button asChild className="w-full">
+                        <Link href={`/quote?deviceType=${encodeURIComponent(device.type)}&brand=${encodeURIComponent(device.brand)}&model=${encodeURIComponent(device.model)}&service=${encodeURIComponent(service.name)}`}>
+                          {t('services.bookService', { defaultValue: 'Book This Service' })}
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-12 bg-gradient-to-br from-green-600 to-green-700 text-white">
