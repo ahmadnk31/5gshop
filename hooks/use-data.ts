@@ -255,7 +255,13 @@ export function usePartsByDeviceModel(deviceType: string | null, brand: string |
 }
 
 // Hook to get brands with counts and images for a device type (for repairs page)
-export function useBrandsWithDetails(deviceType: string | null) {
+export function useBrandsWithDetails(
+  deviceType: string | null, 
+  options?: { 
+    initialData?: { brand: string; count: number; imageUrl?: string }[]
+    enabled?: boolean 
+  }
+) {
   return useQuery({
     queryKey: ['brands-details', deviceType],
     queryFn: async () => {
@@ -263,7 +269,8 @@ export function useBrandsWithDetails(deviceType: string | null) {
       if (!response.ok) throw new Error('Failed to fetch brand details')
       return response.json() as Promise<{ brand: string; count: number; imageUrl?: string }[]>
     },
-    enabled: !!deviceType,
+    enabled: options?.enabled !== undefined ? options.enabled : !!deviceType,
+    initialData: options?.initialData,
     staleTime: 10 * 60 * 1000,
     gcTime: 15 * 60 * 1000,
   })

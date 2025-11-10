@@ -12,17 +12,23 @@ interface DeviceRepairsClientProps {
   deviceType: string;
   deviceTypeEnum: string;
   deviceLabel: string;
+  initialBrands?: { brand: string; count: number; imageUrl?: string }[];
 }
 
 export default function DeviceRepairsClient({ 
   deviceType, 
   deviceTypeEnum, 
-  deviceLabel 
+  deviceLabel,
+  initialBrands = []
 }: DeviceRepairsClientProps) {
   const t = useTranslations('repairs');
   
-  // Fetch brands using TanStack Query
-  const { data: brands = [], isLoading, error } = useBrandsWithDetails(deviceTypeEnum);
+  // Fetch brands using TanStack Query with initialData from SSR
+  const { data: brands = [], isLoading, error } = useBrandsWithDetails(deviceTypeEnum, {
+    initialData: initialBrands,
+    // Only refetch if we don't have initial data
+    enabled: initialBrands.length === 0 || typeof window !== 'undefined'
+  });
 
   // Loading state
   if (isLoading) {

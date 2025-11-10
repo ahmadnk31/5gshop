@@ -58,6 +58,22 @@ export default async function DeviceRepairsPage({ params }: PageProps) {
 
   const deviceLabel = getDeviceTypeLabel(mappedDeviceType);
 
+  // Fetch brands data on server side for SSR/ISR
+  let brandsData: { brand: string; count: number; imageUrl?: string }[] = [];
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    const response = await fetch(`${baseUrl}/api/repairs/brands?type=${mappedDeviceType}`, {
+      next: { revalidate: 300 } // Cache for 5 minutes
+    });
+    
+    if (response.ok) {
+      brandsData = await response.json();
+    }
+  } catch (error) {
+    console.error('[Server] Error fetching brands:', error);
+    // Continue rendering with empty data - client will handle retry
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
@@ -99,6 +115,7 @@ export default async function DeviceRepairsPage({ params }: PageProps) {
         deviceType={deviceType}
         deviceTypeEnum={mappedDeviceType}
         deviceLabel={deviceLabel}
+        initialBrands={brandsData}
       />
 
       {/* CTA Section */}
