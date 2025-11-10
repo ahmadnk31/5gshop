@@ -1,11 +1,18 @@
 "use server";
 
+import { unstable_cache } from "next/cache";
 import { DatabaseService } from "@/lib/database";
 import { DeviceType, RepairService } from "@/lib/types";
 
 export async function getRepairServices(): Promise<RepairService[]> {
   try {
-    return await DatabaseService.getRepairServices();
+    // Cache for 5 minutes to improve TTFB
+    const getCachedServices = unstable_cache(
+      async () => await DatabaseService.getRepairServices(),
+      ['repair-services-all'],
+      { revalidate: 300, tags: ['repair-services'] }
+    );
+    return await getCachedServices();
   } catch (error) {
     console.error("Failed to get repair services:", error);
     throw new Error("Failed to get repair services");

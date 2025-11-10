@@ -1,13 +1,19 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { DatabaseService } from "@/lib/database";
 import { Accessory, AccessoryCategory } from "@/lib/types";
 
-// Accessory Management
+// Accessory Management with caching for better TTFB
 export async function getAccessories() {
   try {
-    return await DatabaseService.getAllAccessoriesSimple();
+    // Cache for 5 minutes to improve TTFB
+    const getCachedAccessories = unstable_cache(
+      async () => await DatabaseService.getAllAccessoriesSimple(),
+      ['accessories-all'],
+      { revalidate: 300, tags: ['accessories'] }
+    );
+    return await getCachedAccessories();
   } catch (error) {
     console.error("Failed to get accessories:", error);
     throw new Error("Failed to get accessories");

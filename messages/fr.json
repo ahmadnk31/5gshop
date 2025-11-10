@@ -1,9 +1,9 @@
 {
   "metadata": {
     "homepage": {
-      "title": "Réparation GSM Louvain | iPhone, Samsung, MacBook ⭐, Réparation iPad, Réparation MacBook Air, Remplacement écran iPad, Réparation Smartphones",
-      "description": "Réparation GSM Louvain ⭐ iPhone, Samsung, MacBook. Service jour même, 6 mois garantie. Aussi logiciel & installation Windows. Bondgenotenlaan 84A",
-      "keywords": "réparation gsm louvain, réparation iphone, réparation samsung, réparation macbook, service téléphone louvain, réparation smartphone, réparation ipad, réparation macbook air, remplacement écran ipad, réparation smartphones, réparation tablette, réparation ordinateur portable, réparation ordinateur, installation windows, réinitialisation mot de passe, suppression virus, réparation gsm à proximité, magasin gsm à proximité, réparation iphone à proximité, réparation samsung à proximité, réparation macbook à proximité, accessoires gsm, pièces gsm, réparation huawei, réparation xiaomi, réparation oneplus, réparation google pixel, réparation ordinateur portable windows, réparation pc de bureau, récupération de données louvain, réparation nokia"
+      "title": "5GPhones Fix : Réparation GSM Louvain | Service 30 Min - Plus Rapide qu'iFixers | iPhone, Samsung, MacBook",
+      "description": "⚡ Service réparation 30 MINUTES - Plus rapide que la concurrence! Sans rendez-vous ✓ Réparation iPhone, Samsung, MacBook ✓ Réduction étudiants ✓ Service jour même ✓ 6 mois garantie ✓ Bondgenotenlaan 84A Louvain",
+      "keywords": "réparation gsm louvain, magasin gsm louvain, réparation téléphone louvain, réparation iphone louvain, réparation smartphone louvain, réparation 30 minutes louvain, réparation express louvain, réparation rapide louvain, réparation jour même louvain, sans rendez-vous louvain, réparation immédiate louvain, réduction étudiants louvain, réparation pas cher étudiants, réparation abordable louvain, réparation économique louvain, réparation samsung louvain, réparation macbook louvain, réparation laptop louvain, réparation tablette louvain, réparation ipad louvain, réparation ordinateur louvain, installation windows louvain, réinitialisation mot de passe louvain, suppression virus louvain, réparation téléphone près de moi, boutique gsm louvain, atelier réparation louvain, accessoires téléphone louvain, pièces téléphone louvain, réparation huawei louvain, réparation xiaomi louvain, réparation oneplus louvain, réparation google pixel louvain, réparation nokia louvain, réparation pc bureau louvain, récupération données louvain, remplacement écran louvain, remplacement batterie louvain, service rapide louvain, service professionnel louvain, dépannage téléphone louvain"
     }
   },
   "homepageHero": {
@@ -100,18 +100,22 @@
       "modelsSupported": "{count} modèles pris en charge"
     },
     "whyChooseUs": {
-      "title": "Pourquoi nous choisir?",
+      "title": "Pourquoi choisir 5GPhones Fix?",
       "fastService": {
-        "title": "Service rapide",
-        "description": "La plupart des réparations terminées dans les 24-48 heures"
+        "title": "⚡ Service Express 30 Min",
+        "description": "Plus rapide qu'iFixers! La plupart des réparations en 30 minutes. Sans rendez-vous bienvenue."
       },
       "qualityGuarantee": {
-        "title": "Garantie de qualité",
-        "description": "Garantie de 90 jours sur toutes les réparations et pièces"
+        "title": "🛡️ Meilleure Garantie",
+        "description": "6 mois garantie sur toutes réparations et pièces. Diagnostic gratuit toujours inclus."
       },
       "expertTechnicians": {
-        "title": "Techniciens experts",
-        "description": "Professionnels certifiés avec des années d'expérience"
+        "title": "👨‍🔧 Techniciens Experts",
+        "description": "Professionnels certifiés avec années d'expérience. Toutes marques, tous modèles."
+      },
+      "studentDiscount": {
+        "title": "🎓 Réduction Étudiants",
+        "description": "Réductions spéciales pour étudiants. Abordable et professionnel. Montrez votre carte!"
       }
     },
     "testimonials": {
@@ -144,12 +148,12 @@
       "learnMore": "En savoir plus"
     },
     "intro": {
-      "title": "Réparation GSM Louvain | Service Matériel & Logiciel pour Tous Appareils",
-      "welcome": "Bienvenue chez <strong>5G Phones</strong>, spécialiste en <strong>réparation GSM Louvain</strong>. <strong>Réparation GSM</strong> professionnelle pour <strong>iPhone, Samsung, Huawei, MacBook</strong> et toutes autres marques. Du <strong>remplacement d'écran</strong> à <strong>l'installation Windows, réinitialisation mot de passe, suppression de virus</strong> - nous résolvons tous les problèmes techniques au <strong>Bondgenotenlaan 84A à Louvain</strong>.",
-      "hardware": "<strong>Matériel:</strong> ✓ Réparation iPhone, Samsung, Huawei, Xiaomi, OnePlus, Nokia & Google Pixel • ✓ Service MacBook & iMac • ✓ Réparation Ordinateur portable & Bureau • ✓ Service iPad & Tablette",
-      "accessories": "<strong>Accessoires:</strong> ✓ Coques & étuis iPhone/Samsung/iPad/Huawei/Xiaomi/OnePlus/Nokia/Google Pixel • ✓ Protecteurs d'écran • ✓ Chargeurs & adaptateurs • ✓ Écouteurs • ✓ Chargeurs ordinateur • ✓ Câbles USB-C, Lightning & Micro-USB",
-      "software": "<strong>Logiciel:</strong> ✓ Installation Windows • ✓ Réinitialisation mot de passe • ✓ Suppression de virus • ✓ Récupération de données • ✓ Dépannage logiciel",
-      "guarantee": "6 mois de garantie • Diagnostic gratuit • Service le jour même • Également pour les clients de Wespelaar, Haacht et environs",
+      "title": "Réparation GSM Louvain | Service 30 Min - Plus Rapide qu'iFixers!",
+      "welcome": "⚡ <strong>Réparation 30 MINUTES</strong> - Plus rapide que la concurrence! Bienvenue chez <strong>5GPhones Fix</strong>, le spécialiste en <strong>réparation GSM Louvain</strong>. <strong>Sans rendez-vous</strong> bienvenue pour service express. Réparation professionnelle <strong>iPhone, Samsung, Huawei, MacBook</strong> et toutes marques. Du <strong>remplacement d'écran</strong> à <strong>l'installation Windows, réinitialisation mot de passe, suppression virus</strong> - nous résolvons tout au <strong>Bondgenotenlaan 84A à Louvain</strong>.",
+      "hardware": "<strong>Réparation Matériel & Service:</strong> ✓ iPhone, Samsung, Huawei, Xiaomi, OnePlus, Nokia & Google Pixel • ✓ Service MacBook & iMac • ✓ Réparation Laptop & PC • ✓ Service iPad & Tablette • ✓ Service express 30 minutes • ✓ Accueil sans rendez-vous",
+      "accessories": "<strong>Accessoires & Pièces:</strong> ✓ Coques & étuis iPhone/Samsung/iPad/Huawei/Xiaomi/OnePlus/Nokia/Google Pixel • ✓ Protecteurs d'écran • ✓ Chargeurs & adaptateurs • ✓ Écouteurs • ✓ Chargeurs ordinateur • ✓ Câbles USB-C, Lightning & Micro-USB • ✓ En stock maintenant",
+      "software": "<strong>Service Logiciel:</strong> ✓ Installation Windows • ✓ Réinitialisation mot de passe • ✓ Suppression virus • ✓ Récupération données • ✓ Dépannage logiciel • ✓ Solution jour même",
+      "guarantee": "✅ Service express 30 MIN • ✅ Sans rendez-vous bienvenue • ✅ 6 mois garantie • ✅ Diagnostic gratuit • ✅ Réduction étudiants disponible • ✅ Service clients de Wespelaar, Haacht et environs",
       "bookRepair": "Réserver Réparation GSM",
       "contact": "Nous Contacter"
     },
@@ -160,7 +164,7 @@
       "questions": {
         "q1": {
           "question": "Où puis-je faire réparer mon GSM à Louvain?",
-          "answer": "5G Phones est votre <strong>magasin GSM de confiance à Louvain</strong>, situé à Bondgenotenlaan 84A. Nous offrons des réparations professionnelles de smartphones pour toutes les marques: iPhone, Samsung, Huawei, Xiaomi et plus. Les clients de Wespelaar, Haacht, Rotselaar et des environs sont les bienvenus!"
+          "answer": "5GPhones Fix est votre <strong>magasin GSM de confiance à Louvain</strong>, situé à Bondgenotenlaan 84A. Nous offrons des réparations professionnelles de smartphones pour toutes les marques: iPhone, Samsung, Huawei, Xiaomi et plus. Les clients de Wespelaar, Haacht, Rotselaar et des environs sont les bienvenus!"
         },
         "q2": {
           "question": "Combien coûte une réparation d'écran iPhone à Louvain?",
@@ -200,7 +204,7 @@
         },
         "q11": {
           "question": "Donnez-vous une garantie sur les réparations?",
-          "answer": "Absolument! Toutes les <strong>réparations GSM</strong> chez 5G Phones sont accompagnées d'une <strong>garantie de 6 mois</strong>. Nous n'utilisons que des pièces de haute qualité et nos techniciens expérimentés assurent un service professionnel. Si un problème survient avec la réparation pendant la période de garantie, nous le réparons gratuitement."
+          "answer": "Absolument! Toutes les <strong>réparations GSM</strong> chez 5GPhones Fix sont accompagnées d'une <strong>garantie de 6 mois</strong>. Nous n'utilisons que des pièces de haute qualité et nos techniciens expérimentés assurent un service professionnel. Si un problème survient avec la réparation pendant la période de garantie, nous le réparons gratuitement."
         }
       }
     }
@@ -1654,5 +1658,197 @@
       "description": "La pièce que vous recherchez n'a pas été trouvée pour ce modèle. Veuillez revenir plus tard ou nous contacter pour obtenir de l'aide.",
       "contactUs": "Nous contacter",
       "browseParts": "Parcourir les pièces"
+    },
+  "studentDiscount": {
+    "title": "Réduction Étudiants!",
+    "subtitle": "Montrez votre carte étudiante et obtenez une réduction",
+    "discount": "10% OFF",
+    "show": "Montrer carte étudiante",
+    "allServices": "Sur toutes réparations",
+    "valid": "Valable dans tous les magasins 5GPhones Fix à Louvain"
+  },
+  "speedComparison": {
+    "badge": "Notre Garantie Vitesse",
+    "title": "Pourquoi sommes-nous plus rapides?",
+    "subtitle": "Comparez notre service 30 minutes avec d'autres services de réparation à Louvain",
+    "competitors": "Concurrents",
+    "us": "5GPhones Fix",
+    "minutes": "minutes",
+    "competitor1": "Temps d'attente plus longs",
+    "competitor2": "Souvent rendez-vous nécessaire",
+    "competitor3": "Service standard 60 min",
+    "advantage1": "Service express 30 minutes",
+    "advantage2": "Sans rendez-vous bienvenue",
+    "advantage3": "Techniciens professionnels prêts",
+    "stat1": "Plus rapide que concurrence",
+    "stat2": "Mois de garantie",
+    "stat3": "Satisfaction client"
+  },
+  "speedPage": {
+    "metaTitle": "Réparation 30 Minutes Louvain | 2X Plus Rapide qu'iFixers | 5GPhones Fix",
+    "metaDescription": "⚡ Réparation smartphone express en 30 minutes - 2X plus rapide que concurrence! Sans rendez-vous ✓ Toutes marques ✓ 6 mois garantie ✓ Bondgenotenlaan 84A Louvain",
+    "metaKeywords": "réparation 30 minutes louvain, réparation la plus rapide louvain, réparation express téléphone, prêt en 30 minutes, plus rapide qu'ifixers, réparation le jour même louvain, sans rendez-vous louvain"
+  },
+  "studentPage": {
+    "metaTitle": "Réduction Étudiants Réparation Téléphone Louvain | 10% OFF avec Carte | 5GPhones Fix",
+    "metaDescription": "🎓 10% réduction étudiants sur toutes réparations! KU Leuven, UCLL, Groep T étudiants bienvenus ✓ Service 30 min ✓ Prix abordables ✓ Bondgenotenlaan 84A Louvain",
+    "metaKeywords": "réduction étudiants réparation louvain, réparation téléphone pas cher étudiant, réparation smartphone abordable, réparation téléphone étudiant louvain, ku leuven réparation, ucll réparation"
+  },
+  "reviewsPage": {
+    "metaTitle": "Avis Clients | Avis Réparation Téléphone Louvain | 4,9/5 Étoiles | 5GPhones Fix",
+    "metaDescription": "⭐ 4,9/5 étoiles sur Google! Lisez les avis de 5000+ clients satisfaits ✓ Fiable ✓ Service rapide ✓ Prix justes ✓ Bondgenotenlaan 84A Louvain",
+    "metaKeywords": "avis réparation téléphone louvain, avis clients réparation louvain, témoignages réparation téléphone, avis réparation smartphone, avis google réparation",
+    "hero": {
+      "badge": "Avis Clients",
+      "title": "Ce Que Disent Nos Clients",
+      "subtitle": "Lisez les vrais avis de clients satisfaits à Louvain"
+    },
+    "stats": {
+      "customers": "Clients satisfaits",
+      "rating": "Note moyenne",
+      "satisfaction": "Satisfaction client",
+      "recommend": "Nous recommandent"
+    },
+    "trustBadges": {
+      "title": "Pourquoi Les Clients Nous Font Confiance",
+      "badge1": {
+        "title": "Avis Vérifiés",
+        "description": "Tous les avis proviennent de vrais clients qui ont fait réparer leurs appareils chez nous"
+      },
+      "badge2": {
+        "title": "Garantie 6 Mois",
+        "description": "Garantie complète sur toutes les réparations - confirmé par nos clients"
+      },
+      "badge3": {
+        "title": "Service 30 Minutes",
+        "description": "Service le plus rapide à Louvain - noté 4,9/5 étoiles"
+      }
+    },
+    "platforms": {
+      "title": "Voir Plus D'avis",
+      "subtitle": "Trouvez-nous sur différentes plateformes avec d'excellentes notes",
+      "google": "Avis Google",
+      "facebook": "Facebook",
+      "trustpilot": "Trustpilot",
+      "reviewsCount": "{count}+ avis"
+    },
+    "cta": {
+      "title": "Devenez Le Prochain Client Satisfait!",
+      "subtitle": "Découvrez le même service rapide et professionnel",
+      "button1": "Réservez Votre Réparation",
+      "button2": "Contactez-Nous"
     }
+  },
+  "faqPage": {
+    "metaTitle": "FAQ | Questions Fréquentes Réparation Téléphone Louvain | 5GPhones Fix",
+    "metaDescription": "Toutes les réponses à vos questions sur la réparation smartphone ✓ Délai réparation ✓ Garantie ✓ Prix ✓ Pièces ✓ Service ✓ Bondgenotenlaan 84A Louvain",
+    "metaKeywords": "faq réparation téléphone louvain, questions fréquentes réparation smartphone, questions réparation louvain, info réparation téléphone, informations réparation louvain"
+  },
+  "whyChoosePage": {
+    "metaTitle": "Pourquoi Choisir 5GPhones Fix? | Meilleure Réparation Téléphone Louvain",
+    "metaDescription": "🏆 Meilleur service de réparation à Louvain! ✓ Service 30 minutes ✓ Garantie 6 mois ✓ 5000+ clients satisfaits ✓ Techniciens certifiés ✓ Bondgenotenlaan 84A",
+    "metaKeywords": "pourquoi 5GPhones Fix, meilleure réparation téléphone louvain, réparation smartphone fiable, réparation professionnelle louvain, service rapide louvain, garantie qualité",
+    "hero": {
+      "badge": "⭐ Meilleur Noté à Louvain",
+      "title": "Pourquoi Choisir",
+      "titleHighlight": "5G Phones",
+      "subtitle": "Le service de réparation le plus rapide et fiable à Louvain",
+      "stat1": "Clients satisfaits",
+      "stat2": "Temps de réparation moyen",
+      "stat3": "Note client"
+    },
+    "mainBenefits": {
+      "benefit1": {
+        "title": "Service Rapide",
+        "description": "Réparation en 30 minutes pour la plupart des écrans",
+        "details": "Pas d'attentes prolongées. Chez 5G Phones, nous réparons la plupart des appareils en 30 minutes. Vous n'avez pas à attendre des semaines - entrez, prenez un café et repartez avec votre appareil réparé!"
+      },
+      "benefit2": {
+        "title": "Garantie Qualité",
+        "description": "Garantie 6 mois sur toutes les réparations",
+        "details": "Nous garantissons notre travail avec une garantie complète de 6 mois sur toutes les réparations. Nous utilisons des pièces d'origine ou des alternatives de haute qualité. Vous obtenez toujours le meilleur rapport qualité-prix."
+      },
+      "benefit3": {
+        "title": "Techniciens Experts",
+        "description": "Professionnels certifiés avec années d'expérience",
+        "details": "Nos techniciens sont entièrement certifiés et ont des années d'expérience avec toutes les marques. D'iPhone à Samsung, Huawei à Google Pixel - nous connaissons chaque appareil sur le bout des doigts."
+      }
+    },
+    "additionalBenefits": {
+      "sectionTitle": "Encore Plus D'avantages",
+      "benefit1": {
+        "title": "Emplacement Parfait",
+        "description": "Bondgenotenlaan 84A - facilement accessible au cœur de Louvain"
+      },
+      "benefit2": {
+        "title": "Prix Transparents",
+        "description": "Pas de frais cachés. Vous savez exactement ce que vous payez à l'avance"
+      },
+      "benefit3": {
+        "title": "5000+ Clients Satisfaits",
+        "description": "Noté 4,9/5 étoiles par nos clients"
+      },
+      "benefit4": {
+        "title": "Meilleur Service Louvain",
+        "description": "Reconnu comme le meilleur service de réparation à Louvain"
+      },
+      "benefit5": {
+        "title": "Service Express",
+        "description": "Réparation en 30 minutes pour la plupart des écrans"
+      },
+      "benefit6": {
+        "title": "Pas-Réparé-Pas-Payé",
+        "description": "Si nous ne pouvons pas le réparer, vous ne payez rien"
+      }
+    },
+    "process": {
+      "title": "Comment Ça Marche",
+      "step1": {
+        "title": "Passez",
+        "description": "Venez sans rendez-vous ou appelez à l'avance pour un service plus rapide"
+      },
+      "step2": {
+        "title": "Diagnostic Gratuit",
+        "description": "Nous examinons votre appareil et vous donnons une estimation honnête"
+      },
+      "step3": {
+        "title": "Réparation Rapide",
+        "description": "Dans la plupart des cas réparé en 30 minutes"
+      },
+      "step4": {
+        "title": "Contrôle Qualité",
+        "description": "Nous testons tout minutieusement avant de vous rendre votre appareil"
+      }
+    },
+    "values": {
+      "title": "Nos Valeurs",
+      "value1": {
+        "title": "Axé Client",
+        "description": "Votre satisfaction est notre priorité. Nous traitons chaque appareil comme s'il était le nôtre."
+      },
+      "value2": {
+        "title": "Fiable",
+        "description": "Nous tenons nos promesses. Une promesse est une promesse, notamment concernant les délais et prix de réparation."
+      },
+      "value3": {
+        "title": "Qualité",
+        "description": "Nous n'utilisons que les meilleures pièces et outils pour chaque réparation."
+      }
+    },
+    "socialProof": {
+      "title": "Ce Que Disent Nos Clients",
+      "stat1": "Nous recommanderaient",
+      "stat2": "Avis Google",
+      "stat3": "Avis en ligne",
+      "cta": "Lire Tous Les Avis"
+    },
+    "cta": {
+      "title": "Prêt à Découvrir La Différence?",
+      "subtitle": "Visitez-nous aujourd'hui et découvrez pourquoi des milliers de clients nous choisissent!",
+      "button1": "Voir Les Services",
+      "button2": "Nous Trouver",
+      "phone": "+32 16 31 00 35",
+      "email": "info@5gphones.be"
+    }
+  }
 }

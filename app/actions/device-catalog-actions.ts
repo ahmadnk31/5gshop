@@ -1,18 +1,26 @@
 'use server'
 
+import { unstable_cache } from 'next/cache'
 import { prisma } from '@/lib/database'
 import { DeviceType } from '@/lib/types'
 
 export async function getDeviceTypes() {
   try {
-    const deviceTypes = await prisma.device.findMany({
-      select: {
-        type: true,
+    // Cache for 10 minutes to improve TTFB
+    const getCachedDeviceTypes = unstable_cache(
+      async () => {
+        const deviceTypes = await prisma.device.findMany({
+          select: {
+            type: true,
+          },
+          distinct: ['type'],
+        })
+        return deviceTypes.map(d => d.type)
       },
-      distinct: ['type'],
-    })
-    
-    return deviceTypes.map(d => d.type)
+      ['device-types-all'],
+      { revalidate: 600, tags: ['device-types'] }
+    );
+    return await getCachedDeviceTypes();
   } catch (error) {
     console.error('Error fetching device types:', error)
     throw new Error('Failed to fetch device types')

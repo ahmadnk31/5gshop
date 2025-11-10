@@ -1,14 +1,19 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { DatabaseService } from "@/lib/database";
 import { DeviceType } from "@/lib/types";
 
-// Device Management
+// Device Management with caching for better TTFB
 export async function getAllDevices() {
-
   try {
-    return await DatabaseService.getAllDevicesSimple();
+    // Cache for 10 minutes to improve TTFB
+    const getCachedDevices = unstable_cache(
+      async () => await DatabaseService.getAllDevicesSimple(),
+      ['devices-all'],
+      { revalidate: 600, tags: ['devices'] }
+    );
+    return await getCachedDevices();
   } catch (error) {
     console.error("Failed to get devices:", error);
     throw new Error("Failed to get devices");

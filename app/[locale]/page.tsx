@@ -4,10 +4,7 @@ import { FeaturedAccessoriesSection } from "@/components/FeaturedAccessoriesSect
 import { RecentlyViewedSection } from "@/components/recently-viewed-section";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Smartphone, Wrench, ShoppingBag, Star, Clock, Shield, CheckCircle, ArrowRight, Zap, Cable, Headphones, Monitor, ShoppingCart } from "lucide-react";
-import { Testimonials } from "@/components/testimonials";
-import { PricingComparison } from "@/components/pricing-comparison";
 import { getAccessories } from "@/app/actions/accessory-actions";
 import { getRepairServices } from "@/app/actions/repair-services-actions";
 import { getDeviceTypes } from "@/app/actions/device-catalog-actions";
@@ -24,10 +21,15 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from "@/i18n/navigation";
 import { formatCurrency } from "@/lib/utils";
 import HomepageHeroCarouselClient from '@/components/homepage-hero-carousel-client';
+import LandingPagesPromo from '@/components/landing-pages-promo';
+import QuickLinksSection from '@/components/quick-links-section';
 
 type Props = {
   params: Promise<{ locale: string }>
 }
+
+// Enable ISR with 5 minute revalidation to improve TTFB
+export const revalidate = 300; // 5 minutes
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -347,10 +349,10 @@ export default async function Home({ params }: Props) {
   // Get homepage parts (top 6 in-stock)
   const featuredParts = homepageParts as Part[];
 
-  // Get popular repair services (sorted by price for better UX)
+  // Get popular repair services (sorted by price for better UX) - Reduced to 3 for performance
   const popularServices = services
     .sort((a: RepairService, b: RepairService) => a.basePrice - b.basePrice)
-    .slice(0, 6);
+    .slice(0, 3);
       {/* Featured Repair Parts */}
       <FeaturedPartsSection parts={featuredParts} t={t} />
 
@@ -476,6 +478,9 @@ export default async function Home({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {/* Landing Pages Promo - Links to Speed & Student pages */}
+      <LandingPagesPromo />
 
       {/* Services Overview */}
       <section className="py-16 bg-[var(--background)]" data-section="services_overview" aria-labelledby="services-title">
@@ -692,81 +697,8 @@ export default async function Home({ params }: Props) {
         </div>
       </section>
 
-      {/* Pricing Comparison Section */}
-      <PricingComparison />
-
-      {/* Why Choose Us */}
-      <section className="py-16 bg-[var(--background)]" aria-labelledby="why-choose-us-title">
-        <div className="container mx-auto px-4">
-          <h2 id="why-choose-us-title" className="text-3xl font-bold text-center mb-12">
-            {t('whyChooseUs.title')}
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8" role="list" aria-label="Reasons to choose our service">
-            <div className="text-center" role="listitem">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
-                <Clock className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{t('whyChooseUs.fastService.title')}</h3>
-              <p className="text-gray-600">{t('whyChooseUs.fastService.description')}</p>
-            </div>
-            <div className="text-center" role="listitem">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
-                <Shield className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{t('whyChooseUs.qualityGuarantee.title')}</h3>
-              <p className="text-gray-600">{t('whyChooseUs.qualityGuarantee.description')}</p>
-            </div>
-            <div className="text-center" role="listitem">
-              <div className="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
-                <Star className="h-8 w-8 text-yellow-600" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">{t('whyChooseUs.expertTechnicians.title')}</h3>
-              <p className="text-gray-600">{t('whyChooseUs.expertTechnicians.description')}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      
-      {/* Testimonials Component */}
-      <Testimonials testimonials={testimonials} />
-
-      {/* FAQ Section - Accordion with i18n Support */}
-      <section className="py-16 bg-gray-50" aria-labelledby="faq-title">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <h2 id="faq-title" className="text-3xl font-bold text-center mb-12">
-            {t('faq.title')}
-          </h2>
-          
-          <Accordion type="single" collapsible className="w-full space-y-4">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((num) => (
-              <AccordionItem 
-                key={`q${num}`} 
-                value={`item-${num}`}
-                className="bg-white rounded-lg shadow-sm border border-gray-200"
-              >
-                <AccordionTrigger className="px-6 py-4 text-left text-lg font-semibold text-gray-900 hover:no-underline">
-                  {t(`faq.questions.q${num}.question`)}
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  <div className="text-gray-700 prose prose-sm max-w-none">
-                    {t.rich(`faq.questions.q${num}.answer`, {
-                      strong: (chunks) => <strong>{chunks}</strong>
-                    })}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-
-          <div className="text-center mt-10">
-            <p className="text-gray-600 mb-4">{t('faq.subtitle')}</p>
-            <Button asChild size="lg" className="bg-green-600 hover:bg-green-700">
-              <Link href="/contact">{t('faq.contactCta')}</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Quick Links to FAQ, Reviews, Why Choose Us */}
+      <QuickLinksSection />
 
       {/* CTA Section */}
       <section className="bg-[var(--primary)] text-white py-16" aria-labelledby="final-cta-title">

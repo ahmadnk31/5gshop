@@ -181,9 +181,11 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
       left = 16;
     }
     
-    // For mobile, use fixed positioning below the navbar
+    // For mobile, use the actual bottom position of the clicked element
+    // This ensures the dropdown appears below the navbar item, not on top of it
     if (window.innerWidth < 1024) {
-      top = 120; // Position below the navbar to avoid overlap
+      // Use the bottom of the navbar element + small gap
+      top = rect.bottom + 8;
       left = 16;
     }
     
@@ -258,7 +260,7 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
   };
 
   return (
-    <nav className={`relative bg-white border-b border-gray-200 shadow-sm ${className}`}>
+    <nav className={`relative bg-white border-b border-gray-200 shadow-sm z-40 ${className}`}>
       <div className="container mx-auto px-4 py-2">
         <div className="flex space-x-1 sm:space-x-2 md:space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide navbar-scroll min-h-[60px] items-center">
           {deviceTypes.map((deviceType) => {
@@ -293,7 +295,7 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
                 {/* Multi-Step Dropdown Menu */}
                 {isHovered && (
                   <div 
-                    className="fixed bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] overflow-visible"
+                    className="fixed bg-white border border-gray-200 rounded-lg shadow-lg z-[10001] overflow-visible"
                     style={{
                       left: `${dropdownPosition.left}px`,
                       top: `${dropdownPosition.top}px`,
