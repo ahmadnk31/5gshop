@@ -145,7 +145,7 @@ export function Navigation() {
                 <DropdownMenuSeparator />
                 {deviceTypes.map((device) => (
                   <DropdownMenuItem key={device.type} asChild>
-                    <Link href={`/repairs/${device.type}`} className="flex items-center space-x-2">
+                    <Link href={`/repairs/${device.type}`} title={device.label} className="flex items-center space-x-2">
                       <device.icon className="h-4 w-4" />
                       <span>{device.label}</span>
                     </Link>
@@ -153,7 +153,7 @@ export function Navigation() {
                 ))}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/repairs" className="flex items-center space-x-2">
+                  <Link href="/repairs" title={t('allRepairs')} className="flex items-center space-x-2">
                     <Package className="h-4 w-4" />
                     <span>{t('allRepairs')}</span>
                   </Link>
@@ -173,7 +173,7 @@ export function Navigation() {
                 <DropdownMenuSeparator />
                 {accessoryCategories.map((accessory) => (
                   <DropdownMenuItem key={accessory.category} asChild>
-                    <Link href={`/accessories?category=${accessory.category}`} className="flex items-center space-x-2">
+                    <Link href={`/accessories?category=${accessory.category}`} title={accessory.label} className="flex items-center space-x-2">
                       <accessory.icon className="h-4 w-4" />
                       <span>{accessory.label}</span>
                     </Link>
@@ -181,7 +181,7 @@ export function Navigation() {
                 ))}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href="/accessories" className="flex items-center space-x-2">
+                  <Link href="/accessories" title={t('allAccessories')} className="flex items-center space-x-2">
                     <Package className="h-4 w-4" />
                     <span>{t('allAccessories')}</span>
                   </Link>
@@ -223,24 +223,24 @@ export function Navigation() {
                   <DropdownMenuLabel>{session.user.email}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/account/profile">
+                    <Link href="/account/profile" title={t('profile')}>
                       {t('profile')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/account/orders">{t('myOrders')}</Link>
+                    <Link href="/account/orders" title={t('myOrders')}>{t('myOrders')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/wishlist">{t('wishlist')}</Link>
+                    <Link href="/wishlist" title={t('wishlist')}>{t('wishlist')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/account/settings">{t('settings')}</Link>
+                    <Link href="/account/settings" title={t('settings')}>{t('settings')}</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   {session.user.role === 'ADMIN' && (
                     <>
                       <DropdownMenuItem asChild>
-                        <Link href="/admin">{t('adminDashboard')}</Link>
+                        <Link href="/admin" title={t('adminDashboard')}>{t('adminDashboard')}</Link>
                       </DropdownMenuItem>
                     </>
                   )}
@@ -260,10 +260,10 @@ export function Navigation() {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
-                      <Link href="/auth/login">{t('login')}</Link>
+                      <Link href="/auth/login" title={t('login')}>{t('login')}</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/auth/register">{t('register')}</Link>
+                      <Link href="/auth/register" title={t('register')}>{t('register')}</Link>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -272,7 +272,7 @@ export function Navigation() {
             )}
           </div>
           <Button asChild className="">
-              <Link href="/quote">{t('getQuote')}</Link>
+              <Link href="/quote" title={t('getQuote')}>{t('getQuote')}</Link>
             </Button>
           </div>
 
@@ -306,7 +306,7 @@ export function Navigation() {
                 <DropdownMenuSeparator />
                 {deviceTypes.slice(0, 4).map((device) => (
                   <DropdownMenuItem key={device.type} asChild>
-                    <Link href={`/repairs/${device.type}`} className="flex items-center space-x-2 text-sm">
+                    <Link href={`/repairs/${device.type}`} title={`${device.label} repair services in Leuven`} className="flex items-center space-x-2 text-sm">
                       <device.icon className="h-3 w-3" />
                       <span>{device.label}</span>
                     </Link>
@@ -334,7 +334,7 @@ export function Navigation() {
                 <DropdownMenuSeparator />
                 {accessoryCategories.map((accessory) => (
                   <DropdownMenuItem key={accessory.category} asChild>
-                    <Link href={`/accessories?category=${accessory.category}`} className="flex items-center space-x-2 text-sm">
+                    <Link href={`/accessories?category=${accessory.category}`} title={`Shop ${accessory.label} accessories`} className="flex items-center space-x-2 text-sm">
                       <accessory.icon className="h-3 w-3" />
                       <span>{accessory.label}</span>
                     </Link>
@@ -561,6 +561,7 @@ export function Navigation() {
             <div className="flex flex-col space-y-4">
               <Link 
                 href="/" 
+               
                 className="text-gray-700 hover:text-green-600 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
@@ -577,7 +578,8 @@ export function Navigation() {
                   {deviceTypes.map((device) => (
                     <Link 
                       key={device.type}
-                      href={`/repairs/${device.type}`} 
+                      href={`/repairs/${device.type}`}
+                      title={`${device.label} repair services in Leuven`}
                       className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors text-sm"
                       onClick={() => setIsOpen(false)}
                     >
@@ -586,7 +588,8 @@ export function Navigation() {
                     </Link>
                   ))}
                   <Link 
-                    href="/repairs" 
+                    href="/repairs"
+                   
                     className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors text-sm"
                     onClick={() => setIsOpen(false)}
                   >
@@ -606,7 +609,8 @@ export function Navigation() {
                   {accessoryCategories.map((accessory) => (
                     <Link 
                       key={accessory.category}
-                      href={`/accessories?category=${accessory.category}`} 
+                      href={`/accessories?category=${accessory.category}`}
+                      title={`Shop ${accessory.label} accessories`}
                       className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors text-sm"
                       onClick={() => setIsOpen(false)}
                     >
@@ -615,7 +619,8 @@ export function Navigation() {
                     </Link>
                   ))}
                   <Link 
-                    href="/accessories" 
+                    href="/accessories"
+                   
                     className="flex items-center space-x-2 text-gray-600 hover:text-green-600 transition-colors text-sm"
                     onClick={() => setIsOpen(false)}
                   >
@@ -626,14 +631,16 @@ export function Navigation() {
               </div>
 
               <Link 
-                href="/about" 
+                href="/about"
+               
                 className="text-gray-700 hover:text-green-600 transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 {t('about')}
               </Link>
               <Link 
-                href="/contact" 
+                href="/contact"
+               
                 className="text-gray-700 hover:text-green-600 transition-colors"
                 onClick={() => setIsOpen(false)}
               >

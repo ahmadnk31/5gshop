@@ -122,9 +122,11 @@ export default function HomepageHeroCarouselClient({ items }: { items: any[] }) 
                       style={{ objectFit: 'cover', objectPosition: 'center' }}
                       className={`transition-transform duration-700 ${selectedIndex === idx ? 'fade-in' : ''}`}
                       priority={idx === 0} // Only first image gets priority
+                      quality={idx === 0 ? 85 : 75} // OPTIMIZED: Reduce quality for faster LCP
                       loading={idx === 0 ? 'eager' : 'lazy'} // Lazy load other images
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 1200px, 1400px"
-                      {...(item.blurDataURL ? { placeholder: 'blur', blurDataURL: item.blurDataURL } : {})}
+                      sizes="(max-width: 640px) 640px, (max-width: 1200px) 1200px, 1920px" // OPTIMIZED: Better breakpoints
+                      placeholder={idx === 0 && item.blurDataURL ? 'blur' : 'empty'} // OPTIMIZED: Blur for first image only
+                      {...(item.blurDataURL ? { blurDataURL: item.blurDataURL } : {})}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
                   </div>

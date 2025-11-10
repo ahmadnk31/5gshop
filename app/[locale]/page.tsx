@@ -469,10 +469,10 @@ export default async function Home({ params }: Props) {
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-4">
               <Button asChild size="lg" className="bg-green-600 hover:bg-green-700">
-                <Link href="/repairs">{t('intro.bookRepair')}</Link>
+                <Link href="/repairs" title="Browse our device repair services">{t('intro.bookRepair')}</Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/contact">{t('intro.contact')}</Link>
+                <Link href="/contact" title="Contact us for support or inquiries">{t('intro.contact')}</Link>
               </Button>
             </div>
           </div>
@@ -517,7 +517,7 @@ export default async function Home({ params }: Props) {
                   </li>
                 </ul>
                 <Button asChild className="w-full bg-green-700 hover:bg-green-600 focus:ring-4 focus:ring-green-300 focus:outline-none">
-                  <Link href="/repairs" aria-label="Learn more about our repair services">
+                  <Link href="/repairs" title="Learn more about our repair services" aria-label="Learn more about our repair services">
                     {t('services.repairs.learnMore')}
                   </Link>
                 </Button>
@@ -554,7 +554,7 @@ export default async function Home({ params }: Props) {
                   </li>
                 </ul>
                 <Button asChild variant="outline" className="w-full focus:ring-4 focus:ring-blue-300 focus:outline-none">
-                  <Link href="/accessories" aria-label="Browse and shop our accessories">
+                  <Link href="/accessories" title="Browse and shop our accessories" aria-label="Browse and shop our accessories">
                     {t('services.accessories.shopNow')}
                   </Link>
                 </Button>
@@ -589,7 +589,7 @@ export default async function Home({ params }: Props) {
               {t('popularServices.title')}
             </h2>
             <Button asChild variant="outline" className="focus:ring-4 focus:ring-blue-300 focus:outline-none flex-shrink-0 whitespace-nowrap">
-              <Link href="/repairs" aria-label="View all repair services">
+              <Link href="/repairs" title="View all repair services" aria-label="View all repair services">
                 <span className="hidden sm:inline">{t('popularServices.viewAllServices')}</span>
                 <span className="sm:hidden">{t('popularServices.viewAll', { defaultValue: 'View All' })}</span>
                 <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
@@ -613,6 +613,7 @@ export default async function Home({ params }: Props) {
                   key={service.id} 
                   href={quoteUrl} 
                   prefetch={false}
+                  title={`Get quote for ${service.name} repair service`}
                   className="focus:ring-4 focus:ring-blue-300 focus:outline-none rounded-lg"
                   aria-label={`Get quote for ${service.name} starting at ${formatCurrency(service.basePrice, "EUR")}`}
                 >
@@ -675,6 +676,7 @@ export default async function Home({ params }: Props) {
                 <Link 
                   key={category.type} 
                   href={`/repairs/${repairType}`}
+                  title={`${category.name} repair services in Leuven`}
                   className="focus:ring-4 focus:ring-blue-300 focus:outline-none rounded-lg"
                   aria-label={`Repair services for ${category.name} - ${modelCount} models supported`}
                 >
@@ -712,7 +714,7 @@ export default async function Home({ params }: Props) {
               variant="outline" 
               className="text-black focus:ring-4 focus:ring-white/50 focus:outline-none"
             >
-              <Link href="/contact" aria-label="Contact us for assistance">
+              <Link href="/contact" title="Contact us for support or inquiries" aria-label="Contact us for assistance">
                 {t('cta.contactUs')}
               </Link>
             </Button>
@@ -722,7 +724,7 @@ export default async function Home({ params }: Props) {
               variant="outline" 
               className="text-white bg-transparent border-white hover:bg-white hover:text-gray-900 focus:ring-4 focus:ring-white/50 focus:outline-none"
             >
-              <Link href="/about" aria-label="Learn more about our company">
+              <Link href="/about" title="Learn more about 5GPhones Fix" aria-label="Learn more about our company">
                 {t('cta.learnMore')}
               </Link>
             </Button>

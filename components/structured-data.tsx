@@ -1,5 +1,3 @@
-import Script from 'next/script'
-
 interface StructuredDataProps {
   data: object | object[]
 }
@@ -8,11 +6,10 @@ export function StructuredData({ data }: StructuredDataProps) {
   const jsonLd = Array.isArray(data) ? data : [data]
   
   return (
-    <Script
-      id="structured-data"
+    <script
       type="application/ld+json"
       dangerouslySetInnerHTML={{
-        __html: JSON.stringify(jsonLd)
+        __html: JSON.stringify(jsonLd, null, 0)
       }}
     />
   )

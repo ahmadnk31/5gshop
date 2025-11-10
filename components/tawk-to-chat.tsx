@@ -37,11 +37,29 @@ export function TawkToChat() {
         }
       }
 
-      // Wait for page to be fully loaded and other scripts to initialize
-      const timer = setTimeout(initializeTawk, 2000)
+      // OPTIMIZED: Load on user interaction or after 5 seconds (whichever comes first)
+      const timer = setTimeout(initializeTawk, 5000) // Increased from 2s to 5s
+      
+      // Load immediately on scroll, mousemove, or touchstart
+      const events = ['scroll', 'mousemove', 'touchstart', 'click'];
+      const loadOnInteraction = () => {
+        clearTimeout(timer);
+        initializeTawk();
+        // Remove listeners after first interaction
+        events.forEach(event => {
+          window.removeEventListener(event, loadOnInteraction);
+        });
+      };
+      
+      events.forEach(event => {
+        window.addEventListener(event, loadOnInteraction, { once: true, passive: true });
+      });
       
       return () => {
-        clearTimeout(timer)
+        clearTimeout(timer);
+        events.forEach(event => {
+          window.removeEventListener(event, loadOnInteraction);
+        });
       }
     }
   }, [])

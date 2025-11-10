@@ -122,7 +122,7 @@ export default function CheckoutPage() {
               <p className="mt-2 text-sm text-red-700">{stripeError}</p>
               <p className="mt-2 text-sm text-red-700">
                 Please contact us directly to complete your order: <br />
-                <a href="tel:+32466134181" className="font-semibold underline">+32 (466) 13 41 81</a>
+                <a href="tel:+32466134181" title="Call 5GPhones Fix for order assistance" className="font-semibold underline">+32 (466) 13 41 81</a>
               </p>
             </div>
           </div>

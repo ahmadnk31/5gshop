@@ -25,6 +25,7 @@ import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema, generateLocalBusinessSchema, generateWebsiteSchema } from "@/lib/seo";
 import { TawkToChat } from "@/components/tawk-to-chat";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { MicrodataLocalBusiness } from "@/components/microdata-local-business";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -37,19 +38,19 @@ const inter = Inter({
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700", "900"],
+  weight: ["400", "500", "700"], // OPTIMIZED: Reduced from 5 to 3 weights
   display: 'swap',
   preload: false,
-  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+  fallback: ['Arial', 'sans-serif'],
 });
 
 const poppins = Poppins({
   variable: "--font-poppins",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: ["400", "600", "700"], // OPTIMIZED: Reduced from 7 to 3 weights
   display: 'swap',
   preload: false,
-  fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+  fallback: ['Arial', 'sans-serif'],
 });
 
 export const metadata: Metadata = baseMetadata;
@@ -86,25 +87,38 @@ export default async function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         
+       
         {/* Hreflang for international SEO */}
         <link rel="alternate" hrefLang="en" href="https://5gphones.be/en" />
         <link rel="alternate" hrefLang="nl" href="https://5gphones.be/nl" />
         <link rel="alternate" hrefLang="fr" href="https://5gphones.be/fr" />
         <link rel="alternate" hrefLang="x-default" href="https://5gphones.be/en" />
         
-        {/* Optimized font loading - preconnect for performance */}
+        {/* OPTIMIZED: High-priority preconnect for fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         
-        {/* Resource hints for critical external resources */}
+        {/* OPTIMIZED: Strategic resource hints for Speed Index */}
         <link rel="dns-prefetch" href="//www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="//www.google-analytics.com" />
         <link rel="dns-prefetch" href="//tire-files.s3.us-east-1.amazonaws.com" />
+        <link rel="dns-prefetch" href="//dl8rlqtc6lw1l.cloudfront.net" />
+        <link rel="dns-prefetch" href="//embed.tawk.to" />
+        
+        {/* LCP OPTIMIZATION: Preload hero image for faster LCP */}
+        <link
+          rel="preload"
+          as="image"
+          href="/logo.svg"
+          fetchPriority="high"
+        />
         
         {/* Additional Open Graph meta tags for better Facebook compatibility */}
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:alt" content="5gphones Leuven - Phone Repair & Mobile Accessories | GSM Reparatie | iPad Reparatie | MacBook Air Herstel | iPad Scherm Vervangen | Smartphone Herstellingen | Phone Repair Leuven | Laptop Repair | iPad Repair | MacBook Reparatie" />
+        <meta property="og:site_name" content="5GPhones Fix" />
+        <meta property="og:image:alt" content="5gphones Fix Leuven - Phone Repair & Mobile Accessories | GSM Reparatie | iPad Reparatie | MacBook Air Herstel | iPad Scherm Vervangen | Smartphone Herstellingen | Phone Repair Leuven | Laptop Repair | iPad Repair | MacBook Reparatie" />
 
 
       </head>
@@ -119,7 +133,7 @@ export default async function RootLayout({
           <AccessibilityProvider>
             {/* Skip Link for keyboard navigation */}
             <a 
-              href="#main-content" 
+              href="#main-content"
               className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
             >
               Skip to main content
@@ -138,8 +152,11 @@ export default async function RootLayout({
             
           </AccessibilityProvider>
           
-          {/* Structured Data */}
+          {/* Structured Data - JSON-LD */}
           <StructuredData data={[structuredData.organization, structuredData.localBusiness, structuredData.website]} />
+          
+          {/* Microdata - HTML attributes for search engines */}
+          <MicrodataLocalBusiness />
           
           {/* Tawk.to Chat Widget */}
           <TawkToChat />
