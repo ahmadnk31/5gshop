@@ -4,6 +4,7 @@ import { DeviceType } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import DeviceRepairsClient from "./page-client";
+import { prisma } from "@/lib/database";
 
 // Enable ISR with revalidation
 export const revalidate = 300;
@@ -58,17 +59,42 @@ export default async function DeviceRepairsPage({ params }: PageProps) {
 
   const deviceLabel = getDeviceTypeLabel(mappedDeviceType);
 
-  // Fetch brands data on server side for SSR/ISR
+  // Fetch brands data directly from database for SSR/ISR
+  // Using Prisma instead of API fetch for better reliability during builds
   let brandsData: { brand: string; count: number; imageUrl?: string }[] = [];
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/repairs/brands?type=${mappedDeviceType}`, {
-      next: { revalidate: 300 } // Cache for 5 minutes
+    const devicesWithBrands = await prisma.device.groupBy({
+      by: ['brand'],
+      where: {
+        type: mappedDeviceType,
+      },
+      _count: {
+        id: true,
+      },
+      orderBy: {
+        brand: 'asc',
+      },
     });
-    
-    if (response.ok) {
-      brandsData = await response.json();
-    }
+
+    brandsData = await Promise.all(
+      devicesWithBrands.map(async (brandGroup) => {
+        const firstDevice = await prisma.device.findFirst({
+          where: {
+            type: mappedDeviceType,
+            brand: brandGroup.brand,
+          },
+          select: {
+            imageUrl: true,
+          },
+        });
+
+        return {
+          brand: brandGroup.brand,
+          count: brandGroup._count.id,
+          imageUrl: firstDevice?.imageUrl || undefined,
+        };
+      })
+    );
   } catch (error) {
     console.error('[Server] Error fetching brands:', error);
     // Continue rendering with empty data - client will handle retry
