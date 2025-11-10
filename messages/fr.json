@@ -378,6 +378,10 @@
         "title": "Réparation d'écran",
         "description": "Remplacement d'écran pour smartphones, tablettes et ordinateurs portables."
       },
+      "noBrands": "Aucune marque disponible pour ce type d'appareil.",
+      "noModels": "Aucun modèle disponible pour cette marque.",
+      "noParts": "Aucune pièce disponible pour ce modèle.",
+      "contactUs": "Nous contacter pour plus d'informations.",
       "selectBrand": "Sélectionnez la marque",
       "selectModel": "Sélectionnez le modèle",
       "selectService": "Sélectionnez le service",
