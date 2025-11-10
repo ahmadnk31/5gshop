@@ -15,11 +15,14 @@ import { TrackablePhoneLink, PageSectionTracker } from "@/components/analytics-c
 import { useTranslations } from 'next-intl';
 import ContactMapClientWrapper from "./contact-map-client-wrapper";
 import { Skeleton } from '@/components/ui/skeleton';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function ContactPage() {
   const t = useTranslations('contact');
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const subject = searchParams.get('subject');
 
   if (loading) {
     return (
@@ -127,14 +130,17 @@ export default function ContactPage() {
               <CardHeader>
                 <CardTitle className="flex items-center text-green-700">
                   <MessageSquare className="h-6 w-6 mr-2 text-green-600" />
-                  Send Us a Message
+                  {subject === 'b2b' ? 'B2B Inquiry' : 'Send Us a Message'}
                 </CardTitle>
                 <CardDescription>
-                  Fill out the form below and we'll get back to you within 24 hours
+                  {subject === 'b2b' 
+                    ? 'Fill out the form below for B2B solutions and we\'ll contact you within 4 hours'
+                    : 'Fill out the form below and we\'ll get back to you within 24 hours'
+                  }
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ContactForm />
+                <ContactForm initialSubject={subject || undefined} />
               </CardContent>
             </Card>
 

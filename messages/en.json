@@ -1,9 +1,9 @@
 {
   "metadata": {
     "homepage": {
-      "title": "Phone Repair Leuven | 30 Min Service | 6 Months Warranty",
-      "description": "⚡ 30 MIN repairs! Walk-in iPhone, Samsung, MacBook service in Leuven. Student discount • Same-day • 6 months warranty. Bondgenotenlaan 84A.",
-      "keywords": "phone repair leuven, gsm repair leuven, mobile repair leuven, iphone repair leuven, smartphone repair leuven, 30 minute repair leuven, fastest phone repair leuven, express repair leuven, same day repair leuven, walk-in repair leuven, no appointment repair leuven, instant repair leuven, student discount repair leuven, cheap phone repair students, affordable smartphone repair leuven, budget phone repair leuven, samsung repair leuven, macbook repair leuven, laptop repair leuven, tablet repair leuven, ipad repair leuven, computer repair leuven, windows installation leuven, password reset leuven, virus removal leuven, phone repair near me, gsm shop leuven, mobile repair shop leuven, smartphone repair shop leuven, phone accessories leuven, phone parts leuven, huawei repair leuven, xiaomi repair leuven, oneplus repair leuven, google pixel repair leuven, nokia repair leuven, desktop pc repair leuven, data recovery leuven, screen replacement leuven, battery replacement leuven, fast repair leuven, professional repair leuven, quick fix leuven, phone service leuven, mobile service leuven"
+      "title": "Phone Repair Belgium | 30 Min Service | 6 Months Warranty",
+      "description": "⚡ 30 MIN repairs! Walk-in iPhone, Samsung, MacBook service in Belgium. Student discount • Same-day • 6 months warranty. Bondgenotenlaan 84A.",
+      "keywords": "phone repair belgium, gsm repair belgium, mobile repair belgium, iphone repair belgium, smartphone repair belgium, 30 minute repair belgium, fastest phone repair belgium, express repair belgium, same day repair belgium, walk-in repair belgium, no appointment repair belgium, instant repair belgium, student discount repair belgium, cheap phone repair students, affordable smartphone repair belgium, budget phone repair belgium, samsung repair belgium, macbook repair belgium, laptop repair belgium, tablet repair belgium, ipad repair belgium, computer repair belgium, windows installation belgium, password reset belgium, virus removal belgium, phone repair near me, gsm shop belgium, mobile repair shop belgium, smartphone repair shop belgium, phone accessories belgium, phone parts belgium, huawei repair belgium, xiaomi repair belgium, oneplus repair belgium, google pixel repair belgium, nokia repair belgium, desktop pc repair belgium, data recovery belgium, screen replacement belgium, battery replacement belgium, fast repair belgium, professional repair belgium, quick fix belgium, phone service belgium, mobile service belgium"
     }
   },
   "homepageHero": {
@@ -153,8 +153,27 @@
       "bookRepair": "Book Phone Repair",
       "contact": "Contact Us"
     },
+    "b2bPromo": {
+      "title": "Business Solutions",
+      "subtitle": "Volume discounts and personalized service for businesses across Belgium",
+      "benefit1": {
+        "title": "Up to 40% Off",
+        "description": "Volume discounts on bulk orders and repair contracts"
+      },
+      "benefit2": {
+        "title": "12 Month Warranty",
+        "description": "Extended warranty on all business repairs and products"
+      },
+      "benefit3": {
+        "title": "24h Delivery",
+        "description": "Fast delivery across Belgium for business orders"
+      },
+      "ctaPrimary": "View B2B Solutions",
+      "ctaSecondary": "Request Quote",
+      "note": "Perfect for businesses, schools, hotels, shops and organizations"
+    },
     "faq": {
-      "title": "Frequently Asked Questions - Phone Repair Leuven",
+      "title": "Frequently Asked Questions - 5GPhones Fix Leuven",
       "subtitle": "Have more questions about our repair services?",
       "contactCta": "Contact Us",
       "questions": {
@@ -502,6 +521,11 @@
     "loading": "Loading..."
   },
   "accessories": {
+    "meta": {
+      "title": "Phone Repair & Accessories Belgium | All Belgium | Free Shipping ⭐",
+      "description": "⭐ Phone repair & largest accessories collection in Belgium! iPhone repair, screen replacement, battery replacement, cases, chargers ✓ Repair all Belgium ✓ Free shipping from €25 ✓ Store in Leuven ✓ Fast service!",
+      "keywords": "phone repair belgium, mobile repair belgium, iphone repair belgium, samsung repair belgium, smartphone repair belgium, screen repair belgium, screen replacement belgium, battery replacement belgium, phone repair leuven, phone repair brussels, smartphone repair antwerp, phone repair ghent, iphone screen repair, samsung screen replacement, phone battery replacement belgium, phone repair service belgium, fast phone repair, professional phone repair, quality smartphone repair, phone accessories belgium, mobile accessories belgium, iphone cases belgium, samsung covers belgium, screen protectors belgium, phone chargers belgium, powerbanks belgium, phone accessories leuven, mobile accessories brussels, mobile shop leuven, phone repair and accessories, phone repair flanders, smartphone service wallonia, mobile shop belgium, best phone repair belgium, original parts, fast delivery belgium"
+    },
     "title": "Premium Device Accessories",
     "addToWishlist":"Add to wishlist",
     "removeFromWishlist":"Remove from wishlist",
@@ -1187,7 +1211,8 @@
       "emailLabel": "Email *",
       "emailPlaceholder": "john@example.com",
       "phoneLabel": "Phone Number",
-      "phonePlaceholder": "+1 (555) 123-4567",
+      "phonePlaceholder": "+32 123 456 789",
+      "serviceB2B": "Business Inquiry",
       "serviceLabel": "Service Type *",
       "servicePlaceholder": "Select a service",
       "serviceRepair": "Device Repair",
@@ -1782,6 +1807,91 @@
       "button2": "Find Us",
       "phone": "+32 16 31 00 35",
       "email": "info@5gphones.be"
+    }
+  },
+  "b2b": {
+    "meta": {
+      "title": "B2B Business Solutions | Phone Repair & Accessories Belgium | Wholesale ⭐",
+      "description": "⭐ B2B solutions for businesses across Belgium! Volume discounts on phone repair & accessories ✓ Business contracts ✓ Fast delivery ✓ Personal account manager ✓ Term invoicing ✓ Custom solutions!",
+      "keywords": "b2b phone belgium, business phone repair belgium, phone accessories wholesale belgium, bulk phone cases belgium, business contract phone repair, volume discount phone accessories, b2b smartphone service belgium, business solutions phone belgium, wholesale phone accessories belgium, corporate gifts phone accessories, corporate phone repair belgium, business phone delivery belgium, b2b chargers wholesale, bulk powerbanks belgium, business phone shop belgium, enterprise phone repair belgium, wholesale cases belgium, b2b smartphone accessories belgium, business invoicing phone belgium, business contract phone repair belgium"
+    },
+    "hero": {
+      "badge": "B2B Business Solutions",
+      "title": "Business Phone Solutions for Companies in Belgium",
+      "subtitle": "Volume discounts, personal service and fast delivery for businesses, schools and organizations across Belgium.",
+      "ctaPrimary": "Request Quote",
+      "ctaSecondary": "View Services"
+    },
+    "stats": {
+      "products": "Products in stock",
+      "businesses": "Happy businesses",
+      "delivery": "Belgium delivery",
+      "satisfaction": "Customer satisfaction"
+    },
+    "benefits": {
+      "heading": "Why Choose Our B2B Solutions?",
+      "subheading": "Discover the benefits of working with 5GPhones.be for your business needs",
+      "volumeDiscount": {
+        "title": "Volume Discounts",
+        "description": "Up to 40% discount on bulk orders. The more you order, the more you save on phone accessories and repair services."
+      },
+      "warranty": {
+        "title": "Extended Warranty",
+        "description": "12 months warranty on all repairs and products. Worry-free business use with our extended warranty conditions."
+      },
+      "accountManager": {
+        "title": "Personal Account Manager",
+        "description": "Dedicated contact who knows your business and can respond quickly to questions or special requests."
+      },
+      "delivery": {
+        "title": "Fast Belgium Delivery",
+        "description": "24-48h delivery across Belgium. Rush deliveries possible for urgent orders and repairs."
+      },
+      "priority": {
+        "title": "Priority Service",
+        "description": "Your repairs and orders get priority. Minimal downtime for your business and employees."
+      },
+      "invoicing": {
+        "title": "Flexible Invoicing",
+        "description": "Term invoicing possible. Monthly statements and customized payment terms."
+      }
+    },
+    "services": {
+      "heading": "Our B2B Services",
+      "subheading": "Complete package of business solutions for your organization",
+      "bulkAccessories": {
+        "title": "Bulk Accessories",
+        "description": "Large stock of phone cases, chargers, cables, powerbanks and more. Perfect for resellers, retailers or corporate equipment. Custom packaging available."
+      },
+      "repairContracts": {
+        "title": "Repair Contracts",
+        "description": "Fixed monthly rates for unlimited repairs. Ideal for businesses with many devices. Screen repairs, battery replacements and more."
+      },
+      "corporateGifts": {
+        "title": "Corporate Gifts",
+        "description": "Premium powerbanks, wireless chargers and high-end accessories with your logo. Perfect for client gifts, events or employees."
+      },
+      "customBranding": {
+        "title": "Custom Branding",
+        "description": "Phone cases and accessories with your company logo or brand identity. Available from 50 pieces. Professional appearance guaranteed."
+      }
+    },
+    "industries": {
+      "heading": "Industries We Serve",
+      "subheading": "Experience across various sectors throughout Belgium",
+      "education": "Education & Schools",
+      "hospitality": "Hospitality & Hotels",
+      "retail": "Retail & Shops",
+      "healthcare": "Healthcare & Medical",
+      "corporate": "Offices & Companies",
+      "events": "Events & Organizations"
+    },
+    "cta": {
+      "heading": "Ready to Get Started?",
+      "subheading": "Contact us for a free quote tailored to your business",
+      "button": "Request Quote",
+      "phone": "Call Now: +32 467 87 12 05",
+      "responseTime": "We respond within 4 hours on business days"
     }
   }
 }

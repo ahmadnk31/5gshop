@@ -24,7 +24,11 @@ interface ContactFormData {
   message: string;
 }
 
-export function ContactForm() {
+interface ContactFormProps {
+  initialSubject?: string;
+}
+
+export function ContactForm({ initialSubject }: ContactFormProps) {
   const t = useTranslations('contact.form');
   const { data: session, status } = useSession();
   // Add Google Analytics tracking
@@ -35,9 +39,9 @@ export function ContactForm() {
     lastName: "",
     email: "",
     phone: "",
-    serviceType: "",
+    serviceType: initialSubject === 'b2b' ? 'B2B / Business Inquiry' : "",
     device: "",
-    message: "",
+    message: initialSubject === 'b2b' ? 'I am interested in B2B solutions for my business.' : "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
@@ -58,6 +62,17 @@ export function ContactForm() {
       }));
     }
   }, [session, status]);
+
+  // Set initial subject when prop changes
+  useEffect(() => {
+    if (initialSubject === 'b2b') {
+      setFormData(prev => ({
+        ...prev,
+        serviceType: 'B2B / Business Inquiry',
+        message: prev.message || 'I am interested in B2B solutions for my business.'
+      }));
+    }
+  }, [initialSubject]);
 
   const handleInputChange = (field: keyof ContactFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -204,6 +219,7 @@ export function ContactForm() {
                 <SelectValue placeholder={t('servicePlaceholder')} />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="B2B / Business Inquiry">{t('serviceB2B', { defaultValue: 'B2B / Business Inquiry' })}</SelectItem>
                 <SelectItem value="repair">{t('serviceRepair')}</SelectItem>
                 <SelectItem value="accessories">{t('serviceAccessories')}</SelectItem>
                 <SelectItem value="quote">{t('serviceQuote')}</SelectItem>

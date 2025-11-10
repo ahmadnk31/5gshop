@@ -19,6 +19,7 @@ import { generateCompleteLocalBusinessSchema } from "@/lib/local-business";
 
 import { getTranslations } from 'next-intl/server';
 import { Link } from "@/i18n/navigation";
+import B2BPromoSection from "@/components/b2b-promo-section";
 import { formatCurrency } from "@/lib/utils";
 import HomepageHeroCarouselClient from '@/components/homepage-hero-carousel-client';
 import LandingPagesPromo from '@/components/landing-pages-promo';
@@ -481,6 +482,9 @@ export default async function Home({ params }: Props) {
 
       {/* Landing Pages Promo - Links to Speed & Student pages */}
       <LandingPagesPromo />
+
+      {/* B2B Business Solutions Promo */}
+      <B2BPromoSection />
 
       {/* Services Overview */}
       <section className="py-16 bg-[var(--background)]" data-section="services_overview" aria-labelledby="services-title">

@@ -140,6 +140,25 @@
       "bookRepair": "GSM Reparatie Boeken",
       "contact": "Contacteer Ons"
     },
+    "b2bPromo": {
+      "title": "Zakelijke Oplossingen",
+      "subtitle": "Volumekortingen en persoonlijke service voor bedrijven in heel België",
+      "benefit1": {
+        "title": "Tot 40% Korting",
+        "description": "Volumekortingen op bulk orders en reparatiecontracten"
+      },
+      "benefit2": {
+        "title": "12 Maanden Garantie",
+        "description": "Extended garantie op alle zakelijke reparaties en producten"
+      },
+      "benefit3": {
+        "title": "24h Levering",
+        "description": "Snelle levering in heel België voor zakelijke orders"
+      },
+      "ctaPrimary": "Bekijk B2B Oplossingen",
+      "ctaSecondary": "Vraag Offerte Aan",
+      "note": "Perfect voor bedrijven, scholen, hotels, winkels en organisaties"
+    },
     "faq": {
       "title": "Veelgestelde Vragen over GSM Reparatie Leuven",
       "subtitle": "Heeft u nog vragen over onze GSM reparatie service?",
@@ -597,6 +616,11 @@
     "loading": "Laden..."
   },
   "accessories": {
+    "meta": {
+      "title": "GSM Reparatie & Accessoires België | Hele België | Gratis Verzending ⭐",
+      "description": "⭐ GSM reparatie & grootste accessoires collectie in België! iPhone reparatie, scherm vervangen, batterij vervangen, hoesjes, opladers ✓ Reparatie in heel België ✓ Gratis verzending vanaf €25 ✓ Winkel in Leuven ✓ Snelle service!",
+      "keywords": "gsm reparatie belgië, telefoon reparatie belgië, iphone reparatie belgië, samsung reparatie belgië, smartphone reparatie belgië, scherm repareren belgië, scherm vervangen belgië, batterij vervangen belgië, gsm reparatie leuven, telefoon reparatie brussel, smartphone reparatie antwerpen, gsm reparatie gent, iphone scherm reparatie, samsung scherm vervangen, telefoon batterij vervangen belgië, gsm reparatie service belgië, snelle telefoon reparatie, professionele gsm reparatie, kwaliteit smartphone reparatie, gsm accessoires belgië, telefoon accessoires belgië, iphone hoesjes belgië, samsung covers belgië, screen protectors belgië, telefoon opladers belgië, powerbanks belgië, gsm accessoires leuven, telefoon accessoires brussel, gsm winkel leuven, gsm reparatie en accessoires, telefoon reparatie vlaanderen, smartphone service wallonië, gsm shop belgië, beste gsm reparatie belgië, originele onderdelen, snelle levering belgië"
+    },
     "title": "Premium apparaat accessoires",
     "addToWishlist":"In wishlist Toevoegen",
     "removeFromWishlist":"Verwijderen uit verlanglijst",
@@ -1185,6 +1209,7 @@
       "servicePlaceholder": "Selecteer een dienst",
       "serviceRepair": "Toestelreparatie",
       "serviceAccessories": "Accessoires",
+      "serviceB2B": "B2B / Zakelijke aanvraag",
       "serviceQuote": "Offerte aanvragen",
       "serviceSupport": "Technische ondersteuning",
       "serviceOther": "Anders",
@@ -1764,6 +1789,91 @@
       "button2": "Vind Ons",
       "phone": "+32 16 31 00 35",
       "email": "info@5gphones.be"
+    }
+  },
+  "b2b": {
+    "meta": {
+      "title": "B2B Zakelijke Oplossingen | GSM Reparatie & Accessoires België | Groothandel ⭐",
+      "description": "⭐ B2B oplossingen voor bedrijven in heel België! Volumekortingen op GSM reparatie & accessoires ✓ Zakelijke contracten ✓ Snelle levering ✓ Persoonlijke accountmanager ✓ Facturering op termijn ✓ Aangepaste oplossingen!",
+      "keywords": "b2b gsm belgië, zakelijke telefoon reparatie belgië, gsm accessoires groothandel belgië, bulk telefoon hoesjes belgië, bedrijfscontract gsm reparatie, volumekorting telefoon accessoires, b2b smartphone service belgië, zakelijke oplossingen gsm belgië, groothandel gsm accessoires belgië, bedrijfsgeschenken telefoon accessoires, corporate gsm reparatie belgië, zakelijke telefoon levering belgië, b2b opladers groothandel, bulk powerbanks belgië, zakelijke gsm winkel belgië, bedrijven telefoon reparatie belgië, groothandel hoesjes belgië, b2b smartphone accessoires belgië, zakelijke facturering gsm belgië, bedrijfscontract telefoon reparatie belgië"
+    },
+    "hero": {
+      "badge": "B2B Zakelijke Oplossingen",
+      "title": "Zakelijke GSM Oplossingen voor Bedrijven in België",
+      "subtitle": "Volumekortingen, persoonlijke service en snelle levering voor bedrijven, scholen en organisaties in heel België.",
+      "ctaPrimary": "Vraag Offerte Aan",
+      "ctaSecondary": "Bekijk Diensten"
+    },
+    "stats": {
+      "products": "Producten op voorraad",
+      "businesses": "Tevreden bedrijven",
+      "delivery": "Levering België",
+      "satisfaction": "Klanttevredenheid"
+    },
+    "benefits": {
+      "heading": "Waarom Kiezen voor Onze B2B Oplossingen?",
+      "subheading": "Ontdek de voordelen van samenwerken met 5GPhones.be voor uw zakelijke behoeften",
+      "volumeDiscount": {
+        "title": "Volumekortingen",
+        "description": "Tot 40% korting op bulk orders. Hoe meer u bestelt, hoe meer u bespaart op GSM accessoires en reparatiediensten."
+      },
+      "warranty": {
+        "title": "Extended Garantie",
+        "description": "12 maanden garantie op alle reparaties en producten. Zorgeloos zakelijk gebruik met onze uitgebreide garantievoorwaarden."
+      },
+      "accountManager": {
+        "title": "Persoonlijke Accountmanager",
+        "description": "Toegewijd contactpersoon die uw bedrijf kent en snel kan schakelen bij vragen of speciale wensen."
+      },
+      "delivery": {
+        "title": "Snelle Levering België",
+        "description": "24-48u levering in heel België. Spoed leveringen mogelijk voor dringende orders en reparaties."
+      },
+      "priority": {
+        "title": "Prioriteit Service",
+        "description": "Uw reparaties en orders krijgen voorrang. Minimale downtime voor uw bedrijf en medewerkers."
+      },
+      "invoicing": {
+        "title": "Flexibele Facturering",
+        "description": "Facturering op termijn mogelijk. Maandelijkse overzichten en aangepaste betalingsvoorwaarden."
+      }
+    },
+    "services": {
+      "heading": "Onze B2B Diensten",
+      "subheading": "Compleet pakket aan zakelijke oplossingen voor uw organisatie",
+      "bulkAccessories": {
+        "title": "Bulk Accessoires",
+        "description": "Grote voorraad telefoon hoesjes, opladers, kabels, powerbanks en meer. Perfect voor wederverkopers, retailers of bedrijfsuitrusting. Aangepaste verpakkingen mogelijk."
+      },
+      "repairContracts": {
+        "title": "Reparatie Contracten",
+        "description": "Vaste maandelijkse tarieven voor onbeperkte reparaties. Ideaal voor bedrijven met veel toestellen. Scherm reparaties, batterij vervangingen en meer."
+      },
+      "corporateGifts": {
+        "title": "Bedrijfsgeschenken",
+        "description": "Hoogwaardige powerbanks, draadloze opladers en premium accessoires met uw logo. Perfect voor relatiegeschenken, events of medewerkers."
+      },
+      "customBranding": {
+        "title": "Custom Branding",
+        "description": "Telefoon hoesjes en accessoires met uw bedrijfslogo of huisstijl. Vanaf 50 stuks mogelijk. Professionele uitstraling gegarandeerd."
+      }
+    },
+    "industries": {
+      "heading": "Sectoren Die We Bedienen",
+      "subheading": "Ervaring in diverse sectoren door heel België",
+      "education": "Onderwijs & Scholen",
+      "hospitality": "Horeca & Hotels",
+      "retail": "Retail & Winkels",
+      "healthcare": "Zorg & Gezondheidszorg",
+      "corporate": "Kantoren & Bedrijven",
+      "events": "Events & Organisaties"
+    },
+    "cta": {
+      "heading": "Klaar om te Starten?",
+      "subheading": "Neem contact op voor een vrijblijvende offerte op maat van uw bedrijf",
+      "button": "Vraag Offerte Aan",
+      "phone": "Bel Direct: +32 467 87 12 05",
+      "responseTime": "We reageren binnen 4 uur op werkdagen"
     }
   }
 }

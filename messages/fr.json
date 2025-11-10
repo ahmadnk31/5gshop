@@ -157,6 +157,25 @@
       "bookRepair": "Réserver Réparation GSM",
       "contact": "Nous Contacter"
     },
+    "b2bPromo": {
+      "title": "Solutions Professionnelles",
+      "subtitle": "Remises sur volume et service personnalisé pour entreprises dans toute la Belgique",
+      "benefit1": {
+        "title": "Jusqu'à 40% de Réduction",
+        "description": "Remises sur volume pour commandes en gros et contrats de réparation"
+      },
+      "benefit2": {
+        "title": "Garantie 12 Mois",
+        "description": "Garantie étendue sur toutes les réparations et produits professionnels"
+      },
+      "benefit3": {
+        "title": "Livraison 24h",
+        "description": "Livraison rapide dans toute la Belgique pour commandes professionnelles"
+      },
+      "ctaPrimary": "Voir Solutions B2B",
+      "ctaSecondary": "Demander Un Devis",
+      "note": "Parfait pour entreprises, écoles, hôtels, magasins et organisations"
+    },
     "faq": {
       "title": "Questions Fréquemment Posées - Réparation GSM Louvain",
       "subtitle": "Vous avez d'autres questions sur nos services de réparation?",
@@ -653,8 +672,9 @@
 ,
   "accessories": {
     "meta": {
-      "title": "Accessoires pour téléphones et appareils - 5gphones Louvain",
-      "description": "Parcourez notre large sélection d'accessoires premium pour smartphones, tablettes et ordinateurs portables"
+      "title": "Réparation GSM & Accessoires Belgique | Toute la Belgique | Livraison Gratuite ⭐",
+      "description": "⭐ Réparation GSM & plus grande collection d'accessoires en Belgique! Réparation iPhone, remplacement écran, remplacement batterie, coques, chargeurs ✓ Réparation toute la Belgique ✓ Livraison gratuite dès €25 ✓ Magasin à Louvain ✓ Service rapide!",
+      "keywords": "réparation gsm belgique, réparation téléphone belgique, réparation iphone belgique, réparation samsung belgique, réparation smartphone belgique, réparer écran belgique, remplacement écran belgique, remplacement batterie belgique, réparation gsm louvain, réparation téléphone bruxelles, réparation smartphone anvers, réparation gsm gand, réparation écran iphone, remplacement écran samsung, remplacement batterie téléphone belgique, service réparation gsm belgique, réparation téléphone rapide, réparation gsm professionnelle, réparation smartphone qualité, accessoires gsm belgique, accessoires téléphone belgique, coques iphone belgique, housses samsung belgique, protecteurs écran belgique, chargeurs téléphone belgique, powerbanks belgique, accessoires gsm louvain, accessoires téléphone bruxelles, boutique gsm louvain, réparation et accessoires gsm, réparation téléphone flandre, service smartphone wallonie, boutique gsm belgique, meilleure réparation gsm belgique, pièces originales, livraison rapide belgique"
     },
     "hero": {
       "title": "Accessoires pour appareils",
@@ -953,6 +973,7 @@
     "phoneLabel": "Numéro de téléphone",
     "phonePlaceholder": "+32 466 13 41 81",
     "serviceLabel": "Type de service *",
+    "serviceB2B": "Services B2B",
     "servicePlaceholder": "Sélectionnez un service",
     "serviceRepair": "Réparation d’appareil",
     "serviceAccessories": "Accessoires",
@@ -1818,6 +1839,91 @@
       "button2": "Nous Trouver",
       "phone": "+32 16 31 00 35",
       "email": "info@5gphones.be"
+    }
+  },
+  "b2b": {
+    "meta": {
+      "title": "Solutions B2B Professionnelles | Réparation GSM & Accessoires Belgique | Gros ⭐",
+      "description": "⭐ Solutions B2B pour entreprises dans toute la Belgique! Remises sur volume réparation GSM & accessoires ✓ Contrats professionnels ✓ Livraison rapide ✓ Account manager personnel ✓ Facturation à terme ✓ Solutions sur mesure!",
+      "keywords": "b2b gsm belgique, réparation téléphone professionnelle belgique, accessoires gsm grossiste belgique, coques téléphone en gros belgique, contrat entreprise réparation gsm, remise volume accessoires téléphone, b2b service smartphone belgique, solutions professionnelles gsm belgique, grossiste accessoires gsm belgique, cadeaux d'affaires accessoires téléphone, réparation gsm corporate belgique, livraison téléphone professionnelle belgique, b2b chargeurs en gros, powerbanks en gros belgique, magasin gsm professionnel belgique, réparation téléphone entreprises belgique, grossiste coques belgique, b2b accessoires smartphone belgique, facturation professionnelle gsm belgique, contrat entreprise réparation téléphone belgique"
+    },
+    "hero": {
+      "badge": "Solutions B2B Professionnelles",
+      "title": "Solutions GSM Professionnelles pour Entreprises en Belgique",
+      "subtitle": "Remises sur volume, service personnalisé et livraison rapide pour entreprises, écoles et organisations dans toute la Belgique.",
+      "ctaPrimary": "Demander Un Devis",
+      "ctaSecondary": "Voir Les Services"
+    },
+    "stats": {
+      "products": "Produits en stock",
+      "businesses": "Entreprises satisfaites",
+      "delivery": "Livraison Belgique",
+      "satisfaction": "Satisfaction client"
+    },
+    "benefits": {
+      "heading": "Pourquoi Choisir Nos Solutions B2B?",
+      "subheading": "Découvrez les avantages de travailler avec 5GPhones.be pour vos besoins professionnels",
+      "volumeDiscount": {
+        "title": "Remises sur Volume",
+        "description": "Jusqu'à 40% de réduction sur les commandes en gros. Plus vous commandez, plus vous économisez sur les accessoires GSM et services de réparation."
+      },
+      "warranty": {
+        "title": "Garantie Étendue",
+        "description": "12 mois de garantie sur toutes les réparations et produits. Usage professionnel sans souci avec nos conditions de garantie étendues."
+      },
+      "accountManager": {
+        "title": "Account Manager Personnel",
+        "description": "Contact dédié qui connaît votre entreprise et peut réagir rapidement en cas de questions ou demandes spéciales."
+      },
+      "delivery": {
+        "title": "Livraison Rapide Belgique",
+        "description": "Livraison 24-48h dans toute la Belgique. Livraisons urgentes possibles pour commandes et réparations urgentes."
+      },
+      "priority": {
+        "title": "Service Prioritaire",
+        "description": "Vos réparations et commandes sont prioritaires. Temps d'arrêt minimal pour votre entreprise et collaborateurs."
+      },
+      "invoicing": {
+        "title": "Facturation Flexible",
+        "description": "Facturation à terme possible. Relevés mensuels et conditions de paiement personnalisées."
+      }
+    },
+    "services": {
+      "heading": "Nos Services B2B",
+      "subheading": "Package complet de solutions professionnelles pour votre organisation",
+      "bulkAccessories": {
+        "title": "Accessoires en Gros",
+        "description": "Grand stock de coques téléphone, chargeurs, câbles, powerbanks et plus. Parfait pour revendeurs, retailers ou équipement d'entreprise. Emballages personnalisés possibles."
+      },
+      "repairContracts": {
+        "title": "Contrats de Réparation",
+        "description": "Tarifs mensuels fixes pour réparations illimitées. Idéal pour entreprises avec nombreux appareils. Réparations d'écran, remplacement de batterie et plus."
+      },
+      "corporateGifts": {
+        "title": "Cadeaux d'Affaires",
+        "description": "Powerbanks premium, chargeurs sans fil et accessoires haut de gamme avec votre logo. Parfait pour cadeaux clients, événements ou collaborateurs."
+      },
+      "customBranding": {
+        "title": "Branding Personnalisé",
+        "description": "Coques téléphone et accessoires avec votre logo ou identité d'entreprise. Possible à partir de 50 pièces. Apparence professionnelle garantie."
+      }
+    },
+    "industries": {
+      "heading": "Secteurs Que Nous Servons",
+      "subheading": "Expérience dans divers secteurs à travers la Belgique",
+      "education": "Éducation & Écoles",
+      "hospitality": "Horeca & Hôtels",
+      "retail": "Retail & Magasins",
+      "healthcare": "Soins & Santé",
+      "corporate": "Bureaux & Entreprises",
+      "events": "Événements & Organisations"
+    },
+    "cta": {
+      "heading": "Prêt à Commencer?",
+      "subheading": "Contactez-nous pour un devis gratuit adapté à votre entreprise",
+      "button": "Demander Un Devis",
+      "phone": "Appelez: +32 467 87 12 05",
+      "responseTime": "Nous répondons dans les 4 heures les jours ouvrables"
     }
   }
 }
