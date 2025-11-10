@@ -1,15 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTranslations } from "next-intl/server";
 import { DeviceType } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import { prisma } from "@/lib/database";
+import DeviceRepairsClient from "./page-client";
 
-// Force dynamic rendering for this page
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Enable ISR with revalidation
+export const revalidate = 300;
 
 type PageProps = {
   params: Promise<{ locale: string; deviceType: string }>;
@@ -44,80 +41,6 @@ export default async function DeviceRepairsPage({ params }: PageProps) {
   
   if (!mappedDeviceType) {
     notFound();
-  }
-
-  // Fetch brands with model counts for this device type
-  let brands: { brand: string; count: number; imageUrl?: string }[] = [];
-  try {
-    console.log(`[Repairs Page] Fetching brands for device type: ${mappedDeviceType}`);
-    
-    // Get distinct brands with their device count with timeout
-    const devicesWithBrands = await Promise.race([
-      prisma.device.groupBy({
-        by: ['brand'],
-        where: {
-          type: mappedDeviceType,
-        },
-        _count: {
-          id: true,
-        },
-        orderBy: {
-          brand: 'asc',
-        },
-      }),
-      new Promise<never>((_, reject) => 
-        setTimeout(() => reject(new Error('Database query timeout')), 10000)
-      )
-    ]);
-
-    console.log(`[Repairs Page] Device Type: ${mappedDeviceType}, Brands found:`, devicesWithBrands.length);
-
-    // Get image URL for each brand (first device image) with timeout
-    const brandsWithImages = await Promise.race([
-      Promise.all(
-        devicesWithBrands.map(async (brandGroup) => {
-          try {
-            const firstDevice = await prisma.device.findFirst({
-              where: {
-                type: mappedDeviceType,
-                brand: brandGroup.brand,
-              },
-              select: {
-                imageUrl: true,
-              },
-            });
-
-            return {
-              brand: brandGroup.brand,
-              count: brandGroup._count.id,
-              imageUrl: firstDevice?.imageUrl || undefined,
-            };
-          } catch (err) {
-            console.error(`[Repairs Page] Error fetching image for brand ${brandGroup.brand}:`, err);
-            return {
-              brand: brandGroup.brand,
-              count: brandGroup._count.id,
-              imageUrl: undefined,
-            };
-          }
-        })
-      ),
-      new Promise<never>((_, reject) => 
-        setTimeout(() => reject(new Error('Image fetch timeout')), 15000)
-      )
-    ]);
-
-    brands = brandsWithImages;
-    console.log(`[Repairs Page] Successfully loaded ${brands.length} brands with images`);
-  } catch (error) {
-    console.error('[Repairs Page] Error loading brands:', error);
-    console.error('[Repairs Page] Error details:', {
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-      deviceType: mappedDeviceType,
-    });
-    // Return empty array instead of throwing to show "No brands" message
-    brands = [];
   }
 
   const getDeviceTypeLabel = (deviceType: DeviceType) => {
@@ -171,59 +94,12 @@ export default async function DeviceRepairsPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* Brands List */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">
-            {t('services.selectBrand', { defaultValue: 'Select Your Brand' })}
-          </h2>
-          
-          {brands.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              {brands.map((brandData) => {
-                const brandSlug = brandData.brand.toLowerCase().replace(/\s+/g, '-');
-                return (
-                  <Link
-                    key={brandData.brand}
-                    href={`/repairs/${deviceType}/${brandSlug}`}
-                    className="group"
-                  >
-                    <Card className="hover:shadow-lg pt-0 transition-shadow border-gray-200 overflow-hidden h-full">
-                      {brandData.imageUrl && (
-                        <div className="relative h-40 bg-gray-100">
-                          <Image
-                            src={brandData.imageUrl}
-                            alt={brandData.brand}
-                            fill
-                            className="object-contain p-4 group-hover:scale-105 transition-transform"
-                          />
-                        </div>
-                      )}
-                      <CardHeader className="text-center">
-                        <CardTitle className="text-xl font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
-                          {brandData.brand}
-                        </CardTitle>
-                        <CardDescription className="text-sm text-gray-600">
-                          {brandData.count} {brandData.count === 1 ? 'model' : 'models'}
-                        </CardDescription>
-                      </CardHeader>
-                    </Card>
-                  </Link>
-                );
-              })}
-            </div>
-          ) : (
-            <Card className="max-w-2xl mx-auto text-center p-12">
-              <p className="text-gray-600 mb-4">
-                {t('services.noBrands', { defaultValue: 'No brands available for this device type yet.' })}
-              </p>
-              <Button asChild>
-                <Link href="/contact">{t('services.contactUs', { defaultValue: 'Contact Us' })}</Link>
-              </Button>
-            </Card>
-          )}
-        </div>
-      </section>
+      {/* Brands List - Client Component */}
+      <DeviceRepairsClient 
+        deviceType={deviceType}
+        deviceTypeEnum={mappedDeviceType}
+        deviceLabel={deviceLabel}
+      />
 
       {/* CTA Section */}
       <section className="py-12 bg-gradient-to-br from-green-600 to-green-700 text-white">

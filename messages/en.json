@@ -76,7 +76,8 @@
       "title": "Popular Repair Services",
       "viewAllServices": "View All Services",
       "starting": "starting",
-      "bookNow": "Book Now"
+      "bookNow": "Book Now",
+      "viewAll": "View All"
     },
     "deviceCategories": {
       "title": "Device Categories",

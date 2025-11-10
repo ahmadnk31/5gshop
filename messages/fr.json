@@ -373,6 +373,7 @@
       "requestPart": "Demander une pièce"
     },
     "services": {
+
       "screenRepair": {
         "title": "Réparation d'écran",
         "description": "Remplacement d'écran pour smartphones, tablettes et ordinateurs portables."
@@ -516,45 +517,9 @@
       "accessories": "Accessoires",
       "productDetails": "Détails du produit",
       "repairs": "Réparations"
-    },
-    "services": {
-      "availableServices": "Services de Réparation Disponibles",
-      "bookService": "Réserver Ce Service"
     }
   },
-  "contact": {
-    "meta": {
-      "title": "Contactez-nous - 5gphones Louvain",
-      "description": "Contactez-nous pour les réparations, questions ou support. Nous sommes là pour vous aider!"
-    },
-    "hero": {
-      "title": "Contactez-nous",
-      "subtitle": "Des questions? Nous sommes là pour vous aider!"
-    },
-    "info": {
-      "title": "Coordonnées",
-      "address": "84A Bondgenotenlaan, 3000 Louvain",
-      "phone": "+32 467 87 12 05",
-      "email": "info@5gphones.be",
-      "hours": "Heures d'ouverture"
-    },
-    "form": {
-      "title": "Envoyez-nous un message",
-      "name": "Nom complet",
-      "email": "Adresse e-mail",
-      "phone": "Numéro de téléphone",
-      "subject": "Sujet",
-      "message": "Message",
-      "send": "Envoyer le message",
-      "sending": "Envoi en cours...",
-      "success": "Message envoyé avec succès!",
-      "error": "Échec de l'envoi du message. Veuillez réessayer."
-    },
-    "location": {
-      "title": "Visitez notre magasin",
-      "directions": "Obtenir l'itinéraire"
-    }
-  },
+  
   "about": {
   "hero": {
     "title": "À propos de 5gphones Leuven",

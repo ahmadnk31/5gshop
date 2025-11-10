@@ -1,17 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { getTranslations } from "next-intl/server";
 import { DeviceType } from "@/lib/types";
-import { getModelsByBrand } from "@/app/actions/device-catalog-actions";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
-import Image from "next/image";
-import { prisma } from "@/lib/database";
+import BrandModelsClient from "./page-client";
 
-// Force dynamic rendering for this page
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Enable ISR with revalidation
+export const revalidate = 300;
 
 type PageProps = {
   params: Promise<{ locale: string; deviceType: string; brand: string }>;
@@ -41,46 +36,6 @@ export default async function BrandModelsPage({ params }: PageProps) {
   const brandName = brand.split('-').map(word => 
     word.charAt(0).toUpperCase() + word.slice(1)
   ).join(' ');
-
-  // Fetch models for this brand and device type
-  let models: any[] = [];
-  try {
-    console.log(`[Brand Page] Fetching models for: ${mappedDeviceType} ${brandName}`);
-    
-    models = await Promise.race([
-      prisma.device.findMany({
-        where: {
-          type: mappedDeviceType,
-          brand: {
-            equals: brandName,
-            mode: 'insensitive', // Case-insensitive comparison
-          },
-        },
-        orderBy: [
-          { order: 'desc' },
-          { model: 'asc' },
-        ],
-      }),
-      new Promise<never>((_, reject) => 
-        setTimeout(() => reject(new Error('Database query timeout')), 10000)
-      )
-    ]);
-    
-    console.log(`[Brand Page] Brand: ${brandName}, Device Type: ${mappedDeviceType}, Models found: ${models.length}`);
-    if (models.length > 0) {
-      console.log(`[Brand Page] First 5 models:`, models.slice(0, 5).map((m: any) => m.model));
-    }
-  } catch (error) {
-    console.error('[Brand Page] Error loading models:', error);
-    console.error('[Brand Page] Error details:', {
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined,
-      deviceType: mappedDeviceType,
-      brand: brandName,
-    });
-    // Return empty array instead of throwing to show "No models" message
-    models = [];
-  }
 
   const getDeviceTypeLabel = (deviceType: DeviceType) => {
     const labels: Record<DeviceType, string> = {
@@ -134,66 +89,13 @@ export default async function BrandModelsPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* Models List */}
-      <section className="py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8 text-gray-900">
-            {t('services.selectModel', { defaultValue: 'Select Your Model' })}
-          </h2>
-          
-          {models.length > 0 ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
-              {models.map((device: any) => {
-                const modelSlug = device.model.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-');
-                return (
-                  <Link
-                    key={device.id}
-                    href={`/repairs/${deviceType}/${brand}/${modelSlug}`}
-                    className="group"
-                  >
-                    <Card className="hover:shadow-lg transition-shadow border-gray-200 overflow-hidden h-full">
-                      {device.imageUrl && (
-                        <div className="relative h-48 bg-gray-100">
-                          <Image
-                            src={device.imageUrl}
-                            alt={`${device.brand} ${device.model}`}
-                            fill
-                            className="object-contain p-4 group-hover:scale-105 transition-transform"
-                          />
-                        </div>
-                      )}
-                      <CardHeader>
-                        <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
-                          {device.model}
-                        </CardTitle>
-                        {device.series && (
-                          <Badge variant="secondary" className="text-xs mt-1">
-                            {device.series}
-                          </Badge>
-                        )}
-                        {device.description && (
-                          <CardDescription className="text-sm text-gray-600 line-clamp-2 mt-2">
-                            {device.description}
-                          </CardDescription>
-                        )}
-                      </CardHeader>
-                    </Card>
-                  </Link>
-                );
-              })}
-            </div>
-          ) : (
-            <Card className="max-w-2xl mx-auto text-center p-12">
-              <p className="text-gray-600 mb-4">
-                {t('services.noModels', { defaultValue: 'No models available for this brand yet.' })}
-              </p>
-              <Button asChild>
-                <Link href="/contact">{t('services.contactUs', { defaultValue: 'Contact Us' })}</Link>
-              </Button>
-            </Card>
-          )}
-        </div>
-      </section>
+      {/* Models List - Client Component */}
+      <BrandModelsClient 
+        deviceType={deviceType}
+        deviceTypeEnum={mappedDeviceType}
+        brand={brand}
+        brandName={brandName}
+      />
 
       {/* CTA Section */}
       <section className="py-12 bg-gradient-to-br from-green-600 to-green-700 text-white">

@@ -135,33 +135,33 @@ export default async function WhyChooseUsPage({ params }: { params: Promise<{ lo
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white py-20">
+      <section className="bg-gradient-to-r from-primary-600 via-primary-700 to-primary-800 text-white py-12 sm:py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="bg-white/20 text-white mb-6 px-6 py-2 text-base">
+            <Badge className="bg-white/20 text-white mb-4 sm:mb-6 px-4 sm:px-6 py-1.5 sm:py-2 text-sm sm:text-base">
               {t('hero.badge')}
             </Badge>
             
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
               {t('hero.title')} <span className="text-primary-300">{t('hero.titleHighlight')}</span>?
             </h1>
             
-            <p className="text-xl md:text-2xl mb-8 text-primary-100">
+            <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-primary-100 px-4">
               {t('hero.subtitle')}
             </p>
 
-            <div className="grid grid-cols-3 gap-4 mt-12 max-w-2xl mx-auto">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold mb-1">5000+</div>
-                <div className="text-sm text-primary-100">{t('hero.stat1')}</div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8 sm:mt-12 max-w-2xl mx-auto">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6">
+                <div className="text-3xl sm:text-4xl font-bold mb-1">5000+</div>
+                <div className="text-sm sm:text-base text-primary-100">{t('hero.stat1')}</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold mb-1">30 min</div>
-                <div className="text-sm text-primary-100">{t('hero.stat2')}</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6">
+                <div className="text-3xl sm:text-4xl font-bold mb-1">30 min</div>
+                <div className="text-sm sm:text-base text-primary-100">{t('hero.stat2')}</div>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-3xl font-bold mb-1">4.9/5</div>
-                <div className="text-sm text-primary-100">{t('hero.stat3')}</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6">
+                <div className="text-3xl sm:text-4xl font-bold mb-1">4.9/5</div>
+                <div className="text-sm sm:text-base text-primary-100">{t('hero.stat3')}</div>
               </div>
             </div>
           </div>

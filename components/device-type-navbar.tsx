@@ -20,10 +20,10 @@ import { formatCurrency } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import DeviceTypeNavbarNotFound from './device-type-navbar-not-found';
 import { 
-  getBrandsByType, 
-  getModelsByBrand, 
-  getPartsByDeviceModel
-} from '@/app/actions/device-catalog-actions';
+  useBrandsByType, 
+  useModelsByBrand, 
+  usePartsByDeviceModel
+} from '@/hooks/use-data';
 
 const deviceIcons: Record<DeviceType, React.ComponentType<any>> = {
   SMARTPHONE: Smartphone,
@@ -71,13 +71,17 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
   
-  const [brands, setBrands] = useState<string[]>([]);
-  const [models, setModels] = useState<string[]>([]);
-  const [parts, setParts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState<{left: number, top: number}>({left: 16, top: 80});
   const [mouseLeaveTimeout, setMouseLeaveTimeout] = useState<NodeJS.Timeout | null>(null);
   const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
+
+  // TanStack Query hooks for data fetching
+  const { data: brands = [], isLoading: brandsLoading } = useBrandsByType(selectedType);
+  const { data: models = [], isLoading: modelsLoading } = useModelsByBrand(selectedType, selectedBrand);
+  const { data: parts = [], isLoading: partsLoading } = usePartsByDeviceModel(selectedType, selectedBrand, selectedModel);
+  
+  // Combined loading state
+  const loading = brandsLoading || modelsLoading || partsLoading;
 
   const deviceTypes: DeviceType[] = [
     'SMARTPHONE',
@@ -103,51 +107,26 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
 
 
   // Handle device type selection
-  const selectDeviceType = async (type: DeviceType) => {
-    setLoading(true);
-    try {
-      setSelectedType(type);
-      setCurrentLevel('brands');
-      const brandsData = await getBrandsByType(type);
-      setBrands(brandsData);
-    } catch (error) {
-      console.error('Error loading brands:', error);
-      setBrands([]);
-    } finally {
-      setLoading(false);
-    }
+  const selectDeviceType = (type: DeviceType) => {
+    setSelectedType(type);
+    setCurrentLevel('brands');
+    // Data will be automatically fetched by TanStack Query
   };
 
   // Handle brand selection
-  const selectBrand = async (brand: string) => {
+  const selectBrand = (brand: string) => {
     if (!selectedType) return;
-    setLoading(true);
-    try {
-      setSelectedBrand(brand);
-      const modelsData = await getModelsByBrand(selectedType, brand);
-      setModels(modelsData);
-      setCurrentLevel('models');
-    } catch (error) {
-      console.error('Error loading models:', error);
-    } finally {
-      setLoading(false);
-    }
+    setSelectedBrand(brand);
+    setCurrentLevel('models');
+    // Data will be automatically fetched by TanStack Query
   };
 
   // Handle model selection
-  const selectModel = async (model: string) => {
+  const selectModel = (model: string) => {
     if (!selectedType) return;
-    setLoading(true);
-    try {
-      setSelectedModel(model);
-      const partsData = await getPartsByDeviceModel(selectedType, selectedBrand || '', model);
-      setParts(partsData);
-      setCurrentLevel('parts');
-    } catch (error) {
-      console.error('Error loading parts:', error);
-    } finally {
-      setLoading(false);
-    }
+    setSelectedModel(model);
+    setCurrentLevel('parts');
+    // Data will be automatically fetched by TanStack Query
   };
 
   // Handle mouse enter for device type
@@ -194,17 +173,13 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
     // Always reset state and load new data when hovering over a different device type
     if (selectedType !== deviceType) {
       // Reset all state immediately
-      setCurrentLevel('types');
-      setSelectedType(null);
       setSelectedBrand(null);
       setSelectedModel(null);
-      setBrands([]);
-      setModels([]);
-      setParts([]);
       
-      // Load new data asynchronously with a small delay to prevent rapid hover issues
+      // Load new data with a small delay to prevent rapid hover issues
       const timeout = setTimeout(() => {
-        selectDeviceType(deviceType);
+        setSelectedType(deviceType);
+        setCurrentLevel('brands');
       }, 50);
       setHoverTimeout(timeout);
     }
@@ -229,9 +204,7 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
       setSelectedType(null);
       setSelectedBrand(null);
       setSelectedModel(null);
-      setBrands([]);
-      setModels([]);
-      setParts([]);
+      // No need to clear data arrays - TanStack Query handles it
       setMouseLeaveTimeout(null);
     }, 300);
     
@@ -244,17 +217,17 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
       case 'brands':
         setCurrentLevel('types');
         setSelectedType(null);
-        setBrands([]);
+        // TanStack Query will handle cache
         break;
       case 'models':
         setCurrentLevel('brands');
         setSelectedBrand(null);
-        setModels([]);
+        // TanStack Query will handle cache
         break;
       case 'parts':
         setCurrentLevel('models');
         setSelectedModel(null);
-        setParts([]);
+        // TanStack Query will handle cache
         break;
     }
   };
@@ -404,7 +377,7 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
                             <>
                               {parts.length > 0 ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                                  {parts.slice(0, 8).map((part) => {
+                                  {parts.slice(0, 8).map((part: any) => {
                                     const partSlug = createPartSlug(part.name, part.id);
                                     return (
                                       <Link

@@ -24,6 +24,7 @@ import Provider from "@/components/provider";
 import { StructuredData } from "@/components/structured-data";
 import { generateOrganizationSchema, generateLocalBusinessSchema, generateWebsiteSchema } from "@/lib/seo";
 import { TawkToChat } from "@/components/tawk-to-chat";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -112,6 +113,7 @@ export default async function RootLayout({
         style={{ backgroundColor: '#FFFFFF', color: '#111827' }}
       >
          <Provider>
+         <QueryProvider>
          <NextIntlClientProvider>
         <CookieConsentProvider>
           <AccessibilityProvider>
@@ -143,6 +145,7 @@ export default async function RootLayout({
           <TawkToChat />
         </CookieConsentProvider>
         </NextIntlClientProvider>
+        </QueryProvider>
         </Provider>
       </body>
     </html>
