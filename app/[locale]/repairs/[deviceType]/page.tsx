@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import DeviceRepairsClient from "./page-client";
 import { prisma } from "@/lib/database";
 
+// Make this page dynamic to avoid DYNAMIC_SERVER_USAGE error with Prisma
+export const dynamic = 'force-dynamic';
 // Enable ISR with revalidation
 export const revalidate = 300;
 
@@ -22,16 +24,8 @@ const deviceTypeMap: Record<string, DeviceType> = {
   'gaming-console': 'GAMING_CONSOLE',
 };
 
-export async function generateStaticParams() {
-  return [
-    { deviceType: 'smartphone' },
-    { deviceType: 'tablet' },
-    { deviceType: 'laptop' },
-    { deviceType: 'smartwatch' },
-    { deviceType: 'desktop' },
-    { deviceType: 'gaming-console' },
-  ];
-}
+// Remove generateStaticParams since we're using dynamic rendering
+// This was causing conflict with Prisma queries
 
 export default async function DeviceRepairsPage({ params }: PageProps) {
   const { locale, deviceType } = await params;
