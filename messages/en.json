@@ -1,9 +1,9 @@
 {
   "metadata": {
     "homepage": {
-      "title": "Phone Repair Belgium | 30 Min Service | 6 Months Warranty",
-      "description": "⚡ 30 MIN repairs! Walk-in iPhone, Samsung, MacBook service in Belgium. Student discount • Same-day • 6 months warranty. Bondgenotenlaan 84A.",
-      "keywords": "phone repair belgium, gsm repair belgium, mobile repair belgium, iphone repair belgium, smartphone repair belgium, 30 minute repair belgium, fastest phone repair belgium, express repair belgium, same day repair belgium, walk-in repair belgium, no appointment repair belgium, instant repair belgium, student discount repair belgium, cheap phone repair students, affordable smartphone repair belgium, budget phone repair belgium, samsung repair belgium, macbook repair belgium, laptop repair belgium, tablet repair belgium, ipad repair belgium, computer repair belgium, windows installation belgium, password reset belgium, virus removal belgium, phone repair near me, gsm shop belgium, mobile repair shop belgium, smartphone repair shop belgium, phone accessories belgium, phone parts belgium, huawei repair belgium, xiaomi repair belgium, oneplus repair belgium, google pixel repair belgium, nokia repair belgium, desktop pc repair belgium, data recovery belgium, screen replacement belgium, battery replacement belgium, fast repair belgium, professional repair belgium, quick fix belgium, phone service belgium, mobile service belgium"
+      "title": "Phone Repair Belgium | All Brands - Smartphone, Laptop, Tablet, Smartwatch | 6 Months Warranty",
+      "description": "⚡ Professional repair service Belgium - All brands: iPhone, Samsung, Huawei, Xiaomi, OnePlus, Google Pixel, Nokia, Motorola and other smartphones, MacBook, iPad, Laptop, Desktop, Smartwatch • 30 MIN express service • Hardware & Software: Screen, Battery, Windows installation, Data recovery ✓ Student discount ✓ Same-day ✓ 6 months warranty ✓ Belgium-wide",
+      "keywords": "phone repair belgium, gsm repair belgium, mobile repair belgium, smartphone repair belgium, iphone repair belgium, samsung repair belgium, huawei repair belgium, xiaomi repair belgium, oneplus repair belgium, google pixel repair belgium, nokia repair belgium, motorola repair belgium, macbook repair belgium, laptop repair belgium, tablet repair belgium, ipad repair belgium, desktop repair belgium, smartwatch repair belgium, apple watch repair belgium, computer repair belgium, 30 minute repair, express repair belgium, fast repair belgium, walk-in repair, no appointment repair, same day repair belgium, student discount repair belgium, windows installation belgium, password reset belgium, virus removal belgium, data recovery belgium, screen replacement belgium, battery replacement belgium, water damage repair belgium, phone repair leuven, phone repair brussels, phone repair antwerp, phone repair ghent, phone repair bruges, phone accessories belgium, phone parts belgium, smartphone shop belgium, mobile service belgium, professional repair belgium, phone service belgium"
     }
   },
   "homepageHero": {
@@ -52,7 +52,7 @@
           "waterDamageRepair": "Water damage repair",
           "softwareTroubleshooting": "Software troubleshooting"
         },
-        "learnMore": "Learn More"
+        "learnMore": "View Repair Services"
       },
       "accessories": {
         "title": "Accessories",
@@ -141,7 +141,7 @@
       "title": "Ready to Get Started?",
       "subtitle": "Book a repair or browse our accessories today",
       "contactUs": "Contact Us",
-      "learnMore": "Learn More"
+      "learnMore": "About Us"
     },
     "intro": {
       "title": "Phone Repair Leuven | 30 Min Express Service | Walk-in Welcome",
@@ -363,8 +363,24 @@
   },
   "repairs": {
     "meta": {
-      "title": "Professional Device Repair Services",
-      "description": "Expert technicians, quality parts, and fast turnaround times for all your device repair needs"
+      "title": "Repair Belgium | All Brands & Models - Smartphone, Tablet, Laptop, Smartwatch ⭐",
+      "description": "⭐ Complete repair service Belgium - All brands: iPhone, Samsung, Huawei, MacBook, iPad, Laptop, Desktop, Smartwatch • Hardware & Software: Screen, Battery, Windows installation, Password reset, Virus removal, Data recovery ✓ Same-day service ✓ 6 months warranty ✓ Belgium-wide delivery",
+      "keywords": "phone repair belgium, mobile repair belgium, smartphone repair belgium, iphone repair belgium, samsung repair belgium, huawei repair belgium, xiaomi repair belgium, oneplus repair belgium, macbook repair belgium, laptop repair belgium, ipad repair belgium, tablet repair belgium, smartwatch repair belgium, desktop repair belgium, windows installation belgium, password reset belgium, virus removal belgium, data recovery belgium, screen repair belgium, battery replacement belgium, water damage repair belgium, fast repair belgium, software repair belgium, computer repair belgium, technical issues belgium, device repair leuven, repair brussels, repair antwerp, repair ghent, repair bruges, it support belgium"
+    },
+    "deviceTypeMeta": {
+      "title": "{device} Repair Belgium | Professional Service ⭐",
+      "description": "Professional {device} repair service in Belgium - Fast turnaround, quality parts, 6 months warranty. Expert technicians for all {device} repairs.",
+      "keywords": "{device} repair belgium, {device} repairs belgium, {device} repair service, {device} screen replacement, {device} battery replacement, {device} water damage repair, {device} repair leuven, {device} repair brussels, {device} repair antwerp"
+    },
+    "brandMeta": {
+      "title": "{brand} {device} Repair Belgium | Expert Service ⭐",
+      "description": "Specialist in {brand} {device} repair - Screen replacement, battery repair, water damage. Professional service for all {brand} models in Belgium.",
+      "keywords": "{brand} {device} repair belgium, {brand} repair belgium, {brand} repairs, {brand} screen replacement, {brand} battery replacement, {brand} repair leuven, {brand} repair brussels, {brand} service antwerp"
+    },
+    "modelMeta": {
+      "title": "{brand} {model} Repair Belgium | Fast Service ⭐",
+      "description": "Expert {brand} {model} repair service - Screen replacement, battery repair, water damage. Same-day service available. 6 months warranty on all repairs.",
+      "keywords": "{brand} {model} repair belgium, {brand} {model} repairs, {model} screen replacement, {model} battery replacement, {model} water damage repair, {model} repair belgium, {brand} {model} repair leuven"
     },
     "hero": {
       "title": "Professional Device Repair Services",
@@ -1462,7 +1478,20 @@
     "showingResults": "Showing {count} of {total} parts",
     "browseAllParts": "Browse our complete catalog of high-quality parts",
     "noBrandsAvailable": "No brands available for this device type",
-    "noModelsAvailable": "No models available for this brand"
+    "noModelsAvailable": "No models available for this brand",
+    "meta": {
+      "title": "Phone Parts Belgium | iPhone, MacBook, iPad, Laptop Parts ⭐",
+      "description": "⭐ Quality parts Belgium - iPhone screens, MacBook batteries, iPad displays, Laptop parts, Samsung screens ✓ Professional installation ✓ Warranty ✓ Delivery throughout Belgium",
+      "keywords": "phone parts belgium, mobile parts belgium, smartphone parts belgium, iphone parts belgium, macbook parts belgium, laptop parts belgium, ipad parts belgium, samsung parts belgium, tablet parts belgium, phone batteries belgium, phone screens belgium, charging ports belgium, computer parts belgium, repair parts belgium, replacement parts belgium"
+    },
+    "partMeta": {
+      "description": "Buy {name} for {device}. High-quality parts with warranty. SKU: {sku}",
+      "yourDevice": "your device",
+      "keywords": {
+        "repairPart": "repair part",
+        "replacement": "replacement"
+      }
+    }
 },
 "profile":{
   "title": "My Profile",

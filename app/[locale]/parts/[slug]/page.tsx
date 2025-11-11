@@ -32,6 +32,7 @@ function extractIdFromSlug(slug: string): string {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: 'parts' });
   const partId = extractIdFromSlug(slug);
   
   try {
@@ -39,21 +40,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     
     if (!part) {
       return {
-        title: 'Product Not Found',
+        title: t('notFound.title', { defaultValue: 'Product Not Found' }),
       };
     }
 
+    const locationText = locale === 'nl' ? 'België' : locale === 'fr' ? 'Belgique' : 'Belgium';
+    
     return {
-      title: `${part.name} - 5gphones Leuven`,
-      description: part.description || `Buy ${part.name} for ${part.deviceModel || part.deviceType || 'your device'}. High-quality parts with warranty. SKU: ${part.sku}`,
+      title: `${part.name} - 5gphones ${locationText}`,
+      description: part.description || t('partMeta.description', { 
+        name: part.name, 
+        device: part.deviceModel || part.deviceType || t('partMeta.yourDevice', { defaultValue: 'your device' }),
+        sku: part.sku 
+      }),
       keywords: [
         part.name,
         part.deviceModel || '',
         part.deviceType || '',
         part.quality || '',
-        'repair part',
-        'replacement',
-        'Leuven',
+        t('partMeta.keywords.repairPart', { defaultValue: 'repair part' }),
+        t('partMeta.keywords.replacement', { defaultValue: 'replacement' }),
+        locationText,
         '5gphones'
       ].filter(Boolean),
       openGraph: {

@@ -9,7 +9,8 @@ import {
   Laptop,
   Watch,
   Monitor,
-  Gamepad2
+  Gamepad2,
+  X
 } from "lucide-react";
 
 import { getTranslations } from "next-intl/server";
@@ -17,165 +18,19 @@ import { Link } from "@/i18n/navigation";
 import { generatePageMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata> {
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'repairs' });
+  
   return await generatePageMetadata({
-    title: "Reparatie Leuven | Hardware & Software - iPhone, Laptop, Windows Installatie ⭐",
-    description: "⭐ Complete reparatie service Leuven - Hardware: iPhone scherm, MacBook batterij, Laptop herstel • Software: Windows installatie, Password reset, Virus verwijdering, Data recovery ✓ Same-day service ✓ 6 maanden garantie ✓ Bondgenotenlaan 84A. All tech problems solved!",
+    title: t('meta.title'),
+    description: t('meta.description'),
     path: "/repairs",
-    keywords: [
-      // Primary Repair Keywords
-      "gsm herstellen leuven",
-      "gsm reparatie leuven",
-      "smartphone reparatie leuven",
-      "telefoon reparatie leuven",
-      "mobiel herstel leuven",
-      
-      // iPhone Repair
-      "iphone reparatie leuven",
-      "iphone herstel leuven",
-      "iphone scherm vervangen leuven",
-      "iphone battery replacement leuven",
-      "iphone repair leuven",
-      
-      // MacBook Repair
-      "macbook reparatie leuven",
-      "macbook herstel leuven",
-      "macbook repair leuven",
-      "macbook scherm vervangen leuven",
-      "macbook battery replacement leuven",
-      "macbook keyboard reparatie",
-      
-      // Laptop Repair
-      "laptop reparatie leuven",
-      "laptop herstel leuven",
-      "laptop repair leuven",
-      "laptop scherm vervangen leuven",
-      "windows laptop repair leuven",
-      "notebook reparatie leuven",
-      
-      // iPad & Tablet Repair
-      "ipad reparatie leuven",
-      "ipad herstel leuven",
-      "ipad screen repair leuven",
-      "tablet reparatie leuven",
-      "tablet herstel leuven",
-      "samsung tablet repair leuven",
-      
-      // Desktop & Computer
-      "desktop reparatie leuven",
-      "computer reparatie leuven",
-      "pc reparatie leuven",
-      "imac reparatie leuven",
-      "computer herstel leuven",
-      
-      // Service Types
-      "scherm reparatie leuven",
-      "batterij vervanging leuven",
-      "waterschade reparatie leuven",
-      "snelle reparatie leuven",
-      "screen repair leuven",
-      "battery replacement leuven",
-      
-      // Brands
-      "samsung reparatie leuven",
-      "huawei reparatie leuven",
-      "xiaomi reparatie leuven",
-      "apple reparatie leuven",
-      "hp laptop repair leuven",
-      "dell laptop repair leuven",
-      
-      // SOFTWARE SERVICES - HIGH PRIORITY
-      // Windows & OS Installation
-      "windows installatie leuven",
-      "windows installation leuven",
-      "windows herinstalleren leuven",
-      "windows 10 installatie leuven",
-      "windows 11 installatie leuven",
-      "os installation leuven",
-      "macos installatie leuven",
-      "operating system install leuven",
-      
-      // Software Repair
-      "software reparatie leuven",
-      "software repair leuven",
-      "iphone software repair leuven",
-      "iphone software probleem leuven",
-      "samsung software repair leuven",
-      "android software repair leuven",
-      "macbook software repair leuven",
-      "laptop software repair leuven",
-      "computer software problems leuven",
-      
-      // Password & Security
-      "password reset leuven",
-      "wachtwoord vergeten leuven",
-      "iphone password reset leuven",
-      "samsung password reset leuven",
-      "windows password reset leuven",
-      "laptop password reset leuven",
-      "forgot password leuven",
-      "unlock iphone leuven",
-      "unlock samsung leuven",
-      "icloud unlock leuven",
-      "google account recovery leuven",
-      "bitlocker recovery leuven",
-      
-      // Virus & Malware
-      "virus verwijdering leuven",
-      "virus removal leuven",
-      "malware removal leuven",
-      "spyware removal leuven",
-      "ransomware removal leuven",
-      "computer virus leuven",
-      "laptop virus leuven",
-      
-      // Performance Issues
-      "computer slow leuven",
-      "laptop traag leuven",
-      "slow computer repair leuven",
-      "computer troubleshooting leuven",
-      "laptop troubleshooting leuven",
-      "pc optimization leuven",
-      "computer cleanup leuven",
-      
-      // Data Services
-      "data recovery leuven",
-      "data herstel leuven",
-      "data backup leuven",
-      "data transfer leuven",
-      "iphone data recovery leuven",
-      "laptop data recovery leuven",
-      "hard drive recovery leuven",
-      "ssd data recovery leuven",
-      
-      // System Services
-      "system update leuven",
-      "ios update leuven",
-      "android update leuven",
-      "windows update leuven",
-      "software update leuven",
-      "firmware update leuven",
-      "bios update leuven",
-      "driver installation leuven",
-      
-      // Technical Issues
-      "technische problemen leuven",
-      "technical issues leuven",
-      "computer problems leuven",
-      "laptop problems leuven",
-      "blue screen repair leuven",
-      "boot problems leuven",
-      "startup issues leuven",
-      
-      // Location-specific
-      "reparatie leuven centrum",
-      "smartphone herstel bondgenotenlaan",
-      "device repair leuven",
-      "phone repair leuven",
-      "mobile repair leuven",
-      "computer service leuven",
-      "it support leuven"
-    ]
+    keywords: t('meta.keywords').split(',').map((k: string) => k.trim())
   });
 }
 
@@ -192,10 +47,12 @@ const deviceTypeInfo: Array<{
   { slug: 'smartwatch', icon: Watch, labelKey: 'smartwatch' },
   { slug: 'desktop', icon: Monitor, labelKey: 'desktop' },
   { slug: 'gaming-console', icon: Gamepad2, labelKey: 'gamingConsole' },
+  { slug: 'other', icon: X, labelKey: 'other' },
 ];
 
-export default async function RepairsPage() {
-  const t = await getTranslations('repairs');
+export default async function RepairsPage({ params }: Props) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'repairs' });
 
   return (
     <div className="min-h-screen bg-gray-50">

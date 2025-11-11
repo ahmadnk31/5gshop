@@ -5,6 +5,8 @@ import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import DeviceRepairsClient from "./page-client";
 import { prisma } from "@/lib/database";
+import { generatePageMetadata } from "@/lib/seo";
+import { Metadata } from "next";
 
 // Make this page dynamic to avoid DYNAMIC_SERVER_USAGE error with Prisma
 export const dynamic = 'force-dynamic';
@@ -23,6 +25,36 @@ const deviceTypeMap: Record<string, DeviceType> = {
   'desktop': 'DESKTOP',
   'gaming-console': 'GAMING_CONSOLE',
 };
+
+// Generate dynamic metadata for each device type
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, deviceType } = await params;
+  const t = await getTranslations({ locale, namespace: 'repairs' });
+  const mappedDeviceType = deviceTypeMap[deviceType];
+  
+  if (!mappedDeviceType) {
+    return {};
+  }
+
+  const deviceLabels: Record<DeviceType, string> = {
+    'SMARTPHONE': t('deviceTypes.smartphone'),
+    'TABLET': t('deviceTypes.tablet'),
+    'LAPTOP': t('deviceTypes.laptop'),
+    'SMARTWATCH': t('deviceTypes.smartwatch'),
+    'DESKTOP': t('deviceTypes.desktop'),
+    'GAMING_CONSOLE': t('deviceTypes.gamingConsole'),
+    'OTHER': t('deviceTypes.other')
+  };
+  
+  const deviceLabel = deviceLabels[mappedDeviceType];
+  
+  return await generatePageMetadata({
+    title: t('deviceTypeMeta.title', { device: deviceLabel }),
+    description: t('deviceTypeMeta.description', { device: deviceLabel }),
+    path: `/repairs/${deviceType}`,
+    keywords: t('deviceTypeMeta.keywords', { device: deviceLabel }).split(',').map((k: string) => k.trim())
+  });
+}
 
 // Remove generateStaticParams since we're using dynamic rendering
 // This was causing conflict with Prisma queries

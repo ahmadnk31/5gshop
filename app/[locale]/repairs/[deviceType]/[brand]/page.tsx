@@ -4,6 +4,8 @@ import { DeviceType } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import BrandModelsClient from "./page-client";
+import { generatePageMetadata } from "@/lib/seo";
+import { Metadata } from "next";
 
 // Enable ISR with revalidation
 export const revalidate = 300;
@@ -20,6 +22,39 @@ const deviceTypeMap: Record<string, DeviceType> = {
   'desktop': 'DESKTOP',
   'gaming-console': 'GAMING_CONSOLE',
 };
+
+// Generate dynamic metadata for each brand
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, deviceType, brand } = await params;
+  const t = await getTranslations({ locale, namespace: 'repairs' });
+  const mappedDeviceType = deviceTypeMap[deviceType];
+  
+  if (!mappedDeviceType) {
+    return {};
+  }
+
+  const deviceLabels: Record<DeviceType, string> = {
+    'SMARTPHONE': t('deviceTypes.smartphone'),
+    'TABLET': t('deviceTypes.tablet'),
+    'LAPTOP': t('deviceTypes.laptop'),
+    'SMARTWATCH': t('deviceTypes.smartwatch'),
+    'DESKTOP': t('deviceTypes.desktop'),
+    'GAMING_CONSOLE': t('deviceTypes.gamingConsole'),
+    'OTHER': t('deviceTypes.other')
+  };
+  
+  const deviceLabel = deviceLabels[mappedDeviceType];
+  const brandName = brand.split('-').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1)
+  ).join(' ');
+  
+  return await generatePageMetadata({
+    title: t('brandMeta.title', { brand: brandName, device: deviceLabel }),
+    description: t('brandMeta.description', { brand: brandName, device: deviceLabel }),
+    path: `/repairs/${deviceType}/${brand}`,
+    keywords: t('brandMeta.keywords', { brand: brandName, device: deviceLabel }).split(',').map((k: string) => k.trim())
+  });
+}
 
 export default async function BrandModelsPage({ params }: PageProps) {
   const { locale, deviceType, brand } = await params;

@@ -1,9 +1,9 @@
 {
   "metadata": {
     "homepage": {
-      "title": "GSM Reparatie Leuven | 30 Min Service | 6 Maanden Garantie",
-      "description": "⚡ 30 MIN herstel! Zonder afspraak iPhone, Samsung, MacBook service in Leuven. Studentenkorting • Same-day • 6 maanden garantie. Bondgenotenlaan 84A.",
-      "keywords": "gsm leuven, gsm winkel leuven, gsm reparatie leuven, gsm herstellen leuven, iphone reparatie leuven, iphone herstellen leuven, smartphone reparatie leuven, smartphone herstellen leuven, telefoon reparatie leuven, 30 minuten reparatie leuven, snelste gsm reparatie leuven, express reparatie leuven, binnen 30 minuten hersteld, zonder afspraak leuven, walk-in reparatie leuven, direct geholpen leuven, meteen reparatie leuven, studentenkorting reparatie leuven, goedkope gsm reparatie studenten, betaalbare smartphone herstel leuven, student gsm reparatie, samsung reparatie leuven, samsung herstellen leuven, macbook herstel leuven, macbook herstellen leuven, laptop reparatie leuven, laptop herstellen leuven, tablet reparatie leuven, tablet herstellen leuven, ipad reparatie leuven, ipad herstellen leuven, computer reparatie leuven, windows installatie leuven, password reset leuven, virus verwijdering leuven, gsm reparatie in de buurt, gsm winkel in de buurt, gsm accessoires leuven, gsm onderdelen leuven, Huawei reparatie leuven, Xiaomi reparatie leuven, OnePlus reparatie leuven, Google Pixel reparatie leuven, Nokia reparatie leuven, desktop pc reparatie leuven, data recovery leuven, scherm vervangen leuven, batterij vervangen leuven, smartphone winkel leuven, gsm shop leuven, telefoon herstel leuven, snelle reparatie leuven, professionele reparatie leuven, goedkope reparatie leuven, herstelling leuven, gsm service leuven"
+      "title": "GSM Reparatie België | Alle Merken - iPhone, Samsung, Huawei, Laptop, Tablet, Apple Watch, Desktop | 6 Maanden Garantie",
+      "description": "⚡ Professionele reparatie service België - Alle merken: iPhone, Samsung, Huawei, Xiaomi, OnePlus, MacBook, iPad, Laptop, Desktop, Smartwatch - Apple Watch • 30 MIN express service • Hardware & Software: Scherm, Batterij, Windows installatie, Data recovery ✓ Studentenkorting ✓ Same-day ✓ 6 maanden garantie ✓ België-breed",
+      "keywords": "gsm reparatie belgië, gsm winkel belgië, smartphone reparatie belgië, telefoon reparatie belgië, iphone reparatie belgië, samsung reparatie belgië, huawei reparatie belgië, xiaomi reparatie belgië, oneplus reparatie belgië, google pixel reparatie belgië, nokia reparatie belgië, macbook reparatie belgië, laptop reparatie belgië, tablet reparatie belgië, ipad reparatie belgië, desktop reparatie belgië, smartwatch reparatie belgië, apple watch reparatie belgië, computer reparatie belgië, 30 minuten reparatie, express reparatie belgië, snelle reparatie belgië, walk-in reparatie, zonder afspraak reparatie, studentenkorting reparatie belgië, windows installatie belgië, password reset belgië, virus verwijdering belgië, data recovery belgië, scherm vervangen belgië, batterij vervangen belgië, waterschade reparatie belgië, gsm reparatie leuven, gsm reparatie brussel, gsm reparatie antwerpen, gsm reparatie gent, gsm reparatie brugge, gsm accessoires belgië, gsm onderdelen belgië, smartphone winkel belgië, telefoon herstel belgië, professionele reparatie belgië, gsm service belgië"
     }
   },
   "homepage": {
@@ -35,7 +35,7 @@
           "waterDamageRepair": "Waterschade reparatie",
           "softwareTroubleshooting": "Softwareproblemen oplossen"
         },
-        "learnMore": "Meer informatie"
+        "learnMore": "Bekijk Reparatiediensten"
       },
       "accessories": {
         "title": "Accessoires",
@@ -128,7 +128,7 @@
       "title": "Klaar om te beginnen?",
       "subtitle": "Boek een reparatie of bekijk onze accessoires vandaag nog",
       "contactUs": "Neem contact op",
-      "learnMore": "Meer informatie"
+      "learnMore": "Over Ons"
     },
     "intro": {
       "title": "GSM Reparatie Leuven | 30 Min Express Service | Walk-in Welkom",
@@ -456,8 +456,24 @@
   },
   "repairs": {
     "meta": {
-      "title": "Professionele apparaat reparatieservices",
-      "description": "Expert technici, kwaliteitsonderdelen en snelle doorlooptijden voor al uw reparatiebehoeften"
+      "title": "Reparatie België | Alle Merken & Modellen - Smartphone, Tablet, Laptop, Smartwatch ⭐",
+      "description": "⭐ Complete reparatie service België - Alle merken: iPhone, Samsung, Huawei, MacBook, iPad, Laptop, Desktop, Smartwatch • Hardware & Software: Scherm, Batterij, Windows installatie, Password reset, Virus verwijdering, Data recovery ✓ Same-day service ✓ 6 maanden garantie ✓ Levering door heel België",
+      "keywords": "gsm herstellen belgië, gsm reparatie belgië, smartphone reparatie belgië, telefoon reparatie belgië, iphone reparatie belgië, samsung reparatie belgië, huawei reparatie belgië, xiaomi reparatie belgië, oneplus reparatie belgië, macbook reparatie belgië, laptop reparatie belgië, ipad reparatie belgië, tablet reparatie belgië, smartwatch reparatie belgië, desktop reparatie belgië, windows installatie belgië, password reset belgië, virus verwijdering belgië, data recovery belgië, scherm reparatie belgië, batterij vervanging belgië, waterschade reparatie belgië, snelle reparatie belgië, software reparatie belgië, computer reparatie belgië, technische problemen belgië, gsm reparatie leuven, smartphone herstel leuven, reparatie brussel, reparatie antwerpen, reparatie gent, reparatie brugge"
+    },
+    "deviceTypeMeta": {
+      "title": "{device} Reparatie België | Professioneel Herstel ⭐",
+      "description": "Professionele {device} reparatie service België - Snelle doorlooptijd, kwaliteitsonderdelen, 6 maanden garantie. Expert technici voor alle {device} reparaties.",
+      "keywords": "{device} reparatie belgië, {device} herstel belgië, {device} repair belgium, {device} scherm vervanging, {device} batterij vervanging, {device} waterschade reparatie, {device} reparatie leuven, {device} herstel brussel, {device} repair antwerp"
+    },
+    "brandMeta": {
+      "title": "{brand} {device} Reparatie België | Expert Service ⭐",
+      "description": "Specialist in {brand} {device} reparatie - Scherm vervanging, batterij herstel, waterschade reparatie. Professioneel service voor alle {brand} modellen in België.",
+      "keywords": "{brand} {device} reparatie belgië, {brand} reparatie belgië, {brand} repair belgium, {brand} scherm vervangen, {brand} batterij vervanging, {brand} herstel leuven, {brand} repair brussels, {brand} service antwerp"
+    },
+    "modelMeta": {
+      "title": "{brand} {model} Reparatie België | Snelle Service ⭐",
+      "description": "Expert {brand} {model} reparatie service - Scherm vervanging, batterij herstel, waterschade. Same-day service beschikbaar. 6 maanden garantie op alle reparaties.",
+      "keywords": "{brand} {model} reparatie belgië, {brand} {model} repair belgium, {model} scherm vervangen, {model} batterij vervanging, {model} waterschade reparatie, {model} herstel belgië, {brand} {model} repair leuven"
     },
     "hero": {
       "title": "Professionele apparaat reparatieservices",
@@ -1458,7 +1474,20 @@
     "showingResults": "{count} van {total} onderdelen worden getoond",
     "browseAllParts": "Blader door onze volledige catalogus van hoogwaardige onderdelen",
     "noBrandsAvailable": "Geen merken beschikbaar voor dit apparaattype",
-    "noModelsAvailable": "Geen modellen beschikbaar voor dit merk"
+    "noModelsAvailable": "Geen modellen beschikbaar voor dit merk",
+    "meta": {
+      "title": "GSM Onderdelen België | iPhone, MacBook, iPad, Laptop Parts ⭐",
+      "description": "⭐ Kwaliteitsvolle onderdelen België - iPhone schermen, MacBook batterijen, iPad displays, Laptop onderdelen, Samsung screens ✓ Professionele installatie ✓ Garantie ✓ Levering door heel België",
+      "keywords": "gsm onderdelen belgië, telefoon onderdelen belgië, smartphone parts belgië, iphone onderdelen belgië, macbook onderdelen belgië, laptop onderdelen belgië, ipad onderdelen belgië, samsung onderdelen belgië, tablet onderdelen belgië, telefoon batterijen belgië, phone screens belgië, charging ports belgië, computer onderdelen belgië, repair parts belgië, vervangingsonderdelen belgië"
+    },
+    "partMeta": {
+      "description": "Koop {name} voor {device}. Hoogwaardige onderdelen met garantie. SKU: {sku}",
+      "yourDevice": "uw apparaat",
+      "keywords": {
+        "repairPart": "reparatie onderdeel",
+        "replacement": "vervanging"
+      }
+    }
   },
   "profile":{
   "title": "Instellingen",

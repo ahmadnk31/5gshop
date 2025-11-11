@@ -1,9 +1,9 @@
 {
   "metadata": {
     "homepage": {
-      "title": "Réparation GSM Louvain | 30 Min Service | 6 Mois Garantie",
-      "description": "⚡ 30 MIN réparation! Sans rendez-vous iPhone, Samsung, MacBook à Louvain. Réduction étudiants • Service jour même • 6 mois garantie. Bondgenotenlaan 84A.",
-      "keywords": "réparation gsm louvain, magasin gsm louvain, réparation téléphone louvain, réparation iphone louvain, réparation smartphone louvain, réparation 30 minutes louvain, réparation express louvain, réparation rapide louvain, réparation jour même louvain, sans rendez-vous louvain, réparation immédiate louvain, réduction étudiants louvain, réparation pas cher étudiants, réparation abordable louvain, réparation économique louvain, réparation samsung louvain, réparation macbook louvain, réparation laptop louvain, réparation tablette louvain, réparation ipad louvain, réparation ordinateur louvain, installation windows louvain, réinitialisation mot de passe louvain, suppression virus louvain, réparation téléphone près de moi, boutique gsm louvain, atelier réparation louvain, accessoires téléphone louvain, pièces téléphone louvain, réparation huawei louvain, réparation xiaomi louvain, réparation oneplus louvain, réparation google pixel louvain, réparation nokia louvain, réparation pc bureau louvain, récupération données louvain, remplacement écran louvain, remplacement batterie louvain, service rapide louvain, service professionnel louvain, dépannage téléphone louvain"
+      "title": "Réparation GSM Belgique | Toutes Marques - Smartphone, Laptop, Tablette, Smartwatch en Apple Watch | 6 Mois Garantie",
+      "description": "⚡ Service de réparation professionnel Belgique - Toutes marques: iPhone, Samsung, Huawei, Xiaomi, OnePlus, MacBook, iPad, Laptop, Desktop, Smartwatch • 30 MIN service express • Hardware & Software: Écran, Batterie, Installation Windows, Récupération données ✓ Réduction étudiants ✓ Service jour même ✓ 6 mois garantie ✓ Belgique-entière",
+      "keywords": "réparation gsm belgique, magasin gsm belgique, réparation smartphone belgique, réparation téléphone belgique, réparation iphone belgique, réparation samsung belgique, réparation huawei belgique, réparation xiaomi belgique, réparation oneplus belgique, réparation google pixel belgique, réparation nokia belgique, réparation macbook belgique, réparation laptop belgique, réparation tablette belgique, réparation ipad belgique, réparation desktop belgique, réparation smartwatch belgique, réparation apple watch belgique, réparation ordinateur belgique, réparation 30 minutes, réparation express belgique, réparation rapide belgique, sans rendez-vous réparation, réparation immédiate, réduction étudiants belgique, installation windows belgique, réinitialisation mot de passe belgique, suppression virus belgique, récupération données belgique, remplacement écran belgique, remplacement batterie belgique, réparation dégâts eau belgique, réparation gsm louvain, réparation gsm bruxelles, réparation gsm anvers, réparation gsm gand, réparation gsm bruges, accessoires gsm belgique, pièces gsm belgique, magasin smartphone belgique, dépannage téléphone belgique, service professionnel belgique, service gsm belgique"
     }
   },
   "homepageHero": {
@@ -52,7 +52,7 @@
           "waterDamageRepair": "Réparation de dégâts d'eau",
           "softwareTroubleshooting": "Dépannage logiciel"
         },
-        "learnMore": "En savoir plus"
+        "learnMore": "Voir Services de Réparation"
       },
       "accessories": {
         "title": "Accessoires",
@@ -145,7 +145,7 @@
       "title": "Prêt à commencer?",
       "subtitle": "Réservez une réparation ou parcourez nos accessoires aujourd'hui",
       "contactUs": "Nous contacter",
-      "learnMore": "En savoir plus"
+      "learnMore": "À Propos de Nous"
     },
     "intro": {
       "title": "Réparation GSM Louvain | Service Express 30 Min | Sans Rendez-vous",
@@ -435,8 +435,24 @@
       "cta": "Obtenir un devis gratuit"
     },
     "meta": {
-      "title": "Services de réparation professionnels",
-      "description": "Techniciens experts, pièces de qualité et délais de livraison rapides pour tous vos besoins de réparation"
+      "title": "Réparation Belgique | Toutes Marques & Modèles - Smartphone, Tablette, Laptop, Smartwatch ⭐",
+      "description": "⭐ Service de réparation complet Belgique - Toutes marques: iPhone, Samsung, Huawei, MacBook, iPad, Laptop, Desktop, Smartwatch • Hardware & Software: Écran, Batterie, Installation Windows, Réinitialisation mot de passe, Suppression virus, Récupération données ✓ Service jour même ✓ Garantie 6 mois ✓ Livraison Belgique",
+      "keywords": "réparation gsm belgique, réparation smartphone belgique, réparation téléphone belgique, réparation iphone belgique, réparation samsung belgique, réparation huawei belgique, réparation xiaomi belgique, réparation oneplus belgique, réparation macbook belgique, réparation laptop belgique, réparation ipad belgique, réparation tablette belgique, réparation smartwatch belgique, réparation desktop belgique, installation windows belgique, réinitialisation mot de passe belgique, suppression virus belgique, récupération données belgique, réparation écran belgique, remplacement batterie belgique, réparation dégâts eau belgique, réparation rapide belgique, réparation logiciel belgique, réparation ordinateur belgique, problèmes techniques belgique, réparation louvain, réparation bruxelles, réparation anvers, réparation gand, réparation bruges"
+    },
+    "deviceTypeMeta": {
+      "title": "Réparation {device} Belgique | Service Professionnel ⭐",
+      "description": "Service de réparation {device} professionnel en Belgique - Délai rapide, pièces de qualité, garantie 6 mois. Techniciens experts pour toutes réparations {device}.",
+      "keywords": "réparation {device} belgique, réparation {device} belgium, {device} repair belgium, remplacement écran {device}, remplacement batterie {device}, réparation dégâts eau {device}, réparation {device} louvain, réparation {device} bruxelles, {device} repair antwerp"
+    },
+    "brandMeta": {
+      "title": "Réparation {brand} {device} Belgique | Service Expert ⭐",
+      "description": "Spécialiste en réparation {brand} {device} - Remplacement écran, réparation batterie, dégâts d'eau. Service professionnel pour tous modèles {brand} en Belgique.",
+      "keywords": "réparation {brand} {device} belgique, réparation {brand} belgique, {brand} repair belgium, remplacement écran {brand}, remplacement batterie {brand}, réparation {brand} louvain, {brand} repair brussels, {brand} service antwerp"
+    },
+    "modelMeta": {
+      "title": "Réparation {brand} {model} Belgique | Service Rapide ⭐",
+      "description": "Service expert de réparation {brand} {model} - Remplacement écran, réparation batterie, dégâts d'eau. Service jour même disponible. Garantie 6 mois sur toutes réparations.",
+      "keywords": "réparation {brand} {model} belgique, {brand} {model} repair belgium, remplacement écran {model}, remplacement batterie {model}, réparation dégâts eau {model}, réparation {model} belgique, {brand} {model} repair louvain"
     },
     "hero": {
       "title": "Services de réparation professionnels",
@@ -1587,6 +1603,19 @@
     "removeFromWishlist": "Retirer de la liste de souhaits",
     "addToWishlist": "Ajouter à la liste de souhaits",
     "allPartsList": "Liste de toutes les pièces",
+    "meta": {
+      "title": "Pièces GSM Belgique | iPhone, MacBook, iPad, Laptop Parts ⭐",
+      "description": "⭐ Pièces de qualité Belgique - Écrans iPhone, batteries MacBook, écrans iPad, pièces Laptop, écrans Samsung ✓ Installation professionnelle ✓ Garantie ✓ Livraison dans toute la Belgique",
+      "keywords": "pièces gsm belgique, pièces téléphone belgique, smartphone parts belgique, pièces iphone belgique, pièces macbook belgique, pièces laptop belgique, pièces ipad belgique, pièces samsung belgique, pièces tablet belgique, batteries téléphone belgique, écrans phone belgique, ports de charge belgique, pièces ordinateur belgique, repair parts belgique, pièces de remplacement belgique"
+    },
+    "partMeta": {
+      "description": "Acheter {name} pour {device}. Pièces de qualité avec garantie. SKU: {sku}",
+      "yourDevice": "votre appareil",
+      "keywords": {
+        "repairPart": "pièce de réparation",
+        "replacement": "remplacement"
+      }
+    },
     "browseAllParts": "Parcourir toutes les pièces",
     "clearFilters": "Effacer les filtres",
     "activeFilters": "Filtres actifs",
