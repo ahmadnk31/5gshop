@@ -14,9 +14,21 @@ export function TawkToChat() {
       // Delay initialization to avoid conflicts with other libraries
       const initializeTawk = () => {
         try {
-          // Initialize Tawk.to API in isolated scope
+          // Initialize Tawk.to API in isolated scope with error suppression
           window.Tawk_API = window.Tawk_API || {}
           window.Tawk_LoadStart = new Date()
+          
+          // Suppress Tawk.to console errors
+          const originalError = console.error
+          console.error = (...args) => {
+            // Filter out Tawk.to i18next errors
+            if (args[0]?.toString().includes('i18next') || 
+                args[0]?.toString().includes('Tawk') ||
+                args[0]?.toString().includes('parseVisitorName')) {
+              return
+            }
+            originalError.apply(console, args)
+          }
 
           // Create and inject the script
           const script = document.createElement('script')
@@ -28,6 +40,13 @@ export function TawkToChat() {
           // Add error handling
           script.onerror = (error) => {
             console.warn('Tawk.to script failed to load:', error)
+          }
+          
+          // Restore console.error after Tawk loads
+          script.onload = () => {
+            setTimeout(() => {
+              console.error = originalError
+            }, 3000) // Give Tawk 3 seconds to initialize
           }
           
           // Append to head
