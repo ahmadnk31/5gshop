@@ -54,10 +54,22 @@ export function Navigation() {
   const [isMounted, setIsMounted] = useState(false);
   const t = useTranslations('navigation');
   
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  // Debug logging - KEEP THIS FOR NOW
+  useEffect(() => {
+    console.log('=== Navigation Session Debug ===');
+    console.log('Session status:', status);
+    console.log('Session data:', JSON.stringify(session, null, 2));
+    console.log('User data:', session?.user);
+    console.log('===============================');
+  }, [session, status]);
 
   const { items } = useCart();
   const totalCartItems = Array.isArray(items) ? items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+  
+  // Prevent hydration mismatch by only showing session-dependent UI after mount
+  const isSessionLoading = status === "loading" || !isMounted;
 
   const handleLogout = async () => {
     try {
@@ -205,18 +217,16 @@ export function Navigation() {
             </button>
             <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
 
-            {/* User info or auth links */}
-            {session?.user ? (
+            {/* User info or auth links - DESKTOP */}
+            {!isSessionLoading && status === "authenticated" && session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center space-x-1 focus:outline-none">
-                  {session?.user && (
-                    <Avatar>
-                      <AvatarImage src={session.user.image ?? undefined} alt="avatar" />
-                      <AvatarFallback className="rounded-full w-8 h-8" >
-                        {session.user.name?.charAt(0) || session.user.email?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                  ) }
+                  <Avatar>
+                    <AvatarImage src={session.user.image ?? undefined} alt={session.user.name || "User avatar"} />
+                    <AvatarFallback className="rounded-full w-8 h-8 bg-green-100 text-green-700 font-semibold">
+                      {session.user.name?.charAt(0)?.toUpperCase() || session.user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
                   <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -250,7 +260,7 @@ export function Navigation() {
                 
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
+            ) : !isSessionLoading ? (
               <div className="flex items-center space-x-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700  transition-colors">
@@ -269,7 +279,7 @@ export function Navigation() {
                 </DropdownMenu>
                
               </div>
-            )}
+            ) : null}
           </div>
           <Button asChild className="">
               <Link href="/quote" title={t('getQuote')}>{t('getQuote')}</Link>
@@ -350,18 +360,16 @@ export function Navigation() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-             {/* User info or auth links */}
-            {session?.user ? (
+             {/* User info or auth links - TABLET */}
+            {!isSessionLoading && status === "authenticated" && session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center space-x-1 focus:outline-none">
-                  {session?.user && (
-                    <Avatar>
-                      <AvatarImage src={session.user.image ?? undefined} alt="avatar" />
-                      <AvatarFallback className="rounded-full w-8 h-8" >
-                        {session.user.name?.charAt(0) || session.user.email?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                  ) }
+                  <Avatar>
+                    <AvatarImage src={session.user.image ?? undefined} alt={session.user.name || "User avatar"} />
+                    <AvatarFallback className="rounded-full w-8 h-8 bg-green-100 text-green-700 font-semibold">
+                      {session.user.name?.charAt(0)?.toUpperCase() || session.user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
                   <ChevronDown className="h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -394,7 +402,7 @@ export function Navigation() {
                  
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
+            ) : !isSessionLoading ? (
               <div className="flex items-center space-x-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors">
@@ -413,7 +421,7 @@ export function Navigation() {
                 </DropdownMenu>
                
               </div>
-            )}
+            ) : null}
             {/* Cart Icon - Desktop & Tablet */}
             <WishlistSheet />
             <button
@@ -456,14 +464,14 @@ export function Navigation() {
               <Search className="h-5 w-5" />
             </button>
 
-            {/* User Avatar/Account */}
-            {session?.user ? (
+            {/* User Avatar/Account - MOBILE */}
+            {!isSessionLoading && status === "authenticated" && session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center focus:outline-none">
                   <Avatar className="w-8 h-8">
-                    <AvatarImage src={session.user.image ?? undefined} alt="avatar" />
-                    <AvatarFallback className="rounded-full w-8 h-8 text-xs">
-                      {session.user.name?.charAt(0) || session.user.email?.charAt(0)}
+                    <AvatarImage src={session.user.image ?? undefined} alt={session.user.name || "User avatar"} />
+                    <AvatarFallback className="rounded-full w-8 h-8 bg-green-100 text-green-700 text-xs font-semibold">
+                      {session.user.name?.charAt(0)?.toUpperCase() || session.user.email?.charAt(0)?.toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
@@ -501,7 +509,7 @@ export function Navigation() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
+            ) : !isSessionLoading ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center p-2 text-gray-700 hover:text-green-600 transition-colors">
                   <UserCircle className="h-6 w-6" />
@@ -515,7 +523,7 @@ export function Navigation() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            )}
+            ) : null}
 
             {/* Mobile menu button */}
             <button
