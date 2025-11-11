@@ -67,29 +67,17 @@ export function Navigation() {
 
   const { items } = useCart();
   const totalCartItems = Array.isArray(items) ? items.reduce((sum, item) => sum + item.quantity, 0) : 0;
-  
-  // Prevent hydration mismatch by only showing session-dependent UI after mount
-  const isSessionLoading = status === "loading" || !isMounted;
 
   const handleLogout = async () => {
     try {
       console.log('Logging out user...');
       
-      // Call logout API for server-side cleanup
-      try {
-        await fetch('/api/auth/logout', { method: 'POST' });
-      } catch (apiError) {
-        console.warn('Logout API call failed:', apiError);
-        // Continue with client-side logout even if API fails
-      }
-      
-      // Perform client-side logout
+      // Use NextAuth's signOut with callbackUrl
+      // This will clear the session and redirect to home page
       await signOut({ 
-        redirect: false  // Don't use NextAuth's redirect
+        callbackUrl: '/',  // Redirect to home page after logout
+        redirect: true      // Let NextAuth handle the redirect
       });
-      
-      // Force a hard redirect to ensure session is fully cleared
-      window.location.href = '/';
     } catch (error) {
       console.error('Logout error:', error);
       // Fallback: force redirect to home page
@@ -218,7 +206,8 @@ export function Navigation() {
             <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
 
             {/* User info or auth links - DESKTOP */}
-            {!isSessionLoading && status === "authenticated" && session?.user ? (
+            {/* Always render login dropdown to prevent hydration mismatch, hide avatar with CSS if not mounted */}
+            {isMounted && status === "authenticated" && session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center space-x-1 focus:outline-none">
                   <Avatar>
@@ -260,7 +249,7 @@ export function Navigation() {
                 
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : !isSessionLoading ? (
+            ) : (
               <div className="flex items-center space-x-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700  transition-colors">
@@ -279,7 +268,7 @@ export function Navigation() {
                 </DropdownMenu>
                
               </div>
-            ) : null}
+            )}
           </div>
           <Button asChild className="">
               <Link href="/quote" title={t('getQuote')}>{t('getQuote')}</Link>
@@ -361,7 +350,7 @@ export function Navigation() {
             </DropdownMenu>
 
              {/* User info or auth links - TABLET */}
-            {!isSessionLoading && status === "authenticated" && session?.user ? (
+            {isMounted && status === "authenticated" && session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center space-x-1 focus:outline-none">
                   <Avatar>
@@ -402,7 +391,7 @@ export function Navigation() {
                  
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : !isSessionLoading ? (
+            ) : (
               <div className="flex items-center space-x-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="flex items-center space-x-1 text-gray-700 hover:text-green-600 transition-colors">
@@ -421,7 +410,7 @@ export function Navigation() {
                 </DropdownMenu>
                
               </div>
-            ) : null}
+            )}
             {/* Cart Icon - Desktop & Tablet */}
             <WishlistSheet />
             <button
@@ -465,7 +454,7 @@ export function Navigation() {
             </button>
 
             {/* User Avatar/Account - MOBILE */}
-            {!isSessionLoading && status === "authenticated" && session?.user ? (
+            {isMounted && status === "authenticated" && session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center focus:outline-none">
                   <Avatar className="w-8 h-8">
@@ -509,7 +498,7 @@ export function Navigation() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : !isSessionLoading ? (
+            ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center p-2 text-gray-700 hover:text-green-600 transition-colors">
                   <UserCircle className="h-6 w-6" />
@@ -523,7 +512,7 @@ export function Navigation() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : null}
+            )}
 
             {/* Mobile menu button */}
             <button

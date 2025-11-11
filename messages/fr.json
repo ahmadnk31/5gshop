@@ -404,6 +404,10 @@
       "selectBrand": "Sélectionnez la marque",
       "selectModel": "Sélectionnez le modèle",
       "selectService": "Sélectionnez le service",
+      "errorTitle": "Erreur de chargement des services",
+      "errorMessage": "Une erreur s'est produite lors du chargement des services de réparation. Veuillez réessayer plus tard.",
+      "retry": "Réessayer",
+      "backToRepairs": "Retour aux réparations",
       "batteryReplacement": {
         "title": "Remplacement de batterie",
         "description": "Remplacement de batterie pour tous les types d'appareils."

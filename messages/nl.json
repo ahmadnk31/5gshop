@@ -610,7 +610,11 @@
       "availableServices": "Beschikbare reparatieservices",
       "bookNow": "Nu boeken",
       "getQuote": "Offerte aanvragen",
-      "bookService": "Boek deze service"
+      "bookService": "Boek deze service",
+      "errorTitle": "Fout bij het laden van services",
+      "errorMessage": "Er is een fout opgetreden bij het ophalen van de reparatieservices. Probeer het later opnieuw.",
+      "retry": "Opnieuw proberen",
+      "backToRepairs": "Terug naar reparaties"
     },
     "parts": {
       "availableParts": "Beschikbare onderdelen & accessoires",

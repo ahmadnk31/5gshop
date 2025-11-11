@@ -515,7 +515,11 @@
       "noBrands": "No brands available for this device type yet.",
       "contactUs": "Contact Us",
       "availableServices": "Available Repair Services",
-      "bookService": "Book This Service"
+      "bookService": "Book This Service",
+      "errorTitle": "Service Unavailable",
+      "errorMessage": "The repair service you selected is currently unavailable. Please contact us for assistance.",
+      "backToServices": "Back to Services",
+      "retry": "Retry"
     },
     "parts": {
       "availableParts": "Available Parts & Accessories",
