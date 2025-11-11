@@ -114,14 +114,14 @@ export default function BrandModelsClient({
                 href={`/repairs/${deviceType}/${brand}/${modelSlug}`}
                 className="group"
               >
-                <Card className="hover:shadow-lg transition-shadow border-gray-200 overflow-hidden h-full">
+                <Card className="hover:shadow-lg pt-0 transition-shadow border-gray-200 overflow-hidden h-full">
                   {device.imageUrl && (
-                    <div className="relative h-48 bg-gray-100">
+                    <div className="relative h-48 product-image-container">
                       <Image
                         src={device.imageUrl}
                         alt={`${device.brand} ${device.model}`}
                         fill
-                        className="object-contain p-4 group-hover:scale-105 transition-transform"
+                        className="object-contain p-4 group-hover:scale-105 transition-transform remove-white-bg"
                       />
                     </div>
                   )}

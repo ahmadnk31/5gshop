@@ -137,12 +137,12 @@ export default function ProductDetailClient({ part, relatedParts }: ProductDetai
             <div className="grid md:grid-cols-2 gap-12">
               {/* Product Image */}
               <div className="space-y-4">
-                <div className="relative bg-white rounded-lg border-2 border-gray-200 overflow-hidden aspect-square">
+                <div className="relative rounded-lg border-2 border-gray-200 overflow-hidden aspect-square product-image-container">
                   {part.imageUrl ? (
                     <ImageZoom
                       src={part.imageUrl}
                       alt={part.name}
-                      className="object-contain p-8"
+                      className="object-contain p-8 remove-white-bg"
                       fallbackContent={
                         <div className="w-full h-full flex items-center justify-center bg-gray-100">
                           <Package className="h-32 w-32 text-gray-300" />
@@ -360,12 +360,12 @@ export default function ProductDetailClient({ part, relatedParts }: ProductDetai
                       <Card className="hover:shadow-lg transition-shadow border-gray-200 h-full flex flex-col">
                         <CardHeader className="flex-shrink-0">
                           {relatedPart.imageUrl && (
-                            <div className="relative h-40 bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                            <div className="relative h-40 rounded-lg mb-3 overflow-hidden product-image-container">
                               <Image
                                 src={relatedPart.imageUrl}
                                 alt={relatedPart.name}
                                 fill
-                                className="object-contain p-4"
+                                className="object-contain p-4 remove-white-bg"
                               />
                             </div>
                           )}

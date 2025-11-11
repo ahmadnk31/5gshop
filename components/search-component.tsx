@@ -507,14 +507,14 @@ export function SearchComponent({ onClose }: SearchComponentProps = {}) {
                   className="w-full px-4 py-4 text-left hover:bg-green-50 border-b last:border-b-0 focus:bg-green-50 focus:outline-none transition-colors"
                 >
                   <div className="flex items-start space-x-4">
-                    <div className="h-16 w-16 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border-2 border-gray-100">
+                    <div className="h-16 w-16 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden border-2 border-gray-100 product-image-container">
                     {result.imageUrl ? (
                         <FallbackImage
                         src={result.imageUrl}
                         alt={result.title}
                         width={64}
                         height={64}
-                          className="h-16 w-16 rounded-lg object-cover"
+                          className="h-16 w-16 rounded-lg object-cover remove-white-bg"
                           fallbackContent={getResultIcon(result)}
                       />
                     ) : (

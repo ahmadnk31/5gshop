@@ -119,12 +119,12 @@ export default function DeviceRepairsClient({
               >
                 <Card className="hover:shadow-lg pt-0 transition-shadow border-gray-200 overflow-hidden h-full">
                   {brandData.imageUrl && (
-                    <div className="relative h-40 bg-gray-100">
+                    <div className="relative h-40 product-image-container">
                       <Image
                         src={brandData.imageUrl}
                         alt={brandData.brand}
                         fill
-                        className="object-contain p-4 group-hover:scale-105 transition-transform"
+                        className="object-contain p-4 group-hover:scale-105 transition-transform remove-white-bg"
                       />
                     </div>
                   )}

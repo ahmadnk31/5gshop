@@ -133,12 +133,12 @@ export default function ModelRepairClient({
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-8 items-center max-w-5xl mx-auto">
             {device.imageUrl && (
-              <div className="relative h-64 w-64 bg-white/10 rounded-xl p-4 flex-shrink-0">
+              <div className="relative h-64 w-64 rounded-xl p-4 flex-shrink-0 product-image-container-dark">
                 <Image
                   src={device.imageUrl}
                   alt={`${device.brand} ${device.model}`}
                   fill
-                  className="object-contain"
+                  className="object-contain remove-white-bg"
                 />
               </div>
             )}
@@ -188,12 +188,12 @@ export default function ModelRepairClient({
                     <Card className="hover:shadow-lg transition-shadow border-gray-200 flex flex-col h-full">
                       <CardHeader className="flex-shrink-0">
                         {part.imageUrl && (
-                          <div className="relative h-48 bg-gray-100 rounded-lg mb-3 overflow-hidden">
+                          <div className="relative h-48 rounded-lg mb-3 overflow-hidden product-image-container">
                             <Image
                               src={part.imageUrl}
                               alt={part.name}
                               fill
-                              className="object-contain p-4 group-hover:scale-105 transition-transform"
+                              className="object-contain p-4 group-hover:scale-105 transition-transform remove-white-bg"
                             />
                           </div>
                         )}

@@ -544,14 +544,14 @@ export default function PartsPage({ initialType, initialBrand, initialModel }: P
                 {/* Image and Content - Clickable to product page */}
                 <Link href={`/parts/${partSlug}`} className="block">
                   {/* Image Section */}
-                  <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+                  <div className="relative h-48 flex items-center justify-center p-4 product-image-container">
                     {part.imageUrl ? (
                       <FallbackImage
                         src={part.imageUrl}
                         alt={part.name}
                         width={200}
                         height={200}
-                        className="object-contain w-full h-full group-hover:scale-110 transition-transform duration-300"
+                        className="object-contain w-full h-full group-hover:scale-110 transition-transform duration-300 remove-white-bg"
                         fallbackContent={
                           <div className="w-full h-full flex items-center justify-center">
                             <Package className="h-16 w-16 text-gray-400" />
@@ -704,14 +704,14 @@ export default function PartsPage({ initialType, initialBrand, initialModel }: P
               {/* Image and Content - Clickable to product page */}
               <Link href={`/parts/${partSlug}`} className="block">
                 {/* Image Section */}
-                <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+                <div className="relative h-48 flex items-center justify-center p-4 product-image-container">
                   {part.imageUrl ? (
                     <FallbackImage
                       src={part.imageUrl}
                       alt={part.name}
                       width={200}
                       height={200}
-                      className="object-contain w-full h-full group-hover:scale-110 transition-transform duration-300"
+                      className="object-contain w-full h-full group-hover:scale-110 transition-transform duration-300 remove-white-bg"
                       fallbackContent={
                         <div className="w-full h-full flex items-center justify-center">
                           <Package className="h-16 w-16 text-gray-400" />
