@@ -239,7 +239,7 @@ export class DatabaseService {
         supplier: data.supplier,
         inStock: data.inStock,
         minStock: data.minStock,
-        imageUrl: data.imageUrl === undefined ? null : data.imageUrl,
+        imageUrl: data.imageUrl !== undefined ? data.imageUrl : undefined,
         description: data.description,
         deviceModel: data.deviceModel,
         deviceType: data.deviceType,
@@ -467,7 +467,7 @@ export class DatabaseService {
         series: data.series ?? null,
         serialNumber: data.serialNumber,
         purchaseDate: data.purchaseDate ? new Date(data.purchaseDate) : undefined,
-        imageUrl: data.imageUrl === undefined ? null : data.imageUrl,
+        imageUrl: data.imageUrl !== undefined ? data.imageUrl : undefined,
         description: data.description,
       },
     })

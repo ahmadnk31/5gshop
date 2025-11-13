@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAdmin } from "@/lib/admin-context-server";
 import { Part, Accessory } from "@/lib/types";
-import { Package, Plus, Minus, AlertTriangle, CheckCircle, Wrench, ShoppingBag } from "lucide-react";
+import { Package, Plus, Minus, AlertTriangle, CheckCircle, Wrench, ShoppingBag, ArrowUp, ArrowDown, GripVertical } from "lucide-react";
 import { getAccessories, updateAccessoryStock, getLowStockAccessories } from "@/app/actions/accessory-actions";
 
 interface InventoryModalProps {
@@ -27,6 +27,8 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
   const [filterDeviceType, setFilterDeviceType] = useState<string>('');
   const [filterModel, setFilterModel] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [editingOrderId, setEditingOrderId] = useState<string | null>(null);
+  const [tempOrderValue, setTempOrderValue] = useState<number>(0);
   
   // Memoized unique device types from parts
   const deviceTypes = useMemo(() => {
@@ -69,7 +71,7 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
         (p.deviceModel && p.deviceModel.toLowerCase().includes(searchTerm.toLowerCase()));
       
       return matchesType && matchesModel && matchesSearch;
-    });
+    }).sort((a, b) => a.order - b.order); // Sort by order field
   }, [state.parts, filterDeviceType, filterModel, searchTerm]);
   
   // Accessories state
@@ -154,6 +156,46 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
     } else if (change < 0) {
       handleUpdateAccessoryStock(accessory.id, Math.abs(change), 'subtract');
     }
+  };
+
+  // Order management functions
+  const handleUpdateOrder = async (partId: string, newOrder: number) => {
+    try {
+      await actions.updatePart(partId, { order: newOrder });
+    } catch (error) {
+      console.error('Failed to update part order:', error);
+    }
+  };
+
+  const handleMoveUp = async (part: Part, index: number) => {
+    if (index === 0) return; // Already at top
+    const prevPart = filteredParts[index - 1];
+    // Swap orders
+    await handleUpdateOrder(part.id, prevPart.order);
+    await handleUpdateOrder(prevPart.id, part.order);
+  };
+
+  const handleMoveDown = async (part: Part, index: number) => {
+    if (index === filteredParts.length - 1) return; // Already at bottom
+    const nextPart = filteredParts[index + 1];
+    // Swap orders
+    await handleUpdateOrder(part.id, nextPart.order);
+    await handleUpdateOrder(nextPart.id, part.order);
+  };
+
+  const startEditingOrder = (part: Part) => {
+    setEditingOrderId(part.id);
+    setTempOrderValue(part.order);
+  };
+
+  const saveOrderEdit = async (partId: string) => {
+    await handleUpdateOrder(partId, tempOrderValue);
+    setEditingOrderId(null);
+  };
+
+  const cancelOrderEdit = () => {
+    setEditingOrderId(null);
+    setTempOrderValue(0);
   };
 
   return (
@@ -282,10 +324,78 @@ export function InventoryModal({ isOpen, onClose }: InventoryModalProps) {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Repair Parts Inventory</h3>
             <div className="space-y-3">
-              {filteredParts.map((part: Part) => (
+              {filteredParts.map((part: Part, index: number) => (
                   <Card key={part.id} className={`${part.inStock <= part.minStock ? 'border-orange-200 bg-orange-50' : ''}`}>
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between gap-4">
+                        {/* Order Controls */}
+                        <div className="flex flex-col items-center gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleMoveUp(part, index)}
+                            disabled={index === 0}
+                            className="h-6 w-6 p-0"
+                            title="Move up"
+                          >
+                            <ArrowUp className="h-3 w-3" />
+                          </Button>
+                          {editingOrderId === part.id ? (
+                            <div className="flex flex-col items-center gap-1">
+                              <Input
+                                type="number"
+                                value={tempOrderValue}
+                                onChange={(e) => setTempOrderValue(parseInt(e.target.value) || 0)}
+                                className="w-12 h-6 text-xs text-center p-1"
+                                min="0"
+                                autoFocus
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') saveOrderEdit(part.id);
+                                  if (e.key === 'Escape') cancelOrderEdit();
+                                }}
+                              />
+                              <div className="flex gap-1">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => saveOrderEdit(part.id)}
+                                  className="h-4 w-4 p-0 text-green-600"
+                                  title="Save"
+                                >
+                                  ✓
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={cancelOrderEdit}
+                                  className="h-4 w-4 p-0 text-red-600"
+                                  title="Cancel"
+                                >
+                                  ✕
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => startEditingOrder(part)}
+                              className="text-xs text-gray-600 hover:text-blue-600 font-mono cursor-pointer min-w-[2rem] text-center"
+                              title="Click to edit order"
+                            >
+                              #{part.order}
+                            </button>
+                          )}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleMoveDown(part, index)}
+                            disabled={index === filteredParts.length - 1}
+                            className="h-6 w-6 p-0"
+                            title="Move down"
+                          >
+                            <ArrowDown className="h-3 w-3" />
+                          </Button>
+                        </div>
+
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
                             <h4 className="font-semibold">{part.name}</h4>

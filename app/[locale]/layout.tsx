@@ -140,7 +140,7 @@ export default async function RootLayout({
             </a>
             
             <GoogleAnalytics />
-            <PerformanceMonitor />
+            
             <Navigation />
             <main id="main-content" role="main">{children}</main>
             <Footer />

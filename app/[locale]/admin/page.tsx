@@ -45,7 +45,9 @@ import {
   LineChart,
   MessageSquare,
   Shield,
-  Loader2
+  Loader2,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 
 function AdminDashboardContent() {
@@ -65,6 +67,9 @@ function AdminDashboardContent() {
   const [customerSearchTerm, setCustomerSearchTerm] = useState('');
   const [showTodayFilter, setShowTodayFilter] = useState(false);
   const [showReportsModal, setShowReportsModal] = useState(false);
+  const [editingPartOrderId, setEditingPartOrderId] = useState<string | null>(null);
+  const [tempPartOrderValue, setTempPartOrderValue] = useState<number>(0);
+  
   // Helper function to check if a date is today
   const isToday = (dateString: string) => {
     const date = new Date(dateString);
@@ -203,6 +208,46 @@ function AdminDashboardContent() {
         console.error('Failed to delete repair:', error);
       }
     }
+  };
+
+  // Part order management functions
+  const sortedParts = [...state.parts].sort((a, b) => a.order - b.order);
+
+  const handleUpdatePartOrder = async (partId: string, newOrder: number) => {
+    try {
+      await actions.updatePart(partId, { order: newOrder });
+    } catch (error) {
+      console.error('Failed to update part order:', error);
+    }
+  };
+
+  const handleMovePartUp = async (part: Part, index: number) => {
+    if (index === 0) return;
+    const prevPart = sortedParts[index - 1];
+    await handleUpdatePartOrder(part.id, prevPart.order);
+    await handleUpdatePartOrder(prevPart.id, part.order);
+  };
+
+  const handleMovePartDown = async (part: Part, index: number) => {
+    if (index === sortedParts.length - 1) return;
+    const nextPart = sortedParts[index + 1];
+    await handleUpdatePartOrder(part.id, nextPart.order);
+    await handleUpdatePartOrder(nextPart.id, part.order);
+  };
+
+  const startEditingPartOrder = (part: Part) => {
+    setEditingPartOrderId(part.id);
+    setTempPartOrderValue(part.order);
+  };
+
+  const savePartOrderEdit = async (partId: string) => {
+    await handleUpdatePartOrder(partId, tempPartOrderValue);
+    setEditingPartOrderId(null);
+  };
+
+  const cancelPartOrderEdit = () => {
+    setEditingPartOrderId(null);
+    setTempPartOrderValue(0);
   };
 
   return (
@@ -1098,15 +1143,83 @@ function AdminDashboardContent() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base sm:text-lg">Inventory Status</CardTitle>
+                  <CardDescription className="text-xs">Click order number to edit, use arrows to reorder</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 sm:space-y-3">
-                    {state.parts.slice(0, 5).map((part: Part) => (
-                      <div key={part.id} className="flex justify-between items-center gap-2">
+                    {sortedParts.slice(0, 5).map((part: Part, index: number) => (
+                      <div key={part.id} className="flex items-center gap-2 p-2 border rounded-lg hover:bg-gray-50">
+                        {/* Order Controls */}
+                        <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleMovePartUp(part, index)}
+                            disabled={index === 0 || isLoading(`update-part-${part.id}`)}
+                            className="h-5 w-5 p-0 hover:bg-gray-200"
+                            title="Move up"
+                          >
+                            <ArrowUp className="h-3 w-3" />
+                          </Button>
+                          {editingPartOrderId === part.id ? (
+                            <div className="flex flex-col items-center gap-0.5">
+                              <Input
+                                type="number"
+                                value={tempPartOrderValue}
+                                onChange={(e) => setTempPartOrderValue(parseInt(e.target.value) || 0)}
+                                className="w-10 h-5 text-[10px] text-center p-0.5 border"
+                                min="0"
+                                autoFocus
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') savePartOrderEdit(part.id);
+                                  if (e.key === 'Escape') cancelPartOrderEdit();
+                                }}
+                              />
+                              <div className="flex gap-0.5">
+                                <button
+                                  onClick={() => savePartOrderEdit(part.id)}
+                                  className="text-[10px] text-green-600 hover:text-green-800 px-1"
+                                  title="Save"
+                                >
+                                  ✓
+                                </button>
+                                <button
+                                  onClick={cancelPartOrderEdit}
+                                  className="text-[10px] text-red-600 hover:text-red-800 px-1"
+                                  title="Cancel"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => startEditingPartOrder(part)}
+                              className="text-[10px] text-gray-600 hover:text-blue-600 font-mono cursor-pointer px-1"
+                              title="Click to edit order"
+                            >
+                              #{part.order}
+                            </button>
+                          )}
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleMovePartDown(part, index)}
+                            disabled={index === sortedParts.slice(0, 5).length - 1 || isLoading(`update-part-${part.id}`)}
+                            className="h-5 w-5 p-0 hover:bg-gray-200"
+                            title="Move down"
+                          >
+                            <ArrowDown className="h-3 w-3" />
+                          </Button>
+                        </div>
+                        
+                        {/* Part Info */}
                         <div className="min-w-0 flex-1">
                           <p className="text-xs sm:text-sm font-medium truncate">{part.name}</p>
                           <p className="text-xs text-gray-500 truncate">SKU: {part.sku}</p>
                         </div>
+                        
+                        {/* Stock Badge */}
                         <div className="text-right flex-shrink-0">
                           <Badge variant={part.inStock <= part.minStock ? "destructive" : "secondary"} className="text-xs">
                             {part.inStock}

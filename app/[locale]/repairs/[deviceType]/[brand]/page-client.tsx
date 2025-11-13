@@ -1,13 +1,15 @@
 'use client';
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDeviceModels } from "@/hooks/use-data";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 interface BrandModelsClientProps {
   deviceType: string;
@@ -23,9 +25,18 @@ export default function BrandModelsClient({
   brandName 
 }: BrandModelsClientProps) {
   const t = useTranslations('repairs');
+  const [expandedSeries, setExpandedSeries] = useState<string[]>([]);
   
   // Fetch models using TanStack Query
   const { data: models = [], isLoading, error } = useDeviceModels(deviceTypeEnum, brandName);
+
+  const toggleSeries = (seriesName: string) => {
+    setExpandedSeries(prev => 
+      prev.includes(seriesName) 
+        ? prev.filter(s => s !== seriesName)
+        : [...prev, seriesName]
+    );
+  };
 
   // Loading state
   if (isLoading) {
@@ -97,6 +108,23 @@ export default function BrandModelsClient({
     );
   }
 
+  // Group models by series
+  const groupedModels = models.reduce((acc: any, device: any) => {
+    const seriesName = device.series || 'Other Models';
+    if (!acc[seriesName]) {
+      acc[seriesName] = [];
+    }
+    acc[seriesName].push(device);
+    return acc;
+  }, {});
+
+  // Sort series: named series first (alphabetically), then "Other Models" last
+  const sortedSeries = Object.keys(groupedModels).sort((a, b) => {
+    if (a === 'Other Models') return 1;
+    if (b === 'Other Models') return -1;
+    return a.localeCompare(b);
+  });
+
   // Success state with data
   return (
     <section className="py-12">
@@ -105,43 +133,87 @@ export default function BrandModelsClient({
           {t('services.selectModel', { defaultValue: 'Select Your Model' })}
         </h2>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {models.map((device: any) => {
-            const modelSlug = device.model.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-');
+        <div className="max-w-7xl mx-auto space-y-4">
+          {sortedSeries.map((seriesName) => {
+            const isExpanded = expandedSeries.includes(seriesName);
+            const seriesModels = groupedModels[seriesName];
+            
             return (
-              <Link
-                key={device.id}
-                href={`/repairs/${deviceType}/${brand}/${modelSlug}`}
-                className="group"
+              <Card 
+                key={seriesName} 
+                className="overflow-hidden border-2 hover:border-green-500 transition-all"
               >
-                <Card className="hover:shadow-lg pt-0 transition-shadow border-gray-200 overflow-hidden h-full">
-                  {device.imageUrl && (
-                    <div className="relative h-48 product-image-container">
-                      <Image
-                        src={device.imageUrl}
-                        alt={`${device.brand} ${device.model}`}
-                        fill
-                        className="object-contain p-4 group-hover:scale-105 transition-transform remove-white-bg"
-                      />
+                {/* Series Card Header - Clickable */}
+                <CardHeader 
+                  className="cursor-pointer bg-gradient-to-r from-gray-50 to-white hover:from-green-50 hover:to-white transition-colors"
+                  onClick={() => toggleSeries(seriesName)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {isExpanded ? (
+                        <ChevronDown className="h-6 w-6 text-green-600" />
+                      ) : (
+                        <ChevronRight className="h-6 w-6 text-gray-600" />
+                      )}
+                      <div>
+                        <CardTitle className="text-xl font-bold text-gray-900">
+                          {seriesName}
+                        </CardTitle>
+                        <CardDescription className="text-sm text-gray-600 mt-1">
+                          {seriesModels.length} {seriesModels.length === 1 ? 'model' : 'models'} available
+                        </CardDescription>
+                      </div>
                     </div>
-                  )}
-                  <CardHeader>
-                    <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
-                      {device.model}
-                    </CardTitle>
-                    {device.series && (
-                      <Badge variant="secondary" className="text-xs mt-1">
-                        {device.series}
-                      </Badge>
-                    )}
-                    {device.description && (
-                      <CardDescription className="text-sm text-gray-600 line-clamp-2 mt-2">
-                        {device.description}
-                      </CardDescription>
-                    )}
-                  </CardHeader>
-                </Card>
-              </Link>
+                    <Badge 
+                      variant={isExpanded ? "default" : "outline"}
+                      className={isExpanded ? "bg-green-600" : ""}
+                    >
+                      {isExpanded ? 'Collapse' : 'Expand'}
+                    </Badge>
+                  </div>
+                </CardHeader>
+
+                {/* Series Card Content - Expandable */}
+                {isExpanded && (
+                  <CardContent className="pt-6 bg-gray-50">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {seriesModels.map((device: any) => {
+                        const modelSlug = device.model.toLowerCase().replace(/\s+/g, '-').replace(/\//g, '-');
+                        return (
+                          <Link
+                            key={device.id}
+                            href={`/repairs/${deviceType}/${brand}/${modelSlug}`}
+                            className="group"
+                          >
+                            <Card className="hover:shadow-lg pt-0 transition-shadow border-gray-200 overflow-hidden h-full bg-white">
+                              {device.imageUrl && (
+                                <div className="relative h-48 product-image-container">
+                                  <Image
+                                    src={device.imageUrl}
+                                    alt={`${device.brand} ${device.model}`}
+                                    fill
+                                    className="object-contain p-4 group-hover:scale-105 transition-transform remove-white-bg"
+                                  />
+                                </div>
+                              )}
+                              <CardHeader>
+                                <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
+                                  {device.model}
+                                </CardTitle>
+                                {device.description && (
+                                  <CardDescription className="text-sm text-gray-600 line-clamp-2 mt-2">
+                                    {device.description}
+                                  </CardDescription>
+                                )}
+                              </CardHeader>
+                            </Card>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </CardContent>
+                )}
+              </Card>
             );
           })}
         </div>

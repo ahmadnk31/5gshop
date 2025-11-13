@@ -25,7 +25,9 @@ import {
   Image as ImageIcon,
   Camera,
   Wrench,
-  Loader2
+  Loader2,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react"
 import { DeviceType, RepairService } from '@/lib/types'
 
@@ -147,6 +149,15 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
   const [uploadingDeviceImage, setUploadingDeviceImage] = useState(false)
   const [uploadingPartImage, setUploadingPartImage] = useState(false)
   
+  // Order editing states
+  const [editingDeviceOrderId, setEditingDeviceOrderId] = useState<string | null>(null)
+  const [tempDeviceOrderValue, setTempDeviceOrderValue] = useState<number>(0)
+  const [editingPartOrderId, setEditingPartOrderId] = useState<string | null>(null)
+  const [tempPartOrderValue, setTempPartOrderValue] = useState<number>(0)
+  
+  // Search and filter states
+  const [deviceSearchTerm, setDeviceSearchTerm] = useState<string>('')
+  
   // Loading states for CRUD operations
   const [loadingStates, setLoadingStates] = useState<{
     [key: string]: boolean;
@@ -241,7 +252,8 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       (p.deviceModel && p.deviceModel.toLowerCase().includes(partSearchTerm.toLowerCase()));
     
     return matchesType && matchesModel && matchesSearch;
-  });
+  }).sort((a, b) => a.order - b.order); // Sort by order field
+  
   const loadDevices = async () => {
     try {
       const deviceData = await getAllDevices()
@@ -546,15 +558,18 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
     const operationKey = `update-device-${editingDevice.id}`;
     try {
       setLoading(operationKey, true);
-      const updateData = {
+      const updateData: any = {
         type: editingDevice.type,
         brand: editingDevice.brand,
         model: editingDevice.model,
         order: typeof editingDevice.order === 'number' ? editingDevice.order : 0,
         series: editingDevice.series || null,
-        imageUrl: editingDevice.imageUrl,
         description: editingDevice.description
       };
+      // Only include imageUrl if it's explicitly set (not null or undefined)
+      if (editingDevice.imageUrl) {
+        updateData.imageUrl = editingDevice.imageUrl;
+      }
       console.log('Updating device with data:', updateData);
       const updatedDevice = await updateDevice(editingDevice.id, updateData)
       setDevices(devices.map(d => d.id === editingDevice.id ? updatedDevice : d))
@@ -578,7 +593,7 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
     }
     try {
       setLoading(operationKey, true);
-      const updateData = {
+      const updateData: any = {
         name: editingPart.name,
         sku: editingPart.sku,
         cost: editingPart.cost,
@@ -589,8 +604,11 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
         deviceModel: deviceModelValue ? deviceModelValue : undefined,
         deviceType: editingPart.deviceType ? editingPart.deviceType : undefined,
         quality: editingPart.quality || undefined,
-        imageUrl: editingPart.imageUrl,
       };
+      // Only include imageUrl if it's explicitly set (not null or undefined)
+      if (editingPart.imageUrl) {
+        updateData.imageUrl = editingPart.imageUrl;
+      }
       console.log('Updating part with data:', updateData);
       const updatedPart = await updatePart(editingPart.id, updateData);
       setParts(
@@ -612,6 +630,165 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       setLoading(operationKey, false);
     }
   }
+
+  // Device order management functions
+  const filteredDevices = devices.filter((device) => {
+    const searchLower = deviceSearchTerm.toLowerCase();
+    return (
+      device.brand.toLowerCase().includes(searchLower) ||
+      device.model.toLowerCase().includes(searchLower) ||
+      device.type.toLowerCase().includes(searchLower) ||
+      (device.series && device.series.toLowerCase().includes(searchLower)) ||
+      (device.description && device.description.toLowerCase().includes(searchLower))
+    );
+  });
+  
+  const sortedDevices = [...filteredDevices].sort((a, b) => a.order - b.order);
+
+  const handleUpdateDeviceOrder = async (deviceId: string, newOrder: number) => {
+    try {
+      await updateDevice(deviceId, { order: newOrder });
+      // Update local state instead of reloading to preserve all data
+      setDevices(devices.map(d => 
+        d.id === deviceId ? { ...d, order: newOrder } : d
+      ));
+    } catch (error) {
+      console.error('Failed to update device order:', error);
+    }
+  };
+
+  const handleMoveDeviceUp = async (device: Device, index: number) => {
+    if (index === 0) return;
+    const prevDevice = sortedDevices[index - 1];
+    
+    try {
+      // Update both devices in parallel
+      await Promise.all([
+        updateDevice(device.id, { order: prevDevice.order }),
+        updateDevice(prevDevice.id, { order: device.order })
+      ]);
+      
+      // Update local state
+      setDevices(devices.map(d => {
+        if (d.id === device.id) return { ...d, order: prevDevice.order };
+        if (d.id === prevDevice.id) return { ...d, order: device.order };
+        return d;
+      }));
+    } catch (error) {
+      console.error('Failed to swap device order:', error);
+    }
+  };
+
+  const handleMoveDeviceDown = async (device: Device, index: number) => {
+    if (index === sortedDevices.length - 1) return;
+    const nextDevice = sortedDevices[index + 1];
+    
+    try {
+      // Update both devices in parallel
+      await Promise.all([
+        updateDevice(device.id, { order: nextDevice.order }),
+        updateDevice(nextDevice.id, { order: device.order })
+      ]);
+      
+      // Update local state
+      setDevices(devices.map(d => {
+        if (d.id === device.id) return { ...d, order: nextDevice.order };
+        if (d.id === nextDevice.id) return { ...d, order: device.order };
+        return d;
+      }));
+    } catch (error) {
+      console.error('Failed to swap device order:', error);
+    }
+  };
+
+  const startEditingDeviceOrder = (device: Device) => {
+    setEditingDeviceOrderId(device.id);
+    setTempDeviceOrderValue(device.order);
+  };
+
+  const saveDeviceOrderEdit = async (deviceId: string) => {
+    await handleUpdateDeviceOrder(deviceId, tempDeviceOrderValue);
+    setEditingDeviceOrderId(null);
+  };
+
+  const cancelDeviceOrderEdit = () => {
+    setEditingDeviceOrderId(null);
+    setTempDeviceOrderValue(0);
+  };
+
+  // Part order management functions
+  const sortedParts = [...parts].sort((a, b) => a.order - b.order);
+
+  const handleUpdatePartOrder = async (partId: string, newOrder: number) => {
+    try {
+      await updatePart(partId, { order: newOrder });
+      // Update local state instead of reloading to preserve all data
+      setParts(parts.map(p => 
+        p.id === partId ? { ...p, order: newOrder } : p
+      ));
+    } catch (error) {
+      console.error('Failed to update part order:', error);
+    }
+  };
+
+  const handleMovePartUp = async (part: Part, index: number) => {
+    if (index === 0) return;
+    const prevPart = sortedParts[index - 1];
+    
+    try {
+      // Update both parts in parallel
+      await Promise.all([
+        updatePart(part.id, { order: prevPart.order }),
+        updatePart(prevPart.id, { order: part.order })
+      ]);
+      
+      // Update local state
+      setParts(parts.map(p => {
+        if (p.id === part.id) return { ...p, order: prevPart.order };
+        if (p.id === prevPart.id) return { ...p, order: part.order };
+        return p;
+      }));
+    } catch (error) {
+      console.error('Failed to swap part order:', error);
+    }
+  };
+
+  const handleMovePartDown = async (part: Part, index: number) => {
+    if (index === sortedParts.length - 1) return;
+    const nextPart = sortedParts[index + 1];
+    
+    try {
+      // Update both parts in parallel
+      await Promise.all([
+        updatePart(part.id, { order: nextPart.order }),
+        updatePart(nextPart.id, { order: part.order })
+      ]);
+      
+      // Update local state
+      setParts(parts.map(p => {
+        if (p.id === part.id) return { ...p, order: nextPart.order };
+        if (p.id === nextPart.id) return { ...p, order: part.order };
+        return p;
+      }));
+    } catch (error) {
+      console.error('Failed to swap part order:', error);
+    }
+  };
+
+  const startEditingPartOrder = (part: Part) => {
+    setEditingPartOrderId(part.id);
+    setTempPartOrderValue(part.order);
+  };
+
+  const savePartOrderEdit = async (partId: string) => {
+    await handleUpdatePartOrder(partId, tempPartOrderValue);
+    setEditingPartOrderId(null);
+  };
+
+  const cancelPartOrderEdit = () => {
+    setEditingPartOrderId(null);
+    setTempPartOrderValue(0);
+  };
 
   // Helper function to get services for a device type
   const getServicesForDeviceType = (deviceType: DeviceType) => {
@@ -767,12 +944,107 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
             <Card>
               <CardHeader className="pb-6">
                 <CardTitle className="text-lg">Device Catalog ({devices.length})</CardTitle>
+                <CardDescription>
+                  {deviceSearchTerm && `Showing ${sortedDevices.length} of ${devices.length} devices`}
+                </CardDescription>
               </CardHeader>
               <CardContent>
+                {/* Search Bar */}
+                <div className="mb-4">
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      placeholder="Search devices by brand, model, type, series..."
+                      value={deviceSearchTerm}
+                      onChange={(e) => setDeviceSearchTerm(e.target.value)}
+                      className="w-full pl-3 pr-10"
+                    />
+                    {deviceSearchTerm && (
+                      <button
+                        onClick={() => setDeviceSearchTerm('')}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        title="Clear search"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {sortedDevices.length === 0 && deviceSearchTerm && (
+                  <div className="text-center py-8 text-gray-500">
+                    No devices found matching "{deviceSearchTerm}"
+                  </div>
+                )}
+
                 <div className="space-y-4">
-                  {devices.map((device) => (
-                    <div key={device.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center space-x-3">
+                  {sortedDevices.map((device, index) => (
+                    <div key={device.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                      {/* Order Controls */}
+                      <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleMoveDeviceUp(device, index)}
+                          disabled={index === 0 || isLoading(`update-device-${device.id}`)}
+                          className="h-6 w-6 p-0 hover:bg-gray-200"
+                          title="Move up"
+                        >
+                          <ArrowUp className="h-3 w-3" />
+                        </Button>
+                        {editingDeviceOrderId === device.id ? (
+                          <div className="flex flex-col items-center gap-0.5">
+                            <Input
+                              type="number"
+                              value={tempDeviceOrderValue}
+                              onChange={(e) => setTempDeviceOrderValue(parseInt(e.target.value) || 0)}
+                              className="w-12 h-6 text-xs text-center p-1"
+                              min="0"
+                              autoFocus
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') saveDeviceOrderEdit(device.id);
+                                if (e.key === 'Escape') cancelDeviceOrderEdit();
+                              }}
+                            />
+                            <div className="flex gap-1">
+                              <button
+                                onClick={() => saveDeviceOrderEdit(device.id)}
+                                className="text-xs text-green-600 hover:text-green-800"
+                                title="Save"
+                              >
+                                ✓
+                              </button>
+                              <button
+                                onClick={cancelDeviceOrderEdit}
+                                className="text-xs text-red-600 hover:text-red-800"
+                                title="Cancel"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => startEditingDeviceOrder(device)}
+                            className="text-xs text-gray-600 hover:text-blue-600 font-mono cursor-pointer px-1"
+                            title="Click to edit order"
+                          >
+                            #{device.order}
+                          </button>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleMoveDeviceDown(device, index)}
+                          disabled={index === sortedDevices.length - 1 || isLoading(`update-device-${device.id}`)}
+                          className="h-6 w-6 p-0 hover:bg-gray-200"
+                          title="Move down"
+                        >
+                          <ArrowDown className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 flex-1">
                         {device.imageUrl ? (
                           <img 
                             src={device.imageUrl} 
@@ -1106,9 +1378,73 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                   </div>
                 </div>
                 <div className="space-y-3">
-                  {filteredParts.map((part: Part) => (
-                    <div key={part.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div className="flex items-center space-x-3">
+                  {filteredParts.map((part: Part, index: number) => (
+                    <div key={part.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                      {/* Order Controls */}
+                      <div className="flex flex-col items-center gap-0.5 flex-shrink-0">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleMovePartUp(part, index)}
+                          disabled={index === 0 || isLoading(`update-part-${part.id}`)}
+                          className="h-6 w-6 p-0 hover:bg-gray-200"
+                          title="Move up"
+                        >
+                          <ArrowUp className="h-3 w-3" />
+                        </Button>
+                        {editingPartOrderId === part.id ? (
+                          <div className="flex flex-col items-center gap-0.5">
+                            <Input
+                              type="number"
+                              value={tempPartOrderValue}
+                              onChange={(e) => setTempPartOrderValue(parseInt(e.target.value) || 0)}
+                              className="w-12 h-6 text-xs text-center p-1"
+                              min="0"
+                              autoFocus
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') savePartOrderEdit(part.id);
+                                if (e.key === 'Escape') cancelPartOrderEdit();
+                              }}
+                            />
+                            <div className="flex gap-1">
+                              <button
+                                onClick={() => savePartOrderEdit(part.id)}
+                                className="text-xs text-green-600 hover:text-green-800"
+                                title="Save"
+                              >
+                                ✓
+                              </button>
+                              <button
+                                onClick={cancelPartOrderEdit}
+                                className="text-xs text-red-600 hover:text-red-800"
+                                title="Cancel"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => startEditingPartOrder(part)}
+                            className="text-xs text-gray-600 hover:text-blue-600 font-mono cursor-pointer px-1"
+                            title="Click to edit order"
+                          >
+                            #{part.order}
+                          </button>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleMovePartDown(part, index)}
+                          disabled={index === filteredParts.length - 1 || isLoading(`update-part-${part.id}`)}
+                          className="h-6 w-6 p-0 hover:bg-gray-200"
+                          title="Move down"
+                        >
+                          <ArrowDown className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 flex-1">
                         {part.imageUrl ? (
                           <img 
                             src={part.imageUrl} 
@@ -1151,7 +1487,15 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                         <Button 
                           size="sm" 
                           variant="outline"
-                          onClick={() => setEditingPart(part)}
+                          onClick={() => {
+                            // Convert deviceModel (model name) to device ID for the select
+                            let deviceModelId = part.deviceModel;
+                            if (part.deviceModel && part.deviceModel !== 'all') {
+                              const foundDevice = allDevices.find((d) => d.model === part.deviceModel);
+                              deviceModelId = foundDevice ? foundDevice.id : part.deviceModel;
+                            }
+                            setEditingPart({ ...part, deviceModel: deviceModelId });
+                          }}
                           className="bg-green-50 hover:bg-green-100 border-green-200 text-green-700 hover:text-green-800"
                         >
                           <Edit className="h-4 w-4" />
