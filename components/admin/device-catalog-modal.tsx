@@ -572,7 +572,24 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       }
       console.log('Updating device with data:', updateData);
       const updatedDevice = await updateDevice(editingDevice.id, updateData)
-      setDevices(devices.map(d => d.id === editingDevice.id ? updatedDevice : d))
+      console.log('Updated device received from server:', updatedDevice);
+      
+      // Use updated device as source of truth, but preserve fields not returned
+      const originalDevice = devices.find(d => d.id === editingDevice.id);
+      console.log('Original device before update:', originalDevice);
+      
+      // Merge: Use server response, fallback to original only for truly missing fields
+      const deviceToUpdate = {
+        ...originalDevice,  // Start with original
+        ...updatedDevice,   // Override with server response
+        // Explicitly preserve imageUrl if server doesn't return it
+        imageUrl: updatedDevice.imageUrl !== undefined ? updatedDevice.imageUrl : originalDevice?.imageUrl,
+        // Explicitly preserve series if server doesn't return it  
+        series: updatedDevice.series !== undefined ? updatedDevice.series : originalDevice?.series,
+      };
+      console.log('Final device to update in state:', deviceToUpdate);
+      
+      setDevices(devices.map(d => d.id === editingDevice.id ? deviceToUpdate : d))
       setEditingDevice(null)
     } catch (error) {
       console.error('Error updating device:', error)
@@ -611,16 +628,29 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
       }
       console.log('Updating part with data:', updateData);
       const updatedPart = await updatePart(editingPart.id, updateData);
+      console.log('Updated part received from server:', updatedPart);
+      
+      // Use updated part as source of truth, but preserve fields not returned
+      const originalPart = parts.find(p => p.id === editingPart.id);
+      console.log('Original part before update:', originalPart);
+      
+      // Merge: Use server response, fallback to original only for truly missing fields
+      const partToUpdate = {
+        ...originalPart,    // Start with original
+        ...updatedPart,     // Override with server response
+        // Explicitly preserve imageUrl if server doesn't return it
+        imageUrl: updatedPart.imageUrl !== undefined ? updatedPart.imageUrl : originalPart?.imageUrl,
+        // Preserve quality, handle null vs undefined
+        quality: updatedPart.quality !== undefined ? updatedPart.quality : originalPart?.quality,
+        // Preserve timestamps
+        createdAt: updatedPart.createdAt || originalPart?.createdAt || new Date().toISOString(),
+        updatedAt: updatedPart.updatedAt || new Date().toISOString(),
+      };
+      console.log('Final part to update in state:', partToUpdate);
+      
       setParts(
         parts.map((p) =>
-          p.id === editingPart.id
-            ? {
-                ...updatedPart,
-                quality: updatedPart.quality ?? null,
-                createdAt: updatedPart.createdAt ?? p.createdAt,
-                updatedAt: updatedPart.updatedAt ?? new Date().toISOString(),
-              }
-            : p
+          p.id === editingPart.id ? partToUpdate : p
         )
       );
       setEditingPart(null);
@@ -1060,6 +1090,11 @@ export function DeviceCatalogModal({ isOpen, onClose }: DeviceCatalogModalProps)
                           <div className="flex items-center space-x-2">
                             <span className="font-medium">{device.brand} {device.model}</span>
                             <Badge variant="secondary">{device.type}</Badge>
+                            {device.series && (
+                              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                                {device.series}
+                              </Badge>
+                            )}
                           </div>
                           {device.description && (
                             <div className="mt-1">

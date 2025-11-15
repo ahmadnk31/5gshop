@@ -32,6 +32,18 @@ export const siteConfig = {
     "mobile shop leuven",
     "electronics repair leuven",
     
+    // English local/proximity keywords
+    "phone repair near me",
+    "mobile repair near me",
+    "repair shop near me",
+    "phone repair nearby",
+    "local phone repair",
+    "phone repair close by",
+    "nearest phone repair",
+    "phone repair around me",
+    "phone repair in my area",
+    "repair service near me leuven",
+    
     // French keywords (French-speaking community)
     "réparation téléphone louvain",
     "réparation mobile louvain",
@@ -50,6 +62,23 @@ export const siteConfig = {
     "remplacement batterie louvain",
     "magasin téléphone louvain",
     "accessoires téléphone louvain",
+    
+    // French local/proximity keywords
+    "réparation téléphone près de moi",
+    "réparation mobile près de moi",
+    "réparation smartphone près de moi",
+    "atelier réparation près de moi",
+    "service réparation louvain",
+    "service réparation téléphone louvain",
+    "dépannage téléphone louvain",
+    "dépannage mobile louvain",
+    "réparation téléphone proximité",
+    "réparation mobile proximité",
+    "réparation locale louvain",
+    "réparation téléphone à proximité",
+    "magasin réparation louvain",
+    "boutique réparation téléphone",
+    "réparation rapide louvain",
     
     // Dutch/Flemish keywords (local audience)
     "gsm reparatie leuven",
@@ -70,6 +99,27 @@ export const siteConfig = {
     "gsm winkel leuven",
     "telefoon winkel leuven",
     "smartphone winkel leuven",
+    
+    // Dutch local/proximity keywords
+    "gsm reparatie in de buurt",
+    "telefoon reparatie in de buurt",
+    "smartphone reparatie in de buurt",
+    "reparatie in de buurt",
+    "gsm herstel leuven",
+    "telefoon herstel leuven",
+    "smartphone herstel leuven",
+    "gsm hersteldienst leuven",
+    "telefoon hersteldienst leuven",
+    "smartphone hersteldienst leuven",
+    "hersteldienst in de buurt",
+    "reparatiedienst leuven",
+    "gsm reparatie dichtbij",
+    "telefoon reparatie dichtbij",
+    "reparatie bij mij in de buurt",
+    "lokale gsm reparatie",
+    "lokale telefoon reparatie",
+    "gsm reparatie nabij",
+    "telefoon reparatie nabij",
     
     // Accessory keywords (English + French + Dutch)
     "phone accessories leuven",
@@ -111,6 +161,18 @@ export const siteConfig = {
     "charging port repair",
     "camera repair",
     "software repair",
+    "professional repair service",
+    "reliable phone repair",
+    "quality repair service",
+    "expert phone repair",
+    "certified technician",
+    "warranty repair",
+    "guaranteed repair",
+    "express repair",
+    "emergency repair",
+    "walk-in repair",
+    "while you wait repair",
+    "repair specialist",
     
     // Service-specific (French)
     "réparation rapide téléphone",
@@ -121,6 +183,16 @@ export const siteConfig = {
     "réparation port charge",
     "réparation caméra",
     "réparation logiciel",
+    "réparation professionnelle",
+    "réparation fiable",
+    "réparation de qualité",
+    "service réparation rapide",
+    "réparation express",
+    "réparation en urgence",
+    "réparation immédiate",
+    "réparation pendant que vous attendez",
+    "réparation expert",
+    "technicien réparation",
     
     // Service-specific (Dutch)
     "snelle reparatie",
@@ -129,6 +201,14 @@ export const siteConfig = {
     "waterschap reparatie",
     "camera reparatie",
     "software reparatie",
+    "professionele reparatie",
+    "betrouwbare reparatie",
+    "kwaliteitsreparatie",
+    "snelle hersteldienst",
+    "spoedre paratie",
+    "dezelfde dag reparatie",
+    "reparatie terwijl u wacht",
+    "vakkundige reparatie",
     
     // Location variations (English)
     "leuven phone repair",
@@ -138,6 +218,14 @@ export const siteConfig = {
     "electronics store leuven",
     "phone store leuven center",
     "bondgenotenlaan phone repair",
+    "phone repair leuven city center",
+    "phone repair leuven centrum",
+    "heverlee phone repair",
+    "kessel-lo phone repair",
+    "wilsele phone repair",
+    "phone repair near leuven station",
+    "phone repair near university leuven",
+    "phone repair near ku leuven",
     
     // Location variations (French)
     "louvain réparation téléphone",
@@ -147,6 +235,11 @@ export const siteConfig = {
     "magasin électronique louvain",
     "magasin téléphone centre louvain",
     "bondgenotenlaan réparation téléphone",
+    "réparation téléphone louvain centre ville",
+    "réparation téléphone heverlee",
+    "réparation téléphone kessel-lo",
+    "réparation téléphone gare louvain",
+    "réparation téléphone université louvain",
     
     // Location variations (Dutch)
     "leuven gsm reparatie",
@@ -154,6 +247,17 @@ export const siteConfig = {
     "reparatie leuven centrum",
     "gsm winkel leuven centrum",
     "telefoon reparatie bondgenotenlaan",
+    "gsm reparatie leuven binnenstad",
+    "telefoon reparatie leuven centrum",
+    "gsm reparatie heverlee",
+    "telefoon reparatie heverlee",
+    "gsm reparatie kessel-lo",
+    "telefoon reparatie kessel-lo",
+    "gsm reparatie wilsele",
+    "gsm reparatie wijgmaal",
+    "telefoon reparatie leuven station",
+    "gsm reparatie ku leuven",
+    "telefoon reparatie bij universiteit",
     
     // Student-focused keywords
     "student phone repair leuven",
