@@ -5,20 +5,20 @@ import { Link } from "@/i18n/navigation"
 import { HelpCircle, Phone, Mail, MessageCircle, Clock } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+import { generatePageMetadata } from '@/lib/seo';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'faqPage' })
   
-  return {
+  return await generatePageMetadata({
     title: t('metaTitle'),
     description: t('metaDescription'),
-    keywords: t('metaKeywords'),
-    openGraph: {
-      title: t('metaTitle'),
-      description: t('metaDescription'),
-      type: 'website',
-    },
-  }
+    path: '/faq',
+    keywords: t('metaKeywords').split(',').map((k: string) => k.trim()),
+    locale
+  })
 }
 
 export default async function FAQPage({ params }: { params: Promise<{ locale: string }> }) {

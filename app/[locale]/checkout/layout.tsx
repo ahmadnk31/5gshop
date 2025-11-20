@@ -10,14 +10,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   
   return await generatePageMetadata({
-    title: 'Authentication - 5GPhones Fix',
-    description: 'Login or register to access your account',
-    path: '/auth',
-    noIndex: true, // Auth pages should not be indexed
+    title: 'Checkout - 5GPhones Fix',
+    description: 'Complete your purchase - secure checkout for device repairs and accessories',
+    path: '/checkout',
+    noIndex: true, // Checkout pages should not be indexed
     locale
   });
 }
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default function CheckoutLayout({ children }: { children: React.ReactNode }) {
   return children;
 }
+

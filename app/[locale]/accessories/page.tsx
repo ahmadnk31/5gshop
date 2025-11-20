@@ -58,10 +58,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       }
     },
     alternates: {
-      canonical: `${siteUrl}/accessories`,
+      canonical: `${siteUrl}/${locale}/accessories`,
       languages: {
         'en': `${siteUrl}/en/accessories`,
-        'nl': `${siteUrl}/nl/accessories`
+        'nl': `${siteUrl}/nl/accessories`,
+        'fr': `${siteUrl}/fr/accessories`,
+        'x-default': `${siteUrl}/en/accessories`
       }
     }
   };

@@ -42,8 +42,8 @@ model Device {
   type         String
   brand        String
   model        String
-  order        Int       @default( autoincrement())
-  series       String?   // e.g. "iPhone X/XS/XR", "Galaxy S", "A Series", etc.
+  order        Int       @default(autoincrement())
+  series       String? // e.g. "iPhone X/XS/XR", "Galaxy S", "A Series", etc.
   serialNumber String?
   purchaseDate DateTime?
   createdAt    DateTime  @default(now())
@@ -57,25 +57,25 @@ model Device {
 }
 
 model Part {
-  id          String       @id @default(cuid())
-  name        String
-  sku         String       @unique
-  cost        Float
-  supplier    String
-  inStock     Int
-  minStock    Int
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  description String?
-  imageUrl    String?
-  deviceModel String?      // Compatible device model for exact matching
-  deviceType  String?      // Compatible device type for broader matching
-  quality     String?      // e.g. "OEM", "Original", "Premium", "Aftermarket", "Refurbished"
-  order       Int          @default( autoincrement())
-  repairParts RepairPart[]
+  id           String         @id @default(cuid())
+  name         String
+  sku          String         @unique
+  cost         Float
+  supplier     String
+  inStock      Int
+  minStock     Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  description  String?
+  imageUrl     String?
+  deviceModel  String? // Compatible device model for exact matching
+  deviceType   String? // Compatible device type for broader matching
+  quality      String? // e.g. "OEM", "Original", "Premium", "Aftermarket", "Refurbished"
+  order        Int            @default(autoincrement())
+  repairParts  RepairPart[]
+  WishlistItem WishlistItem[]
 
   @@map("parts")
-  WishlistItem WishlistItem[]
 }
 
 model Repair {
@@ -95,7 +95,7 @@ model Repair {
   repairNotes         RepairNote[]
   repairParts         RepairPart[]
   device              Device       @relation(fields: [deviceId], references: [id])
-  customer            Customer?     @relation(fields: [customerId], references: [id])
+  customer            Customer?    @relation(fields: [customerId], references: [id])
 
   @@map("repairs")
 }
@@ -123,66 +123,67 @@ model RepairNote {
 }
 
 model Quote {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   customerId    String?
   deviceId      String?
   issues        String
   description   String?
   estimatedCost Float?
   estimatedTime String?
-  status        String   @default("PENDING")
-  urgency       String   @default("MEDIUM")
+  status        String    @default("PENDING")
+  urgency       String    @default("MEDIUM")
   adminNotes    String?
   expiresAt     DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  device        Device?  @relation(fields: [deviceId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  device        Device?   @relation(fields: [deviceId], references: [id])
   customer      Customer? @relation(fields: [customerId], references: [id])
 
   @@map("quotes")
 }
 
 model User {
-  id            String   @id @default(cuid())
-  name          String?
-  email         String?  @unique
-  emailVerified DateTime?
-  image         String?
-  role          String   @default("USER") // 'admin', 'retailer', 'user'
+  id             String         @id @default(cuid())
+  name           String?
+  email          String?        @unique
+  emailVerified  DateTime?
+  image          String?
+  role           String         @default("USER") // 'admin', 'retailer', 'user'
   hashedPassword String?
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  orders        Order[]
+  accounts       Account[]
+  sessions       Session[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  orders         Order[]
   // Address fields
-  firstName     String?
-  lastName      String?
-  address1      String?
-  address2      String?
-  city          String?
-  state         String?
-  postalCode    String?
-  country       String?
+  firstName      String?
+  lastName       String?
+  address1       String?
+  address2       String?
+  city           String?
+  state          String?
+  postalCode     String?
+  country        String?
+  WishlistItem   WishlistItem[]
 
   @@map("users")
-  WishlistItem WishlistItem[]
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
-  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
   @@map("accounts")
 }
@@ -193,89 +194,91 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("sessions")
 }
 
 model VerificationToken {
   identifier String
   token      String   @unique
-  expires   DateTime
+  expires    DateTime
+
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
 
 model Accessory {
-  id           String    @id @default(cuid())
-  name         String
-  category     String    // e.g., "CASE", "CHARGER", "CABLE", "HEADPHONES", "STAND", "SCREEN_PROTECTOR"
-  brand        String
-  model        String?
-  price        Float
-  inStock      Int
-  minStock     Int
-  description  String?
-  imageUrl     String?
-  compatibility String?   // Compatible device types or models
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id            String         @id @default(cuid())
+  name          String
+  category      String // e.g., "CASE", "CHARGER", "CABLE", "HEADPHONES", "STAND", "SCREEN_PROTECTOR"
+  brand         String
+  model         String?
+  price         Float
+  inStock       Int
+  minStock      Int
+  description   String?
+  imageUrl      String?
+  compatibility String? // Compatible device types or models
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  WishlistItem  WishlistItem[]
 
   @@map("accessories")
-  WishlistItem WishlistItem[]
 }
 
 model Contact {
-  id           String    @id @default(cuid())
-  firstName    String
-  lastName     String
-  email        String
-  phone        String?
-  serviceType  String    // "repair", "accessories", "quote", "support", "other"
-  device       String?   // Optional device info
-  message      String
-  status       String    @default("new") // "new", "responded", "resolved"
-  adminNotes   String?
-  respondedAt  DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime @updatedAt
+  id          String    @id @default(cuid())
+  firstName   String
+  lastName    String
+  email       String
+  phone       String?
+  serviceType String // "repair", "accessories", "quote", "support", "other"
+  device      String? // Optional device info
+  message     String
+  status      String    @default("new") // "new", "responded", "resolved"
+  adminNotes  String?
+  respondedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@map("contacts")
 }
 
 model RepairService {
-  id           String   @id @default(cuid())
-  name         String
-  description  String?
-  basePrice    Float
-  estimatedTime Int     // in minutes
-  deviceTypes  String  // JSON array of device types ["SMARTPHONE", "TABLET", etc.]
-  specificBrand String? // null = all brands, "Apple" = only Apple devices
-  specificModel String? // null = all models, "iPhone 15 Pro" = only this model
+  id              String   @id @default(cuid())
+  name            String
+  description     String?
+  basePrice       Float
+  estimatedTime   Int // in minutes
+  deviceTypes     String // JSON array of device types ["SMARTPHONE", "TABLET", etc.]
+  specificBrand   String? // null = all brands, "Apple" = only Apple devices
+  specificModel   String? // null = all models, "iPhone 15 Pro" = only this model
   priceVariations String? // JSON object for model-specific pricing {"iPhone 15 Pro": 120, "iPhone 14": 100}
-  popularity   String? // "Most Popular", "Popular", null
-  icon         String?
-  isActive     Boolean @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  popularity      String? // "Most Popular", "Popular", null
+  icon            String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@map("repair_services")
 }
 
 model Order {
-  id            String      @id @default(cuid())
-  stripeId      String      @unique
-  amount        Int         // in cents
-  currency      String
-  status        OrderStatus @default(CREATED)
-  email         String
-  cart          String      // JSON string of cart items
-  addressId     String?     @unique
-  address       OrderAddress? @relation(fields: [addressId], references: [id])
-  userId        String?     // Optional: link to User if registered
-  user          User?       @relation(fields: [userId], references: [id])
-  repairType    String?     // 'self' or 'by_us' (for parts orders)
-  shippingOption String?    // 'at_shop', 'send', 'receive' (if repairType is 'by_us')
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id             String        @id @default(cuid())
+  stripeId       String        @unique
+  amount         Int // in cents
+  currency       String
+  status         OrderStatus   @default(CREATED)
+  email          String
+  cart           String // JSON string of cart items
+  addressId      String?       @unique
+  address        OrderAddress? @relation(fields: [addressId], references: [id])
+  userId         String? // Optional: link to User if registered
+  user           User?         @relation(fields: [userId], references: [id])
+  repairType     String? // 'self' or 'by_us' (for parts orders)
+  shippingOption String? // 'at_shop', 'send', 'receive' (if repairType is 'by_us')
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@map("orders")
 }
@@ -295,20 +298,33 @@ model OrderAddress {
 
   @@map("order_addresses")
 }
+
 model WishlistItem {
-  id         String   @id @default(cuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
-  part       Part?    @relation(fields: [partId], references: [id])
-  partId     String?  // <-- make optional
+  part   Part?   @relation(fields: [partId], references: [id])
+  partId String? // <-- make optional
 
-  accessory  Accessory? @relation(fields: [accessoryId], references: [id])
-  accessoryId String?  // <-- make optional
+  accessory   Accessory? @relation(fields: [accessoryId], references: [id])
+  accessoryId String? // <-- make optional
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([userId, partId])
   @@unique([userId, accessoryId])
   @@map("wishlistItem")
+}
+
+model Setting {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String // JSON string for complex values
+  category    String   @default("general") // "seo", "general", "social", etc.
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("settings")
 }

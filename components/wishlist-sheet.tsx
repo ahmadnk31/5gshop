@@ -11,7 +11,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Heart, ShoppingCart, Trash2, X } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { Link } from '@/i18n/navigation';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
 interface WishlistItem {
   id: string;
@@ -40,50 +40,79 @@ export function WishlistSheet() {
   const { addToCart } = useCart();
   const t = useTranslations('wishlist');
   const [open, setOpen] = useState(false);
-  const [removingId, setRemovingId] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: wishlistItems = [], isLoading: loading, refetch } = useQuery({
+  const { data: wishlistItems = [], isLoading: loading } = useQuery({
     queryKey: ['wishlist', session?.user?.id],
     queryFn: async () => {
       if (!session?.user?.id || !open) return [];
       const res = await fetch('/api/wishlist');
       if (!res.ok) throw new Error('Failed to fetch wishlist');
       const data = await res.json();
-      return data.items || [];
+      // Handle different response formats
+      if (Array.isArray(data)) {
+        return data;
+      } else if (data && Array.isArray(data.items)) {
+        return data.items;
+      } else if (data && Array.isArray(data.data)) {
+        return data.data;
+      }
+      return [];
     },
     enabled: !!session?.user?.id && open,
     staleTime: 1000 * 60 * 2,
   });
 
-  const removeFromWishlist = async (itemType: 'part' | 'accessory', itemId: string) => {
-    const uniqueId = `${itemType}-${itemId}`;
-    setRemovingId(uniqueId);
-    
-    try {
-      const response = await fetch(`/api/wishlist/${itemType}/${itemId}`, { 
-        method: 'DELETE',
+  // Remove from wishlist mutation - using POST toggle endpoint for consistency
+  const removeFromWishlistMutation = useMutation({
+    mutationFn: async ({ itemType, itemId }: { itemType: 'part' | 'accessory', itemId: string }) => {
+      console.log('🗑️ Removing from wishlist:', { itemType, itemId });
+      
+      // Use the POST toggle endpoint (same as wishlist page) for consistency
+      const body = itemType === 'part' ? { partId: itemId } : { accessoryId: itemId };
+      const response = await fetch('/api/wishlist', { 
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(body),
       });
       
+      console.log('🗑️ Toggle response status:', response.status);
+      
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('🗑️ Toggle error:', error);
         throw new Error(error.error || 'Failed to remove from wishlist');
       }
       
-      // Invalidate and refetch the wishlist
-      await queryClient.invalidateQueries({ queryKey: ['wishlist', session?.user?.id] });
-      await refetch();
+      const result = await response.json();
+      console.log('🗑️ Toggle success:', result);
       
-      console.log('Successfully removed from wishlist');
-    } catch (error) {
-      console.error('Error removing from wishlist:', error);
+      // Verify the action was 'removed'
+      if (result.action !== 'removed') {
+        console.warn('🗑️ Expected removal but got:', result.action);
+      }
+      
+      return result;
+    },
+    onSuccess: () => {
+      console.log('🗑️ Mutation success, invalidating queries');
+      // Invalidate all wishlist queries (with and without user ID)
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+      // Also specifically invalidate the query with user ID
+      if (session?.user?.id) {
+        queryClient.invalidateQueries({ queryKey: ['wishlist', session.user.id] });
+      }
+    },
+    onError: (error) => {
+      console.error('🗑️ Error removing from wishlist:', error);
       alert(t('removeError') || 'Failed to remove item from wishlist');
-    } finally {
-      setRemovingId(null);
-    }
+    },
+  });
+
+  const removeFromWishlist = (itemType: 'part' | 'accessory', itemId: string) => {
+    removeFromWishlistMutation.mutate({ itemType, itemId });
   };
 
   const addToCartFromWishlist = (item: WishlistItem) => {
@@ -218,11 +247,16 @@ export function WishlistSheet() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          disabled={removingId === `${itemType}-${product.id}`}
-                          onClick={() => removeFromWishlist(itemType, product.id)}
+                          disabled={removeFromWishlistMutation.isPending}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('🗑️ Delete button clicked:', { itemType, productId: product.id });
+                            removeFromWishlist(itemType, product.id);
+                          }}
                           className="hover:bg-red-50"
                         >
-                          {removingId === `${itemType}-${product.id}` ? (
+                          {removeFromWishlistMutation.isPending ? (
                             <div className="animate-spin h-3 w-3 border-2 border-red-500 border-t-transparent rounded-full" />
                           ) : (
                             <Trash2 className="h-3 w-3 text-red-500" />

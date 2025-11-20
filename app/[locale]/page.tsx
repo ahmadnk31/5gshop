@@ -319,7 +319,7 @@ export default async function Home({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations('homepage');
 
-  // Fetch featured data
+  // Fetch featured data - all queries are cached
   const [accessories, services, deviceTypes, homepageParts, allDevices] = await Promise.all([
     getAccessories(),
     getRepairServices(),
@@ -337,7 +337,7 @@ export default async function Home({ params }: Props) {
     return `${nameSlug}-${id}`;
   };
 
-  // Get featured accessories (top 6 by stock)
+  // Get featured accessories (top 6 by stock) - optimized to only process what we need
   const featuredAccessories = accessories
     .filter((acc: Accessory) => acc.inStock > 0)
     .sort((a: Accessory, b: Accessory) => b.inStock - a.inStock)
@@ -356,6 +356,13 @@ export default async function Home({ params }: Props) {
     .slice(0, 3);
       {/* Featured Repair Parts */}
       <FeaturedPartsSection parts={featuredParts} t={t} />
+
+  // Pre-calculate device counts for better performance (O(n) instead of O(n²))
+  const deviceCounts = new Map<string, number>();
+  allDevices.forEach((device: any) => {
+    const count = deviceCounts.get(device.type) || 0;
+    deviceCounts.set(device.type, count + 1);
+  });
 
   // Device categories with counts and icons
   const deviceCategories = [
@@ -666,7 +673,8 @@ export default async function Home({ params }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" role="list" aria-label="Device repair categories">
             {deviceCategories.map((category) => {
               const IconComponent = category.icon;
-              const modelCount = allDevices.filter((device: any) => device.type === category.type).length;
+              // Use pre-calculated device counts for O(1) lookup
+              const modelCount = deviceCounts.get(category.type) || 0;
               // Map device types to repair page parameter format
               const repairTypeMap: Record<string, string> = {
                 'SMARTPHONE': 'smartphone',

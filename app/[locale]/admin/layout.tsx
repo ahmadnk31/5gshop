@@ -7,6 +7,14 @@ import { authOptions } from "@/lib/auth";
 export const metadata: Metadata = {
   title: "Admin Dashboard - TechFix Pro",
   description: "Admin dashboard for managing repairs, customers, and inventory",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
 };
 
 export default async function AdminLayout({

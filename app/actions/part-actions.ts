@@ -1,11 +1,17 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_cache } from "next/cache";
 import { DatabaseService } from "@/lib/database";
 
 export async function getParts() {
   try {
-    return await DatabaseService.getParts();
+    // Cache for 5 minutes to improve TTFB
+    const getCachedParts = unstable_cache(
+      async () => await DatabaseService.getParts(),
+      ['parts-all'],
+      { revalidate: 300, tags: ['parts'] }
+    );
+    return await getCachedParts();
   } catch (error) {
     console.error("Failed to get parts:", error);
     throw new Error("Failed to get parts");

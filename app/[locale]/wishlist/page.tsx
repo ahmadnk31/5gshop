@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react'
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import { useCart } from '@/components/cart-context';
@@ -12,7 +11,7 @@ import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { Link } from '@/i18n/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 
 interface WishlistItem {
   id: string;
@@ -44,23 +43,31 @@ export default function WishlistPage() {
   const { addToCart } = useCart();
   const t = useTranslations('wishlist');
   const queryClient = useQueryClient();
-  const [removingId, setRemovingId] = useState<string | null>(null);
-  const { data: wishlistItems = [], isLoading: loading, refetch } = useQuery({
+  
+  const { data: wishlistItems = [], isLoading: loading } = useQuery({
     queryKey: ['wishlist', session?.user?.id],
     queryFn: async () => {
       if (!session?.user?.id) return [];
       const res = await fetch('/api/wishlist');
       if (!res.ok) throw new Error('Failed to fetch wishlist');
       const data = await res.json();
-      return data.items || [];
+      // Handle different response formats
+      if (Array.isArray(data)) {
+        return data;
+      } else if (data && Array.isArray(data.items)) {
+        return data.items;
+      } else if (data && Array.isArray(data.data)) {
+        return data.data;
+      }
+      return [];
     },
     enabled: !!session?.user?.id,
     staleTime: 1000 * 60 * 2,
   });
 
-  const removeFromWishlist = async (itemType: 'part' | 'accessory', itemId: string) => {
-    setRemovingId(itemId);
-    try {
+  // Remove from wishlist mutation
+  const removeFromWishlistMutation = useMutation({
+    mutationFn: async ({ itemType, itemId }: { itemType: 'part' | 'accessory', itemId: string }) => {
       const body = itemType === 'part' ? { partId: itemId } : { accessoryId: itemId };
       const response = await fetch('/api/wishlist', { 
         method: 'POST',
@@ -72,19 +79,21 @@ export default function WishlistPage() {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to remove from wishlist');
       }
-
-      const result = await response.json();
-      console.log('Remove from wishlist result:', result);
       
-      // Force refetch of wishlist data
-      await queryClient.invalidateQueries({ queryKey: ['wishlist'] });
-      await refetch();
-    } catch (error) {
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate wishlist queries to refetch updated data
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+    },
+    onError: (error) => {
       console.error('Error removing from wishlist:', error);
       alert('Failed to remove item from wishlist. Please try again.');
-    } finally {
-      setRemovingId(null);
-    }
+    },
+  });
+
+  const removeFromWishlist = (itemType: 'part' | 'accessory', itemId: string) => {
+    removeFromWishlistMutation.mutate({ itemType, itemId });
   };
 
   const addToCartFromWishlist = (item: WishlistItem) => {
@@ -214,9 +223,13 @@ export default function WishlistPage() {
                         size="sm"
                         className="absolute top-2 right-2 bg-white/80 hover:bg-white"
                         onClick={() => removeFromWishlist(itemType, product.id)}
-                        disabled={removingId === product.id}
+                        disabled={removeFromWishlistMutation.isPending}
                       >
-                        <Trash2 className={`h-4 w-4 ${removingId === product.id ? 'text-gray-400 animate-pulse' : 'text-red-500'}`} />
+                        {removeFromWishlistMutation.isPending ? (
+                          <div className="animate-spin h-4 w-4 border-2 border-red-500 border-t-transparent rounded-full" />
+                        ) : (
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        )}
                       </Button>
                     </div>
                   </CardHeader>
@@ -299,9 +312,13 @@ export default function WishlistPage() {
                         size="sm"
                         className="absolute top-2 right-2 bg-white/80 hover:bg-white"
                         onClick={() => removeFromWishlist(itemType, product.id)}
-                        disabled={removingId === product.id}
+                        disabled={removeFromWishlistMutation.isPending}
                       >
-                        <Trash2 className={`h-4 w-4 ${removingId === product.id ? 'text-gray-400 animate-pulse' : 'text-red-500'}`} />
+                        {removeFromWishlistMutation.isPending ? (
+                          <div className="animate-spin h-4 w-4 border-2 border-red-500 border-t-transparent rounded-full" />
+                        ) : (
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        )}
                       </Button>
                     </div>
                   </CardHeader>

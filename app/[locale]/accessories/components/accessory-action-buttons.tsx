@@ -3,55 +3,83 @@ import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useSession } from 'next-auth/react';
-import { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function AccessoryActionButtons({ accessory }: { accessory: any }) {
   const t = useTranslations('');
   const { data: session } = useSession();
-  const [inWishlist, setInWishlist] = useState(false);
-  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   // Check if accessory is in wishlist
-  useEffect(() => {
-    if (!session?.user?.id || !accessory?.id) return;
-    fetch(`/api/wishlist/accessory/${accessory.id}`)
-      .then(res => res.json())
-      .then(data => setInWishlist(!!data.inWishlist));
-  }, [session?.user?.id, accessory?.id]);
+  const { data: wishlistData } = useQuery({
+    queryKey: ['wishlist'],
+    queryFn: async () => {
+      if (!session?.user?.id) return [];
+      try {
+        const res = await fetch('/api/wishlist');
+        if (res.ok) {
+          const data = await res.json();
+          // Handle different response formats
+          if (Array.isArray(data)) {
+            return data;
+          } else if (data && Array.isArray(data.items)) {
+            return data.items;
+          } else if (data && Array.isArray(data.data)) {
+            return data.data;
+          }
+          return [];
+        }
+        return [];
+      } catch (error) {
+        console.error('Error fetching wishlist:', error);
+        return [];
+      }
+    },
+    enabled: !!session?.user?.id,
+  });
 
-  const toggleWishlist = async () => {
-    console.log('🔍 toggleWishlist called (accessory)');
-    console.log('🔍 session?.user?.id:', session?.user?.id);
-    console.log('🔍 accessory?.id:', accessory?.id);
+  const wishlistItems = Array.isArray(wishlistData) ? wishlistData : [];
+  const isInWishlist = wishlistItems.some((item: any) => item.accessoryId === accessory?.id);
+
+  // Toggle wishlist mutation
+  const toggleWishlistMutation = useMutation({
+    mutationFn: async (accessoryId: string) => {
+      const res = await fetch('/api/wishlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessoryId }),
+      });
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to toggle wishlist');
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      // Invalidate and refetch wishlist to update UI
+      queryClient.invalidateQueries({ queryKey: ['wishlist'] });
+    },
+    onError: (error) => {
+      console.error('Error toggling wishlist:', error);
+    },
+  });
+
+  const toggleWishlist = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     
-    if (!session?.user?.id || !accessory?.id) {
-      console.log('❌ Early return - missing session or accessory id');
+    if (!session?.user?.id) {
       return;
     }
     
-    setWishlistLoading(true);
-    const method = inWishlist ? 'DELETE' : 'POST';
-    const url = `/api/wishlist/accessory/${accessory.id}`;
-    
-    console.log('🔍 Making request:', method, url);
-    
-    try {
-      const response = await fetch(url, { method });
-      console.log('🔍 Response status:', response.status);
-      console.log('🔍 Response ok:', response.ok);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Wishlist request failed:', errorText);
-      } else {
-        console.log('✅ Wishlist request successful');
-      }
-    } catch (error) {
-      console.error('❌ Wishlist request error:', error);
+    if (!accessory?.id) {
+      console.error('Accessory ID is missing');
+      return;
     }
     
-    setInWishlist(!inWishlist);
-    setWishlistLoading(false);
+    toggleWishlistMutation.mutate(accessory.id);
   };
 
   return (
@@ -62,9 +90,9 @@ export function AccessoryActionButtons({ accessory }: { accessory: any }) {
           size="sm" 
           className="flex-1"
           onClick={toggleWishlist}
-          disabled={wishlistLoading}
+          disabled={toggleWishlistMutation.isPending}
         >
-          {inWishlist ? (
+          {isInWishlist ? (
             <Heart className="h-4 w-4 mr-2 text-red-500 fill-red-500" />
           ) : (
             <Heart className="h-4 w-4 mr-2" />

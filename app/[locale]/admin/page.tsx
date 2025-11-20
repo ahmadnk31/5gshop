@@ -18,6 +18,7 @@ import { QuotesList } from "@/components/admin/quotes-list";
 import { ReportsModal } from "@/components/admin/reports-modal";
 import { OrdersTable } from "@/components/admin/orders-table";
 import { UserManagement } from "@/components/admin/user-management";
+import { SEOManagement } from "@/components/admin/seo-management";
 import { Repair, Customer, Priority, RepairStatus, Part } from "@/lib/types";
 import { 
   DollarSign, 
@@ -47,7 +48,8 @@ import {
   Shield,
   Loader2,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  Globe
 } from "lucide-react";
 
 function AdminDashboardContent() {
@@ -63,7 +65,7 @@ function AdminDashboardContent() {
   const [showCustomerEditModal, setShowCustomerEditModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<RepairStatus | 'all'>('all');
-  const [activeTab, setActiveTab] = useState<'overview' | 'repairs' | 'customers' | 'contacts' | 'quotes' | 'analytics' | 'inventory' | 'orders' | 'users'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'repairs' | 'customers' | 'contacts' | 'quotes' | 'analytics' | 'inventory' | 'orders' | 'users' | 'seo'>('overview');
   const [customerSearchTerm, setCustomerSearchTerm] = useState('');
   const [showTodayFilter, setShowTodayFilter] = useState(false);
   const [showReportsModal, setShowReportsModal] = useState(false);
@@ -290,7 +292,8 @@ function AdminDashboardContent() {
                 { id: 'analytics', label: 'Analytics', icon: PieChart },
                 { id: 'inventory', label: 'Inventory', icon: Package },
                 { id: 'orders', label: 'Orders', icon: Box },
-                { id: 'users', label: 'Users', icon: Shield }
+                { id: 'users', label: 'Users', icon: Shield },
+                { id: 'seo', label: 'SEO', icon: Globe }
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -1246,6 +1249,12 @@ function AdminDashboardContent() {
         {activeTab === 'users' && (
           <div className="space-y-4">
             <UserManagement />
+          </div>
+        )}
+
+        {activeTab === 'seo' && (
+          <div className="space-y-4">
+            <SEOManagement />
           </div>
         )}
       </div>

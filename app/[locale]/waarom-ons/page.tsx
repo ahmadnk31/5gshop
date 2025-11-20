@@ -5,20 +5,20 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+import { generatePageMetadata } from '@/lib/seo';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'whyChoosePage' })
   
-  return {
+  return await generatePageMetadata({
     title: t('metaTitle'),
     description: t('metaDescription'),
-    keywords: t('metaKeywords'),
-    openGraph: {
-      title: t('metaTitle'),
-      description: t('metaDescription'),
-      type: 'website',
-    },
-  }
+    path: '/waarom-ons',
+    keywords: t('metaKeywords').split(',').map((k: string) => k.trim()),
+    locale
+  })
 }
 
 export default async function WhyChooseUsPage({ params }: { params: Promise<{ locale: string }> }) {

@@ -3,9 +3,9 @@ import { getTranslations } from 'next-intl/server'
 
 // Base SEO configuration
 export const siteConfig = {
-  name: "5gphones Leuven",
-  title: "5gphones Leuven - Phone, Tablet, iPad, MacBook & Desktop Repair + Accessories | GSM Reparatie | Réparation",
-  description: "Professional device repair & accessories in Leuven ✓ Phone, Tablet, iPad, MacBook, Desktop repair ✓ Cases, Chargers, Screen Protectors ✓ iPhone, Samsung, Huawei ✓ Fast service ✓ Warranty | Professionele reparatie en accessoires voor telefoons, tablets, laptops en computers ✓ Réparation professionnelle et accessoires téléphones, tablettes, ordinateurs",
+  name: "5GPhones Fix",
+  title: "5GPhones Fix | Smartphone, Laptop, Tablet, Desktop & Accessories ⭐",
+  description: "5GPhones Fix ⭐ Smartphone, Laptop, Tablet, Desktop & MacBook repair & accessories. iPhone, Samsung, Huawei, Xiaomi, OnePlus, Google Pixel, Nokia, MacBook, iPad, Laptop, Desktop, Smartwatch. Same-day service, 6 months warranty. Also software & Windows installation. Bondgenotenlaan 84A",
   url: "https://5gphones.be",
   ogImage: "/5g-og.png",
   keywords: [
@@ -198,14 +198,14 @@ export const siteConfig = {
     "snelle reparatie",
     "goedkope reparatie",
     "reparatie met garantie",
-    "waterschap reparatie",
+    "waterschade reparatie",
     "camera reparatie",
     "software reparatie",
     "professionele reparatie",
     "betrouwbare reparatie",
     "kwaliteitsreparatie",
     "snelle hersteldienst",
-    "spoedre paratie",
+    "spoedreparatie",
     "dezelfde dag reparatie",
     "reparatie terwijl u wacht",
     "vakkundige reparatie",
@@ -489,12 +489,6 @@ export async function generateProductMetadata({
     '5gphones shop',
     '5gphones store',
     '5gphones Belgium',
-    '5gphones Leuven',
-    '5gphones accessories',
-    '5gphones parts',
-    '5gphones repair',
-    '5gphones electronics',
-    '5gphones shop',
     'Belgium',
     'Leuven'
   ].filter(Boolean) as string[]
@@ -624,8 +618,7 @@ export async function generateServiceMetadata({
     'electronics',
     'Leuven',
     'Belgium',
-    'België',
-    ...(deviceTypes || [])
+    'België'
   ]
 
   return generatePageMetadata({
@@ -688,7 +681,7 @@ export function generateLocalBusinessSchema() {
       'Atelier Réparation Mobile Louvain'
     ],
     url: siteConfig.url,
-    description: 'Professional device repair services in Leuven. Phones, Tablets, iPads, MacBooks, Laptops, Desktops - iPhone, Samsung, Huawei repair specialist with warranty. | Professionele reparatie voor telefoons, tablets, laptops en computers in Leuven met garantie. | Réparation professionnelle téléphones, tablettes, ordinateurs portables et ordinateurs de bureau à Louvain avec garantie.',
+    description: '5GPhones Fix ⭐ iPhone, Samsung, MacBook herstel & Accessoires. Same-day service, 6 maanden garantie. Ook software & Windows installatie. Professional device repair services in Leuven. Phones, Tablets, iPads, MacBooks, Laptops, Desktops - iPhone, Samsung, Huawei repair specialist with warranty. | Professionele reparatie voor telefoons, tablets, laptops en computers in Leuven met garantie. | Réparation professionnelle téléphones, tablettes, ordinateurs portables et ordinateurs de bureau à Louvain avec garantie.',
     image: [`${siteConfig.url}/logo.png`, `${siteConfig.url}/storefront.jpg`],
     telephone: '+32 466 13 41 81',
     email: 'info@5gphones.be',

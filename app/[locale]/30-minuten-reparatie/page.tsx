@@ -4,20 +4,20 @@ import { Clock, Zap, CheckCircle2, ArrowRight, Phone, MapPin } from 'lucide-reac
 import Link from 'next/link'
 import SpeedComparison from '@/components/speed-comparison'
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+import { generatePageMetadata } from '@/lib/seo';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params
   const t = await getTranslations({ locale, namespace: 'speedPage' })
   
-  return {
+  return await generatePageMetadata({
     title: t('metaTitle'),
     description: t('metaDescription'),
-    keywords: t('metaKeywords'),
-    openGraph: {
-      title: t('metaTitle'),
-      description: t('metaDescription'),
-      type: 'website',
-    },
-  }
+    path: '/30-minuten-reparatie',
+    keywords: t('metaKeywords').split(',').map((k: string) => k.trim()),
+    locale
+  })
 }
 
 export default async function SpeedRepairPage({ params }: { params: Promise<{ locale: string }> }) {
