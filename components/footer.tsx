@@ -12,10 +12,10 @@ export function Footer() {
 
   return (
     <footer className="bg-gray-900 text-white py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-8">
           {/* Logo and Description */}
-          <div className="md:col-span-1">
+          <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
               <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
                          <Image
@@ -30,33 +30,33 @@ export function Footer() {
                          </span>
                        </Link>
             </div>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-300 text-sm leading-relaxed">
               {t('description')}
             </p>
             <LanguageSelector />
           </div>
 
           {/* Quick Links */}
-          <div className="md:col-span-1">
-            <h3 className="text-lg font-semibold mb-4">{t('quickLinks.title')}</h3>
-            <ul className="space-y-2">
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-white">{t('quickLinks.title')}</h3>
+            <ul className="space-y-2.5">
               <li>
-                <Link href="/repairs" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/repairs" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
                   {t('quickLinks.deviceRepairs')}
                 </Link>
               </li>
               <li>
-                <Link href="/accessories" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/accessories" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
                   {t('quickLinks.accessories')}
                 </Link>
               </li>
               <li>
-                <Link href="/quote" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/quote" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
                   {t('quickLinks.getQuote')}
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/about" className="text-gray-300 hover:text-green-400 transition-colors text-sm">
                   {t('quickLinks.aboutUs')}
                 </Link>
               </li>
@@ -64,33 +64,33 @@ export function Footer() {
           </div>
 
           {/* Contact Info */}
-          <div className="md:col-span-1">
-            <h3 className="text-lg font-semibold mb-4">{t('contactInfo.title')}</h3>
-            <ul className="space-y-2">
-              <li className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4 text-green-400" />
-                <span className="text-gray-400 text-sm">{t('contactInfo.address')}</span>
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-white">{t('contactInfo.title')}</h3>
+            <ul className="space-y-2.5">
+              <li className="flex items-start space-x-2">
+                <MapPin className="h-4 w-4 text-green-400 mt-0.5 flex-shrink-0" />
+                <span className="text-gray-300 text-sm leading-relaxed">{t('contactInfo.address')}</span>
               </li>
               <li className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-green-400" />
+                <Phone className="h-4 w-4 text-green-400 flex-shrink-0" />
                 <TrackablePhoneLink 
                   phoneNumber="+32467871205"
-                  className="text-gray-400 hover:text-white transition-colors text-sm"
+                  className="text-gray-300 hover:text-green-400 transition-colors text-sm"
                 >
                   {t('contactInfo.phone')}
                 </TrackablePhoneLink>
               </li>
               <li className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-green-400" />
-                <span className="text-gray-400 text-sm">{t('contactInfo.email')}</span>
+                <Mail className="h-4 w-4 text-green-400 flex-shrink-0" />
+                <span className="text-gray-300 text-sm">{t('contactInfo.email')}</span>
               </li>
             </ul>
           </div>
 
           {/* Business Hours */}
-          <div className="md:col-span-1">
-            <h3 className="text-lg font-semibold mb-4">{t('businessHours.title')}</h3>
-            <ul className="space-y-1 text-gray-400 text-sm">
+          <div>
+            <h3 className="text-lg font-semibold mb-4 text-white">{t('businessHours.title')}</h3>
+            <ul className="space-y-1.5 text-gray-300 text-sm">
               <li>{t('businessHours.mondayFriday')}</li>
               <li>{t('businessHours.saturday')}</li>
               <li>{t('businessHours.sunday')}</li>
@@ -101,17 +101,19 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 pt-8 mt-8">
           {/* Legal Links */}
-          <div className="flex items-center flex-wrap justify-center space-x-6 space-y-2 mb-6">
-            <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors text-sm">
+          <div className="flex flex-col sm:flex-row items-center justify-center flex-wrap gap-4 sm:gap-6 mb-6">
+            <Link href="/privacy" className="text-gray-300 hover:text-green-400 transition-colors text-sm whitespace-nowrap">
               {t('legal.privacyPolicy')}
             </Link>
-            <Link href="/terms" className="text-gray-400 hover:text-white transition-colors text-sm">
+            <Link href="/terms" className="text-gray-300 hover:text-green-400 transition-colors text-sm whitespace-nowrap">
               {t('legal.termsOfService')}
             </Link>
-            <Link href="/contact" className="text-gray-400 hover:text-white transition-colors text-sm">
+            <Link href="/contact" className="text-gray-300 hover:text-green-400 transition-colors text-sm whitespace-nowrap">
               {t('legal.contactUs')}
             </Link>
-            <CookiePreferencesButton />
+            <div className="flex items-center">
+              <CookiePreferencesButton />
+            </div>
           </div>
           
           {/* Payment Methods */}
@@ -184,16 +186,22 @@ export function Footer() {
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row justify-between items-center text-white">
-            <p className="text-gray-400 text-sm">
-              ©
-              {new Date().getFullYear()} 5gphones. {t('copyright')}
-              <span className="ml-1">{t('poweredBy')}
-              <span className="text-green-400">.</span>
-              </span>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-300 text-sm text-center md:text-left">
+              © {new Date().getFullYear()} 5gphones. {t('copyright')}
+              {t('poweredBy') && (
+                <span className="ml-1 text-gray-400">
+                  {t('poweredBy')}
+                </span>
+              )}
             </p>
-            <div className="flex space-x-4 mt-4 md:mt-0">
-              <Link target="_blank" href="https://www.facebook.com/people/5G-Phones/61574724281619/?mibextid=wwXIfr&rdid=ejJd9qfqIlAcJifz&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BRtxJDHSV%2F%3Fmibextid%3DwwXIfr" className="text-gray-400 hover:text-white transition-colors">
+            <div className="flex space-x-4">
+              <Link 
+                target="_blank" 
+                href="https://www.facebook.com/people/5G-Phones/61574724281619/?mibextid=wwXIfr&rdid=ejJd9qfqIlAcJifz&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BRtxJDHSV%2F%3Fmibextid%3DwwXIfr" 
+                className="text-gray-400 hover:text-green-400 transition-colors"
+                aria-label="Facebook"
+              >
                 <Facebook className="h-5 w-5" />
               </Link>
             </div>

@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
+// Optimized loading skeleton - matches actual page layout
+// This only shows during initial server-side page load
 export default function AccessoriesLoading() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -13,7 +15,7 @@ export default function AccessoriesLoading() {
                 <Skeleton className="h-6 w-32" />
               </CardHeader>
               <CardContent className="space-y-4">
-                {[...Array(5)].map((_, i) => (
+                {[...Array(4)].map((_, i) => (
                   <div key={i} className="space-y-2">
                     <Skeleton className="h-4 w-24" />
                     <Skeleton className="h-10 w-full" />
@@ -28,7 +30,7 @@ export default function AccessoriesLoading() {
             {/* Search and Controls */}
             <div className="mb-6">
               <Skeleton className="h-10 w-full max-w-md mb-4" />
-              <div className="flex gap-2">
+              <div className="flex gap-2 mb-4">
                 <Skeleton className="h-9 w-24" />
                 <Skeleton className="h-9 w-24" />
                 <Skeleton className="h-9 w-32" />
@@ -41,9 +43,9 @@ export default function AccessoriesLoading() {
               <Skeleton className="h-5 w-64" />
             </div>
 
-            {/* Product Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-              {[...Array(12)].map((_, i) => (
+            {/* Product Grid - Reduced from 12 to 8 for faster initial render */}
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
+              {[...Array(8)].map((_, i) => (
                 <Card key={i} className="overflow-hidden">
                   <Skeleton className="aspect-square w-full" />
                   <CardContent className="p-4 space-y-3">

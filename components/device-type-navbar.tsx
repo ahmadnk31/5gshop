@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { 
@@ -64,12 +65,17 @@ interface DeviceTypeNavbarProps {
 }
 
 export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
+  // Clean className to remove any z-index that might conflict, ensuring consistent z-50
+  // This must be defined first to ensure it's always available
+  const cleanClassName = className ? className.replace(/\bz-\d+\b/g, '').trim() : '';
+  
   const t = useTranslations('repairs.deviceTypes');
   const [hoveredType, setHoveredType] = useState<DeviceType | null>(null);
   const [currentLevel, setCurrentLevel] = useState<'types' | 'brands' | 'models' | 'parts'>('types');
   const [selectedType, setSelectedType] = useState<DeviceType | null>(null);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   
   const [dropdownPosition, setDropdownPosition] = useState<{left: number, top: number}>({left: 16, top: 80});
   const [mouseLeaveTimeout, setMouseLeaveTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -92,6 +98,12 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
     'GAMING_CONSOLE',
     'OTHER'
   ];
+
+  // Check if component is mounted (for portal)
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -233,7 +245,7 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
   };
 
   return (
-    <nav className={`relative bg-white border-b border-gray-200 shadow-sm z-40 ${className}`}>
+    <nav className={`relative bg-white border-b border-gray-200 shadow-sm z-50 ${cleanClassName}`}>
       <div className="container mx-auto px-4 py-2">
         <div className="flex space-x-1 sm:space-x-2 md:space-x-4 lg:space-x-8 overflow-x-auto scrollbar-hide navbar-scroll min-h-[60px] items-center">
           {deviceTypes.map((deviceType) => {
@@ -265,16 +277,30 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
                   <ChevronDown className={`h-3 w-3 sm:h-4 sm:w-4 transition-transform duration-200 flex-shrink-0 ${isHovered ? 'rotate-180' : ''}`} />
                 </Link>
 
-                {/* Multi-Step Dropdown Menu */}
-                {isHovered && (
+                {/* Multi-Step Dropdown Menu - Rendered via Portal for Safari compatibility */}
+                {isHovered && mounted && createPortal(
                   <div 
-                    className="fixed bg-white border border-gray-200 rounded-lg shadow-lg z-[10001] overflow-visible"
+                    className="fixed bg-white border border-gray-200 rounded-lg shadow-xl z-[9999] overflow-visible"
                     style={{
                       left: `${dropdownPosition.left}px`,
                       top: `${dropdownPosition.top}px`,
-                      width: window.innerWidth < 1024 ? 'calc(100vw - 32px)' : '800px',
-                      maxWidth: 'calc(100vw - 32px)'
+                      width: typeof window !== 'undefined' && window.innerWidth < 1024 ? 'calc(100vw - 32px)' : '800px',
+                      maxWidth: 'calc(100vw - 32px)',
+                      WebkitTransform: 'translateZ(0)', // Force hardware acceleration for Safari
+                      transform: 'translateZ(0)', // Force hardware acceleration
+                      willChange: 'transform', // Optimize for Safari
+                      isolation: 'isolate', // Create new stacking context for Safari
+                      WebkitBackfaceVisibility: 'hidden', // Safari fix
+                      backfaceVisibility: 'hidden' // Safari fix
                     } as React.CSSProperties}
+                    onMouseEnter={() => {
+                      // Clear any pending mouse leave timeout when entering dropdown
+                      if (mouseLeaveTimeout) {
+                        clearTimeout(mouseLeaveTimeout);
+                        setMouseLeaveTimeout(null);
+                      }
+                    }}
+                    onMouseLeave={handleMouseLeave}
                   >
                     <div className="p-2 sm:p-4">
                       {/* Header with Back Button */}
@@ -427,7 +453,8 @@ export function DeviceTypeNavbar({ className = "" }: DeviceTypeNavbarProps) {
                         </>
                       )}
                     </div>
-                  </div>
+                  </div>,
+                  document.body
                 )}
               </div>
             );

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -220,8 +221,14 @@ export default function AccessoriesPagePaginated() {
 
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Apply sidebar filters to all accessories
-  const filteredAccessories = useAccessoryFilters(allAccessories, sidebarFilters);
+  // Use server-side search results when searchTerm is active, otherwise use client-side filtering
+  // This ensures search works with all accessories, not just the first 1000
+  // When using server-side search, use results directly (server already filtered by search)
+  // When not searching, use client-side filtering on allAccessories
+  const clientFilteredAccessories = useAccessoryFilters(allAccessories, sidebarFilters);
+  const filteredAccessories = searchTerm 
+    ? accessories // Use server-side search results directly when searching
+    : clientFilteredAccessories; // Use client-side filtered results when not searching
 
   const pagination = usePagination({
     totalItems: filteredAccessories.length,
@@ -264,6 +271,13 @@ export default function AccessoriesPagePaginated() {
       ...prev,
       categories: prev.categories.filter(c => c !== category),
     }));
+    // Reset page when filter changes
+    setCurrentPage(1);
+    pagination.goToFirstPage();
+    // Clear selectedCategory if it matches
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+    }
   };
 
   const clearBrandFilter = (brand: string) => {
@@ -271,6 +285,9 @@ export default function AccessoriesPagePaginated() {
       ...prev,
       brands: prev.brands.filter(b => b !== brand),
     }));
+    // Reset page when filter changes
+    setCurrentPage(1);
+    pagination.goToFirstPage();
   };
 
   const clearCompatibilityFilter = (compatibility: string) => {
@@ -278,14 +295,21 @@ export default function AccessoriesPagePaginated() {
       ...prev,
       compatibility: prev.compatibility.filter(c => c !== compatibility),
     }));
+    // Reset page when filter changes
+    setCurrentPage(1);
+    pagination.goToFirstPage();
   };
 
   const clearSearchFilter = () => {
     setSearchInput('');
+    setSearchTerm(''); // Clear the searchTerm state that triggers server-side search
     setSidebarFilters(prev => ({
       ...prev,
       searchTerm: '',
     }));
+    // Reset page when filter changes
+    setCurrentPage(1);
+    pagination.goToFirstPage();
   };
 
   const clearAllActiveFilters = () => {
@@ -300,7 +324,11 @@ export default function AccessoriesPagePaginated() {
         )
       : { min: 0, max: 1000 };
     
+    // Clear all search-related state
     setSearchInput('');
+    setSearchTerm(''); // Clear the searchTerm state that triggers server-side search
+    setSelectedCategory(null); // Clear selected category
+    
     setSidebarFilters({
       categories: [],
       brands: [],
@@ -312,12 +340,17 @@ export default function AccessoriesPagePaginated() {
       compatibility: [],
       searchTerm: '',
     });
+    
+    // Reset page when clearing all filters
+    setCurrentPage(1);
+    pagination.goToFirstPage();
   };
 
   // Load accessories with pagination
   const loadAccessories = async (page = 1) => {
     try {
       setLoading(true);
+      console.log('🔍 Loading accessories with search:', searchTerm);
       const result = await getAccessoriesWithFiltersPaginated({
         page,
         limit: itemsPerPage,
@@ -329,27 +362,35 @@ export default function AccessoriesPagePaginated() {
         inStockOnly: true,
       });
 
+      console.log('✅ Search results:', result.data.length, 'accessories found');
       setAccessories(result.data);
       setTotalItems(result.pagination.totalItems);
       setCurrentPage(result.pagination.currentPage);
     } catch (error) {
-      console.error('Failed to load accessories:', error);
+      console.error('❌ Failed to load accessories:', error);
+      setAccessories([]); // Clear results on error
     } finally {
       setLoading(false);
     }
   };
 
   // Load accessories when dependencies change
+  // Only load from server when searchTerm is active (server-side search)
+  // Otherwise, use client-side filtering on allAccessories
   useEffect(() => {
-    loadAccessories(currentPage);
-  }, [currentPage, itemsPerPage, sortBy, sortOrder, selectedCategory, searchTerm]);
-
-  // Trigger search when searchTerm changes
-  useEffect(() => {
-    if (searchTerm !== undefined) {
-      loadAccessories(1);
+    if (searchTerm && searchTerm.trim().length >= 2) {
+      // Only call server-side search when searchTerm is set and valid
+      loadAccessories(currentPage);
+    } else {
+      // When no search, clear accessories array to use allAccessories with client-side filtering
+      // Don't set loading to false here - let loadAllAccessories handle the initial loading state
+      setAccessories([]);
+      // Only set loading to false if allAccessories has already been loaded
+      if (allAccessories.length > 0) {
+        setLoading(false);
+      }
     }
-  }, [searchTerm]);
+  }, [currentPage, itemsPerPage, sortBy, sortOrder, selectedCategory, searchTerm, allAccessories.length]);
 
   // Update URL only when necessary and with minimal impact
   useEffect(() => {
@@ -380,7 +421,7 @@ export default function AccessoriesPagePaginated() {
     setSearchInput(search); // Update input immediately for responsive UI
     setSelectedSuggestionIndex(-1); // Reset selection when typing
     
-    // Update sidebar filters with search term
+    // Update sidebar filters with search term for client-side filtering
     setSidebarFilters(prev => ({
       ...prev,
       searchTerm: search,
@@ -391,6 +432,12 @@ export default function AccessoriesPagePaginated() {
     if (search.trim() && search.length >= 2) {
       setSearchLoading(true);
       debounceRef.current = setTimeout(() => {
+        // Update searchTerm to trigger server-side search
+        setSearchTerm(search);
+        setCurrentPage(1);
+        pagination.goToFirstPage();
+        
+        // Fetch suggestions for dropdown
         getAccessoriesWithFiltersPaginated({
           page: 1,
           limit: 5, // Limit suggestions
@@ -406,6 +453,8 @@ export default function AccessoriesPagePaginated() {
         });
       }, 300); // 300ms debounce
     } else {
+      // Clear search when input is empty or too short
+      setSearchTerm('');
       setSearchSuggestions([]);
       setShowSearchDropdown(false);
       setSearchLoading(false);
@@ -499,14 +548,17 @@ export default function AccessoriesPagePaginated() {
   useEffect(() => {
     const loadAllAccessories = async () => {
       try {
-        console.log('Loading all accessories for category counts...');
+        console.log('🔄 Loading all accessories for category counts...');
+        setLoading(true);
         const result = await getAccessoriesWithFiltersPaginated({
           page: 1,
           limit: 1000, // Large number to get all accessories
           inStockOnly: false, // Get all accessories for filter sidebar
         });
-        console.log('All accessories loaded:', result.data.length);
+        console.log('✅ All accessories loaded:', result.data.length, 'items');
+        console.log('📦 Setting allAccessories state...');
         setAllAccessories(result.data);
+        console.log('✅ allAccessories state set, length:', result.data.length);
         
         // Calculate category counts
         const counts = result.data.reduce((acc, accessory) => {
@@ -516,7 +568,7 @@ export default function AccessoriesPagePaginated() {
           return acc;
         }, {} as Record<AccessoryCategory, number>);
         
-        console.log('Category counts calculated:', counts);
+        console.log('✅ Category counts calculated:', counts);
         setCategoryCounts(counts);
         
         // Log initial filters to verify URL params were captured
@@ -524,16 +576,23 @@ export default function AccessoriesPagePaginated() {
           categories: initialCategory ? [initialCategory] : [],
           searchTerm: initialSearch
         });
-        
-        setLoading(false);
       } catch (error) {
-        console.error('Failed to load category counts:', error);
+        console.error('❌ Failed to load category counts:', error);
+        console.error('Error details:', error instanceof Error ? error.message : String(error));
+        setAllAccessories([]); // Set empty array on error
+      } finally {
+        console.log('🏁 Setting loading to false');
         setLoading(false);
       }
     };
 
     loadAllAccessories();
   }, []);
+
+  // Debug: Log when allAccessories changes
+  useEffect(() => {
+    console.log('📊 allAccessories state changed:', allAccessories.length, 'items');
+  }, [allAccessories]);
 
 
   const hasActiveFilters = 
@@ -544,54 +603,8 @@ export default function AccessoriesPagePaginated() {
 
   const relatedSearches = getRelatedSearches(searchTerm, allAccessories);
 
-  if (loading && accessories.length === 0) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Skeleton Sidebar */}
-            <div className="lg:w-80 flex-shrink-0">
-              <Card>
-                <CardHeader>
-                  <div className="h-6 w-32 bg-gray-200 rounded animate-pulse"></div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {[...Array(4)].map((_, i) => (
-                    <div key={i} className="space-y-2">
-                      <div className="h-4 w-24 bg-gray-200 rounded animate-pulse"></div>
-                      <div className="h-8 w-full bg-gray-200 rounded animate-pulse"></div>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </div>
-            
-            {/* Skeleton Grid */}
-            <div className="flex-1">
-              <div className="mb-6">
-                <div className="h-10 w-full max-w-md bg-gray-200 rounded animate-pulse mb-4"></div>
-                <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
-              </div>
-              
-              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6">
-                {[...Array(12)].map((_, i) => (
-                  <Card key={i} className="overflow-hidden">
-                    <div className="aspect-square bg-gray-200 animate-pulse"></div>
-                    <CardContent className="p-4 space-y-3">
-                      <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
-                      <div className="h-4 w-3/4 bg-gray-200 rounded animate-pulse"></div>
-                      <div className="h-6 w-24 bg-gray-200 rounded animate-pulse"></div>
-                      <div className="h-9 w-full bg-gray-200 rounded animate-pulse"></div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Removed blocking skeleton - loading.tsx handles initial load
+  // Show layout immediately with non-blocking loading indicator
 
   // Helper for low stock
   function isLowStock(accessory: Accessory) {
@@ -684,25 +697,33 @@ export default function AccessoriesPagePaginated() {
           {/* Filter Sidebar */}
           <div className="lg:w-80 flex-shrink-0">
             {allAccessories.length > 0 ? (
-              <AccessoriesFilterSidebar
-                accessories={allAccessories}
-                onFiltersChange={handleSidebarFiltersChange}
-              />
+              <>
+                {console.log('✅ Rendering AccessoriesFilterSidebar with', allAccessories.length, 'accessories')}
+                <AccessoriesFilterSidebar
+                  accessories={allAccessories}
+                  onFiltersChange={handleSidebarFiltersChange}
+                />
+              </>
             ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Filter className="h-5 w-5" />
-                    Filters
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                    <p className="text-sm text-gray-600">Loading filters...</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <>
+                {console.log('⏳ Showing skeleton - allAccessories.length:', allAccessories.length, 'loading:', loading)}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      <Filter className="h-5 w-5" />
+                      Filters
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {[...Array(4)].map((_, i) => (
+                      <div key={i} className="space-y-2">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-10 w-full" />
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </>
             )}
           </div>
 
@@ -716,7 +737,7 @@ export default function AccessoriesPagePaginated() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 z-10" />
               {searchLoading && (
                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></div>
                 </div>
               )}
               <Input
@@ -757,7 +778,7 @@ export default function AccessoriesPagePaginated() {
                       <div className="flex-1 min-w-0">
                         <div className="font-medium text-sm truncate">{accessory.name}</div>
                         <div className="text-xs text-gray-500 truncate">{accessory.brand}</div>
-                        <div className="text-sm font-semibold text-blue-600">{formatCurrency(accessory.price, "EUR")}</div>
+                        <div className="text-sm font-semibold text-green-600">{formatCurrency(accessory.price, "EUR")}</div>
                       </div>
                       <div className="text-xs text-gray-500">
                         {categoryConfigs[accessory.category]?.label || accessory.category}
@@ -1000,7 +1021,21 @@ export default function AccessoriesPagePaginated() {
             </div>
           )}
         {/* Accessories Grid/List */}
-        {filteredAccessories.length > 0 ? (
+        {loading && (searchTerm ? accessories.length === 0 : allAccessories.length === 0) ? (
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6 mb-8">
+            {[...Array(8)].map((_, i) => (
+              <Card key={i} className="overflow-hidden">
+                <div className="aspect-square bg-gray-100 animate-pulse"></div>
+                <CardContent className="p-4 space-y-3">
+                  <div className="h-4 w-full bg-gray-100 rounded animate-pulse"></div>
+                  <div className="h-4 w-3/4 bg-gray-100 rounded animate-pulse"></div>
+                  <div className="h-6 w-24 bg-gray-100 rounded animate-pulse"></div>
+                  <div className="h-9 w-full bg-gray-100 rounded animate-pulse"></div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : filteredAccessories.length > 0 ? (
           <>
             <div  className={viewMode === 'grid' 
               ? "grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 xl:gap-6 mb-8"
