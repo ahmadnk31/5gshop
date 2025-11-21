@@ -119,7 +119,7 @@ export function Footer() {
             <h4 className="text-sm font-medium text-gray-300 mb-3">{t('paymentMethods.title') || 'Accepted Payment Methods'}</h4>
             <div className="flex flex-wrap justify-center items-center gap-4">
               <Image
-                src="/visa-pay-logo-svgrepo-com.svg"
+                src="/visa-logo.svg"
                 alt="Visa"
                 width={120}
                 height={110}
@@ -147,11 +147,11 @@ export function Footer() {
                 className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
               />
               <Image
-                src="/stripe-svgrepo-com.svg"
+                src="/stripe-logo-blue.svg"
                 alt="Stripe"
                 width={60}
                 height={40}
-                className="h-12 w-auto opacity-70 hover:opacity-100 transition-opacity"
+                className="h-12 w-auto opacity-70 hover:opacity-100  transition-opacity"
               />
               <Image
                 src="/klarna-svgrepo-com.svg"
@@ -184,7 +184,7 @@ export function Footer() {
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row justify-between items-center">
+          <div className="flex flex-col md:flex-row justify-between items-center text-white">
             <p className="text-gray-400 text-sm">
               ©
               {new Date().getFullYear()} 5gphones. {t('copyright')}
