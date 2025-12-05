@@ -10,6 +10,7 @@ declare module "next-auth" {
       firstName?: string;
       lastName?: string;
       image?: string;
+      emailVerified?: Date | null;
     } & DefaultSession["user"];
   }
   interface User extends DefaultUser {
@@ -18,6 +19,7 @@ declare module "next-auth" {
     firstName?: string;
     lastName?: string;
     image?: string;
+    emailVerified?: Date | null;
     // Add any other custom fields here
   }
 }
@@ -29,5 +31,6 @@ declare module "next-auth/jwt" {
     firstName?: string;
     lastName?: string;
     image?: string;
+    emailVerified?: Date | null;
   }
 }

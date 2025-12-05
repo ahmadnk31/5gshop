@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/database";
+import { ResendService } from "@/lib/resend-service";
 
 export async function GET(req: NextRequest) {
   const email = req.nextUrl.searchParams.get("email");
@@ -18,9 +19,20 @@ export async function GET(req: NextRequest) {
   if (user.emailVerified) {
     return NextResponse.redirect(`${origin}/auth/verify-success?already=1`);
   }
-  await prisma.user.update({
+  
+  // Update user to verified
+  const updatedUser = await prisma.user.update({
     where: { email },
     data: { emailVerified: new Date() },
   });
-  return NextResponse.redirect(`${origin}/auth/verify-success`);
+  
+  // Send welcome email after verification
+  try {
+    await ResendService.sendWelcomeEmail(email, user.name || "User");
+  } catch (error) {
+    // Log error but don't fail verification if welcome email fails
+    console.error("Failed to send welcome email after verification:", error);
+  }
+  
+  return NextResponse.redirect(`${origin}/auth/verify-success?verified=1`);
 }

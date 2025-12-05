@@ -1,7 +1,4 @@
-import { SESService } from "@/lib/ses-service";
-
-// Add this to SESService if not present:
-// static async sendGenericEmail({ to, subject, html, text }: { to: string; subject: string; html: string; text?: string }) { ... }
+import { ResendService } from "@/lib/resend-service";
 
 export async function sendConfirmationEmail({
   to,
@@ -14,5 +11,5 @@ export async function sendConfirmationEmail({
 }) {
   // Fallback to a simple text version
   const text = html.replace(/<[^>]+>/g, "");
-  return SESService.sendRawEmail({ to, subject, html, text });
+  return ResendService.sendRawEmail({ to, subject, html, text });
 }

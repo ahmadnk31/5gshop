@@ -40,8 +40,15 @@ export default function RegisterPage() {
 
   return (
     <div className="w-full">
-      <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">{t("title")}</h1>
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{t("title")}</h1>
+          <p className="text-gray-600 text-base md:text-lg">Create your account to get started</p>
+        </div>
+
+        {/* Register Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label htmlFor="name" className="block text-sm md:text-base font-semibold text-gray-900 mb-2">
             Name
@@ -87,21 +94,26 @@ export default function RegisterPage() {
             required
           />
         </div>
-        {error && (
-          <div className="bg-red-50 border-2 border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm md:text-base font-medium">
-            {error}
-          </div>
-        )}
-        {success && (
-          <div className="bg-green-50 border-2 border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm md:text-base font-medium">
-            {success}
-          </div>
-        )}
-        <Button
-          type="submit"
-          className="w-full bg-green-600 hover:bg-green-700 mt-4 text-white font-semibold py-3 md:py-4 text-base md:text-lg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
-          disabled={loading}
-        >
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border-2 border-red-200 text-red-800 px-4 py-3 rounded-lg text-base font-medium">
+              {error}
+            </div>
+          )}
+
+          {/* Success Message */}
+          {success && (
+            <div className="bg-green-50 border-2 border-green-200 text-green-800 px-4 py-3 rounded-lg text-base font-medium">
+              {success}
+            </div>
+          )}
+
+          {/* Register Button */}
+          <Button
+            type="submit"
+            className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-4 text-lg rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
+            disabled={loading}
+          >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -113,37 +125,38 @@ export default function RegisterPage() {
           ) : (
             t("button")
           )}
-        </Button>
-      </form>
-      
-      {/* Divider */}
-      <div className="relative my-6">
+          </Button>
+        </form>
+
+        {/* Divider */}
+        <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t-2 border-gray-200" />
         </div>
-        <div className="relative flex justify-center text-sm md:text-base">
-          <span className="px-4 bg-white text-gray-500 font-medium">or continue with</span>
+          <div className="relative flex justify-center text-base">
+            <span className="px-4 bg-white text-gray-500 font-medium">or continue with</span>
+          </div>
         </div>
-      </div>
 
-      {/* Google Sign Up */}
-      <button
-        type="button"
-        onClick={() => signIn("google")}
-        className="w-full flex items-center justify-center gap-3 border-2 border-gray-300 bg-white hover:bg-gray-50 text-gray-900 font-semibold py-3 md:py-3.5 text-sm md:text-base rounded-lg transition-all shadow-sm hover:shadow-md"
-      >
-        <img src="/google.svg" alt="Google" className="h-5 w-5 md:h-6 md:w-6" />
-        <span>Sign up with Google</span>
-      </button>
-
-      {/* Footer Links */}
-      <div className="flex justify-center mt-6 pt-4 border-t-2 border-gray-100">
-        <Link 
-          href="/auth/login" 
-          className="text-green-600 hover:text-green-700 font-medium text-sm md:text-base hover:underline transition-colors"
+        {/* Google Sign Up */}
+        <button
+          type="button"
+          onClick={() => signIn("google")}
+          className="w-full flex items-center justify-center gap-3 border-2 border-gray-300 bg-white hover:bg-gray-50 text-gray-900 font-semibold py-3.5 text-base rounded-lg transition-all shadow-sm hover:shadow-md"
         >
-          {t("login")}
-        </Link>
+          <img src="/google.svg" alt="Google" className="h-6 w-6" />
+          <span>Sign up with Google</span>
+        </button>
+
+        {/* Footer Links */}
+        <div className="flex justify-center pt-4 border-t-2 border-gray-100">
+          <Link 
+            href="/auth/login" 
+            className="text-green-600 hover:text-green-700 font-medium text-base hover:underline transition-colors"
+          >
+            {t("login")}
+          </Link>
+        </div>
       </div>
     </div>
   );

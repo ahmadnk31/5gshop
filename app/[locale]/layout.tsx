@@ -11,10 +11,9 @@ declare global {
     dataLayer: any[];
   }
 }
-import { Navigation } from "@/components/navigation";
-import { Footer } from "@/components/footer";
+import { ConditionalLayout } from "@/components/conditional-layout";
 import { CookieConsentProvider } from "@/components/cookie-consent-context";
-import { CookieConsentBanner, CookieSettingsModal } from "@/components/cookie-consent-banner";
+import { CookieSettingsModal } from "@/components/cookie-consent-banner";
 import { GoogleAnalytics } from "@/components/google-analytics";
 import { AccessibilityProvider } from "@/components/accessibility";
 import {NextIntlClientProvider, hasLocale} from 'next-intl';
@@ -69,6 +68,7 @@ export default async function RootLayout({
   if (!hasLocale(routing.locales, locale)) {
     notFound();
   }
+
 
   // Pre-generate structured data to avoid runtime computation
   const structuredData = {
@@ -141,10 +141,9 @@ export default async function RootLayout({
             
             <GoogleAnalytics />
             
-            <Navigation />
-            <main id="main-content" role="main">{children}</main>
-            <Footer />
-            <CookieConsentBanner />
+            <ConditionalLayout>
+              <main id="main-content" role="main">{children}</main>
+            </ConditionalLayout>
             <CookieSettingsModal />
             {/* Load Analytics after main content */}
             <Analytics />

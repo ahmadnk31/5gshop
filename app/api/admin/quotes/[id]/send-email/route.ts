@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { SESService } from '@/lib/ses-service';
+import { ResendService } from '@/lib/resend-service';
 import { prisma } from '@/lib/database';
 
 export async function POST(
@@ -57,12 +57,8 @@ export async function POST(
       attachments: attachments || []
     };
 
-    let result;
-    if (attachments && attachments.length > 0) {
-      result = await SESService.sendQuoteResponseWithAttachment(emailData);
-    } else {
-      result = await SESService.sendQuoteResponse(emailData);
-    }
+    // ResendService.sendQuoteResponse now supports attachments
+    const result = await ResendService.sendQuoteResponse(emailData);
 
     // Update quote with response
     await prisma.quote.update({
@@ -77,7 +73,7 @@ export async function POST(
 
     return NextResponse.json({ 
       success: true, 
-      messageId: result.MessageId,
+      messageId: result?.id,
       message: 'Quote response email sent successfully' 
     });
 

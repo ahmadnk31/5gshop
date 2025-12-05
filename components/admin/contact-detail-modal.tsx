@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { respondToContact } from "@/app/actions/contact-actions";
 import { Contact } from "@/lib/types";
 import { 
   Mail, 
@@ -45,9 +44,22 @@ export function ContactDetailModal({
 
     setSending(true);
     try {
-      // Use the configured admin email
-      const adminEmail = 'shafiq@5gphones.be';
-      await respondToContact(contact.id, response, adminEmail, adminNotes);
+      const fetchResponse = await fetch(`/api/admin/contacts/${contact.id}/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          responseMessage: response,
+          adminNotes: adminNotes,
+        }),
+      });
+
+      if (!fetchResponse.ok) {
+        const errorData = await fetchResponse.json();
+        throw new Error(errorData.error || 'Failed to send response');
+      }
+
       await onStatusUpdate(contact.id, 'responded');
       await onContactUpdate();
       setResponse('');

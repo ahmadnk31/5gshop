@@ -133,6 +133,7 @@ model Quote {
   status        String    @default("PENDING")
   urgency       String    @default("MEDIUM")
   adminNotes    String?
+  photos        String?   // JSON array of {url: string, key: string}
   expiresAt     DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

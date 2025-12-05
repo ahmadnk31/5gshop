@@ -85,6 +85,7 @@ export interface Quote {
   expiresAt: string;
   urgency: Priority;
   adminNotes?: string;
+  photos?: Array<{ url: string; key: string }>;
 }
 
 export type RepairStatus = 

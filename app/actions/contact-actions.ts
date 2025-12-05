@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { DatabaseService } from "@/lib/database";
-import { SESService } from "@/lib/ses-service";
+import { ResendService } from "@/lib/resend-service";
 
 export interface ContactSubmission {
   id: string;
@@ -36,8 +36,8 @@ export async function submitContactForm(data: {
       createdAt: new Date(),
     });
 
-    // Send email notification to admin via AWS SES
-    await SESService.sendContactNotification({
+    // Send email notification to admin via Resend
+    await ResendService.sendContactNotification({
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
@@ -48,7 +48,7 @@ export async function submitContactForm(data: {
     });
 
     // Send confirmation email to customer
-    await SESService.sendContactConfirmation({
+    await ResendService.sendContactConfirmation({
       customerEmail: data.email,
       customerName: `${data.firstName} ${data.lastName}`,
     });
@@ -114,9 +114,9 @@ export async function respondToContact(
 
     console.log("Contact found:", contact.email, contact.firstName, contact.lastName);
 
-    // Send response email via AWS SES
-    console.log("Attempting to send email via SES...");
-    await SESService.sendContactResponse({
+    // Send response email via Resend
+    console.log("Attempting to send email via Resend...");
+    await ResendService.sendContactResponse({
       customerEmail: contact.email,
       customerName: `${contact.firstName} ${contact.lastName}`,
       responseMessage,

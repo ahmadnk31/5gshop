@@ -10,6 +10,13 @@ export default function SettingsPage() {
   const t = useTranslations("settings");
   const { data: session, status } = useSession();
   const user = session?.user;
+
+  // Redirect to verification page if email is not verified
+  useEffect(() => {
+    if (status === "authenticated" && user && !user.emailVerified) {
+      window.location.href = "/auth/verify-required";
+    }
+  }, [status, user]);
   const [address, setAddress] = useState({
     firstName: "",
     lastName: "",
@@ -111,6 +118,13 @@ export default function SettingsPage() {
           <Button>Login</Button>
         </Link>
       </div>
+    </div>;
+  }
+
+  // Show loading while checking verification status
+  if (status === "authenticated" && user && !user.emailVerified) {
+    return <div className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow border mt-8">
+      <div className="text-center">Redirecting...</div>
     </div>;
   }
 

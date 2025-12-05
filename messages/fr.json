@@ -980,6 +980,10 @@
       "closed": "fermé"
     }
   },
+  "meta": {
+    "title": "Contactez-nous",
+    "description": "Contactez-nous pour toute question ou demande de service. Nous sommes là pour vous aider!"
+  },
   "form": {
     "title": "Envoyez-nous un message",
     "description": "Remplissez le formulaire ci-dessous et nous vous contacterons dans les 24 heures.",

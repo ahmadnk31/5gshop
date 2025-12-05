@@ -64,6 +64,13 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Redirect to verification page if email is not verified
+  useEffect(() => {
+    if (status === "authenticated" && session?.user && !session.user.emailVerified) {
+      window.location.href = "/auth/verify-required";
+    }
+  }, [status, session]);
+
   useEffect(() => {
     const fetchOrders = async () => {
       if (!session?.user?.email) return;
@@ -108,6 +115,15 @@ export default function OrdersPage() {
             <Button className="bg-green-600 hover:bg-green-700 text-white">{t("login")}</Button>
           </Link>
         </div>
+      </div>
+    );
+  }
+
+  // Show loading while checking verification status
+  if (status === "authenticated" && session?.user && !session.user.emailVerified) {
+    return (
+      <div className="max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-lg border border-green-100 my-8">
+        <div className="text-center">Redirecting...</div>
       </div>
     );
   }

@@ -397,6 +397,7 @@ export class DatabaseService {
         estimatedTime: data.estimatedTime != null ? String(data.estimatedTime) : null,
         status: data.status,
         urgency: data.urgency,
+        photos: data.photos ? JSON.stringify(data.photos) : null,
         expiresAt: new Date(data.expiresAt),
       },
       include: {
@@ -1324,6 +1325,7 @@ export class DatabaseService {
       status: quote.status,
       urgency: quote.urgency,
       adminNotes: quote.adminNotes,
+      photos: quote.photos ? JSON.parse(quote.photos) : [],
       expiresAt: quote.expiresAt.toISOString(),
       customer: DatabaseService.mapCustomerNullable(quote.customer),
       device: DatabaseService.mapDeviceNullable(quote.device),

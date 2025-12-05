@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
           firstName: user.firstName || undefined,
           lastName: user.lastName || undefined,
+          emailVerified: user.emailVerified || undefined,
         };
       },
     }),
@@ -78,6 +79,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name as string | undefined;
         session.user.firstName = token.firstName as string | undefined;
         session.user.lastName = token.lastName as string | undefined;
+        session.user.emailVerified = token.emailVerified as Date | undefined;
       }
       return session;
     },
@@ -89,6 +91,7 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name;
         token.firstName = (user as any).firstName;
         token.lastName = (user as any).lastName;
+        token.emailVerified = (user as any).emailVerified;
       }
       
       // For OAuth users, fetch data from database only once
@@ -96,7 +99,7 @@ export const authOptions: NextAuthOptions = {
         try {
           const dbUser = await prisma.user.findUnique({ 
             where: { email: user.email },
-            select: { role: true, image: true, name: true, firstName: true, lastName: true }
+            select: { role: true, image: true, name: true, firstName: true, lastName: true, emailVerified: true }
           });
           if (dbUser) {
             token.role = dbUser.role || "user";
@@ -104,6 +107,7 @@ export const authOptions: NextAuthOptions = {
             token.name = dbUser.name || undefined;
             token.firstName = dbUser.firstName || undefined;
             token.lastName = dbUser.lastName || undefined;
+            token.emailVerified = dbUser.emailVerified || undefined;
           } else {
             token.role = "user"; // Default role if not found
           }
@@ -118,7 +122,7 @@ export const authOptions: NextAuthOptions = {
         try {
           const dbUser = await prisma.user.findUnique({ 
             where: { id: token.sub },
-            select: { role: true, image: true, name: true, firstName: true, lastName: true }
+            select: { role: true, image: true, name: true, firstName: true, lastName: true, emailVerified: true }
           });
           if (dbUser) {
             token.role = dbUser.role || "user";
@@ -126,10 +130,26 @@ export const authOptions: NextAuthOptions = {
             token.name = dbUser.name || undefined;
             token.firstName = dbUser.firstName || undefined;
             token.lastName = dbUser.lastName || undefined;
+            token.emailVerified = dbUser.emailVerified || undefined;
           }
         } catch (error) {
           console.error('Error fetching user data in JWT fallback:', error);
           token.role = "user"; // Fallback to default role
+        }
+      }
+      
+      // Always refresh emailVerified from DB to ensure it's up to date
+      if (token.sub) {
+        try {
+          const dbUser = await prisma.user.findUnique({ 
+            where: { id: token.sub },
+            select: { emailVerified: true }
+          });
+          if (dbUser) {
+            token.emailVerified = dbUser.emailVerified || undefined;
+          }
+        } catch (error) {
+          console.error('Error refreshing emailVerified in JWT:', error);
         }
       }
       

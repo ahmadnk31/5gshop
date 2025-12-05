@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { DatabaseService } from "@/lib/database";
-import { SESService } from "@/lib/ses-service";
+import { ResendService } from "@/lib/resend-service";
 
 export async function getQuotes() {
   try {
@@ -113,12 +113,13 @@ export async function submitQuoteRequest(data: {
     const quote = await DatabaseService.createQuote({
       customerId: customerId,
       deviceId: deviceId,
-      issues: JSON.stringify(data.issues),
+      issues: data.issues,
       description: data.issueDescription,
       estimatedCost: 0, // Will be filled by admin
       estimatedTime: 0, // Will be filled by admin
       status: 'PENDING' as const,
       urgency: data.urgency,
+      photos: data.photos, // Store photos
       expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
       quality: data.quality // Store quality if provided
     });
@@ -126,7 +127,7 @@ export async function submitQuoteRequest(data: {
     console.log('Quote created successfully:', quote.id);
 
     // Send email notification to admin
-    await SESService.sendQuoteNotification({
+    await ResendService.sendQuoteNotification({
       firstName: data.firstName,
       lastName: data.lastName,
       email: data.email,
@@ -145,7 +146,7 @@ export async function submitQuoteRequest(data: {
     });
 
     // Send confirmation email to customer
-    await SESService.sendQuoteConfirmation({
+    await ResendService.sendQuoteConfirmation({
       customerEmail: data.email,
       customerName: `${data.firstName} ${data.lastName}`,
       deviceInfo: `${data.brand} ${data.model}`,
@@ -225,9 +226,9 @@ export async function sendQuoteResponse(data: {
       console.log("Quote updated with estimates");
     }
 
-    // Send response email via AWS SES
-    console.log("Attempting to send quote response email via SES...");
-    await SESService.sendQuoteResponse({
+    // Send response email via Resend
+    console.log("Attempting to send quote response email via Resend...");
+    await ResendService.sendQuoteResponse({
       customerEmail: data.customerEmail,
       customerName: data.customerName,
       deviceInfo: data.deviceInfo,

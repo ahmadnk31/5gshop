@@ -1248,8 +1248,13 @@
       "sending": "Sending...",
       "successMessage": "Thank you for your message! We'll get back to you within 24 hours.",
       "errorMessage": "Failed to send your message. Please try again or contact us directly."
+    },
+    "meta": {
+      "title": "Contact Us",
+      "description": "Contact us for any questions or service requests. We're here to help!"
     }
   },
+  
   "cart": {
     "title": "Cart",
     "empty": "Your cart is empty.",

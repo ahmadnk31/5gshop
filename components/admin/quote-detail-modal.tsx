@@ -277,6 +277,39 @@ export function QuoteDetailModal({
               </div>
             )}
 
+            {/* Photos */}
+            {quote.photos && quote.photos.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold flex items-center">
+                  <Paperclip className="h-5 w-5 mr-2" />
+                  Customer Photos ({quote.photos.length})
+                </h3>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {quote.photos.map((photo: { url: string; key: string }, index: number) => (
+                      <div key={index} className="relative group">
+                        <a
+                          href={photo.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                        >
+                          <img
+                            src={photo.url}
+                            alt={`Photo ${index + 1}`}
+                            className="w-full h-32 object-cover rounded border border-gray-200 hover:border-green-500 transition-colors cursor-pointer"
+                          />
+                        </a>
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-opacity rounded flex items-center justify-center">
+                          <span className="text-white opacity-0 group-hover:opacity-100 text-sm">Click to view</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Issues */}
             <div className="space-y-3">
               <h3 className="text-lg font-semibold">Reported Issues</h3>

@@ -12,12 +12,6 @@ const stripe = process.env.STRIPE_SECRET_KEY
     })
   : null;
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function POST(req: NextRequest) {
   console.log('--- Stripe webhook endpoint hit ---');
   

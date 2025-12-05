@@ -17,7 +17,14 @@ export default function ProfilePage() {
 
   const { data: session, status, update } = useSession();
   const user = session?.user;
-  console.log("Session user:", user);  
+  console.log("Session user:", user);
+
+  // Redirect to verification page if email is not verified
+  useEffect(() => {
+    if (status === "authenticated" && user && !user.emailVerified) {
+      window.location.href = "/auth/verify-required";
+    }
+  }, [status, user]);  
   
   // Use uploaded photo if available, else user.image from session
   const avatarUrl = profilePhoto || user?.image || undefined;
@@ -88,6 +95,13 @@ export default function ProfilePage() {
           <Button>Login</Button>
         </Link>
       </div>
+    </div>;
+  }
+
+  // Show loading while checking verification status
+  if (status === "authenticated" && user && !user.emailVerified) {
+    return <div className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow border mt-8">
+      <div className="text-center">Redirecting...</div>
     </div>;
   }
 

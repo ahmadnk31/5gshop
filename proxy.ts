@@ -8,7 +8,7 @@ import { getToken } from 'next-auth/jwt';
 
 const adminPrefix = '/admin';
 
-export default async function middleware(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
   const startTime = Date.now();
   const { pathname } = req.nextUrl;
 
